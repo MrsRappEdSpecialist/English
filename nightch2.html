@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Night Chapter 3 - Interactive Lesson</title>
+    <title>Night Chapter 2 - Interactive Lesson</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --bg-color: #F4F9F9;
-            --primary: #2EC4B6; 
-            --secondary: #FF9F1C; 
-            --accent: #E71D36; 
-            --success: #2ecc71;
-            --text-dark: #011627;
-            --card-bg: #FFFFFF;
+            /* Vibrant Teen-Friendly Color Palette */
+            --primary: #6F2DBD;    /* Electric Purple */
+            --secondary: #FF3366;  /* Hot Pink / Coral */
+            --accent: #00E5FF;     /* Neon Cyan */
+            --bg-color: #F4F7FC;   /* Cool Light Blue-Gray */
+            --text-dark: #1A1A24;  /* Deep Dark Indigo (easier on eyes than black) */
+            --card-bg: #FFFFFF;    /* Pure White */
+            --success: #00E676;    /* Neon Green */
+            --danger: #FF1744;     /* Bright Red */
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-dark);
             line-height: 1.6;
@@ -29,116 +31,691 @@
             max-width: 900px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(111, 45, 189, 0.15);
+            border-top: 10px solid var(--primary);
         }
 
-        h1, h2, h3 { color: var(--primary); }
-        
-        h1 {
+        header {
             text-align: center;
-            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed var(--accent);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 3em;
+            margin: 0 0 10px 0;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 4px solid var(--secondary);
-            padding-bottom: 10px;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 0px rgba(0, 229, 255, 0.3);
         }
 
-        .student-info {
+        .controls {
             display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .student-info input {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid var(--primary);
-            border-radius: 8px;
-            font-size: 1em;
-        }
-
-        .goals-box {
-            background-color: #E8F7F6;
-            border-left: 5px solid var(--primary);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .section {
-            background: #fff;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .section h2 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
-
-        textarea, input[type="text"], select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1em;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        textarea:focus, input[type="text"]:focus, select:focus {
-            border-color: var(--secondary);
-            outline: none;
-        }
-
-        textarea { resize: vertical; min-height: 80px; }
-
-        .tts-btn {
-            background-color: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-            font-size: 1.2em;
-            display: inline-flex;
-            align-items: center;
             justify-content: center;
-            transition: transform 0.2s;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
-        .tts-btn:hover { transform: scale(1.1); background-color: #e88e15; }
-
-        .hint-btn {
+        button {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 12px 24px;
+            border-radius: 30px;
             cursor: pointer;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             font-size: 0.9em;
-            margin-top: 5px;
+            box-shadow: 0 6px 12px rgba(111, 45, 189, 0.3);
         }
 
-        .hint-content {
-            display: none;
-            background-color: #FFF3E0;
-            padding: 10px;
-            border-left: 4px solid var(--secondary);
-            margin-top: 10px;
-            font-size: 0.9em;
-            border-radius: 0 5px 5px 0;
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(111, 45, 189, 0.4);
         }
 
-        /* Drag and Drop Styles */
-        .vocab-container {
+        .btn-pdf { background-color: var(--secondary); box-shadow: 0 6px 12px rgba(255, 51, 102, 0.3); }
+        .btn-pdf:hover { background-color: #e62050; box-shadow: 0 10px 20px rgba(255, 51, 102, 0.4); }
+        .btn-tts { background-color: var(--accent); color: #000; box-shadow: 0 6px 12px rgba(0, 229, 255, 0.3); }
+        .btn-tts:hover { background-color: #00cce6; }
+        .btn-tts.active { background-color: #ffd700; box-shadow: 0 6px 12px rgba(255, 215, 0, 0.4); }
+
+        .goals-box {
+            background-color: rgba(111, 45, 189, 0.08);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 6px solid var(--primary);
+            margin-bottom: 35px;
+        }
+        
+        .goals-box h2 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .section-title {
+            color: var(--secondary);
+            font-size: 2em;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 8px;
+            margin-top: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Drag & Drop Vocabulary */
+        .vocab-activity {
+            background: rgba(0, 229, 255, 0.05);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .word-bank {
             display: flex;
-            gap: 20px;
-            margin-top: 15px
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            min-height: 50px;
+            border: 2px dashed #ccc;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .draggable {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: grab;
+            font-weight: bold;
+            user-select: none;
+            box-shadow: 0 4px 8px rgba(111, 45, 189, 0.3);
+            transition: transform 0.2s;
+        }
+        
+        .draggable:hover { transform: scale(1.05); }
+        .draggable:active { cursor: grabbing; opacity: 0.8; transform: scale(0.95); }
+        
+        .draggable.matched {
+            background-color: var(--success);
+            box-shadow: 0 4px 8px rgba(0, 230, 118, 0.3);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .def-row {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            gap: 15px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .def-text { flex: 1; font-size: 1.1em; font-weight: 500;}
+
+        .dropzone {
+            width: 160px;
+            height: 45px;
+            border: 2px dashed var(--secondary);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 51, 102, 0.05);
+            transition: all 0.2s;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .dropzone.hovered { background: var(--secondary); color: white; transform: scale(1.05); }
+        .dropzone.filled { 
+            border: 2px solid var(--success); 
+            background: rgba(0, 230, 118, 0.1); 
+            color: var(--success);
+        }
+
+        /* Forms & Inputs */
+        label { font-weight: bold; display: block; margin-top: 15px; color: var(--primary); font-size: 1.1em;}
+        textarea, input[type="text"], input[type="date"] {
+            width: 100%; padding: 12px; margin-top: 8px; 
+            border: 2px solid #e2e8f0;
+            border-radius: 10px; box-sizing: border-box; font-family: inherit; resize: vertical;
+            font-size: 1em; background-color: #f8fafc;
+            transition: all 0.3s;
+        }
+        textarea:focus, input[type="text"]:focus, input[type="date"]:focus {
+            outline: none; border-color: var(--accent); background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.2);
+        }
+        
+        .sentence-frame-note {
+            font-size: 0.9em;
+            color: var(--secondary);
+            font-weight: bold;
+            margin-bottom: -2px;
+            display: block;
+        }
+
+        /* Hints */
+        .hint-btn {
+            background-color: var(--accent); color: #000; padding: 4px 10px;
+            font-size: 0.8em; border-radius: 50%; margin-left: 10px; border: none; cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .hint-text {
+            display: none; background-color: rgba(255, 51, 102, 0.1); color: var(--text-dark); padding: 15px;
+            border-radius: 10px; font-size: 1em; margin-top: 10px; border-left: 5px solid var(--secondary);
+        }
+
+        /* Clickable Dictionary Words */
+        .define-word {
+            text-decoration: underline dashed var(--accent); cursor: help; color: var(--primary); font-weight: 800;
+            padding: 0 2px; transition: 0.2s;
+        }
+        .define-word:hover { background-color: var(--accent); color: #000; border-radius: 3px; }
+
+        /* Multiple Choice / Options */
+        .question-block { margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        .mc-option {
+            display: block; margin: 10px 0; padding: 12px 15px; background: #f8fafc;
+            border-radius: 10px; cursor: pointer; border: 2px solid #e2e8f0; transition: 0.2s;
+            font-weight: 500; color: var(--text-dark);
+        }
+        .mc-option:hover { background: #edf2f7; border-color: var(--accent); transform: translateX(5px); }
+        .mc-option.correct { border-color: var(--success); background-color: rgba(0, 230, 118, 0.1); }
+        .mc-option.incorrect { border-color: var(--danger); background-color: rgba(255, 23, 68, 0.1); }
+        .mc-option.selected { border-color: var(--primary); background-color: rgba(111, 45, 189, 0.05); border-width: 3px;}
+        .feedback { font-weight: 800; margin-left: 10px; display: none; font-size: 1.1em;}
+        .correct-text { color: var(--success); }
+        .incorrect-text { color: var(--danger); }
+
+        /* Read Aloud Class */
+        .read-aloud { cursor: pointer; border-radius: 5px; transition: 0.2s; }
+        .read-aloud:hover { background-color: rgba(0, 229, 255, 0.1); }
+
+        /* Modal for definitions */
+        #def-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            z-index: 1000; text-align: center; border-top: 8px solid var(--secondary); width: 85%; max-width: 450px;
+        }
+        #def-modal h2 { font-size: 2.5em; margin-top: 0; }
+        #def-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 26, 36, 0.8); z-index: 999; backdrop-filter: blur(3px);
+        }
+
+        /* Gradient Quote Box */
+        .gradient-quote {
+            text-align: center; 
+            font-size: 1.4em; 
+            font-style: italic; 
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(255, 51, 102, 0.2);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <button id="ttsToggle" class="btn-tts" onclick="toggleTTS()">🔊 Enable Text-to-Speech</button>
+        <button class="btn-pdf" onclick="saveAsPDF()">💾 Save as PDF</button>
+        <button onclick="clearStorage()" style="background: #64748b;">🗑️ Reset Lesson</button>
+    </div>
+
+    <div class="container" id="lesson-content">
+        <header>
+            <h1 class="read-aloud">Night Chapter 2</h1>
+            <p class="read-aloud" style="font-size: 1.2em; font-weight: bold; color: var(--secondary);">Interactive Lesson & Analysis</p>
+            <div class="student-info" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <input type="text" id="studentName" placeholder="Student Name" style="width: 250px;" oninput="saveData()">
+                <input type="date" id="lessonDate" style="width: 160px;" oninput="saveData()">
+                <input type="text" id="studentPeriod" placeholder="Period" style="width: 120px;" oninput="saveData()">
+            </div>
+        </header>
+
+        <div class="goals-box read-aloud">
+            <h2>🎯 Set Goals</h2>
+            <ul style="font-size: 1.1em; font-weight: 500;">
+                <li>I can engage in a vocabulary review to define unknown and previously learned words.</li>
+                <li>I can identify key plot details from Chapter 2 of Night.</li>
+                <li>I can be a critical thinker by analyzing literary devices and textual evidence.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title read-aloud">🧠 Interactive Vocabulary</h2>
+        <p class="read-aloud" style="font-size: 1.1em; font-weight: bold;"><em>Drag the words from the word bank and drop them next to their correct definitions. Includes review words from Chapter 1!</em></p>
+        
+        <div class="vocab-activity">
+            <div class="word-bank" id="wordBank">
+                <div class="draggable" draggable="true" id="drag-possession" data-word="Possession">Possession</div>
+                <div class="draggable" draggable="true" id="drag-abominable" data-word="Abominable">Abominable</div>
+                <div class="draggable" draggable="true" id="drag-ghetto" data-word="Ghetto">Ghetto</div>
+                <div class="draggable" draggable="true" id="drag-deportation" data-word="Deportation">Deportation</div>
+                <div class="draggable" draggable="true" id="drag-fascist" data-word="Fascist">Fascist</div>
+            </div>
+
+            <div id="dropZones">
+                <div class="def-row read-aloud">
+                    <div class="def-text">1. Causing moral revulsion; very bad, terrible, or unpleasant. (pg. 25)</div>
+                    <div class="dropzone" data-match="Abominable" id="drop1">Drop here</div>
+                </div>
+                <div class="def-row read-aloud">
+                    <div class="def-text">2. Something that is owned or controlled by someone. (pg. 21)</div>
+                    <div class="dropzone" data-match="Possession" id="drop2">Drop here</div>
+                </div>
+                <div class="def-row read-aloud">
+                    <div class="def-text">3. <em>(Review)</em> The forced removal of people from their homes or country.</div>
+                    <div class="dropzone" data-match="Deportation" id="drop3">Drop here</div>
+                </div>
+                <div class="def-row read-aloud">
+                    <div class="def-text">4. <em>(Review)</em> A restricted, often isolated area of a city where Jews were forced to live.</div>
+                    <div class="dropzone" data-match="Ghetto" id="drop4">Drop here</div>
+                </div>
+                <div class="def-row read-aloud">
+                    <div class="def-text">5. <em>(Review)</em> A dictatorial political regime characterized by extreme nationalism.</div>
+                    <div class="dropzone" data-match="Fascist" id="drop5">Drop here</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title read-aloud">📖 Comprehension Check</h2>
+        
+        <div class="question-block">
+            <label class="read-aloud">1) What were the young people doing on the train? (21)
+                <button class="hint-btn" onclick="toggleHint('hint1')">💡</button>
+            </label>
+            <div id="hint1" class="hint-text"><strong>Hint:</strong> Stripped of their inhibitions in the dark, cramped car, what did the young men and women begin doing?</div>
+            <label class="mc-option"><input type="radio" name="q1" value="A" onclick="checkMC('q1', 'B')"> A) Singing religious songs to keep hope alive.</label>
+            <label class="mc-option"><input type="radio" name="q1" value="B" onclick="checkMC('q1', 'B')"> B) Flirting and caressing one another in the dark.</label>
+            <label class="mc-option"><input type="radio" name="q1" value="C" onclick="checkMC('q1', 'B')"> C) Plotting a rebellion against the armed guards.</label>
+            <label class="mc-option"><input type="radio" name="q1" value="D" onclick="checkMC('q1', 'B')"> D) Sleeping peacefully through the night.</label>
+            <span id="q1-feedback" class="feedback"></span>
+        </div>
+
+        <div class="question-block">
+            <label class="read-aloud">2) Who were they under the <span class="define-word" onclick="showDef('Authority')">authority</span> of? (21)</label>
+            <label class="mc-option"><input type="radio" name="q2" value="A" onclick="checkMC('q2', 'B')"> A) The Hungarian Police</label>
+            <label class="mc-option"><input type="radio" name="q2" value="B" onclick="checkMC('q2', 'B')"> B) The German Army</label>
+            <label class="mc-option"><input type="radio" name="q2" value="C" onclick="checkMC('q2', 'B')"> C) The Allied Forces</label>
+            <label class="mc-option"><input type="radio" name="q2" value="D" onclick="checkMC('q2', 'B')"> D) The town Mayor</label>
+            <span id="q2-feedback" class="feedback"></span>
+        </div>
+
+        <div class="question-block">
+            <label class="read-aloud">3) What possessions did they have to give to the German army? (21)
+                <button class="hint-btn" onclick="toggleHint('hint3')">💡</button>
+            </label>
+            <div id="hint3" class="hint-text"><strong>Hint:</strong> The officers threatened to shoot anyone who kept valuables.</div>
+            <label class="mc-option"><input type="radio" name="q3" value="A" onclick="checkMC('q3', 'B')"> A) Only their food and water</label>
+            <label class="mc-option"><input type="radio" name="q3" value="B" onclick="checkMC('q3', 'B')"> B) Gold, silver, and watches</label>
+            <label class="mc-option"><input type="radio" name="q3" value="C" onclick="checkMC('q3', 'B')"> C) Their shoes and winter coats</label>
+            <label class="mc-option"><input type="radio" name="q3" value="D" onclick="checkMC('q3', 'B')"> D) Books and family photographs</label>
+            <span id="q3-feedback" class="feedback"></span>
+        </div>
+
+        <div class="question-block">
+            <label class="read-aloud">4) What was Madame Schachter yelling on the train? (22)</label>
+            <label class="mc-option"><input type="radio" name="q4" value="A" onclick="checkMC('q4', 'B')"> A) "I am so thirsty! Give me water!"</label>
+            <label class="mc-option"><input type="radio" name="q4" value="B" onclick="checkMC('q4', 'B')"> B) "Fire! I see a fire! I see a fire!"</label>
+            <label class="mc-option"><input type="radio" name="q4" value="C" onclick="checkMC('q4', 'B')"> C) "Let us out! We are going to suffocate!"</label>
+            <label class="mc-option"><input type="radio" name="q4" value="D" onclick="checkMC('q4', 'B')"> D) "They are coming to kill us!"</label>
+            <span id="q4-feedback" class="feedback"></span>
+        </div>
+
+        <div class="question-block">
+            <label class="read-aloud">5) What was the name of the final station they stopped at? (24)</label>
+            <label class="mc-option"><input type="radio" name="q5" value="A" onclick="checkMC('q5', 'C')"> A) Budapest</label>
+            <label class="mc-option"><input type="radio" name="q5" value="B" onclick="checkMC('q5', 'C')"> B) Kaschau</label>
+            <label class="mc-option"><input type="radio" name="q5" value="C" onclick="checkMC('q5', 'C')"> C) Auschwitz-Birkenau</label>
+            <label class="mc-option"><input type="radio" name="q5" value="D" onclick="checkMC('q5', 'C')"> D) Sighet</label>
+            <span id="q5-feedback" class="feedback"></span>
+        </div>
+
+        <h2 class="section-title read-aloud">🔍 Literary Device: Foreshadowing</h2>
+        <div class="vocab-activity" style="background: rgba(111, 45, 189, 0.05); border-color: var(--primary);">
+            <p class="read-aloud" style="font-size: 1.2em; color: var(--text-dark);"><strong>Definition:</strong> A literary device where the author gives a hint or warning about an event that will happen later in the story.</p>
+            
+            <hr style="border-top: 2px dashed #cbd5e1; margin: 20px 0;">
+
+            <h3 class="read-aloud" style="color: var(--primary); font-size: 1.5em; margin-bottom: 5px;">Claim-Evidence-Reasoning (CER)</h3>
+            <label class="read-aloud" style="font-size: 1.2em;"><strong>Prompt:</strong> What do Madame Schachter's visions foreshadow?</label>
+            
+            <div style="margin-top: 20px;">
+                <label>1. Claim</label>
+                <span class="sentence-frame-note">Sentence Frame: Madame Schachter's visions foreshadow...</span>
+                <textarea id="cer-claim" rows="3" placeholder="Write your claim here..." oninput="saveData()"></textarea>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <label>2. Evidence <span style="font-size: 0.85em; color: #64748b; font-weight: normal;">(Choose the piece of evidence that best supports your claim)</span></label>
+                <label class="mc-option" id="evA-label">
+                    <input type="radio" name="cerEvidence" value="A" onclick="selectEvidence('evA-label')"> 
+                    "She continued to scream and gasp for breath: 'Fire! I see a fire! I see a fire!'" (24).
+                </label>
+                <label class="mc-option" id="evB-label">
+                    <input type="radio" name="cerEvidence" value="B" onclick="selectEvidence('evB-label')"> 
+                    "'Look! Look at this fire! This terrible fire! Have mercy on me!' Some of the men pressed against the bars." (25).
+                </label>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <label>3. Reasoning</label>
+                <span class="sentence-frame-note">Sentence Frame: This evidence proves my claim because...</span>
+                <textarea id="cer-reasoning" rows="4" placeholder="Write your reasoning here..." oninput="saveData()"></textarea>
+            </div>
+        </div>
+
+        <h2 class="section-title read-aloud">💭 Critical Thinking Quote Questions</h2>
+        
+        <div class="gradient-quote read-aloud">
+            "In front of us flames. In the air that smell of burning flesh" (26).
+        </div>
+        
+        <p class="read-aloud" style="font-size: 1.1em; font-weight: 500;">What questions come to mind when you read this quote? Write down two things you wonder about regarding this horrific moment. 
+            <button class="hint-btn" onclick="toggleHint('hint-quote')">💡</button>
+        </p>
+        <div id="hint-quote" class="hint-text">
+            <strong>Hint:</strong> Think about the deeper psychological impact, the author's choices, or how this moment connects to earlier events in the chapter. <br><br>
+            <em>For example: "I wonder if the prisoners finally realized Madame Schachter was a prophet rather than a madwoman?" or "I wonder how experiencing this horrific smell and sight permanently changed Elie's view of humanity?"</em>
+        </div>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+            <div style="flex: 1; min-width: 250px;">
+                <label>Question 1:</label>
+                <span class="sentence-frame-note">I wonder...</span>
+                <textarea id="quote-q1" rows="4" placeholder="Your thoughtful question here..." oninput="saveData()"></textarea>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+                <label>Question 2:</label>
+                <span class="sentence-frame-note">I wonder...</span>
+                <textarea id="quote-q2" rows="4" placeholder="Your thoughtful question here..." oninput="saveData()"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="def-overlay" onclick="closeDef()"></div>
+    <div id="def-modal">
+        <h2 id="def-title" style="color: var(--secondary);">Word</h2>
+        <p id="def-text" style="font-size: 1.3em; font-weight: 500;"></p>
+        <button onclick="closeDef()" style="margin-top: 20px; width: 100%;">Close</button>
+    </div>
+
+    <script>
+        // Dictionary
+        const dictionary = {
+            'Authority': 'The power or right to give orders, make decisions, and enforce obedience.',
+        };
+
+        function showDef(word) {
+            document.getElementById('def-title').innerText = word;
+            document.getElementById('def-text').innerText = dictionary[word] || 'Definition not found.';
+            document.getElementById('def-overlay').style.display = 'block';
+            document.getElementById('def-modal').style.display = 'block';
+            if(ttsEnabled) speakText(word + ". " + dictionary[word]);
+        }
+
+        function closeDef() {
+            document.getElementById('def-overlay').style.display = 'none';
+            document.getElementById('def-modal').style.display = 'none';
+        }
+
+        // Text to Speech
+        let ttsEnabled = false;
+        function toggleTTS() {
+            ttsEnabled = !ttsEnabled;
+            const btn = document.getElementById('ttsToggle');
+            if (ttsEnabled) {
+                btn.classList.add('active');
+                btn.innerText = '🔊 Text-to-Speech: ON';
+                alert("Text-to-Speech enabled. Click on any text to hear it read aloud.");
+            } else {
+                btn.classList.remove('active');
+                btn.innerText = '🔊 Enable Text-to-Speech';
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function speakText(text) {
+            if (!ttsEnabled) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.read-aloud, label:not(.mc-option), .def-text');
+            elements.forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if(!['INPUT','BUTTON','TEXTAREA'].includes(e.target.tagName) && !e.target.classList.contains('define-word') && !e.target.classList.contains('draggable')) {
+                        speakText(el.innerText.replace('💡', ''));
+                    }
+                });
+            });
+            initDragAndDrop();
+            loadData();
+        });
+
+        // Hints
+        function toggleHint(hintId) {
+            const hint = document.getElementById(hintId);
+            hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
+            if(ttsEnabled && hint.style.display === 'block') speakText(hint.innerText.replace('Hint:', ''));
+        }
+
+        // Multiple Choice Feedback
+        function checkMC(questionName, correctVal) {
+            const options = document.getElementsByName(questionName);
+            const feedback = document.getElementById(questionName + '-feedback');
+            
+            options.forEach(opt => opt.parentElement.classList.remove('correct', 'incorrect'));
+
+            options.forEach(opt => {
+                if (opt.checked) {
+                    if (opt.value === correctVal) {
+                        opt.parentElement.classList.add('correct');
+                        feedback.innerHTML = '✔️ Correct!';
+                        feedback.className = 'feedback correct-text';
+                        feedback.style.display = 'block';
+                        if(ttsEnabled) speakText("Correct!");
+                    } else {
+                        opt.parentElement.classList.add('incorrect');
+                        feedback.innerHTML = '❌ Try again.';
+                        feedback.className = 'feedback incorrect-text';
+                        feedback.style.display = 'block';
+                        if(ttsEnabled) speakText("Incorrect. Try again.");
+                    }
+                }
+            });
+            saveData();
+        }
+
+        // Highlight selected evidence in CER section
+        function selectEvidence(labelId) {
+            document.getElementById('evA-label').classList.remove('selected');
+            document.getElementById('evB-label').classList.remove('selected');
+            document.getElementById(labelId).classList.add('selected');
+            saveData();
+        }
+
+        // Drag and Drop Logic
+        let draggedItem = null;
+        const dragState = {}; 
+
+        function initDragAndDrop() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropzones = document.querySelectorAll('.dropzone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggedItem = draggable;
+                    setTimeout(() => draggable.style.display = 'none', 0);
+                });
+                draggable.addEventListener('dragend', () => {
+                    setTimeout(() => {
+                        if(draggedItem) draggedItem.style.display = 'block';
+                        draggedItem = null;
+                    }, 0);
+                });
+            });
+
+            dropzones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    if(!zone.classList.contains('filled')) zone.classList.add('hovered');
+                });
+                zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('hovered');
+                    if (zone.classList.contains('filled') || !draggedItem) return;
+
+                    const matchWord = zone.getAttribute('data-match');
+                    const draggedWord = draggedItem.getAttribute('data-word');
+
+                    if (matchWord === draggedWord) {
+                        zone.innerText = draggedWord;
+                        zone.classList.add('filled');
+                        draggedItem.classList.add('matched');
+                        
+                        dragState[zone.id] = draggedWord;
+                        saveData();
+                        
+                        if(ttsEnabled) speakText("Correct. " + draggedWord);
+                    } else {
+                        zone.style.borderColor = 'var(--danger)';
+                        zone.style.color = 'var(--danger)';
+                        setTimeout(() => {
+                            zone.style.borderColor = 'var(--secondary)';
+                            zone.style.color = 'var(--secondary)';
+                        }, 500);
+                        if(ttsEnabled) speakText("Try again.");
+                    }
+                });
+            });
+        }
+
+        function restoreDragState(savedDragState) {
+            if(!savedDragState) return;
+            for(const [zoneId, word] of Object.entries(savedDragState)) {
+                const zone = document.getElementById(zoneId);
+                const item = document.querySelector(`.draggable[data-word="${word}"]`);
+                if(zone && item) {
+                    zone.innerText = word;
+                    zone.classList.add('filled');
+                    item.classList.add('matched');
+                    dragState[zoneId] = word;
+                }
+            }
+        }
+
+        // Local Storage
+        function saveData() {
+            const data = {
+                studentName: document.getElementById('studentName').value,
+                lessonDate: document.getElementById('lessonDate').value,
+                studentPeriod: document.getElementById('studentPeriod').value,
+                cerClaim: document.getElementById('cer-claim').value,
+                cerReasoning: document.getElementById('cer-reasoning').value,
+                quoteQ1: document.getElementById('quote-q1').value,
+                quoteQ2: document.getElementById('quote-q2').value,
+                dragState: dragState
+            };
+            
+            ['q1', 'q2', 'q3', 'q4', 'q5', 'cerEvidence'].forEach(q => {
+                const checked = document.querySelector(`input[name="${q}"]:checked`);
+                if(checked) data[q] = checked.value;
+            });
+
+            localStorage.setItem('nightCh2Lesson_v4_vibrant', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('nightCh2Lesson_v4_vibrant');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('studentName').value = data.studentName || '';
+                document.getElementById('lessonDate').value = data.lessonDate || '';
+                document.getElementById('studentPeriod').value = data.studentPeriod || '';
+                
+                document.getElementById('cer-claim').value = data.cerClaim || '';
+                document.getElementById('cer-reasoning').value = data.cerReasoning || '';
+                document.getElementById('quote-q1').value = data.quoteQ1 || '';
+                document.getElementById('quote-q2').value = data.quoteQ2 || '';
+
+                restoreDragState(data.dragState);
+
+                const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'B', q5: 'C' };
+                for(const [q, correctVal] of Object.entries(correctAnswers)) {
+                    if(data[q]) {
+                        const radio = document.querySelector(`input[name="${q}"][value="${data[q]}"]`);
+                        if(radio) {
+                            radio.checked = true;
+                            checkMC(q, correctVal);
+                        }
+                    }
+                }
+                
+                if(data.cerEvidence) {
+                    const radio = document.querySelector(`input[name="cerEvidence"][value="${data.cerEvidence}"]`);
+                    if(radio) {
+                        radio.checked = true;
+                        selectEvidence('ev' + data.cerEvidence + '-label');
+                    }
+                }
+            }
+        }
+
+        function clearStorage() {
+            if(confirm('Are you sure you want to reset all your work?')) {
+                localStorage.removeItem('nightCh2Lesson_v4_vibrant');
+                location.reload();
+            }
+        }
+
+        // PDF Export
+        function saveAsPDF() {
+            const element = document.getElementById('lesson-content');
+            const opt = {
+                margin:       0.4,
+                filename:     'Night_Chapter_2_Lesson.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            element.style.boxShadow = 'none';
+            element.style.borderTop = 'none';
+            const wordBank = document.getElementById('wordBank');
+            wordBank.style.display = 'none';
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.style.boxShadow = '0 15px 35px rgba(111, 45, 189, 0.15)';
+                element.style.borderTop = '10px solid var(--primary)';
+                wordBank.style.display = 'flex'; 
+            });
+        }
+    </script>
+</body>
+</html>
