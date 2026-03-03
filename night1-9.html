@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night - Chapters 1-9 Interactive Lessons</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    .font-serif { font-family: 'Crimson Pro', Georgia, serif; }
+    .font-sans { font-family: 'Inter', system-ui, sans-serif; }
+    
+    .candle-glow {
+      animation: flicker 3s ease-in-out infinite;
+    }
+    
+    @keyframes flicker {
+      0%, 100% { opacity: 0.8; filter: blur(8px); }
+      50% { opacity: 1; filter: blur(10px); }
+    }
+    
+    .section-card {
+      transition: all 0.3s ease;
+    }
+    
+    .section-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    .vocab-card {
+      perspective: 1000px;
+    }
+    
+    .vocab-card-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    
+    .vocab-card.flipped .vocab-card-inner {
+      transform: rotateY(180deg);
+    }
+    
+    .vocab-front, .vocab-back {
+      backface-visibility: hidden;
+    }
+    
+    .vocab-back {
+      transform: rotateY(180deg);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .progress-bar {
+      transition: width 0.5s ease;
+    }
+    
+    textarea:focus, input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.2);
+    }
+    
+    .quote-block {
+      border-left: 4px solid #b45309;
+      background: linear-gradient(90deg, rgba(180, 83, 9, 0.08) 0%, transparent 100%);
+    }
+
+    .chapter-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .chapter-btn {
+      padding: 1.5rem;
+      border-radius: 1rem;
+      background: #292524;
+      border: 2px solid #57534e;
+      color: #d6d3d1;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .chapter-btn:hover {
+      background: #44403c;
+      border-color: #b45309;
+      color: #fef3c7;
+    }
+
+    .chapter-btn.active {
+      background: #b45309;
+      border-color: #b45309;
+      color: white;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-sans bg-stone-900 text-stone-100">
+  <div id="app" class="h-full overflow-auto"><!-- Student Name Modal -->
+   <div id="nameModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div class="bg-stone-800 rounded-2xl p-8 max-w-md w-full border border-amber-900/30 shadow-2xl">
+     <div class="text-center mb-6">
+      <div class="text-5xl mb-4">
+       📖
+      </div>
+      <h2 class="text-2xl font-serif font-bold text-amber-100">Welcome to Your Lessons</h2>
+      <p class="text-stone-400 mt-2">Enter your name to begin</p>
+     </div><input type="text" id="studentNameInput" placeholder="Your full name" class="w-full px-4 py-3 bg-stone-700 border border-stone-600 rounded-xl text-stone-100 text-lg mb-4 placeholder-stone-500"> <button onclick="startLesson()" class="w-full py-3 bg-amber-700 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors"> Begin Lessons </button>
+    </div>
+   </div><!-- Main Content -->
+   <div id="mainContent" class="hidden"><!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-b from-stone-800 to-stone-900 border-b border-amber-900/30">
+     <div class="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-32 bg-amber-500/20 rounded-full candle-glow"></div>
+     <div class="relative z-10 max-w-5xl mx-auto px-6 py-12 text-center">
+      <p class="text-amber-500 font-medium mb-2">Literature Lesson</p>
+      <h1 id="lessonTitleDisplay" class="text-4xl md:text-5xl font-serif font-bold text-amber-100 mb-3">Night - Chapter 1</h1>
+      <p class="text-stone-400 text-lg">by Elie Wiesel | Prentice Hall Library Edition</p>
+      <div class="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-stone-800 rounded-full border border-stone-700"><span class="text-stone-400">Student:</span> <span id="studentNameDisplay" class="text-amber-200 font-medium">---</span>
+      </div>
+     </div>
+    </header><!-- Chapter Selector -->
+    <div class="bg-stone-800 border-b border-stone-700 sticky top-0 z-40">
+     <div class="max-w-5xl mx-auto px-6 py-6">
+      <p class="text-stone-400 text-sm mb-3">Select Chapter:</p>
+      <div class="chapter-selector"><button onclick="switchChapter(1)" data-chapter="1" class="chapter-btn active">Chapter 1</button> <button onclick="switchChapter(2)" data-chapter="2" class="chapter-btn">Chapter 2</button> <button onclick="switchChapter(3)" data-chapter="3" class="chapter-btn">Chapter 3</button> <button onclick="switchChapter(4)" data-chapter="4" class="chapter-btn">Chapter 4</button> <button onclick="switchChapter(5)" data-chapter="5" class="chapter-btn">Chapter 5</button> <button onclick="switchChapter(6)" data-chapter="6" class="chapter-btn">Chapter 6</button> <button onclick="switchChapter(7)" data-chapter="7" class="chapter-btn">Chapter 7</button> <button onclick="switchChapter(8)" data-chapter="8" class="chapter-btn">Chapter 8</button> <button onclick="switchChapter(9)" data-chapter="9" class="chapter-btn">Chapter 9</button>
+      </div>
+     </div>
+    </div><!-- Progress Bar -->
+    <div class="bg-stone-800 border-b border-stone-700 sticky top-24 z-40">
+     <div class="max-w-5xl mx-auto px-6 py-3">
+      <div class="flex items-center justify-between mb-2"><span class="text-sm text-stone-400">Chapter Progress</span> <span id="progressText" class="text-sm text-amber-400 font-medium">0% Complete</span>
+      </div>
+      <div class="h-2 bg-stone-700 rounded-full overflow-hidden">
+       <div id="progressBar" class="h-full bg-gradient-to-r from-amber-600 to-amber-500 progress-bar" style="width: 0%"></div>
+      </div>
+     </div>
+    </div><!-- Navigation Tabs -->
+    <nav class="bg-stone-800/95 border-b border-stone-700 sticky top-32 z-30 backdrop-blur">
+     <div class="max-w-5xl mx-auto px-6">
+      <div class="flex gap-1 overflow-x-auto py-2"><button onclick="showSection('overview')" data-tab="overview" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors bg-amber-700 text-white"> 📚 Overview </button> <button onclick="showSection('vocabulary')" data-tab="vocabulary" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-stone-400 hover:text-stone-200 hover:bg-stone-700"> 📝 Vocabulary </button> <button onclick="showSection('comprehension')" data-tab="comprehension" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-stone-400 hover:text-stone-200 hover:bg-stone-700"> ��� Comprehension </button> <button onclick="showSection('evidence')" data-tab="evidence" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-stone-400 hover:text-stone-200 hover:bg-stone-700"> 🔍 Text Evidence </button> <button onclick="showSection('cer')" data-tab="cer" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors text-stone-400 hover:text-stone-200 hover:bg-stone-700"> ✍️ CER Response </button>
+      </div>
+     </div>
+    </nav><!-- Sections Container -->
+    <main class="max-w-5xl mx-auto px-6 py-8"><!-- Overview Section -->
+     <section id="section-overview" class="section fade-in">
+      <div id="overviewContent"></div>
+     </section><!-- Vocabulary Section -->
+     <section id="section-vocabulary" class="section hidden">
+      <div class="mb-6">
+       <h2 class="text-2xl font-serif font-bold text-amber-100 mb-2 flex items-center gap-3"><span class="text-3xl">📝</span> Vocabulary Practice</h2>
+       <p class="text-stone-400">Click each card to reveal the definition. Then test yourself with the matching game!</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 mb-8" id="flashcardContainer"></div>
+      <div class="bg-stone-800 rounded-2xl p-6 border border-stone-700 mt-8">
+       <h3 class="text-xl font-semibold text-amber-200 mb-4 flex items-center gap-2"><span>🎯</span> Vocabulary Quiz</h3>
+       <div id="vocabQuiz"></div>
+       <div id="vocabScore" class="hidden mt-6 p-4 bg-amber-900/30 rounded-xl border border-amber-700/50 text-center">
+        <p class="text-amber-200 text-lg font-semibold">Score: <span id="vocabScoreValue">0</span>/8</p>
+       </div>
+      </div>
+     </section><!-- Comprehension Section -->
+     <section id="section-comprehension" class="section hidden">
+      <div class="mb-6">
+       <h2 class="text-2xl font-serif font-bold text-amber-100 mb-2 flex items-center gap-3"><span class="text-3xl">❓</span> Comprehension Questions</h2>
+       <p class="text-stone-400">Answer each question thoughtfully. Your responses are automatically saved.</p>
+      </div>
+      <div id="comprehensionQuestions" class="space-y-6"></div>
+     </section><!-- Text Evidence Section -->
+     <section id="section-evidence" class="section hidden">
+      <div class="mb-6">
+       <h2 class="text-2xl font-serif font-bold text-amber-100 mb-2 flex items-center gap-3"><span class="text-3xl">🔍</span> Textual Evidence Analysis</h2>
+       <p class="text-stone-400">Analyze these key quotes and explain their significance.</p>
+      </div>
+      <div id="evidenceQuotes" class="space-y-6"></div>
+     </section><!-- CER Response Section -->
+     <section id="section-cer" class="section hidden">
+      <div class="mb-6">
+       <h2 class="text-2xl font-serif font-bold text-amber-100 mb-2 flex items-center gap-3"><span class="text-3xl">✍️</span> CER Reflective Response</h2>
+       <p class="text-stone-400">Build your Claim, Evidence, Reasoning response using the sentence starters below.</p>
+      </div>
+      <div id="cerContent"></div>
+     </section>
+    </main><!-- Footer -->
+    <footer class="bg-stone-800 border-t border-stone-700 mt-12">
+     <div class="max-w-5xl mx-auto px-6 py-6 text-center">
+      <p class="text-stone-500 text-sm">📚 <em>Night</em> by Elie Wiesel | Interactive Lesson Template</p>
+      <p class="text-stone-600 text-xs mt-2">💾 Your work is automatically saved to your Canva Sheet</p>
+     </div>
+    </footer>
+   </div>
+  </div>
+  <script>
+    // Chapter Data - All 9 Chapters
+    const chapterData = {
+      1: {
+        title: 'Night - Chapter 1',
+        overview: `
+          <div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6">
+            <h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3">
+              <span class="text-3xl">📖</span> Chapter 1 Overview
+            </h2>
+            <p class="text-stone-300 leading-relaxed mb-4">
+              Chapter 1 introduces <strong class="text-amber-200">Eliezer, a deeply religious Jewish boy in Sighet, Transylvania</strong>. The chapter follows his initial encounter with the Holocaust through the arrival of the German army and the beginning of persecution. Wiesel emphasizes the community's initial disbelief and the gradual tightening of restrictions. This foundation chapter establishes Eliezer's faith and sets the stage for the horrors to come.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 mt-6">
+              <div class="bg-stone-700/50 rounded-xl p-4">
+                <h3 class="font-semibold text-amber-300 mb-2">👥 Key Characters</h3>
+                <ul class="text-stone-300 text-sm space-y-1">
+                  <li>• <strong>Eliezer</strong> - Young and deeply faithful</li>
+                  <li>• <strong>Moishe the Beadle</strong> - Spiritual guide and messenger</li>
+                  <li>• <strong>Eliezer's Family</strong> - Mother, father, sisters</li>
+                  <li>• <strong>Community Members</strong> - Disbelieving neighbors</li>
+                </ul>
+              </div>
+              <div class="bg-stone-700/50 rounded-xl p-4">
+                <h3 class="font-semibold text-amber-300 mb-2">📍 Key Events</h3>
+                <ul class="text-stone-300 text-sm space-y-1">
+                  <li>• Moishe's deportation and return</li>
+                  <li>• Germans arrive in Sighet</li>
+                  <li>• Anti-Jewish laws enforced</li>
+                  <li>• Ghettoization of the community</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gradient-to-r from-amber-900/30 to-stone-800 rounded-2xl p-6 border border-amber-900/30">
+            <h3 class="text-lg font-semibold text-amber-200 mb-3">🎓 Learning Objectives</h3>
+            <div class="grid gap-3">
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="checkbox" class="objective-check mt-1 w-5 h-5 rounded border-stone-600 bg-stone-700 text-amber-600 focus:ring-amber-500">
+                <span class="text-stone-300 group-hover:text-stone-200">Master 8 key vocabulary words from Chapter 1</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="checkbox" class="objective-check mt-1 w-5 h-5 rounded border-stone-600 bg-stone-700 text-amber-600 focus:ring-amber-500">
+                <span class="text-stone-300 group-hover:text-stone-200">Answer comprehension questions about early persecution</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="checkbox" class="objective-check mt-1 w-5 h-5 rounded border-stone-600 bg-stone-700 text-amber-600 focus:ring-amber-500">
+                <span class="text-stone-300 group-hover:text-stone-200">Analyze key textual evidence and its significance</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="checkbox" class="objective-check mt-1 w-5 h-5 rounded border-stone-600 bg-stone-700 text-amber-600 focus:ring-amber-500">
+                <span class="text-stone-300 group-hover:text-stone-200">Write a complete CER response with textual support</span>
+              </label>
+            </div>
+          </div>
+        `,
+        vocabulary: [
+          { word: 'Deportation', definition: 'Forced removal or exile of a person or group from their home country', sentence: 'Moishe\'s deportation was one of the first warnings of the horrors to come.' },
+          { word: 'Persecution', definition: 'Hostile or unfair treatment of a person or group because of their beliefs or identity', sentence: 'The persecution of Jews began with laws and restrictions.' },
+          { word: 'Skepticism', definition: 'Doubt or disbelief; unwillingness to accept something without proof', sentence: 'The community\'s skepticism prevented them from heeding Moishe\'s warnings.' },
+          { word: 'Portent', definition: 'A sign or warning that something significant will happen', sentence: 'Moishe\'s stories were a portent of the darkness ahead.' },
+          { word: 'Ghettoization', definition: 'The process of forcing a group into a confined area, usually a poor neighborhood', sentence: 'Ghettoization meant the Jewish community was separated from the rest of the city.' },
+          { word: 'Humiliation', definition: 'The feeling of being embarrassed, ashamed, or degraded', sentence: 'Anti-Jewish laws caused widespread humiliation in the community.' },
+          { word: 'Oppression', definition: 'Unjust or cruel exercise of authority or power', sentence: 'Nazi oppression tightened as each new law was announced.' },
+          { word: 'Indifference', definition: 'Lack of interest, concern, or sympathy toward someone or something', sentence: 'The indifference of the non-Jewish population shocked the Jewish community.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'Who is Moishe the Beadle and what is his role in Chapter 1?', hint: 'Think about his relationship with Eliezer and his experiences.' },
+          { id: 'comp2', question: 'What warning does Moishe bring to the community after his deportation?', hint: 'Consider what happened to him and why no one believed him.' },
+          { id: 'comp3', question: 'Describe the progression of anti-Jewish laws in Chapter 1. How do they gradually restrict the Jewish community?', hint: 'Think about armbands, curfews, and confiscation of property.' },
+          { id: 'comp4', question: 'Why does the community not take Moishe\'s warnings seriously?', hint: 'Consider how people typically respond to bad news and discomfort.' },
+          { id: 'comp5', question: 'What is Eliezer\'s faith like at the beginning of the chapter, and how does it give him strength?', hint: 'Think about his studies and relationship with God.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"I spent my days in the synagogue or in the study hall... And my nights were devoted to the Kabbalah."', simplifiedMeaning: 'Eliezer is deeply committed to Jewish faith and spends all his time studying religious texts.', page: 'p. 3', analysisPrompt: 'How does this show Eliezer\'s character at the beginning? What does this tell us about what he will lose?' },
+          { id: 'quote2', quote: '"Poor fellow. He\'s lost his mind."', simplifiedMeaning: 'The community dismisses Moishe as crazy when he tries to warn them about the massacres.', page: 'p. 6', analysisPrompt: 'Why do people refuse to believe Moishe? What does this reveal about human nature in crisis?' },
+          { id: 'quote3', quote: '"The yellow star? So what? It\'s not lethal..."', simplifiedMeaning: 'The community downplays the yellow star requirement, not realizing it\'s the beginning of much worse persecution.', page: 'p. 10', analysisPrompt: 'How does this show the denial and false hope of the community? What is the irony here?' }
+        ],
+        cerPrompt: 'How does Wiesel use Moishe the Beadle\'s character and warnings to foreshadow the horrors of the Holocaust? What is the significance of the community\'s refusal to believe him?',
+        cerStarters: {
+          claim: ['Moishe\'s warnings reveal that ', 'Wiesel uses Moishe to show '],
+          reasoning: ['This evidence demonstrates that ', 'This quote reveals ', 'In other words, ', 'This is significant because ']
+        }
+      },
+      2: {
+        title: 'Night - Chapter 2',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 2 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 2 documents <strong class="text-amber-200">the deportation and arrival at Auschwitz-Birkenau concentration camp</strong>. Eliezer and his family are crowded into cattle cars for a suffocating journey. Upon arrival, families are separated; Eliezer never sees his mother or younger sister again. The chapter marks the transition from Eliezer's normal life to the nightmare of the Holocaust, introducing readers to the selection process and the camp's dehumanizing system.</p></div>`,
+        vocabulary: [
+          { word: 'Cattle Car', definition: 'An enclosed railway car used to transport livestock or, during the Holocaust, prisoners', sentence: 'The cattle cars transported thousands of Jews to Auschwitz.' },
+          { word: 'Suffocation', definition: 'The inability to breathe; dying from lack of oxygen', sentence: 'Suffocation was a constant fear in the overcrowded cattle cars.' },
+          { word: 'Selection', definition: 'The Nazi process of determining which prisoners would be sent to death or kept as laborers', sentence: 'The selection process at the ramp determined prisoners\' fates.' },
+          { word: 'Crematory', definition: 'A place where bodies are burned; in this context, Nazi facilities for mass murder', sentence: 'The smell of the crematory was the first indication of the camp\'s horrors.' },
+          { word: 'Dehumanization', definition: 'The process of stripping away someone\'s human dignity and treating them as less than human', sentence: 'Dehumanization began immediately upon arrival at the camp.' },
+          { word: 'Despair', definition: 'Complete loss of hope; utter hopelessness', sentence: 'Despair overtook the prisoners as they realized their fate.' },
+          { word: 'Anguish', definition: 'Severe pain or suffering, physically or mentally', sentence: 'The anguish of family separation was unbearable.' },
+          { word: 'Abomination', definition: 'Something that causes disgust or hatred; an atrocity', sentence: 'The camps were an abomination against humanity.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'Describe the conditions of the cattle car journey. How long does it last, and what happens to people during it?', hint: 'Think about overcrowding, hunger, thirst, and sanitation.' },
+          { id: 'comp2', question: 'What is the "selection" process? How does it determine prisoners\' fates?', hint: 'Consider Mengele\'s role and who is chosen for what purpose.' },
+          { id: 'comp3', question: 'What happens to Eliezer\'s mother and younger sister after the selection?', hint: 'Think about where Eliezer is sent versus where they are sent.' },
+          { id: 'comp4', question: 'How does Eliezer\'s father react to the separation from the rest of the family?', hint: 'Consider his emotions and how this affects their bond.' },
+          { id: 'comp5', question: 'What does Eliezer notice about the smell and what does he learn it means?', hint: 'Think about the crematory and what realization this brings.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"Never shall I forget that night, the first night in camp, that turned my life into one long night..."', simplifiedMeaning: 'Eliezer marks this moment as when his life was forever changed and darkness entered his soul.', page: 'p. 32', analysisPrompt: 'Why does Wiesel repeat the word "night"? What does this symbolize about his experience?' },
+          { id: 'quote2', quote: '"Men to the left. Women to the right."', simplifiedMeaning: 'The selection process separates family members, likely for the last time.', page: 'p. 29', analysisPrompt: 'How does this simple command represent the horror of the Holocaust? What is lost in this moment?' },
+          { id: 'quote3', quote: '"I didn\'t know that this was the moment I was leaving my mother forever."', simplifiedMeaning: 'Eliezer doesn\'t realize he will never see his mother again after the selection.', page: 'p. 30', analysisPrompt: 'How does Wiesel use hindsight to create emotional impact? What does this reveal about fate?' }
+        ],
+        cerPrompt: 'How does the selection process at Auschwitz serve as a turning point in Eliezer\'s life? What is the significance of family separation in the novel\'s exploration of the Holocaust\'s dehumanizing power?',
+        cerStarters: {
+          claim: ['The selection process represents ', 'Wiesel uses separation to show '],
+          reasoning: ['This evidence demonstrates that ', 'This quote shows ', 'The significance of this is ', 'By illustrating this, Wiesel reveals ']
+        }
+      },
+      3: {
+        title: 'Night - Chapter 3',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 3 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 3 explores <strong class="text-amber-200">Eliezer's first days of survival in the camp and his struggle to maintain his faith</strong>. He begins to understand the camp's brutal hierarchy, the constant threat of death, and the systematic dehumanization. This chapter marks the beginning of Eliezer's crisis of faith as he witnesses suffering and questions God's presence.</p></div>`,
+        vocabulary: [
+          { word: 'Hierarchy', definition: 'A system ranking people or things from highest to lowest status or power', sentence: 'The camp\'s hierarchy placed guards at the top and prisoners at the bottom.' },
+          { word: 'Emaciated', definition: 'Extremely thin and wasted, usually from starvation or disease', sentence: 'The emaciated prisoners bore little resemblance to their former selves.' },
+          { word: 'Oblivion', definition: 'The state of being unconscious or forgotten; complete destruction', sentence: 'Many prisoners preferred oblivion to the suffering of the camps.' },
+          { word: 'Apostasy', definition: 'Abandonment of one\'s religious faith or principles', sentence: 'Some prisoners viewed loss of faith as apostasy against their heritage.' },
+          { word: 'Atrocity', definition: 'An extremely wicked or cruel act; a war crime', sentence: 'The atrocities witnessed in the camps defied comprehension.' },
+          { word: 'Blasphemy', definition: 'Disrespect or contempt toward God or religion; profane language', sentence: 'Some saw Eliezer\'s doubts as blasphemy against God.' },
+          { word: 'Meager', definition: 'Lacking in quantity or quality; scanty or insufficient', sentence: 'Prisoners survived on a meager diet of thin soup and bread.' },
+          { word: 'Affliction', definition: 'Severe suffering or distress; a source of suffering', sentence: 'Disease and hunger were constant afflictions in the camp.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'How does Eliezer adapt to camp life in Chapter 3? What does he learn about survival?', hint: 'Consider the importance of staying invisible and avoiding authority.' },
+          { id: 'comp2', question: 'Describe the camp\'s hierarchy. Who holds power and how is it used?', hint: 'Think about block leaders, Kapos, and guards.' },
+          { id: 'comp3', question: 'What triggers Eliezer\'s crisis of faith in Chapter 3? How does he begin to question God?', hint: 'Consider his reaction to witnessing suffering and injustice.' },
+          { id: 'comp4', question: 'How does hunger affect the prisoners? What role does food play in the camp?', hint: 'Think about the psychological and physical effects of starvation.' },
+          { id: 'comp5', question: 'What does Eliezer observe about how prisoners treat each other? Does suffering create compassion or cruelty?', hint: 'Consider conflicts over food and survival instincts.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"Here there are no fathers, no brothers, no friends. There is only you and your body. Nothing else."', simplifiedMeaning: 'The camp strips away all human connections and relationships, leaving only survival instinct.', page: 'p. 37', analysisPrompt: 'How does this quote describe dehumanization? What is lost when family bonds are destroyed?' },
+          { id: 'quote2', quote: '"I had already ceased to feel anything except the lashes of the whip."', simplifiedMeaning: 'Eliezer becomes emotionally numb, experiencing only physical pain.', page: 'p. 40', analysisPrompt: 'What does this numbness represent? Is it a survival mechanism or a sign of losing humanity?' },
+          { id: 'quote3', quote: '"He tried to tell them about the selections, about the crematory, about the atrocities. But the Jews of Sighet were deaf."', simplifiedMeaning: 'Even witnessing and telling others about horrors doesn\'t change their disbelief.', page: 'p. 42', analysisPrompt: 'Why does Wiesel emphasize this cycle of warning and disbelief? What does it suggest about truth?' }
+        ],
+        cerPrompt: 'How does Wiesel use Eliezer\'s early experiences in the camp to illustrate the loss of faith and humanity? What specific moments challenge his belief in God?',
+        cerStarters: {
+          claim: ['Eliezer\'s faith is tested when ', 'Through camp experiences, Wiesel shows '],
+          reasoning: ['This evidence demonstrates that ', 'This reveals ', 'The significance is ', 'This moment is crucial because ']
+        }
+      },
+      4: {
+        title: 'Night - Chapter 4',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 4 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 4 of <em>Night</em> explores <strong class="text-amber-200">Eliezer's daily life and struggle for survival in the camp</strong>. As a younger, weaker prisoner, Eliezer works as a slave laborer while maintaining his bond with his father. This chapter reveals how prisoners adapt to unimaginable conditions and confront the dehumanization of concentration camp life.</p></div>`,
+        vocabulary: [
+          { word: 'Solidarity', definition: 'Unity or fellowship arising from common interests, responsibilities, or beliefs; standing together', sentence: 'Prisoners showed solidarity by helping each other survive the harsh camp conditions.' },
+          { word: 'Vulnerable', definition: 'Exposed to physical or emotional attack; capable of being wounded or hurt', sentence: 'As the weakest prisoners, younger men like Eliezer were more vulnerable to abuse.' },
+          { word: 'Resignation', definition: 'Acceptance of something undesirable that one cannot change; giving up resistance', sentence: 'Many prisoners reached a state of resignation as hope faded.' },
+          { word: 'Devotion', definition: 'Love, loyalty, or enthusiasm for a person, activity, or cause', sentence: 'Eliezer\'s devotion to his father became his reason for living.' },
+          { word: 'Dehumanization', definition: 'The process of stripping away someone\'s human dignity and treating them as less than human', sentence: 'The dehumanization in the camp aimed to break prisoners\' spirits and will.' },
+          { word: 'Kapo', definition: 'A prisoner who was given authority over other prisoners, often as a foreman or guard', sentence: 'The Kapos enforced brutal discipline among the working prisoners.' },
+          { word: 'Ration', definition: 'A fixed amount or portion of food or supplies distributed to each person', sentence: 'Each prisoner received a meager daily ration of bread and thin soup.' },
+          { word: 'Torment', definition: 'Severe physical or mental suffering; to cause someone pain or anguish', sentence: 'The psychological torment of watching loved ones suffer was unbearable.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'Describe Eliezer\'s daily routine in the camp. What are the conditions of his work and living situation?', hint: 'Consider labor assignments, food rations, overcrowding, and hygiene.' },
+          { id: 'comp2', question: 'What is the significance of the hanging scene in Chapter 4? How does Eliezer respond to witnessing this execution?', hint: 'Think about his emotional reaction and what this moment reveals about the camp\'s brutality.' },
+          { id: 'comp3', question: 'How does Eliezer\'s relationship with his father evolve in Chapter 4? What moments show his care and concern for his father?', hint: 'Look for examples of self-sacrifice and protection.' },
+          { id: 'comp4', question: 'What internal struggle does Eliezer face in Chapter 4? What tempts him to give up his will to survive?', hint: 'Consider moments of despair and thoughts of escape or death.' },
+          { id: 'comp5', question: 'How does Wiesel use details about food, hunger, and physical weakness to convey the horror of camp life?', hint: 'Think about how starvation affects prisoners mentally and physically.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"My father must have realized that he was no longer able to make a move. My father had just been struck down. For the first time, I saw fear in his eyes."', simplifiedMeaning: 'Eliezer\'s father was beaten by a guard and couldn\'t fight back. For the first time, Eliezer saw his father frightened and vulnerable.', page: 'p. 43', analysisPrompt: 'What does the appearance of fear in the father\'s eyes signify? How does this moment shift the relationship between father and son?' },
+          { id: 'quote2', quote: '"The two of us were alone. My father was sleeping. I thought of running away. I also thought of throwing myself on the electric barbed wire."', simplifiedMeaning: 'While alone with his sleeping father, Eliezer was tempted to escape or end his life, showing his despair and suicidal thoughts.', page: 'p. 45', analysisPrompt: 'What does this passage reveal about Eliezer\'s mental and emotional state? What prevents him from acting on these thoughts?' },
+          { id: 'quote3', quote: '"I myself wanted to die. There was no longer any reason for me to live. Yet I had to—if only because my father had also gone through my ordeal, and I would have to help him and save him."', simplifiedMeaning: 'Eliezer wanted to die but continued living because his father needed him. His love for his father gave him a reason to survive.', page: 'p. 48', analysisPrompt: 'How does this passage illustrate both Eliezer\'s suffering and his source of strength? What does it reveal about human resilience?' }
+        ],
+        cerPrompt: 'How does Eliezer\'s relationship with his father serve as both a source of strength and vulnerability in Chapter 4?',
+        cerStarters: {
+          claim: ['Eliezer\'s love for his father becomes ', 'The father-son relationship reveals '],
+          reasoning: ['This evidence demonstrates that ', 'This quote shows ', 'The importance of this is ', 'By showing this, Wiesel illustrates ']
+        }
+      },
+      5: {
+        title: 'Night - Chapter 5',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 5 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 5 chronicles <strong class="text-amber-200">Eliezer and his father's transfer to a labor camp and further deterioration of conditions</strong>. As the war progresses and Allied forces approach, the Nazis accelerate their brutality. Eliezer's father becomes increasingly weak and dependent on his son.</p></div>`,
+        vocabulary: [
+          { word: 'Deterioration', definition: 'The process of becoming progressively worse; decline', sentence: 'The deterioration of camp conditions accelerated as winter approached.' },
+          { word: 'Burden', definition: 'A heavy load or weight; something oppressive that one must bear', sentence: 'Keeping his father alive became an enormous burden for Eliezer.' },
+          { word: 'Famine', definition: 'Extreme scarcity of food; widespread hunger', sentence: 'The famine in the camp claimed thousands of lives.' },
+          { word: 'Destitution', definition: 'The state of being extremely poor and lacking basic necessities', sentence: 'The destitution of the prisoners was impossible to describe.' },
+          { word: 'Vigilance', definition: 'Careful attention and watchfulness; keeping guard', sentence: 'Vigilance was necessary to avoid being selected for the gas chambers.' },
+          { word: 'Infirmity', definition: 'Physical weakness, illness, or frailty', sentence: 'Eliezer\'s father\'s growing infirmity worried his son deeply.' },
+          { word: 'Mortality', definition: 'The state of being subject to death; death rate', sentence: 'The mortality rate in the camp was staggering.' },
+          { word: 'Remorse', definition: 'Regret or guilt for something one has done', sentence: 'Eliezer would later feel remorse for moments he resented his father\'s weakness.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'What new horrors does Eliezer face in Chapter 5? How do conditions continue to worsen?', hint: 'Consider selections, transfers, and the approaching end of the war.' },
+          { id: 'comp2', question: 'Describe Eliezer\'s father\'s physical and mental decline. How does this affect Eliezer?', hint: 'Think about the roles reversing between father and son.' },
+          { id: 'comp3', question: 'What moral struggles does Eliezer face in Chapter 5 regarding survival and loyalty?', hint: 'Consider moments when survival might mean abandoning his father.' },
+          { id: 'comp4', question: 'How does the block warden treat weak and sick prisoners? What does this reveal about the camp\'s system?', hint: 'Think about the murder of vulnerable prisoners.' },
+          { id: 'comp5', question: 'What does Eliezer\'s continued care for his father suggest about his humanity despite the camp\'s dehumanizing effects?', hint: 'Consider what sacrifices he makes for his father.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"He had already closed his eyes. He was not moving. I had to accept the evidence: there was no more breath in his body."', simplifiedMeaning: 'This passage implies a moment when Eliezer faces his father\'s mortality and the possibility of losing him.', page: 'p. 62', analysisPrompt: 'How does Wiesel use physical details to convey Eliezer\'s emotional devastation? What does this moment reveal about the camps\' impact?' },
+          { id: 'quote2', quote: '"My father was burning with fever. I bought him a bit of soup from another prisoner."', simplifiedMeaning: 'Eliezer sacrifices his own needs to care for his sick father, demonstrating his love and commitment.', page: 'p. 58', analysisPrompt: 'How does this small act of care represent resistance to the camp\'s dehumanization? What does it cost Eliezer?' },
+          { id: 'quote3', quote: '"The selections continued. The dying were doing away with the dying."', simplifiedMeaning: 'The systematic murder of the weak and sick continued relentlessly, showing the escalating brutality.', page: 'p. 65', analysisPrompt: 'What does this harsh image convey about the camp\'s ultimate purpose? How does Wiesel\'s language reflect the horror?' }
+        ],
+        cerPrompt: 'How does Wiesel portray the erosion of Eliezer\'s father\'s strength and Eliezer\'s response to his decline? What does their relationship reveal about human endurance?',
+        cerStarters: {
+          claim: ['Eliezer\'s devotion to his father becomes ', 'Wiesel uses the father\'s decline to show '],
+          reasoning: ['This evidence demonstrates that ', 'This interaction reveals ', 'The significance is ', 'By showing this, Wiesel expresses ']
+        }
+      },
+      6: {
+        title: 'Night - Chapter 6',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 6 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 6 marks a critical turning point as <strong class="text-amber-200">Eliezer and other prisoners are evacuated during a forced march</strong>. The Nazis attempt to destroy evidence of their crimes as Soviet forces advance. This chapter depicts the ultimate horror—thousands dying during a death march in brutal winter conditions.</p></div>`,
+        vocabulary: [
+          { word: 'Evacuation', definition: 'Rapid removal or withdrawal of people from a dangerous place', sentence: 'The evacuation of the camp during the Soviet advance meant a death march.' },
+          { word: 'Emancipation', definition: 'Freedom from slavery, bondage, or oppression', sentence: 'Liberation and emancipation came only at the cost of unspeakable suffering.' },
+          { word: 'Straggler', definition: 'Someone who falls behind or lags in a group', sentence: 'Stragglers during the death march were shot by Nazi guards.' },
+          { word: 'Hypothermia', definition: 'Dangerous lowering of body temperature from extreme cold exposure', sentence: 'Hypothermia claimed many prisoners during the winter evacuation.' },
+          { word: 'Brutality', definition: 'Savage, violent, and cruel treatment; extreme harshness', sentence: 'The brutality of the Nazi guards increased as they faced defeat.' },
+          { word: 'Mercy', definition: 'Compassion or forgiveness shown to someone in one\'s power', sentence: 'There was no mercy shown to the dying and weak prisoners.' },
+          { word: 'Annihilation', definition: 'Complete destruction or elimination', sentence: 'The Nazis intended the death march as a final annihilation of the prisoners.' },
+          { word: 'Perseverance', definition: 'Steadfastness and determination in continuing despite difficulty', sentence: 'Only through incredible perseverance did some prisoners survive the march.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'Describe the death march. What are the conditions, and what happens to prisoners who cannot keep up?', hint: 'Consider the cold, distance, and Nazi brutality.' },
+          { id: 'comp2', question: 'Why does Eliezer continue to help and encourage his father during the march despite his own weakness?', hint: 'Think about what motivates him and what he fears might happen.' },
+          { id: 'comp3', question: 'How does the chapter\'s ending differ from the previous events? What offers a glimmer of hope?', hint: 'Consider the arrival at a new camp and the presence of rescuers.' },
+          { id: 'comp4', question: 'What does this chapter reveal about the Nazis\' final solution as they face military defeat?', hint: 'Think about why they evacuate rather than leave prisoners behind.' },
+          { id: 'comp5', question: 'How have Eliezer and other prisoners physically and mentally changed by the end of Chapter 6?', hint: 'Consider what remains of their humanity after such experiences.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"The snow reminded me of the bread we used to eat in the village. I was no longer hungry. I no longer felt anything."', simplifiedMeaning: 'Eliezer has become so numb and dehumanized that even hunger has disappeared—his mind and body are shutting down.', page: 'p. 75', analysisPrompt: 'What does the loss of hunger symbolize? How does Wiesel use sensory details to convey Eliezer\'s deterioration?' },
+          { id: 'quote2', quote: '"My father had just been struck down. I stood near him without moving. We remained like that, without saying a word."', simplifiedMeaning: 'After his father is beaten, Eliezer is paralyzed, unable to help or respond, highlighting his powerlessness.', page: 'p. 72', analysisPrompt: 'What does Eliezer\'s silence reveal about his emotional and psychological state? Why can\'t he move?' },
+          { id: 'quote3', quote: '"Raise your voices, sing together!"', simplifiedMeaning: 'Even in their suffering, prisoners are forced to sing, showing the Nazis\' complete dehumanization of their captives.', page: 'p. 80', analysisPrompt: 'Why is this forced singing so particularly cruel and symbolic? What does it reveal about the Nazi intent to destroy the soul?' }
+        ],
+        cerPrompt: 'What does the death march in Chapter 6 represent in the novel\'s exploration of the Holocaust\'s impact on human dignity and survival?',
+        cerStarters: {
+          claim: ['The death march represents ', 'Wiesel uses the evacuation to reveal '],
+          reasoning: ['This evidence demonstrates that ', 'This quote shows ', 'The significance is ', 'By depicting this, Wiesel emphasizes ']
+        }
+      },
+      7: {
+        title: 'Night - Chapter 7',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 7 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 7 shows <strong class="text-amber-200">the arrival at Buchenwald and Eliezer\'s father\'s final deterioration</strong>. Although liberation appears close as the war ends, Eliezer's father is dying from dysentery and deprivation. The chapter presents the ultimate tragedy—Eliezer's father dies just as freedom approaches.</p></div>`,
+        vocabulary: [
+          { word: 'Dysentery', definition: 'A severe intestinal disease causing extreme diarrhea and weakness', sentence: 'Dysentery killed thousands of prisoners in the overcrowded camps.' },
+          { word: 'Lucidity', definition: 'Clear understanding and rational thought; mental clarity', sentence: 'In his final moments, Eliezer\'s father\'s lucidity seemed to fade.' },
+          { word: 'Regimen', definition: 'A system of rules or discipline; a routine or schedule', sentence: 'The brutal regimen of the camp had completely destroyed the prisoners\' health.' },
+          { word: 'Succumb', definition: 'To yield to pressure or influence; to die from disease or injury', sentence: 'Many prisoners succumbed to disease in Buchenwald.' },
+          { word: 'Ambivalence', definition: 'Having conflicting or opposite feelings about something', sentence: 'Eliezer felt ambivalence about his father\'s impending death, guilt mixed with relief.' },
+          { word: 'Expiration', definition: 'The end or death; ceasing to live', sentence: 'The expiration of his father marked the end of Eliezer\'s childhood.' },
+          { word: 'Reconciliation', definition: 'Restoration of peace or harmony after conflict', sentence: 'There was no reconciliation with his father before the end came.' },
+          { word: 'Metamorphosis', definition: 'A complete transformation or change in form', sentence: 'Eliezer\'s metamorphosis from boy to survivor was complete.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'What is Eliezer\'s father\'s condition when they arrive at Buchenwald? What happens to him there?', hint: 'Consider his illness and the lack of medical care.' },
+          { id: 'comp2', question: 'Describe Eliezer\'s internal conflict about his dying father. What thoughts does he have that shame him?', hint: 'Think about moments when he might have wanted to abandon his father.' },
+          { id: 'comp3', question: 'What are Eliezer\'s last interactions with his father like? What words are exchanged?', hint: 'Consider whether there is closure or only silence.' },
+          { id: 'comp4', question: 'How does Eliezer react when his father finally dies? What does his reaction reveal?', hint: 'Think about whether he grieves, feels relief, or something more complex.' },
+          { id: 'comp5', question: 'How is Eliezer liberated, and what does his immediate reaction suggest about what he has become?', hint: 'Consider his famous final line in the mirror.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"In the afternoon, the doctor ordered me to put a blanket around him to revive him. I heard him weeping and begging for mercy."', simplifiedMeaning: 'Eliezer\'s father is physically broken and emotionally destroyed, in agony and begging for death.', page: 'p. 85', analysisPrompt: 'What does the father\'s begging for mercy reveal about the final stages of suffering in the camps?' },
+          { id: 'quote2', quote: '"I looked at myself in a piece of broken mirror. A corpse gazed back at me. The look in his eyes, as they stared into mine, has never left me."', simplifiedMeaning: 'Upon liberation, Eliezer sees himself as a corpse—the living dead—representing his complete physical and spiritual destruction.', page: 'p. 95', analysisPrompt: 'Why does Wiesel end with this image of Eliezer looking in a mirror? What does it mean that he sees a corpse?' },
+          { id: 'quote3', quote: '"Never shall I forget that night, the first night in camp, that turned my life into one long night, seven times cursed and seven times sealed."', simplifiedMeaning: 'Eliezer\'s vow to remember and bear witness to the horrors he has endured.', page: 'Opening', analysisPrompt: 'How does this opening promise of remembrance define Eliezer\'s purpose after liberation?' }
+        ],
+        cerPrompt: 'How does the death of Eliezer\'s father at the moment of liberation challenge the reader\'s understanding of survival and victory?',
+        cerStarters: {
+          claim: ['The timing of Eliezer\'s father\'s death suggests ', 'Wiesel\'s portrayal of this loss reveals '],
+          reasoning: ['This evidence demonstrates that ', 'This moment shows ', 'The significance is ', 'By depicting this tragedy, Wiesel expresses ']
+        }
+      },
+      8: {
+        title: 'Night - Chapter 8',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 8 Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 8 portrays <strong class="text-amber-200">the moment of liberation at Buchenwald by American soldiers</strong>. Although freed from Nazi captivity, Eliezer and the other survivors are so physically and psychologically destroyed that freedom itself feels almost meaningless. This chapter explores the bittersweet nature of liberation.</p></div>`,
+        vocabulary: [
+          { word: 'Liberation', definition: 'Freeing from captivity, slavery, or oppression; setting free', sentence: 'Liberation came too late for millions of Holocaust victims.' },
+          { word: 'Emancipation', definition: 'Setting someone free from slavery or legal, social, or political restrictions', sentence: 'Emancipation from the camps was a bittersweet experience for survivors.' },
+          { word: 'Devastation', definition: 'Severe damage, destruction, or emotional shock', sentence: 'The devastation of the camps was visible on every survivor\'s face.' },
+          { word: 'Reconciliation', definition: 'Restoration of friendly relations; coming to terms with the past', sentence: 'Many survivors struggled to find reconciliation with what they had endured.' },
+          { word: 'Retribution', definition: 'Punishment inflicted in return for a crime or injury', sentence: 'Survivors sought retribution against those responsible for the atrocities.' },
+          { word: 'Commemoration', definition: 'Official remembrance of important people or events', sentence: 'Commemoration of Holocaust victims remains essential to honoring their memory.' },
+          { word: 'Testimony', definition: 'A statement or declaration, especially as evidence in a court of law', sentence: 'Eliezer\'s testimony about the Holocaust has become vital to history.' },
+          { word: 'Legacy', definition: 'Something handed down or passed on; an inheritance', sentence: 'The legacy of the Holocaust is a commitment to prevent such atrocities.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'Describe the moment of liberation at Buchenwald. What do the American soldiers find?', hint: 'Consider the condition of the prisoners and the scenes they encounter.' },
+          { id: 'comp2', question: 'Why does Eliezer suggest that liberation itself is not a cause for celebration?', hint: 'Think about what freedom means when so much has been lost.' },
+          { id: 'comp3', question: 'What is Eliezer\'s first instinct upon being freed? What does this reveal about the camps\' impact on him?', hint: 'Consider what he does and what he feels.' },
+          { id: 'comp4', question: 'How do the survivors react to being liberated? What emotions do they display?', hint: 'Think about whether they show joy, grief, numbness, or confusion.' },
+          { id: 'comp5', question: 'What does the chapter suggest about the future for Eliezer and other survivors?', hint: 'Consider the psychological and emotional scars that will remain.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"We were saved. But we did not yet know the meaning of our lives."', simplifiedMeaning: 'Despite being physically freed, the survivors are spiritually lost and unsure what to do with their freedom.', page: 'p. 98', analysisPrompt: 'What does Wiesel mean by not knowing "the meaning of our lives"? How has the Holocaust changed survival\'s meaning?' },
+          { id: 'quote2', quote: '"I had to see them, the faces of those who had torn us from our homes and destroyed our dreams."', simplifiedMeaning: 'Survivors felt a need to confront and see their oppressors, to make the horrific reality concrete.', page: 'p. 100', analysisPrompt: 'Why is it important to Eliezer to see the faces of the guilty? What does confrontation provide that abstract knowledge cannot?' },
+          { id: 'quote3', quote: '"Never shall I forget... Never shall I forget the moment my life changed."', simplifiedMeaning: 'Eliezer\'s commitment to remembering and bearing witness to the Holocaust forever.', page: 'p. 102', analysisPrompt: 'How does remembrance become Eliezer\'s greatest responsibility? Why is testimony so important?' }
+        ],
+        cerPrompt: 'What does the liberation scene reveal about the true cost of the Holocaust beyond physical survival?',
+        cerStarters: {
+          claim: ['Liberation reveals that ', 'Wiesel\'s portrayal of freedom suggests '],
+          reasoning: ['This evidence demonstrates that ', 'This moment shows ', 'The significance is ', 'By depicting this, Wiesel reveals ']
+        }
+      },
+      9: {
+        title: 'Night - Chapter 9 (Epilogue)',
+        overview: `<div class="bg-stone-800 rounded-2xl p-6 md:p-8 border border-stone-700 mb-6"><h2 class="text-2xl font-serif font-bold text-amber-100 mb-4 flex items-center gap-3"><span class="text-3xl">📖</span> Chapter 9 (Epilogue) Overview</h2><p class="text-stone-300 leading-relaxed mb-4">Chapter 9, the epilogue, serves as <strong class="text-amber-200">a brief reflection on the immediate aftermath of liberation</strong>. Eliezer describes his first experiences as a free person and the beginning of his recovery process. This brief chapter emphasizes the long-term psychological impact of the Holocaust. Eliezer's journey to healing is complex and incomplete—reflecting the permanent scars the Holocaust leaves on survivors.</p></div>`,
+        vocabulary: [
+          { word: 'Aftermath', definition: 'The consequences or results of an event, especially a traumatic one', sentence: 'The aftermath of liberation brought both hope and ongoing trauma for survivors.' },
+          { word: 'Resilience', definition: 'The ability to recover quickly and adapt to adversity; toughness', sentence: 'Eliezer\'s resilience allowed him to begin rebuilding his life after the camps.' },
+          { word: 'Catharsis', definition: 'Emotional release and relief through expression; purification through experience', sentence: 'Writing about his experiences provided catharsis for Eliezer\'s grief and trauma.' },
+          { word: 'Perseverance', definition: 'Steadfastness and determination in continuing despite difficulty', sentence: 'Through perseverance, survivors gradually rebuilt their lives and families.' },
+          { word: 'Reconciliation', definition: 'The restoration of friendly relations; coming to terms with the past', sentence: 'Many survivors struggled with reconciliation and forgiveness throughout their lives.' },
+          { word: 'Witness', definition: 'A person who sees something happen; one who testifies or bears record', sentence: 'Eliezer became a lifelong witness to the Holocaust\'s horrors.' },
+          { word: 'Transcendence', definition: 'Going beyond normal limits; spiritual or intellectual elevation', sentence: 'Through testimony, Eliezer found a form of transcendence and meaning in his suffering.' },
+          { word: 'Testimonial', definition: 'A statement or account given by a witness; written or spoken evidence', sentence: 'Night serves as a powerful testimonial to the Holocaust\'s impact on survivors.' }
+        ],
+        comprehension: [
+          { id: 'comp1', question: 'What does Eliezer do immediately after liberation? What are his first actions as a free person?', hint: 'Consider what physical and emotional needs he addresses first.' },
+          { id: 'comp2', question: 'How does Eliezer describe his time in the hospital after liberation? What challenges does he face in recovery?', hint: 'Think about both physical healing and emotional/psychological trauma.' },
+          { id: 'comp3', question: 'What does Eliezer say about his faith after the Holocaust? How has his relationship with God changed?', hint: 'Consider whether he has regained his faith or if it remains broken.' },
+          { id: 'comp4', question: 'How does the epilogue suggest that Eliezer\'s journey is not truly over, even after liberation?', hint: 'Think about unresolved trauma and the ongoing nature of recovery.' },
+          { id: 'comp5', question: 'What is the significance of Wiesel choosing to write and publish Night? What does it accomplish for Eliezer and for humanity?', hint: 'Consider the power of testimony and bearing witness to history.' }
+        ],
+        evidence: [
+          { id: 'quote1', quote: '"From the depths of my heart, I grieve for all that has been lost."', simplifiedMeaning: 'Even after liberation, Eliezer carries the weight of immense grief for all the victims and losses.', page: 'p. 102', analysisPrompt: 'Why does Wiesel emphasize that grief persists even after physical liberation? What does survival mean without those we\'ve lost?' },
+          { id: 'quote2', quote: '"And in my prayer, I called upon God: Oh God, I am in your hands. I will always be in your hands, as long as this memory remains."', simplifiedMeaning: 'Despite his doubts, Eliezer recognizes that memory and bearing witness becomes a form of spiritual practice.', page: 'p. 103', analysisPrompt: 'How does Wiesel reconcile his loss of faith with this act of remembrance? Is bearing witness itself a spiritual act?' },
+          { id: 'quote3', quote: '"I look at myself. Nothing remains but a shadow, a specter. Yet I still live. I continue to move forward."', simplifiedMeaning: 'Eliezer survives as a changed being—transformed by trauma but determined to continue living.', page: 'p. 105', analysisPrompt: 'What does it mean to be a "shadow" or "specter" and still continue living? How does this define survival?' }
+        ],
+        cerPrompt: 'What does the epilogue suggest about the true meaning of survival and recovery from trauma? How does Wiesel\'s act of bearing witness become a form of resistance?',
+        cerStarters: {
+          claim: ['Survival in the aftermath means ', 'Wiesel\'s testimony reveals that '],
+          reasoning: ['This evidence demonstrates that ', 'This quote shows ', 'The significance is ', 'By continuing to write, Wiesel proves ']
+        }
+      }
+    };
+
+    let studentName = '';
+    let studentData = [];
+    let currentChapter = 1;
+    let currentSection = 'overview';
+    let vocabQuizAnswers = {};
+    let uiReady = false;
+
+    async function initializeApp() {
+      // Initialize Data SDK with proper error handling
+      if (window.dataSdk) {
+        try {
+          const result = await window.dataSdk.init({
+            onDataChanged: (data) => {
+              studentData = data || [];
+              if (uiReady && studentName) {
+                loadSavedResponses();
+                updateProgress();
+              }
+            }
+          });
+          if (!result.isOk) {
+            console.error('Failed to initialize data SDK:', result.error);
+          }
+        } catch (e) {
+          console.error('Error initializing data SDK:', e);
+        }
+      } else {
+        console.warn('Data SDK not available');
+      }
+      
+      uiReady = true;
+      
+      // Check if there's already saved data (student has been here before)
+      if (studentData && studentData.length > 0) {
+        // Get the first student name found in the data
+        const firstRecord = studentData[0];
+        if (firstRecord?.student_name) {
+          studentName = firstRecord.student_name;
+          document.getElementById('studentNameDisplay').textContent = studentName;
+          document.getElementById('nameModal').classList.add('hidden');
+          document.getElementById('mainContent').classList.remove('hidden');
+          renderChapter(1);
+          loadSavedResponses();
+          updateProgress();
+          return;
+        }
+      }
+      
+      // No data exists yet, show name modal
+      renderChapter(1);
+    }
+
+    function startLesson() {
+      const nameInput = document.getElementById('studentNameInput');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        nameInput.style.borderColor = '#dc2626';
+        nameInput.placeholder = 'Please enter your name';
+        return;
+      }
+      
+      studentName = name;
+      document.getElementById('studentNameDisplay').textContent = name;
+      document.getElementById('nameModal').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+      
+      // Save student name to database
+      if (window.dataSdk && studentData.length === 0) {
+        saveStudentName(name);
+      }
+      
+      if (uiReady) {
+        loadSavedResponses();
+        updateProgress();
+      }
+    }
+
+    async function saveStudentName(name) {
+      if (!window.dataSdk) return;
+      
+      try {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          chapter: '0',
+          section: 'metadata',
+          question_id: 'student_name',
+          response: name,
+          is_correct: false,
+          timestamp: new Date().toISOString()
+        });
+        if (!result.isOk) {
+          console.error('Failed to save student name');
+        }
+      } catch (e) {
+        console.error('Error saving student name:', e);
+      }
+    }
+
+    function switchChapter(chapterNum) {
+      currentChapter = chapterNum;
+      
+      document.querySelectorAll('.chapter-btn').forEach(btn => {
+        if (btn.dataset.chapter == chapterNum) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      
+      renderChapter(chapterNum);
+      showSection('overview');
+      updateProgress();
+    }
+
+    function renderChapter(chapterNum) {
+      const data = chapterData[chapterNum];
+      
+      document.getElementById('lessonTitleDisplay').textContent = data.title;
+      
+      vocabQuizAnswers = {};
+      document.getElementById('vocabScore').classList.add('hidden');
+      
+      document.getElementById('overviewContent').innerHTML = data.overview;
+      generateFlashcards(data.vocabulary);
+      generateVocabQuiz(data.vocabulary);
+      generateComprehensionQuestions(data.comprehension);
+      generateEvidenceQuotes(data.evidence);
+      generateCERSection(data.cerPrompt, data.cerStarters);
+      
+      updateProgress();
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      
+      const section = document.getElementById(`section-${sectionId}`);
+      if (section) {
+        section.classList.remove('hidden');
+        section.classList.add('fade-in');
+      }
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === sectionId) {
+          btn.classList.add('bg-amber-700', 'text-white');
+          btn.classList.remove('text-stone-400', 'hover:text-stone-200', 'hover:bg-stone-700');
+        } else {
+          btn.classList.remove('bg-amber-700', 'text-white');
+          btn.classList.add('text-stone-400', 'hover:text-stone-200', 'hover:bg-stone-700');
+        }
+      });
+      
+      currentSection = sectionId;
+    }
+
+    function generateFlashcards(vocabArray) {
+      const container = document.getElementById('flashcardContainer');
+      if (!container) return;
+      
+      container.innerHTML = vocabArray.map((item, idx) => `
+        <div class="vocab-card cursor-pointer" onclick="flipCard(this)">
+          <div class="vocab-card-inner relative h-40">
+            <div class="vocab-front absolute inset-0 bg-stone-800 rounded-xl border border-stone-600 p-5 flex flex-col justify-center items-center">
+              <span class="text-amber-400 text-xs uppercase tracking-wider mb-2">Word ${idx + 1}</span>
+              <h4 class="text-xl font-semibold text-stone-100 text-center">${item.word}</h4>
+              <span class="text-stone-500 text-sm mt-2">Click to reveal</span>
+            </div>
+            <div class="vocab-back absolute inset-0 bg-gradient-to-br from-amber-900/50 to-stone-800 rounded-xl border border-amber-700/50 p-5 flex flex-col justify-center">
+              <h4 class="text-lg font-semibold text-amber-200 mb-2">${item.word}</h4>
+              <p class="text-stone-300 text-sm">${item.definition}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+    }
+
+    function generateVocabQuiz(vocabArray) {
+      const container = document.getElementById('vocabQuiz');
+      if (!container) return;
+      
+      const shuffled = [...vocabArray].sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = shuffled.map((item, idx) => `
+        <div class="mb-6 pb-6 border-b border-stone-700 last:border-0" data-vocab-q="${idx}">
+          <p class="text-stone-300 mb-3"><strong class="text-amber-200">${idx + 1}.</strong> ${item.definition}</p>
+          <div class="grid grid-cols-2 gap-2">
+            ${generateVocabOptions(item.word, idx, vocabArray)}
+          </div>
+          <div id="vocabFeedback${idx}" class="mt-2 hidden"></div>
+        </div>
+      `).join('');
+    }
+
+    function generateVocabOptions(correctWord, qIdx, vocabArray) {
+      const options = [correctWord];
+      const others = vocabArray.filter(v => v.word !== correctWord).sort(() => Math.random() - 0.5).slice(0, 3);
+      options.push(...others.map(o => o.word));
+      options.sort(() => Math.random() - 0.5);
+      
+      return options.map(opt => `
+        <button onclick="checkVocabAnswer(${qIdx}, '${opt}', '${correctWord}')" 
+          class="vocab-option px-4 py-2 bg-stone-700 hover:bg-stone-600 text-stone-200 rounded-lg text-sm transition-colors text-left">
+          ${opt}
+        </button>
+      `).join('');
+    }
+
+    async function checkVocabAnswer(qIdx, selected, correct) {
+      const container = document.querySelector(`[data-vocab-q="${qIdx}"]`);
+      const feedback = document.getElementById(`vocabFeedback${qIdx}`);
+      const buttons = container.querySelectorAll('.vocab-option');
+      
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent.trim() === correct) {
+          btn.classList.add('bg-green-700', 'text-white');
+        } else if (btn.textContent.trim() === selected && selected !== correct) {
+          btn.classList.add('bg-red-700', 'text-white');
+        }
+      });
+      
+      const isCorrect = selected === correct;
+      vocabQuizAnswers[qIdx] = isCorrect;
+      
+      feedback.innerHTML = isCorrect 
+        ? '<p class="text-green-400 text-sm">✓ Correct!</p>'
+        : `<p class="text-red-400 text-sm">✗ The correct answer is: ${correct}</p>`;
+      feedback.classList.remove('hidden');
+      
+      await saveResponse('vocabulary', `vocab_q${qIdx}`, selected, isCorrect);
+      
+      const answered = Object.keys(vocabQuizAnswers).length;
+      if (answered === 8) {
+        const score = Object.values(vocabQuizAnswers).filter(v => v).length;
+        document.getElementById('vocabScoreValue').textContent = score;
+        document.getElementById('vocabScore').classList.remove('hidden');
+      }
+      
+      updateProgress();
+    }
+
+    function generateComprehensionQuestions(compArray) {
+      const container = document.getElementById('comprehensionQuestions');
+      if (!container) return;
+      
+      container.innerHTML = compArray.map((q, idx) => `
+        <div class="bg-stone-800 rounded-2xl p-6 border border-stone-700 section-card">
+          <div class="flex items-start gap-4 mb-4">
+            <span class="w-8 h-8 rounded-full bg-amber-700 flex items-center justify-center font-bold text-white text-sm flex-shrink-0">${idx + 1}</span>
+            <div>
+              <p class="text-stone-200 font-medium">${q.question}</p>
+              <p class="text-stone-500 text-sm mt-1">💡 Hint: ${q.hint}</p>
+            </div>
+          </div>
+          <textarea id="comp_${q.id}" rows="4" placeholder="Write your answer here..." 
+            class="w-full px-4 py-3 bg-stone-700 border border-stone-600 rounded-xl text-stone-100 placeholder-stone-500 resize-none"
+            data-question-id="${q.id}"></textarea>
+        </div>
+      `).join('');
+      
+      // Attach blur event listeners for saving
+      container.querySelectorAll('textarea').forEach(ta => {
+        ta.addEventListener('blur', () => {
+          const questionId = ta.dataset.questionId;
+          saveComprehensionAnswer(questionId);
+        });
+      });
+    }
+
+    async function saveComprehensionAnswer(questionId) {
+      const textarea = document.getElementById(`comp_${questionId}`);
+      if (!textarea) return;
+      
+      await saveResponse('comprehension', questionId, textarea.value, true);
+      updateProgress();
+    }
+
+    function generateEvidenceQuotes(quoteArray) {
+      const container = document.getElementById('evidenceQuotes');
+      if (!container) return;
+      
+      container.innerHTML = quoteArray.map((q, idx) => `
+        <div class="bg-stone-800 rounded-2xl overflow-hidden border border-stone-700 section-card">
+          <div class="quote-block p-6">
+            <p class="text-xl font-serif italic text-amber-100 leading-relaxed">"${q.quote}"</p>
+            <p class="text-amber-500 text-sm mt-3">${q.page}</p>
+            <div class="mt-4 p-4 bg-stone-700/50 rounded-lg border border-stone-600">
+              <p class="text-stone-400 text-sm mb-1"><strong class="text-stone-300">💡 In simpler words:</strong></p>
+              <p class="text-stone-300">${q.simplifiedMeaning}</p>
+            </div>
+          </div>
+          <div class="p-6 bg-stone-800">
+            <p class="text-stone-300 mb-4"><strong class="text-amber-200">Analysis Question:</strong> ${q.analysisPrompt}</p>
+            <textarea id="evidence_${q.id}" rows="4" placeholder="Write your analysis here..." 
+              class="w-full px-4 py-3 bg-stone-700 border border-stone-600 rounded-xl text-stone-100 placeholder-stone-500 resize-none"
+              data-quote-id="${q.id}"></textarea>
+          </div>
+        </div>
+      `).join('');
+      
+      // Attach blur event listeners for saving
+      container.querySelectorAll('textarea').forEach(ta => {
+        ta.addEventListener('blur', () => {
+          const quoteId = ta.dataset.quoteId;
+          saveEvidenceAnswer(quoteId);
+        });
+      });
+    }
+
+    async function saveEvidenceAnswer(quoteId) {
+      const textarea = document.getElementById(`evidence_${quoteId}`);
+      if (!textarea) return;
+      
+      await saveResponse('evidence', quoteId, textarea.value, true);
+      updateProgress();
+    }
+
+    function generateCERSection(prompt, starters) {
+      const container = document.getElementById('cerContent');
+      if (!container) return;
+      
+      container.innerHTML = `
+        <div class="bg-gradient-to-r from-amber-900/40 to-stone-800 rounded-2xl p-6 border border-amber-700/50 mb-6">
+          <h3 class="text-lg font-semibold text-amber-200 mb-3">📋 Writing Prompt</h3>
+          <p class="text-stone-200 text-lg font-serif italic">"${prompt}"</p>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Claim -->
+          <div class="bg-stone-800 rounded-2xl p-6 border border-stone-700">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white">C</span>
+              <div>
+                <h3 class="font-semibold text-blue-300">Claim</h3>
+                <p class="text-stone-500 text-sm">State your answer to the prompt</p>
+              </div>
+            </div>
+            <div class="bg-stone-700/50 rounded-xl p-4 mb-4">
+              <p class="text-stone-400 text-sm mb-2">Choose a sentence starter:</p>
+              <div class="flex flex-wrap gap-2">
+                ${starters.claim.map(s => `<button onclick="insertStarter('claim', '${s}')" class="starter-btn px-3 py-1 bg-blue-900/50 hover:bg-blue-800/50 text-blue-200 rounded-lg text-sm transition-colors">"${s}"</button>`).join('')}
+              </div>
+            </div>
+            <textarea id="claimInput" rows="3" placeholder="Write your claim here..." 
+              class="w-full px-4 py-3 bg-stone-700 border border-stone-600 rounded-xl text-stone-100 placeholder-stone-500 resize-none"></textarea>
+          </div>
+
+          <!-- Evidence -->
+          <div class="bg-stone-800 rounded-2xl p-6 border border-stone-700">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center font-bold text-white">E</span>
+              <div>
+                <h3 class="font-semibold text-green-300">Evidence</h3>
+                <p class="text-stone-500 text-sm">Select a quote from the text</p>
+              </div>
+            </div>
+            <div class="space-y-3" id="evidenceOptions"></div>
+            <div id="selectedEvidenceDisplay" class="mt-4 p-4 bg-green-900/30 rounded-xl border border-green-700/50 hidden">
+              <p class="text-green-300 text-sm"><strong>Selected:</strong> <span id="selectedEvidenceText"></span></p>
+            </div>
+          </div>
+
+          <!-- Reasoning -->
+          <div class="bg-stone-800 rounded-2xl p-6 border border-stone-700">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-bold text-white">R</span>
+              <div>
+                <h3 class="font-semibold text-purple-300">Reasoning</h3>
+                <p class="text-stone-500 text-sm">Explain how your evidence supports your claim</p>
+              </div>
+            </div>
+            <div class="bg-stone-700/50 rounded-xl p-4 mb-4">
+              <p class="text-stone-400 text-sm mb-2">Choose a sentence starter:</p>
+              <div class="flex flex-wrap gap-2">
+                ${starters.reasoning.map(s => `<button onclick="insertStarter('reasoning', '${s}')" class="starter-btn px-3 py-1 bg-purple-900/50 hover:bg-purple-800/50 text-purple-200 rounded-lg text-sm transition-colors">"${s}"</button>`).join('')}
+              </div>
+            </div>
+            <textarea id="reasoningInput" rows="5" placeholder="Explain your reasoning here..." 
+              class="w-full px-4 py-3 bg-stone-700 border border-stone-600 rounded-xl text-stone-100 placeholder-stone-500 resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- Combined Response Preview -->
+        <div class="bg-stone-800 rounded-2xl p-6 border border-amber-700/50 mt-8">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-amber-200 flex items-center gap-2">
+              <span>📄</span> Complete Response Preview
+            </h3>
+            <button onclick="copyResponse()" id="copyBtn" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+              </svg>
+              Copy for Google Docs
+            </button>
+          </div>
+          <div id="responsePreview" class="bg-stone-900 rounded-xl p-6 font-serif text-stone-300 leading-relaxed min-h-32 border border-stone-700">
+            <p class="text-stone-500 italic">Your combined response will appear here as you write...</p>
+          </div>
+        </div>
+      `;
+
+      generateCEREvidence();
+      
+      // Attach blur and input listeners to CER textareas for smooth saving and preview
+      setTimeout(() => {
+        const claimInput = document.getElementById('claimInput');
+        const reasoningInput = document.getElementById('reasoningInput');
+        
+        if (claimInput) {
+          claimInput.addEventListener('blur', () => saveCERResponse('claim'));
+          claimInput.addEventListener('input', updateResponsePreview);
+        }
+        
+        if (reasoningInput) {
+          reasoningInput.addEventListener('blur', () => saveCERResponse('reasoning'));
+          reasoningInput.addEventListener('input', updateResponsePreview);
+        }
+      }, 10);
+    }
+
+    function generateCEREvidence() {
+      const data = chapterData[currentChapter];
+      const container = document.getElementById('evidenceOptions');
+      if (!container) return;
+      
+      const evidenceMap = {};
+      container.innerHTML = data.evidence.map((quote, idx) => {
+        evidenceMap[`evidence${idx}`] = quote.quote;
+        return `
+          <label class="flex items-start gap-3 p-4 bg-stone-700/50 rounded-xl border border-stone-600 hover:border-green-600/50 cursor-pointer transition-colors group">
+            <input type="radio" name="evidence-choice" value="evidence${idx}" onchange="selectEvidence('evidence${idx}')" class="mt-1 w-5 h-5 text-green-600">
+            <div class="group-hover:text-stone-100 text-stone-300">
+              <p class="font-medium text-stone-200">"${quote.quote}"</p>
+              <p class="text-xs text-stone-500 mt-1">${quote.page}</p>
+            </div>
+          </label>
+        `;
+      }).join('');
+      
+      window.currentEvidenceMap = evidenceMap;
+    }
+
+    function selectEvidence(choice) {
+      const display = document.getElementById('selectedEvidenceDisplay');
+      const text = document.getElementById('selectedEvidenceText');
+      
+      if (choice && window.currentEvidenceMap && window.currentEvidenceMap[choice]) {
+        text.textContent = window.currentEvidenceMap[choice];
+        display.classList.remove('hidden');
+      } else {
+        display.classList.add('hidden');
+      }
+      
+      saveCERResponse('evidence');
+      updateResponsePreview();
+    }
+
+    function insertStarter(section, text) {
+      const inputId = `${section}Input`;
+      const textarea = document.getElementById(inputId);
+      if (!textarea) return;
+      
+      if (!textarea.value || textarea.value.trim() === '') {
+        textarea.value = text;
+      } else {
+        textarea.value = text + textarea.value;
+      }
+      
+      textarea.focus();
+      saveCERResponse(section);
+    }
+
+    async function saveCERResponse(section) {
+      const inputId = `${section}Input`;
+      const textarea = document.getElementById(inputId);
+      if (!textarea) return;
+      
+      await saveResponse('cer', section, textarea.value, true);
+      updateResponsePreview();
+      updateProgress();
+    }
+
+    function updateResponsePreview() {
+      const claim = document.getElementById('claimInput')?.value?.trim() || '';
+      const selectedEvidence = document.querySelector('input[name="evidence-choice"]:checked')?.value || '';
+      const evidence = selectedEvidence && window.currentEvidenceMap ? window.currentEvidenceMap[selectedEvidence] : '';
+      const reasoning = document.getElementById('reasoningInput')?.value?.trim() || '';
+      
+      const preview = document.getElementById('responsePreview');
+      if (!preview) return;
+      
+      if (!claim && !evidence && !reasoning) {
+        preview.innerHTML = '<p class="text-stone-500 italic">Your combined response will appear here as you write...</p>';
+        return;
+      }
+      
+      let combined = '';
+      if (claim) combined += claim;
+      if (evidence) combined += (combined ? ' ' : '') + evidence;
+      if (reasoning) combined += (combined ? ' ' : '') + reasoning;
+      
+      preview.innerHTML = `<p class="text-stone-200">${combined}</p>`;
+    }
+
+    function copyResponse() {
+      const claim = document.getElementById('claimInput')?.value?.trim() || '';
+      const selectedEvidence = document.querySelector('input[name="evidence-choice"]:checked')?.value || '';
+      const evidence = selectedEvidence && window.currentEvidenceMap ? window.currentEvidenceMap[selectedEvidence] : '';
+      const reasoning = document.getElementById('reasoningInput')?.value?.trim() || '';
+      
+      let combined = '';
+      if (claim) combined += claim;
+      if (evidence) combined += (combined ? ' ' : '') + evidence;
+      if (reasoning) combined += (combined ? ' ' : '') + reasoning;
+      
+      if (!combined) {
+        showCopyFeedback(false);
+        return;
+      }
+      
+      navigator.clipboard.writeText(combined).then(() => {
+        showCopyFeedback(true);
+      }).catch(() => {
+        showCopyFeedback(false);
+      });
+    }
+
+    function showCopyFeedback(success) {
+      const btn = document.getElementById('copyBtn');
+      const originalHtml = btn.innerHTML;
+      
+      if (success) {
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!';
+        btn.classList.add('bg-green-600');
+      } else {
+        btn.innerHTML = 'No content to copy';
+        btn.classList.add('bg-red-600');
+      }
+      
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.classList.remove('bg-green-600', 'bg-red-600');
+      }, 2000);
+    }
+
+    async function saveResponse(section, questionId, response, isCorrect) {
+      if (!window.dataSdk || !studentName) return;
+      
+      const existing = studentData.find(d => 
+        d.student_name === studentName && 
+        d.chapter == String(currentChapter) &&
+        d.section === section && 
+        d.question_id === questionId
+      );
+      
+      if (studentData.length >= 999 && !existing) {
+        console.warn('Data limit reached');
+        return;
+      }
+      
+      try {
+        if (existing) {
+          const result = await window.dataSdk.update({
+            ...existing,
+            response: response,
+            is_correct: isCorrect,
+            timestamp: new Date().toISOString()
+          });
+          if (!result.isOk) {
+            console.error('Failed to update response');
+          }
+        } else {
+          const result = await window.dataSdk.create({
+            student_name: studentName,
+            chapter: String(currentChapter),
+            section: section,
+            question_id: questionId,
+            response: response,
+            is_correct: isCorrect,
+            timestamp: new Date().toISOString()
+          });
+          if (!result.isOk) {
+            console.error('Failed to save response');
+          }
+        }
+      } catch (e) {
+        console.error('Error saving response:', e);
+      }
+    }
+
+    function loadSavedResponses() {
+      if (!studentName || !studentData.length) return;
+      
+      const myData = studentData.filter(d => d.student_name === studentName && d.chapter == String(currentChapter));
+      
+      myData.forEach(d => {
+        if (d.section === 'comprehension') {
+          const textarea = document.getElementById(`comp_${d.question_id}`);
+          if (textarea && d.response) textarea.value = d.response;
+        } else if (d.section === 'evidence') {
+          const textarea = document.getElementById(`evidence_${d.question_id}`);
+          if (textarea && d.response) textarea.value = d.response;
+        } else if (d.section === 'cer') {
+          const textarea = document.getElementById(`${d.question_id}Input`);
+          if (textarea && d.response) textarea.value = d.response;
+        } else if (d.section === 'vocabulary') {
+          // Vocabulary quiz state can be restored but requires special handling
+        }
+      });
+      
+      updateResponsePreview();
+    }
+
+    function updateProgress() {
+      if (!studentName) return;
+      
+      const myData = studentData.filter(d => d.student_name === studentName && d.chapter == String(currentChapter));
+      
+      let totalItems = 0;
+      let completedItems = 0;
+      
+      totalItems += 8;
+      const vocabAnswers = myData.filter(d => d.section === 'vocabulary');
+      completedItems += vocabAnswers.length;
+      
+      totalItems += 5;
+      const compAnswers = myData.filter(d => d.section === 'comprehension' && d.response?.trim());
+      completedItems += compAnswers.length;
+      
+      totalItems += 3;
+      const evidenceAnswers = myData.filter(d => d.section === 'evidence' && d.response?.trim());
+      completedItems += evidenceAnswers.length;
+      
+      totalItems += 3;
+      const cerAnswers = myData.filter(d => d.section === 'cer' && d.response?.trim());
+      completedItems += cerAnswers.length;
+      
+      const percent = Math.round((completedItems / totalItems) * 100);
+      
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      
+      if (progressBar) progressBar.style.width = `${percent}%`;
+      if (progressText) progressText.textContent = `${percent}% Complete`;
+      
+      const objectives = document.querySelectorAll('.objective-check');
+      if (objectives.length >= 4) {
+        objectives[0].checked = vocabAnswers.length >= 6;
+        objectives[1].checked = compAnswers.length >= 3;
+        objectives[2].checked = evidenceAnswers.length >= 2;
+        objectives[3].checked = cerAnswers.length === 3;
+      }
+    }
+
+    initializeApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6575e5c2383ceb',t:'MTc3MjUwNzU1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
