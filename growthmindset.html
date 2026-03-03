@@ -730,132 +730,73 @@
 
     function completeJourney() {
       const goal = document.getElementById('goal-input').value || 'My growth goal';
-      const why = document.getElementById('why-input').value || 'Because growth matters';
       const steps = [
-        document.getElementById('step-1').value || 'Step 1',
-        document.getElementById('step-2').value || 'Step 2',
-        document.getElementById('step-3').value || 'Step 3'
-      ];
-      const mantra = document.getElementById('mantra-input').value || 'I am always growing';
-      
-      document.getElementById('goal-summary').innerHTML = `
-        <h3 class="text-xl font-bold text-purple-300 mb-4">📋 Your Growth Plan</h3>
-        <div class="space-y-4">
-          <div>
-            <p class="text-sm text-slate-400">🎯 Goal</p>
-            <p class="font-medium">${goal}</p>
-          </div>
-          <div>
-            <p class="text-sm text-slate-400">💭 Why It Matters</p>
-            <p class="font-medium">${why}</p>
-          </div>
-          <div>
-            <p class="text-sm text-slate-400">📝 This Week's Steps</p>
-            <ul class="list-disc list-inside space-y-1">
-              ${steps.map(s => `<li>${s}</li>`).join('')}
-            </ul>
-          </div>
-          <div class="p-3 bg-purple-500/20 rounded-lg">
-            <p class="text-sm text-slate-400">💪 My Mantra</p>
-            <p class="font-bold text-purple-300 italic">"${mantra}"</p>
-          </div>
-        </div>
+        document.getElementById('step-1').value,
+        document.getElementById('step-2').value,
+        document.getElementById('step-3').value
+      ].filter(s => s.trim() !== "").join(", ");
+      const mantra = document.getElementById('mantra-input').value;
+
+      const summaryDiv = document.getElementById('goal-summary');
+      summaryDiv.innerHTML = `
+        <h3 class="text-xl font-bold text-purple-300 mb-2">My Growth Blueprint</h3>
+        <p class="mb-2"><strong>Target:</strong> ${goal}</p>
+        <p class="mb-4"><strong>Action Plan:</strong> ${steps || 'Taking small steps every day!'}</p>
+        <button onclick="copyToClipboard('${goal}', '${steps}', '${mantra}')" 
+                class="w-full py-2 bg-emerald-600 rounded-lg font-bold hover:bg-emerald-500 transition-all flex items-center justify-center gap-2">
+          <span>📋</span> Copy for LMS Submission
+        </button>
       `;
-      
+
       showSection('section-complete');
       updateProgress(100);
+      // Clear local storage upon completion if you want a fresh start next time
+      localStorage.removeItem('growth_journey_data');
     }
+
+    function copyToClipboard(goal, steps, mantra) {
+      const text = `GROWTH MINDSET ASSIGNMENT\n\nGoal: ${goal}\nSteps: ${steps}\nRemind myself: ${mantra}`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Success! Your goal and steps are copied. Now paste them into the LMS (Ctrl+V).");
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+
+    // --- LOCAL SAVING LOGIC ---
+    // Save inputs to local storage as the student types
+    document.addEventListener('input', (e) => {
+      const data = {
+        goal: document.getElementById('goal-input').value,
+        why: document.getElementById('why-input').value,
+        step1: document.getElementById('step-1').value,
+        step2: document.getElementById('step-2').value,
+        step3: document.getElementById('step-3').value,
+        mantra: document.getElementById('mantra-input').value
+      };
+      localStorage.setItem('growth_journey_data', JSON.stringify(data));
+    });
+
+    // Load inputs when the page opens
+    window.onload = () => {
+      initApp();
+      const saved = localStorage.getItem('growth_journey_data');
+      if (saved) {
+        const data = JSON.parse(saved);
+        document.getElementById('goal-input').value = data.goal || '';
+        document.getElementById('why-input').value = data.why || '';
+        document.getElementById('step-1').value = data.step1 || '';
+        document.getElementById('step-2').value = data.step2 || '';
+        document.getElementById('step-3').value = data.step3 || '';
+        document.getElementById('mantra-input').value = data.mantra || '';
+      }
+    };
 
     function restartJourney() {
-      sortedCards = { fixed: [], growth: [] };
-      progress = 0;
-      tetrisGames = {};
-      
-      initApp();
-      
-      document.querySelectorAll('input, textarea').forEach(el => el.value = '');
-      document.getElementById('activity1-result').classList.add('hidden');
-      document.getElementById('activity2-result').classList.add('hidden');
-      document.getElementById('check-activity1').classList.remove('hidden');
-      document.getElementById('check-activity1').disabled = true;
-      document.getElementById('check-activity2').classList.remove('hidden');
-      document.getElementById('brain-break-1-btn').classList.add('hidden');
-      document.getElementById('brain-break-2-btn').classList.add('hidden');
-      document.getElementById('continue-to-activity2').classList.add('hidden');
-      document.getElementById('continue-to-activity3').classList.add('hidden');
-      document.getElementById('start-tetris-1').classList.remove('hidden');
-      document.getElementById('start-tetris-2').classList.remove('hidden');
-      document.getElementById('tetris-timer-1').textContent = '1:00';
-      document.getElementById('tetris-timer-2').textContent = '1:00';
-      document.getElementById('tetris-score-1').textContent = '0';
-      document.getElementById('tetris-score-2').textContent = '0';
-      
-      updateProgress(0);
-      showSection('section-welcome');
+      localStorage.removeItem('growth_journey_data');
+      location.reload();
     }
-
-    // Element SDK
-    async function onConfigChange(cfg) {
-      document.getElementById('main-title').textContent = cfg.main_title || defaultConfig.main_title;
-      document.getElementById('welcome-msg').textContent = cfg.welcome_message || defaultConfig.welcome_message;
-      
-      const font = cfg.font_family || defaultConfig.font_family;
-      document.body.style.fontFamily = `${font}, sans-serif`;
-    }
-
-    function mapToCapabilities(cfg) {
-      return {
-        recolorables: [
-          {
-            get: () => cfg.background_color || defaultConfig.background_color,
-            set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
-          },
-          {
-            get: () => cfg.primary_color || defaultConfig.primary_color,
-            set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
-          },
-          {
-            get: () => cfg.text_color || defaultConfig.text_color,
-            set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
-          },
-          {
-            get: () => cfg.secondary_color || defaultConfig.secondary_color,
-            set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
-          },
-          {
-            get: () => cfg.accent_color || defaultConfig.accent_color,
-            set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => cfg.font_family || defaultConfig.font_family,
-          set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
-        },
-        fontSizeable: undefined
-      };
-    }
-
-    function mapToEditPanelValues(cfg) {
-      return new Map([
-        ['main_title', cfg.main_title || defaultConfig.main_title],
-        ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
-      ]);
-    }
-
-    // Initialize
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-      config = window.elementSdk.config;
-    }
-
-    initApp();
-    onConfigChange(config);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6588ee647f531e',t:'MTc3MjUwODMzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
