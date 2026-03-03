@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article of the Week: Stress Less, Listen More</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --panel: #121a2a;
+      --panel-2: #0f1422;
+      --text: #e9f2ff;
+      --muted: #b8c9e8;
+      --neon-cyan: #2ee6ff;
+      --neon-pink: #ff4fb8;
+      --accent: #87ff65;
+      --ink: #0f1117;
+      --white: #ffffff;
+      --article-size: 1rem;
+      --ruler-y: -100px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, #1c2440 0%, transparent 30%),
+        radial-gradient(circle at 90% 20%, #271730 0%, transparent 28%),
+        linear-gradient(160deg, var(--bg), #08111f 55%, #0d1b2c 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body.locked { overflow: hidden; }
+
+    body.high-contrast {
+      --bg: #000;
+      --panel: #111;
+      --panel-2: #000;
+      --text: #fff;
+      --muted: #fff;
+      --neon-cyan: #fff;
+      --neon-pink: #fff;
+      --accent: #fff;
+      background: #000;
+    }
+
+    .progress-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(4px);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+      transition: width 0.12s linear;
+    }
+
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: #05070d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .lock-card {
+      width: min(460px, 100%);
+      background: var(--panel);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 0 24px rgba(46, 230, 255, 0.22);
+    }
+
+    .lock-card h2 { margin: 0 0 0.6rem; }
+    .lock-card p { margin: 0.2rem 0 0.8rem; color: var(--muted); }
+
+    .lock-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem;
+    }
+
+    .page {
+      width: min(1160px, 96vw);
+      margin: 10px auto 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid rgba(46, 230, 255, 0.35);
+      border-radius: 10px;
+      padding: 0.7rem;
+    }
+
+    h1, h2, h3, h4 { margin: 0.2rem 0; }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .date-stamp {
+      font-weight: 700;
+      color: var(--accent);
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(135, 255, 101, 0.6);
+      background: rgba(135, 255, 101, 0.08);
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .standards {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    button, .btn {
+      border: 1px solid var(--neon-cyan);
+      background: rgba(46, 230, 255, 0.08);
+      color: var(--text);
+      border-radius: 7px;
+      padding: 6px 9px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button:hover { filter: brightness(1.08); }
+
+    .active-toggle {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(135, 255, 101, 0.2) inset;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      border: 2px solid var(--neon-pink);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px;
+      font: inherit;
+      outline: none;
+    }
+
+    textarea {
+      resize: none;
+      overflow: hidden;
+      min-height: 2.2rem;
+      line-height: 1.35;
+    }
+
+    .compact { font-size: 0.88rem; color: var(--muted); }
+
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .article-col {
+      display: grid;
+      gap: 8px;
+    }
+
+    .article-row {
+      display: grid;
+      grid-template-columns: 2.15fr 1fr;
+      gap: 8px;
+      align-items: start;
+      background: rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 9px;
+      padding: 0.55rem;
+    }
+
+    .article-text {
+      font-size: var(--article-size);
+      line-height: 1.45;
+    }
+
+    .article-text.dyslexia {
+      font-family: "Comic Sans MS", Arial, sans-serif;
+    }
+
+    .pnum {
+      color: var(--accent);
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .tts-btn {
+      margin-left: 6px;
+      padding: 2px 6px;
+      font-size: 0.88rem;
+      line-height: 1;
+      border-radius: 6px;
+      vertical-align: middle;
+    }
+
+    .margin-title {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .margin-box textarea { min-height: 2rem; }
+
+    .highlighted {
+      background: rgba(255, 236, 94, 0.42);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .highlight-toolbar,
+    .define-popup {
+      position: absolute;
+      z-index: 1400;
+      display: none;
+      background: #0f1a2f;
+      color: #fff;
+      border: 1px solid var(--neon-cyan);
+      border-radius: 8px;
+      padding: 6px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+      max-width: 280px;
+    }
+
+    .highlight-toolbar button {
+      margin-right: 6px;
+      padding: 4px 8px;
+    }
+
+    .define-popup h4 {
+      margin: 0 0 4px;
+      font-size: 0.9rem;
+      color: var(--neon-cyan);
+    }
+
+    .inline-activity {
+      margin-top: 8px;
+      padding: 8px;
+      border: 1px solid rgba(46, 230, 255, 0.4);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .choice {
+      display: block;
+      margin: 4px 0;
+      cursor: pointer;
+    }
+
+    .feedback { font-weight: 700; margin-top: 4px; }
+
+    .hint-box {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-left: 3px solid var(--neon-cyan);
+      padding-left: 8px;
+    }
+
+    img.article-image {
+      width: 100%;
+      height: auto;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 8px;
+      margin: 20px 0;
+      display: block;
+    }
+
+    .ruler {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 2.2rem;
+      background: rgba(255, 255, 120, 0.14);
+      border-top: 1px solid rgba(255, 255, 120, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 120, 0.45);
+      top: var(--ruler-y);
+      pointer-events: none;
+      display: none;
+      z-index: 1200;
+    }
+
+    .footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .print-box { display: none; }
+
+    @media (max-width: 980px) {
+      .top-grid { grid-template-columns: 1fr; }
+      .article-layout { grid-template-columns: 1fr; }
+      .article-row { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      .no-print, .highlight-toolbar, .define-popup, .ruler, .progress-wrap {
+        display: none !important;
+      }
+
+      .panel,
+      .article-row {
+        border: 1px solid #333 !important;
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+      }
+
+      .article-row {
+        display: grid !important;
+        grid-template-columns: 2.15fr 1fr !important;
+        gap: 8px !important;
+      }
+
+      textarea { display: none !important; }
+
+      .print-box {
+        display: block !important;
+        border: 1px solid #000;
+        padding: 6px;
+        min-height: 1.2rem;
+        white-space: pre-wrap;
+        background: #fff;
+        color: #000;
+        border-radius: 3px;
+      }
+
+      .highlighted {
+        background: #ddd !important;
+      }
+    }
+  </style>
+</head>
+<body class="locked">
+  <div class="progress-wrap no-print"><div id="progressBar" class="progress-bar"></div></div>
+
+  <div id="lockOverlay" class="lock-overlay no-print" aria-modal="true" role="dialog">
+    <div class="lock-card">
+      <h2>Assignment Locked</h2>
+      <p>Enter class passcode to begin.</p>
+      <div class="lock-row">
+        <input id="passcodeInput" type="text" aria-label="Passcode" placeholder="Enter passcode" />
+        <button id="unlockBtn" type="button">Unlock</button>
+      </div>
+      <p id="passcodeMsg" class="compact" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="highlight-toolbar no-print" id="highlightToolbar">
+    <button type="button" id="doHighlight">Highlight</button>
+    <button type="button" id="doDefine">Define</button>
+  </div>
+
+  <div class="define-popup no-print" id="definePopup" aria-live="polite"></div>
+  <div id="readingRuler" class="ruler no-print"></div>
+
+  <main class="page" id="mainPage">
+    <section class="panel">
+      <div class="top-grid">
+        <div class="field">
+          <label for="studentName">Name</label>
+          <input id="studentName" type="text" placeholder="Your name" />
+        </div>
+        <div class="field">
+          <label for="period">Period</label>
+          <input id="period" type="text" placeholder="Class period" />
+        </div>
+        <div>
+          <label>Automatic Date Stamp</label>
+          <div id="dateStamp" class="date-stamp"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h1>Article of the Week: Stress Less, Listen More: The Mental Benefits of Music - Menos estrés, más música: Los beneficios mentales de la música by Carlos Ramirez</h1>
+      <div class="standards">
+        <strong>CCSS 9th Grade ELA Standards:</strong>
+        RI.9-10.1 (cite strong textual evidence), RI.9-10.2 (determine central ideas), W.9-10.1 (argument writing), W.9-10.9 (draw evidence from texts), L.9-10.4 (determine meaning of words/phrases in context), SL.9-10.1 (collaborative discussion through annotation and reflection)
+      </div>
+    </section>
+
+    <section class="panel no-print">
+      <h3>Accessibility Control Panel</h3>
+      <div class="controls">
+        <button type="button" id="fontDown">A-</button>
+        <button type="button" id="fontUp">A+</button>
+        <button type="button" id="dyslexiaToggle">Dyslexia Font</button>
+        <button type="button" id="contrastToggle">High Contrast</button>
+        <button type="button" id="rulerToggle">Reading Ruler</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Pre-reading Engagement</h3>
+      <p class="compact">Quick poll: When you feel stressed, does music usually help you reset?</p>
+      <label class="choice"><input type="radio" name="musicPoll" id="pollYes" value="Yes" /> Yes</label>
+      <label class="choice"><input type="radio" name="musicPoll" id="pollSometimes" value="Sometimes" /> Sometimes</label>
+      <label class="choice"><input type="radio" name="musicPoll" id="pollNo" value="No" /> No</label>
+      <textarea id="preJournal" rows="1" placeholder="Journal warm-up: Describe a time when music changed your mood."></textarea>
+    </section>
+
+    <section class="panel">
+      <h3>T4: Talk To The Text Annotations</h3>
+      <p class="compact">Select text to highlight or define words. Click highlighted text to remove highlight.</p>
+
+      <div class="article-layout">
+        <div class="article-col" id="articleContent">
+          <div class="article-row">
+            <div class="article-text">
+              <p id="p1"><span class="pnum">1.</span>Can music really help reduce our stress? At any given moment when you press play on your favorite song, your body might already be starting to relax. Music is more than just entertainment; it can actually lower our stress levels. <button class="tts-btn no-print" data-target="p1" type="button">🔊</button></p>
+              <p id="p2"><span class="pnum">2.</span>In a world where stress has become a part of daily life for students, workers, and families, something as accessible as music could be one of the most powerful tools to help manage it. <button class="tts-btn no-print" data-target="p2" type="button">🔊</button></p>
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations (P1-P2)</div>
+              <textarea id="note1" rows="1" placeholder="Connection: When does music help you feel calm? Sentence starter: This reminds me of..."></textarea>
+            </div>
+          </div>
+
+          <div class="article-row">
+            <div class="article-text">
+              <p id="p3"><span class="pnum">3.</span>Stress has become increasingly common in our everyday routines. With academic pressure and the rise of social media, many people experience mental health issues. <button class="tts-btn no-print" data-target="p3" type="button">🔊</button></p>
+              <p id="p4"><span class="pnum">4.</span>According to ANA (American Nurses Association), incorporating more music can relieve anxiety, provide emotional release, improve focus on the present moment, pull attention away from stressors, encourage creativity, and increase connection. <button class="tts-btn no-print" data-target="p4" type="button">🔊</button></p>
+
+              <img class="article-image" src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=900" alt="Student wearing headphones in low light, focused and calm" />
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations (P3-P4)</div>
+              <textarea id="note2" rows="1" placeholder="In your own words, what pressure do students face here? Use one example from school or home."></textarea>
+            </div>
+          </div>
+
+          <div class="article-row">
+            <div class="article-text">
+              <p id="p5"><span class="pnum">5.</span>Music not only improves mental health, but it also allows us to build strong connections with others who share similar music tastes, causing stronger relationships. <button class="tts-btn no-print" data-target="p5" type="button">🔊</button></p>
+              <p id="p6"><span class="pnum">6.</span>Music has also been proven to help patients with dementia remember certain aspects of their earlier lives. <button class="tts-btn no-print" data-target="p6" type="button">🔊</button></p>
+              <p id="p7"><span class="pnum">7.</span>Another benefit is emotional support. Music can serve as a healthy outlet to process feelings when people feel anxious, overwhelmed, or mentally drained. <button class="tts-btn no-print" data-target="p7" type="button">🔊</button></p>
+
+              <div class="inline-activity">
+                <h4>Skill Focus: Critical-Thinking</h4>
+                <p class="compact">How does this article balance emotional claims with factual evidence? Use one paragraph to explain.</p>
+                <textarea id="skillResponse" rows="1" placeholder="Your response..."></textarea>
+                <button class="no-print" type="button" id="hintBtn">Need a Hint?</button>
+                <div id="hintBox" class="hint-box" hidden></div>
+              </div>
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations (P5-P7)</div>
+              <textarea id="note3" rows="1" placeholder="Nuance check: Music can help, but what are its limits? Sentence starter: A nuance is..."></textarea>
+            </div>
+          </div>
+
+          <div class="article-row">
+            <div class="article-text">
+              <p id="p8"><span class="pnum">8.</span>After polling 118 people, 116 said music improves mental health, while only 2 said it did not. That means 98% reported a positive effect. <button class="tts-btn no-print" data-target="p8" type="button">🔊</button></p>
+              <p id="p9"><span class="pnum">9.</span>Unlike expensive therapy sessions or wellness programs, music is very <strong>cost effective</strong> and accessible to nearly everyone with a phone or radio. <button class="tts-btn no-print" data-target="p9" type="button">🔊</button></p>
+
+              <div class="inline-activity" id="vocabActivity">
+                <h4>Vocabulary in Context</h4>
+                <p>In paragraph 9, what does <strong>cost effective</strong> most likely mean?</p>
+                <label class="choice"><input type="radio" name="vocabQ" value="a" /> A. It makes music louder and clearer.</label>
+                <label class="choice"><input type="radio" name="vocabQ" value="b" /> B. It is affordable compared with other options.</label>
+                <label class="choice"><input type="radio" name="vocabQ" value="c" /> C. It only works for adults.</label>
+                <label class="choice"><input type="radio" name="vocabQ" value="d" /> D. It requires special medical training.</label>
+                <div id="vocabFeedback" class="feedback" aria-live="polite"></div>
+              </div>
+
+              <img class="article-image" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=900" alt="Crowd at a concert illuminated by moody lights" />
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations (P8-P9)</div>
+              <textarea id="note4" rows="1" placeholder="Do these numbers match your experience? Explain why or why not in 1-2 sentences."></textarea>
+            </div>
+          </div>
+
+          <div class="article-row">
+            <div class="article-text">
+              <p id="p10"><span class="pnum">10.</span>As stress continues to rise in society, it is important to explore affordable strategies to manage it. Music is not a permanent solution, but it can reduce stress. <button class="tts-btn no-print" data-target="p10" type="button">🔊</button></p>
+              <p id="p11"><span class="pnum">11.</span>From classical to R&amp;B to pop, the right music at the right time can support mental health. <button class="tts-btn no-print" data-target="p11" type="button">🔊</button></p>
+              <p id="p12"><span class="pnum">12.</span>In a time where stress feels unavoidable, maybe the solution is not always complicated; sometimes it is as easy as pressing play. <button class="tts-btn no-print" data-target="p12" type="button">🔊</button></p>
+
+              <img class="article-image" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&q=80&w=900" alt="Vinyl records and turntable in a dark study setting" />
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations (P10-P12)</div>
+              <textarea id="note5" rows="1" placeholder="Author's message in simple words: Music is helpful, but..."></textarea>
+            </div>
+          </div>
+
+          <div class="article-row">
+            <div class="article-text">
+              <div class="inline-activity">
+                <h4>Claim-Evidence-Reasoning (CER) Written Response</h4>
+                <p class="compact">Prompt: Should schools intentionally use music-based stress breaks during the school day? Write a CER response using the article.</p>
+                <textarea id="cerResponse" rows="1" placeholder="Claim... Evidence... Reasoning..."></textarea>
+                <button class="no-print" type="button" id="cerHintBtn">CER Hints</button>
+                <div id="cerHintBox" class="hint-box" hidden></div>
+              </div>
+
+              <div class="inline-activity">
+                <h4>Critical-Thinking Connection</h4>
+                <p class="compact">Create one critical-thinking question that connects this article to your real world (home, school, team, or online life).</p>
+                <textarea id="criticalQuestion" rows="1" placeholder="Write your own critical-thinking question..."></textarea>
+              </div>
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Final Annotations</div>
+              <textarea id="note6" rows="1" placeholder="Personal connection: One idea from this article I can use this week is..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel no-print footer-actions">
+      <button type="button" id="finalSubmit">Final Submit (Save as PDF)</button>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = "aow_music_assignment_v1";
+      const articleContent = document.getElementById("articleContent");
+      const progressBar = document.getElementById("progressBar");
+      const toolbar = document.getElementById("highlightToolbar");
+      const definePopup = document.getElementById("definePopup");
+      const readingRuler = document.getElementById("readingRuler");
+      const body = document.body;
+
+      let selectedRange = null;
+      let hintLevel = 0;
+      let cerHintLevel = 0;
+      let currentUtterance = null;
+      let currentTtsButton = null;
+      let rulerEnabled = false;
+
+      function nowDateStamp() {
+        const d = new Date();
+        return d.toLocaleDateString(undefined, {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        });
+      }
+
+      document.getElementById("dateStamp").textContent = nowDateStamp();
+
+      function autoExpand(el) {
+        if (!el) return;
+        el.style.height = "auto";
+        el.style.height = el.scrollHeight + "px";
+      }
+
+      function autoExpandAll() {
+        document.querySelectorAll("textarea").forEach(autoExpand);
+      }
+
+      function getState() {
+        const fields = {};
+        document.querySelectorAll("input[id], textarea[id]").forEach((el) => {
+          if (el.type === "radio") {
+            fields[el.id] = el.checked;
+          } else {
+            fields[el.id] = el.value;
+          }
+        });
+
+        fields.__articleHTML = articleContent.innerHTML;
+        fields.__articleSize = getComputedStyle(document.documentElement).getPropertyValue("--article-size").trim();
+        fields.__dyslexia = document.querySelectorAll(".article-text.dyslexia").length > 0;
+        fields.__contrast = body.classList.contains("high-contrast");
+        fields.__ruler = rulerEnabled;
+        return fields;
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getState()));
+      }
+
+      function restoreState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          return;
+        }
+
+        if (data.__articleHTML) {
+          articleContent.innerHTML = data.__articleHTML;
+        }
+
+        document.querySelectorAll("input[id], textarea[id]").forEach((el) => {
+          if (!(el.id in data)) return;
+          if (el.type === "radio") {
+            el.checked = Boolean(data[el.id]);
+          } else {
+            el.value = data[el.id];
+          }
+        });
+
+        if (data.__articleSize) {
+          document.documentElement.style.setProperty("--article-size", data.__articleSize);
+        }
+
+        if (data.__dyslexia) {
+          document.querySelectorAll(".article-text").forEach((x) => x.classList.add("dyslexia"));
+          document.getElementById("dyslexiaToggle").classList.add("active-toggle");
+        }
+
+        if (data.__contrast) {
+          body.classList.add("high-contrast");
+          document.getElementById("contrastToggle").classList.add("active-toggle");
+        }
+
+        if (data.__ruler) {
+          rulerEnabled = true;
+          readingRuler.style.display = "block";
+          document.getElementById("rulerToggle").classList.add("active-toggle");
+        }
+      }
+
+      function updateProgress() {
+        const doc = document.documentElement;
+        const scrolled = doc.scrollTop || document.body.scrollTop;
+        const height = doc.scrollHeight - doc.clientHeight;
+        const pct = height > 0 ? (scrolled / height) * 100 : 0;
+        progressBar.style.width = pct.toFixed(2) + "%";
+      }
+
+      function unwrapHighlight(span) {
+        const parent = span.parentNode;
+        while (span.firstChild) parent.insertBefore(span.firstChild, span);
+        parent.removeChild(span);
+        parent.normalize();
+      }
+
+      function safeSurround(range, className) {
+        const wrapper = document.createElement("span");
+        wrapper.className = className;
+        try {
+          range.surroundContents(wrapper);
+        } catch (e) {
+          const contents = range.extractContents();
+          wrapper.appendChild(contents);
+          range.insertNode(wrapper);
+        }
+      }
+
+      function showToolbarAtRange(range) {
+        const rect = range.getBoundingClientRect();
+        toolbar.style.left = `${Math.max(8, rect.left + window.scrollX)}px`;
+        toolbar.style.top = `${Math.max(8, rect.top + window.scrollY - 44)}px`;
+        toolbar.style.display = "block";
+      }
+
+      function hideToolOverlays() {
+        toolbar.style.display = "none";
+        definePopup.style.display = "none";
+      }
+
+      async function defineWord(word, x, y) {
+        definePopup.style.display = "block";
+        definePopup.style.left = `${x}px`;
+        definePopup.style.top = `${y}px`;
+        definePopup.innerHTML = `<h4>Definition: ${word}</h4><div class="compact">Loading...</div>`;
+
+        try {
+          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+          if (!res.ok) throw new Error("No definition found");
+          const data = await res.json();
+          const meaning = data[0]?.meanings?.[0]?.definitions?.[0]?.definition || "Definition unavailable.";
+          definePopup.innerHTML = `<h4>Definition: ${word}</h4><div>${meaning}</div>`;
+        } catch (err) {
+          definePopup.innerHTML = `<h4>Definition: ${word}</h4><div>No definition found. Try selecting another word.</div>`;
+        }
+      }
+
+      function stopTTS() {
+        speechSynthesis.cancel();
+        if (currentTtsButton) {
+          currentTtsButton.textContent = "🔊";
+          currentTtsButton.classList.remove("active-toggle");
+        }
+        currentUtterance = null;
+        currentTtsButton = null;
+      }
+
+      function playTTS(btn, text) {
+        if (!text) return;
+
+        if (currentTtsButton && currentTtsButton !== btn) {
+          stopTTS();
+        }
+
+        if (currentTtsButton === btn) {
+          stopTTS();
+          return;
+        }
+
+        const u = new SpeechSynthesisUtterance(text);
+        currentUtterance = u;
+        currentTtsButton = btn;
+        btn.textContent = "⏹️";
+        btn.classList.add("active-toggle");
+
+        u.onend = stopTTS;
+        u.onerror = stopTTS;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      }
+
+      function buildPrintGhosts() {
+        document.querySelectorAll(".print-box").forEach((n) => n.remove());
+        document.querySelectorAll("textarea").forEach((ta) => {
+          const ghost = document.createElement("div");
+          ghost.className = "print-box";
+          ghost.textContent = ta.value;
+          ta.insertAdjacentElement("afterend", ghost);
+        });
+      }
+
+      window.addEventListener("afterprint", () => {
+        document.querySelectorAll(".print-box").forEach((n) => n.remove());
+      });
+
+      document.addEventListener("input", (e) => {
+        if (e.target.matches("textarea")) autoExpand(e.target);
+        if (e.target.matches("input, textarea")) saveState();
+      });
+
+      document.addEventListener("change", (e) => {
+        if (e.target.matches("input, textarea")) saveState();
+      });
+
+      document.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+
+      document.addEventListener("mouseup", (e) => {
+        if (!articleContent.contains(e.target)) return;
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+        const range = selection.getRangeAt(0);
+        if (range.collapsed) {
+          toolbar.style.display = "none";
+          return;
+        }
+        selectedRange = range.cloneRange();
+        showToolbarAtRange(range);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("highlighted")) {
+          unwrapHighlight(e.target);
+          saveState();
+          return;
+        }
+
+        if (!toolbar.contains(e.target) && !definePopup.contains(e.target)) {
+          if (!window.getSelection().toString()) hideToolOverlays();
+        }
+      });
+
+      document.getElementById("doHighlight").addEventListener("click", () => {
+        if (!selectedRange || selectedRange.collapsed) return;
+        safeSurround(selectedRange, "highlighted");
+        window.getSelection().removeAllRanges();
+        selectedRange = null;
+        hideToolOverlays();
+        saveState();
+      });
+
+      document.getElementById("doDefine").addEventListener("click", () => {
+        if (!selectedRange || selectedRange.collapsed) return;
+        const word = selectedRange.toString().trim().split(/\s+/)[0]?.replace(/[^a-zA-Z\-]/g, "");
+        if (!word) return;
+        const rect = selectedRange.getBoundingClientRect();
+        defineWord(word, Math.max(10, rect.left + window.scrollX), Math.max(10, rect.bottom + window.scrollY + 8));
+      });
+
+      articleContent.addEventListener("dblclick", (e) => {
+        const sel = window.getSelection();
+        const word = sel ? sel.toString().trim().replace(/[^a-zA-Z\-]/g, "") : "";
+        if (!word) return;
+        const rect = sel.getRangeAt(0).getBoundingClientRect();
+        defineWord(word, Math.max(10, rect.left + window.scrollX), Math.max(10, rect.bottom + window.scrollY + 8));
+      });
+
+      articleContent.addEventListener("click", (e) => {
+        const ttsBtn = e.target.closest(".tts-btn");
+        if (ttsBtn) {
+          const targetId = ttsBtn.getAttribute("data-target");
+          const target = document.getElementById(targetId);
+          playTTS(ttsBtn, target ? target.textContent.replace("🔊", "") : "");
+          return;
+        }
+      });
+
+      document.addEventListener("change", (e) => {
+        if (e.target.name === "vocabQ") {
+          const fb = document.getElementById("vocabFeedback");
+          if (e.target.value === "b") {
+            fb.textContent = "Correct: In context, the sentence compares music to expensive options, so cost effective means affordable and practical.";
+            fb.style.color = "#87ff65";
+          } else {
+            fb.textContent = "Not quite: The paragraph contrasts music with expensive programs, so cost effective means it saves money while still helping.";
+            fb.style.color = "#ff9e9e";
+          }
+          saveState();
+        }
+      });
+
+      document.getElementById("hintBtn").addEventListener("click", () => {
+        hintLevel = Math.min(hintLevel + 1, 3);
+        const box = document.getElementById("hintBox");
+        box.hidden = false;
+        if (hintLevel === 1) {
+          box.innerHTML = "<div>Level 1: Which paragraph gives emotional examples, and which gives statistics or source-based evidence?</div>";
+        } else if (hintLevel === 2) {
+          if (!box.innerHTML.includes("Level 2:")) {
+            box.innerHTML += "<div>Level 2: Sentence starter: The article is persuasive because it combines _____ with _____.</div>";
+          }
+        } else {
+          if (!box.innerHTML.includes("Level 2:")) {
+            box.innerHTML += "<div>Level 2: Sentence starter: The article is persuasive because it combines _____ with _____.</div>";
+          }
+          if (!box.innerHTML.includes("Level 3:")) {
+            box.innerHTML += "<div>Level 3: Try citing paragraph 4 (ANA source) and paragraph 8 (118-person poll) in one response.</div>";
+          }
+        }
+        saveState();
+      });
+
+      document.getElementById("cerHintBtn").addEventListener("click", () => {
+        cerHintLevel = Math.min(cerHintLevel + 1, 2);
+        const box = document.getElementById("cerHintBox");
+        box.hidden = false;
+        if (cerHintLevel === 1) {
+          box.innerHTML = "<div>Level 1 Frame: Claim: Schools should/should not use music breaks because... Evidence: The article states... Reasoning: This matters because...</div>";
+        } else {
+          if (!box.innerHTML.includes("Level 2 Evidence Choices:")) {
+            box.innerHTML += "<div>Level 2 Evidence Choices: (1) Paragraph 4 says music can reduce anxiety and improve focus. (2) Paragraph 8 reports 98% positive responses in the poll.</div>";
+          }
+        }
+        saveState();
+      });
+
+      function setArticleSize(delta) {
+        const root = document.documentElement;
+        const cur = parseFloat(getComputedStyle(root).getPropertyValue("--article-size")) || 1;
+        const next = Math.min(1.5, Math.max(0.85, cur + delta));
+        root.style.setProperty("--article-size", `${next}rem`);
+        saveState();
+      }
+
+      document.getElementById("fontDown").addEventListener("click", () => setArticleSize(-0.05));
+      document.getElementById("fontUp").addEventListener("click", () => setArticleSize(0.05));
+
+      document.getElementById("dyslexiaToggle").addEventListener("click", (e) => {
+        document.querySelectorAll(".article-text").forEach((x) => x.classList.toggle("dyslexia"));
+        e.currentTarget.classList.toggle("active-toggle");
+        saveState();
+      });
+
+      document.getElementById("contrastToggle").addEventListener("click", (e) => {
+        body.classList.toggle("high-contrast");
+        e.currentTarget.classList.toggle("active-toggle");
+        saveState();
+      });
+
+      document.getElementById("rulerToggle").addEventListener("click", (e) => {
+        rulerEnabled = !rulerEnabled;
+        readingRuler.style.display = rulerEnabled ? "block" : "none";
+        e.currentTarget.classList.toggle("active-toggle");
+        saveState();
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!rulerEnabled) return;
+        document.documentElement.style.setProperty("--ruler-y", `${e.clientY - 16}px`);
+      });
+
+      document.getElementById("finalSubmit").addEventListener("click", () => {
+        buildPrintGhosts();
+        window.print();
+      });
+
+      const passInput = document.getElementById("passcodeInput");
+      const passMsg = document.getElementById("passcodeMsg");
+      function tryUnlock() {
+        const ok = (passInput.value || "").trim().toLowerCase() === "rapp";
+        if (!ok) {
+          passMsg.textContent = "Incorrect passcode. Try again.";
+          return;
+        }
+        document.getElementById("lockOverlay").style.display = "none";
+        body.classList.remove("locked");
+        body.style.overflow = "auto";
+      }
+
+      document.getElementById("unlockBtn").addEventListener("click", tryUnlock);
+      passInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") tryUnlock();
+      });
+
+      restoreState();
+      autoExpandAll();
+      updateProgress();
+
+      setInterval(() => {
+        saveState();
+      }, 30000);
+    })();
+  </script>
+</body>
+</html>
