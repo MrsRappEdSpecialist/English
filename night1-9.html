@@ -1197,5 +1197,60 @@
 
     initializeApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6575e5c2383ceb',t:'MTc3MjUwNzU1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6575e5c2383ceb',t:'MTc3MjUwNzU1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+ <div style="text-align: center; padding: 20px; background: #f8f9fa; border-top: 2px solid #dee2e6;">
+    <button id="master-save-btn" onclick="saveAssignmentLocally()" style="padding: 15px 30px; background: #2ecc71; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; border: none; font-size: 1.1em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        💾 SAVE ENTIRE 45-PAGE ASSIGNMENT (.html)
+    </button>
+    <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Click this to save your progress. You can reopen this file later to continue or turn it in.</p>
+</div>
+
+<script>
+function saveAssignmentLocally() {
+    // This part ensures that what the student typed actually gets written into the file
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(ta => {
+        ta.innerHTML = ta.value; 
+    });
+
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(inp => {
+        if (inp.type === 'checkbox' || inp.type === 'radio') {
+            if (inp.checked) inp.setAttribute('checked', 'checked');
+            else inp.removeAttribute('checked');
+        } else {
+            inp.setAttribute('value', inp.value);
+        }
+    });
+
+    const selects = document.querySelectorAll('select');
+    selects.forEach(sel => {
+        const options = sel.querySelectorAll('option');
+        options.forEach(opt => {
+            if (opt.selected) opt.setAttribute('selected', 'selected');
+            else opt.removeAttribute('selected');
+        });
+    });
+
+    // Capture the entire 45-page structure
+    const fullAppContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    
+    // Attempt to find the student's name from your existing inputs
+    const studentName = document.getElementById('studentName')?.value || 
+                        document.querySelector('input[placeholder*="Name"]')?.value || 
+                        'Night_Assignment';
+    
+    const blob = new Blob([fullAppContent], { type: 'text/html' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${studentName.replace(/\s+/g, '_')}_Saved.html`;
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert("Success! Your work across all pages has been saved into a new file in your Downloads folder.");
+}
+</script>
+ </body>
 </html>
