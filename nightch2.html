@@ -695,62 +695,80 @@
         }
 
         <script>
-        function saveAsPDF() {
-            const element = document.getElementById('lesson-content');
-            const wordBank = document.getElementById('wordBank');
+     <script>
+    // 1. PDF Export Function
+    function saveAsPDF() {
+        const element = document.getElementById('lesson-content');
+        const wordBank = document.getElementById('wordBank');
 
-            // 1. Prepare the element for PDF (Remove shadows/borders)
-            element.style.boxShadow = 'none';
-            element.style.borderTop = 'none';
-            if (wordBank) wordBank.style.display = 'none';
-
-            // 2. Convert textareas/inputs to divs so they expand to show ALL text
-            const inputs = element.querySelectorAll('textarea, input[type="text"]');
-            const createdReplacements = [];
-
-            inputs.forEach(input => {
-                const replacement = document.createElement('div');
-                replacement.className = 'pdf-replacement';
-                replacement.innerText = input.value;
-                
-                // Match the styling of your inputs so the PDF looks consistent
-                replacement.style.border = '1px solid #ccc';
-                replacement.style.padding = '10px';
-                replacement.style.marginBottom = '10px';
-                replacement.style.whiteSpace = 'pre-wrap'; // This allows line breaks to show
-                replacement.style.minHeight = '20px';
-                replacement.style.backgroundColor = '#f9f9f9';
-
-                input.style.display = 'none';
-                input.parentNode.insertBefore(replacement, input);
-                createdReplacements.push({ input, replacement });
-            });
-
-            // 3. Set PDF options
-            const opt = {
-                margin:       0.4,
-                filename:     'Night_Chapter_2_Lesson.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            // 4. Generate the PDF
-            html2pdf().set(opt).from(element).save().then(() => {
-                // 5. Cleanup: Restore the original interactive elements
-                createdReplacements.forEach(pair => {
-                    pair.replacement.remove();
-                    pair.input.style.display = 'block';
-                });
-
-                element.style.boxShadow = '0 15px 35px rgba(111, 45, 189, 0.15)';
-                element.style.borderTop = '10px solid var(--primary)';
-                if (wordBank) wordBank.style.display = 'flex';
-            });
+        if (!element) {
+            console.error("Could not find lesson-content element");
+            return;
         }
+
+        // Prepare element for PDF
+        element.style.boxShadow = 'none';
+        element.style.borderTop = 'none';
+        if (wordBank) wordBank.style.display = 'none';
+
+        const inputs = element.querySelectorAll('textarea, input[type="text"]');
+        const createdReplacements = [];
+
+        inputs.forEach(input => {
+            const replacement = document.createElement('div');
+            replacement.className = 'pdf-replacement';
+            replacement.innerText = input.value;
+            replacement.style.border = '1px solid #ccc';
+            replacement.style.padding = '10px';
+            replacement.style.marginBottom = '10px';
+            replacement.style.whiteSpace = 'pre-wrap';
+            replacement.style.minHeight = '20px';
+            replacement.style.backgroundColor = '#f9f9f9';
+
+            input.style.display = 'none';
+            input.parentNode.insertBefore(replacement, input);
+            createdReplacements.push({ input, replacement });
+        });
+
+        const opt = {
+            margin: 0.4,
+            filename: 'Night_Chapter_2_Lesson.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            createdReplacements.forEach(pair => {
+                pair.replacement.remove();
+                pair.input.style.display = 'block';
+            });
+            element.style.boxShadow = '0 15px 35px rgba(111, 45, 189, 0.15)';
+            element.style.borderTop = '10px solid var(--primary)';
+            if (wordBank) wordBank.style.display = 'flex';
+        }).catch(err => {
+            console.error("PDF Generation Error:", err);
+        });
+    }
+
+    // 2. Reset Function
+    function resetForm() {
+        if (confirm("Are you sure you want to clear all answers?")) {
+            location.reload();
+        }
+    }
+
+    // 3. Text to Speech Function (Basic Implementation)
+    function speakText() {
+        const text = document.getElementById('lesson-content').innerText;
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
     </script>
 </body>
 </html>
+
 
 
 
