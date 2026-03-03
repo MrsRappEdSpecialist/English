@@ -763,11 +763,37 @@
         const text = document.getElementById('lesson-content').innerText;
         const utterance = new SpeechSynthesisUtterance(text);
         window.speechSynthesis.speak(utterance);
+
+        
+            element.style.boxShadow = 'none';
+
+            element.style.borderTop = 'none';
+
+            const wordBank = document.getElementById('wordBank');
+
+            wordBank.style.display = 'none';
+
+
+
+            html2pdf().set(opt).from(element).save().then(() => {
+
+                element.style.boxShadow = '0 15px 35px rgba(111, 45, 189, 0.15)';
+
+                element.style.borderTop = '10px solid var(--primary)';
+
+                wordBank.style.display = 'flex'; 
+
+            });
+
+        }
+
+    </script>
     }
 </script>
     </script>
 </body>
 </html>
+
 
 
 
