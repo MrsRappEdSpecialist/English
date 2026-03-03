@@ -694,15 +694,35 @@
             }
         }
 
-        // PDF Export
-        function saveAsPDF() {
-            const element = document.getElementById('lesson-content');
-            const opt = {
-                margin:       0.4,
-                filename:     'Night_Chapter_2_Lesson.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        //function saveAsPDF() {
+    const element = document.getElementById('lesson-content');
+    
+    // 1. Convert textareas/inputs to divs so they expand
+    const inputs = element.querySelectorAll('textarea, input[type="text"]');
+    inputs.forEach(input => {
+        const replacement = document.createElement('div');
+        replacement.className = 'pdf-replacement';
+        replacement.innerText = input.value;
+        // Copy some styles so it looks similar
+        replacement.style.border = '1px solid #ccc';
+        replacement.style.padding = '5px';
+        replacement.style.whiteSpace = 'pre-wrap'; // Preserves line breaks
+        
+        input.style.display = 'none';
+        input.parentNode.insertBefore(replacement, input);
+    });
+
+    const opt = { /* ... your existing options ... */ };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        // 2. Clean up: Remove the divs and show the inputs again
+        const replacements = element.querySelectorAll('.pdf-replacement');
+        replacements.forEach(div => div.remove());
+        inputs.forEach(input => input.style.display = 'block');
+        
+        // ... your existing cleanup (boxShadow, wordBank, etc)
+    });
+}
             };
             
             element.style.boxShadow = 'none';
@@ -719,3 +739,4 @@
     </script>
 </body>
 </html>
+
