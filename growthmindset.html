@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Mindset Journey</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
+    }
+    
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .slide-in { animation: slide-in 0.5s ease-out forwards; }
+    .bounce-in { animation: bounce-in 0.6s ease-out forwards; }
+    
+    .tetris-board {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 1px;
+      background: #1a1a2e;
+      border: 3px solid #8b5cf6;
+      border-radius: 8px;
+    }
+    
+    .tetris-cell {
+      aspect-ratio: 1;
+      background: #16213e;
+      border-radius: 2px;
+    }
+    
+    .tetris-cell.filled {
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+    }
+    
+    .tetris-cell.active {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.4);
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #8b5cf6, #06b6d4, #10b981);
+      background-size: 200% 100%;
+      animation: gradient-shift 2s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    }
+    
+    .brain-emoji {
+      font-size: 3rem;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-900 text-white overflow-auto">
+  <div id="app" class="min-h-full w-full"><!-- Progress Bar -->
+   <div class="fixed top-0 left-0 right-0 z-50 bg-slate-800/90 backdrop-blur-sm p-3">
+    <div class="max-w-4xl mx-auto">
+     <div class="flex items-center justify-between mb-2"><span class="text-sm font-medium text-purple-300">Your Journey Progress</span> <span id="progress-text" class="text-sm font-bold text-cyan-400">0%</span>
+     </div>
+     <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+      <div id="progress-fill" class="h-full progress-bar rounded-full transition-all duration-500" style="width: 0%"></div>
+     </div>
+    </div>
+   </div><!-- Main Content -->
+   <div class="pt-20 pb-10 px-4">
+    <div class="max-w-4xl mx-auto"><!-- Welcome Section -->
+     <section id="section-welcome" class="mb-12">
+      <div class="text-center mb-8">
+       <div class="brain-emoji float-animation mb-4">
+        🧠
+       </div>
+       <h1 id="main-title" class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-4">Growth Mindset Journey</h1>
+       <p id="welcome-msg" class="text-xl text-slate-300">Level up your brain! 🚀</p>
+      </div>
+      <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-purple-500/30 pulse-glow">
+       <div class="flex items-start gap-4">
+        <div class="text-4xl">
+         💡
+        </div>
+        <div>
+         <h2 class="text-xl font-bold text-purple-300 mb-2">What is Growth Mindset?</h2>
+         <p class="text-slate-300 leading-relaxed">It's the belief that your abilities aren't fixed—they can grow through effort, learning, and persistence. Think of your brain like a muscle: the more you challenge it, the stronger it gets! 💪</p>
+        </div>
+       </div>
+      </div><button onclick="startJourney()" class="mt-6 w-full py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-bold text-lg hover:from-purple-500 hover:to-cyan-500 transition-all transform hover:scale-[1.02] active:scale-[0.98]"> Start Your Journey 🎮 </button>
+     </section><!-- Activity 1: Fixed vs Growth -->
+     <section id="section-activity1" class="mb-12 hidden">
+      <div class="bg-slate-800 rounded-2xl p-6 border border-cyan-500/30">
+       <div class="flex items-center gap-3 mb-6"><span class="text-3xl">🎯</span>
+        <div><span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Activity 1</span>
+         <h2 class="text-2xl font-bold text-white">Fixed vs Growth Mindset Sorter</h2>
+        </div>
+       </div>
+       <p class="text-slate-300 mb-6">Drag each thought to the correct mindset category. Think about how YOU would reframe fixed thoughts!</p>
+       <div id="sorting-game" class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4 mb-6">
+         <div id="fixed-zone" class="min-h-32 p-4 bg-red-500/10 border-2 border-dashed border-red-500/50 rounded-xl" ondrop="dropCard(event, 'fixed')" ondragover="allowDrop(event)">
+          <h3 class="text-center font-bold text-red-400 mb-2">🔒 Fixed Mindset</h3>
+          <p class="text-center text-xs text-red-300/70">Drop thoughts that limit growth</p>
+         </div>
+         <div id="growth-zone" class="min-h-32 p-4 bg-emerald-500/10 border-2 border-dashed border-emerald-500/50 rounded-xl" ondrop="dropCard(event, 'growth')" ondragover="allowDrop(event)">
+          <h3 class="text-center font-bold text-emerald-400 mb-2">🌱 Growth Mindset</h3>
+          <p class="text-center text-xs text-emerald-300/70">Drop thoughts that help you grow</p>
+         </div>
+        </div>
+        <div id="thought-cards" class="flex flex-wrap gap-3 justify-center"><!-- Cards will be generated by JS -->
+        </div>
+       </div>
+       <div id="activity1-result" class="hidden mt-6 p-4 rounded-xl"></div><button id="check-activity1" onclick="checkActivity1()" class="mt-6 w-full py-3 bg-cyan-600 rounded-xl font-bold hover:bg-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled> Check My Answers ✓ </button>
+      </div><button id="brain-break-1-btn" onclick="startBrainBreak(1)" class="hidden mt-4 w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl font-bold text-lg hover:from-amber-400 hover:to-orange-400 transition-all"> 🎮 Brain Break: Tetris Time! (1 minute) </button>
+     </section><!-- Brain Break 1 -->
+     <section id="section-brainbreak1" class="mb-12 hidden">
+      <div class="bg-slate-800 rounded-2xl p-6 border border-amber-500/30">
+       <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3"><span class="text-3xl">🎮</span>
+         <div><span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Brain Break</span>
+          <h2 class="text-2xl font-bold text-white">Tetris Challenge!</h2>
+         </div>
+        </div>
+        <div id="tetris-timer-1" class="text-2xl font-bold text-amber-400">
+         1:00
+        </div>
+       </div>
+       <p class="text-slate-300 mb-4">Use arrow keys to play! Taking breaks helps your brain process new info 🧠</p>
+       <div class="flex flex-col items-center gap-4">
+        <div class="flex gap-6 items-start">
+         <div id="tetris-board-1" class="tetris-board w-48"><!-- 20 rows x 10 cols -->
+         </div>
+         <div class="text-center">
+          <p class="text-sm text-slate-400 mb-2">Score</p>
+          <p id="tetris-score-1" class="text-3xl font-bold text-amber-400">0</p>
+          <div class="mt-4 text-sm text-slate-400">
+           <p>← → Move</p>
+           <p>↑ Rotate</p>
+           <p>↓ Drop</p>
+          </div>
+         </div>
+        </div><button id="start-tetris-1" onclick="startTetris(1)" class="px-8 py-3 bg-amber-500 rounded-xl font-bold hover:bg-amber-400 transition-all"> Start Game 🎮 </button>
+       </div>
+      </div><button id="continue-to-activity2" onclick="showSection('section-activity2')" class="hidden mt-4 w-full py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-bold text-lg hover:from-purple-500 hover:to-cyan-500 transition-all"> Continue to Activity 2 → </button>
+     </section><!-- Activity 2: Reframe Challenge -->
+     <section id="section-activity2" class="mb-12 hidden">
+      <div class="bg-slate-800 rounded-2xl p-6 border border-emerald-500/30">
+       <div class="flex items-center gap-3 mb-6"><span class="text-3xl">✨</span>
+        <div><span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Activity 2</span>
+         <h2 class="text-2xl font-bold text-white">Reframe Challenge</h2>
+        </div>
+       </div>
+       <p class="text-slate-300 mb-6">Transform these fixed mindset thoughts into growth mindset power-ups! 💪</p>
+       <div id="reframe-challenges" class="space-y-6"><!-- Challenges will be generated by JS -->
+       </div>
+       <div id="activity2-result" class="hidden mt-6 p-4 rounded-xl"></div><button id="check-activity2" onclick="checkActivity2()" class="mt-6 w-full py-3 bg-emerald-600 rounded-xl font-bold hover:bg-emerald-500 transition-all"> Submit My Reframes ✓ </button>
+      </div><button id="brain-break-2-btn" onclick="startBrainBreak(2)" class="hidden mt-4 w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl font-bold text-lg hover:from-amber-400 hover:to-orange-400 transition-all"> 🎮 Brain Break: Tetris Time! (1 minute) </button>
+     </section><!-- Brain Break 2 -->
+     <section id="section-brainbreak2" class="mb-12 hidden">
+      <div class="bg-slate-800 rounded-2xl p-6 border border-amber-500/30">
+       <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3"><span class="text-3xl">🎮</span>
+         <div><span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Brain Break</span>
+          <h2 class="text-2xl font-bold text-white">Tetris Round 2!</h2>
+         </div>
+        </div>
+        <div id="tetris-timer-2" class="text-2xl font-bold text-amber-400">
+         1:00
+        </div>
+       </div>
+       <p class="text-slate-300 mb-4">Beat your previous score! Remember: failing = learning 😉</p>
+       <div class="flex flex-col items-center gap-4">
+        <div class="flex gap-6 items-start">
+         <div id="tetris-board-2" class="tetris-board w-48"><!-- 20 rows x 10 cols -->
+         </div>
+         <div class="text-center">
+          <p class="text-sm text-slate-400 mb-2">Score</p>
+          <p id="tetris-score-2" class="text-3xl font-bold text-amber-400">0</p>
+          <div class="mt-4 text-sm text-slate-400">
+           <p>← → Move</p>
+           <p>↑ Rotate</p>
+           <p>↓ Drop</p>
+          </div>
+         </div>
+        </div><button id="start-tetris-2" onclick="startTetris(2)" class="px-8 py-3 bg-amber-500 rounded-xl font-bold hover:bg-amber-400 transition-all"> Start Game 🎮 </button>
+       </div>
+      </div><button id="continue-to-activity3" onclick="showSection('section-activity3')" class="hidden mt-4 w-full py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-bold text-lg hover:from-purple-500 hover:to-cyan-500 transition-all"> Continue to Final Activity → </button>
+     </section><!-- Activity 3: Personal Goals -->
+     <section id="section-activity3" class="mb-12 hidden">
+      <div class="bg-slate-800 rounded-2xl p-6 border border-purple-500/30">
+       <div class="flex items-center gap-3 mb-6"><span class="text-3xl">🚀</span>
+        <div><span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Activity 3</span>
+         <h2 class="text-2xl font-bold text-white">Your Growth Goals</h2>
+        </div>
+       </div>
+       <p class="text-slate-300 mb-6">Set a personal growth goal and plan your journey! What skill do you want to develop?</p>
+       <div class="space-y-6">
+        <div><label class="block text-sm font-medium text-purple-300 mb-2">🎯 My Growth Goal</label> <input type="text" id="goal-input" placeholder="e.g., Get better at public speaking, Learn to code, Improve at math..." class="w-full p-4 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+        </div>
+        <div><label class="block text-sm font-medium text-purple-300 mb-2">🤔 Why This Matters To Me</label> <textarea id="why-input" rows="2" placeholder="Why do you want to achieve this goal?" class="w-full p-4 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all resize-none"></textarea>
+        </div>
+        <div><label class="block text-sm font-medium text-purple-300 mb-2">📝 3 Small Steps I Can Take This Week</label>
+         <div class="space-y-2"><input type="text" id="step-1" placeholder="Step 1..." class="w-full p-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-purple-500 outline-none"> <input type="text" id="step-2" placeholder="Step 2..." class="w-full p-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-purple-500 outline-none"> <input type="text" id="step-3" placeholder="Step 3..." class="w-full p-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-purple-500 outline-none">
+         </div>
+        </div>
+        <div><label class="block text-sm font-medium text-purple-300 mb-2">💭 When I face setbacks, I will remind myself:</label> <input type="text" id="mantra-input" placeholder="e.g., Mistakes help me learn, I'm still growing..." class="w-full p-4 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-purple-500 outline-none">
+        </div>
+       </div><button onclick="completeJourney()" class="mt-6 w-full py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-bold text-lg hover:from-purple-500 hover:to-cyan-500 transition-all"> Complete My Journey 🎉 </button>
+      </div>
+     </section><!-- Completion Section -->
+     <section id="section-complete" class="mb-12 hidden">
+      <div class="text-center py-12">
+       <div class="text-6xl mb-6 bounce-in">
+        🏆
+       </div>
+       <h2 class="text-3xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-4">Journey Complete!</h2>
+       <p class="text-xl text-slate-300 mb-8">You've unlocked your growth mindset potential!</p>
+       <div id="goal-summary" class="bg-slate-800 rounded-2xl p-6 border border-purple-500/30 text-left mb-8"><!-- Summary will be populated by JS -->
+       </div>
+       <div class="grid md:grid-cols-3 gap-4 mb-8">
+        <div class="bg-slate-800 rounded-xl p-4 card-hover">
+         <div class="text-3xl mb-2">
+          🧠
+         </div>
+         <h3 class="font-bold text-purple-300">Remember</h3>
+         <p class="text-sm text-slate-400">Your brain grows with every challenge</p>
+        </div>
+        <div class="bg-slate-800 rounded-xl p-4 card-hover">
+         <div class="text-3xl mb-2">
+          💪
+         </div>
+         <h3 class="font-bold text-cyan-300">Embrace</h3>
+         <p class="text-sm text-slate-400">Mistakes are learning opportunities</p>
+        </div>
+        <div class="bg-slate-800 rounded-xl p-4 card-hover">
+         <div class="text-3xl mb-2">
+          🌟
+         </div>
+         <h3 class="font-bold text-emerald-300">Celebrate</h3>
+         <p class="text-sm text-slate-400">Progress over perfection</p>
+        </div>
+       </div><button onclick="restartJourney()" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-bold hover:from-purple-500 hover:to-cyan-500 transition-all"> Start Over 🔄 </button>
+      </div>
+     </section>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Config for Element SDK
+    const defaultConfig = {
+      main_title: "Growth Mindset Journey",
+      welcome_message: "Level up your brain! 🚀",
+      primary_color: "#8b5cf6",
+      secondary_color: "#06b6d4",
+      text_color: "#e2e8f0",
+      background_color: "#0f172a",
+      accent_color: "#f59e0b",
+      font_family: "Space Grotesk"
+    };
+
+    let config = { ...defaultConfig };
+
+    // Game data
+    const thoughtCards = [
+      { text: "I'm just not a math person", type: "fixed", emoji: "🔢" },
+      { text: "I can improve with practice", type: "growth", emoji: "📈" },
+      { text: "This is too hard, I give up", type: "fixed", emoji: "😤" },
+      { text: "Mistakes help me learn", type: "growth", emoji: "💡" },
+      { text: "I'll never be as good as them", type: "fixed", emoji: "😔" },
+      { text: "What can I learn from this?", type: "growth", emoji: "🤔" },
+      { text: "I'm not smart enough", type: "fixed", emoji: "🙁" },
+      { text: "I can train my brain", type: "growth", emoji: "🧠" }
+    ];
+
+    const reframeChallenges = [
+      { fixed: "I failed the test, I'm so dumb", hint: "Think about what this failure can teach you..." },
+      { fixed: "She's naturally talented, I could never do that", hint: "What if talent is really just hours of practice?" },
+      { fixed: "I've never been good at this", hint: "Add 'yet' to the end..." }
+    ];
+
+    let sortedCards = { fixed: [], growth: [] };
+    let progress = 0;
+    let tetrisGames = {};
+
+    // Initialize boards and activities
+    function initApp() {
+      initThoughtCards();
+      initReframeChallenges();
+      initTetrisBoards();
+    }
+
+    function initThoughtCards() {
+      const container = document.getElementById('thought-cards');
+      const shuffled = [...thoughtCards].sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = shuffled.map((card, i) => `
+        <div id="card-${i}" 
+             draggable="true" 
+             ondragstart="dragCard(event)" 
+             data-type="${card.type}"
+             class="px-4 py-3 bg-slate-700 rounded-lg cursor-grab active:cursor-grabbing hover:bg-slate-600 transition-all text-sm font-medium flex items-center gap-2 border border-slate-600">
+          <span>${card.emoji}</span>
+          <span>${card.text}</span>
+        </div>
+      `).join('');
+    }
+
+    function initReframeChallenges() {
+      const container = document.getElementById('reframe-challenges');
+      container.innerHTML = reframeChallenges.map((challenge, i) => `
+        <div class="bg-slate-700/50 rounded-xl p-4">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-xl">🔒</span>
+            <div>
+              <p class="text-red-300 font-medium">"${challenge.fixed}"</p>
+              <p class="text-xs text-slate-400 mt-1">💡 ${challenge.hint}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🌱</span>
+            <input type="text" id="reframe-${i}" placeholder="Reframe this thought..." class="flex-1 p-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-slate-400 focus:border-emerald-500 outline-none">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function initTetrisBoards() {
+      [1, 2].forEach(num => {
+        const board = document.getElementById(`tetris-board-${num}`);
+        let cells = '';
+        for (let i = 0; i < 200; i++) {
+          cells += `<div class="tetris-cell" data-index="${i}"></div>`;
+        }
+        board.innerHTML = cells;
+      });
+    }
+
+    // Drag and drop functions
+    function dragCard(e) {
+      e.dataTransfer.setData('text/plain', e.target.id);
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('ring-2', 'ring-white/30');
+    }
+    
+    document.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+    
+    document.addEventListener('dragleave', (e) => {
+      if (e.target.id === 'fixed-zone' || e.target.id === 'growth-zone') {
+        e.target.classList.remove('ring-2', 'ring-white/30');
+      }
+    });
+
+    function dropCard(e, zone) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const dropZone = e.currentTarget;
+      dropZone.classList.remove('ring-2', 'ring-white/30');
+      
+      const cardId = e.dataTransfer.getData('text/plain');
+      const card = document.getElementById(cardId);
+      
+      if (card && !card.classList.contains('sorted')) {
+        card.classList.add('sorted', zone === 'fixed' ? 'border-red-500' : 'border-emerald-500');
+        card.draggable = false;
+        card.classList.remove('cursor-grab', 'active:cursor-grabbing');
+        card.style.cursor = 'default';
+        
+        dropZone.appendChild(card);
+        sortedCards[zone].push(cardId);
+        
+        updateActivity1Button();
+      }
+    }
+
+    function updateActivity1Button() {
+      const totalSorted = sortedCards.fixed.length + sortedCards.growth.length;
+      const btn = document.getElementById('check-activity1');
+      btn.disabled = totalSorted < thoughtCards.length;
+    }
+
+    function checkActivity1() {
+      let correct = 0;
+      const total = thoughtCards.length;
+      
+      ['fixed', 'growth'].forEach(zone => {
+        sortedCards[zone].forEach(cardId => {
+          const card = document.getElementById(cardId);
+          const cardType = card.dataset.type;
+          if (cardType === zone) {
+            correct++;
+            card.classList.add('ring-2', 'ring-emerald-400');
+          } else {
+            card.classList.add('ring-2', 'ring-red-400');
+          }
+        });
+      });
+      
+      const resultDiv = document.getElementById('activity1-result');
+      const percentage = Math.round((correct / total) * 100);
+      
+      resultDiv.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="text-4xl">${percentage >= 80 ? '🎉' : percentage >= 50 ? '👍' : '💪'}</span>
+          <div>
+            <p class="font-bold text-lg">${correct}/${total} Correct (${percentage}%)</p>
+            <p class="text-sm text-slate-400">${percentage >= 80 ? 'Amazing! You really understand the difference!' : 'Keep practicing! Growth mindset is a journey.'}</p>
+          </div>
+        </div>
+      `;
+      resultDiv.className = `mt-6 p-4 rounded-xl ${percentage >= 80 ? 'bg-emerald-500/20 border border-emerald-500/50' : 'bg-amber-500/20 border border-amber-500/50'}`;
+      resultDiv.classList.remove('hidden');
+      
+      document.getElementById('check-activity1').classList.add('hidden');
+      document.getElementById('brain-break-1-btn').classList.remove('hidden');
+      
+      updateProgress(25);
+    }
+
+    function checkActivity2() {
+      const responses = reframeChallenges.map((_, i) => 
+        document.getElementById(`reframe-${i}`).value.trim()
+      );
+      
+      const filledCount = responses.filter(r => r.length > 0).length;
+      const resultDiv = document.getElementById('activity2-result');
+      
+      if (filledCount < reframeChallenges.length) {
+        resultDiv.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">✏️</span>
+            <p>Please fill in all ${reframeChallenges.length} reframes to continue!</p>
+          </div>
+        `;
+        resultDiv.className = 'mt-6 p-4 rounded-xl bg-amber-500/20 border border-amber-500/50';
+        resultDiv.classList.remove('hidden');
+        return;
+      }
+      
+      resultDiv.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="text-4xl">🌟</span>
+          <div>
+            <p class="font-bold text-lg">Great reframing!</p>
+            <p class="text-sm text-slate-400">You're building powerful new thought patterns!</p>
+          </div>
+        </div>
+      `;
+      resultDiv.className = 'mt-6 p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50';
+      resultDiv.classList.remove('hidden');
+      
+      document.getElementById('check-activity2').classList.add('hidden');
+      document.getElementById('brain-break-2-btn').classList.remove('hidden');
+      
+      updateProgress(50);
+    }
+
+    // Tetris Game
+    const TETRIS_PIECES = [
+      { shape: [[1,1,1,1]], color: 'cyan' },
+      { shape: [[1,1],[1,1]], color: 'yellow' },
+      { shape: [[0,1,0],[1,1,1]], color: 'purple' },
+      { shape: [[1,0,0],[1,1,1]], color: 'orange' },
+      { shape: [[0,0,1],[1,1,1]], color: 'blue' },
+      { shape: [[1,1,0],[0,1,1]], color: 'green' },
+      { shape: [[0,1,1],[1,1,0]], color: 'red' }
+    ];
+
+    function startTetris(gameNum) {
+      const game = {
+        board: Array(20).fill(null).map(() => Array(10).fill(0)),
+        score: 0,
+        piece: null,
+        pieceX: 0,
+        pieceY: 0,
+        gameLoop: null,
+        timerLoop: null,
+        timeLeft: 60,
+        active: true
+      };
+      
+      tetrisGames[gameNum] = game;
+      
+      document.getElementById(`start-tetris-${gameNum}`).classList.add('hidden');
+      spawnPiece(gameNum);
+      
+      game.gameLoop = setInterval(() => {
+        if (game.active) {
+          movePieceDown(gameNum);
+          renderTetrisBoard(gameNum);
+        }
+      }, 500);
+      
+      game.timerLoop = setInterval(() => {
+        game.timeLeft--;
+        updateTetrisTimer(gameNum);
+        
+        if (game.timeLeft <= 0) {
+          endTetris(gameNum);
+        }
+      }, 1000);
+      
+      document.addEventListener('keydown', (e) => handleTetrisKey(e, gameNum));
+    }
+
+    function spawnPiece(gameNum) {
+      const game = tetrisGames[gameNum];
+      const piece = TETRIS_PIECES[Math.floor(Math.random() * TETRIS_PIECES.length)];
+      game.piece = piece.shape.map(row => [...row]);
+      game.pieceX = Math.floor((10 - game.piece[0].length) / 2);
+      game.pieceY = 0;
+      
+      if (!canMove(gameNum, 0, 0)) {
+        endTetris(gameNum);
+      }
+    }
+
+    function canMove(gameNum, dx, dy, testPiece = null) {
+      const game = tetrisGames[gameNum];
+      const piece = testPiece || game.piece;
+      const newX = game.pieceX + dx;
+      const newY = game.pieceY + dy;
+      
+      for (let y = 0; y < piece.length; y++) {
+        for (let x = 0; x < piece[y].length; x++) {
+          if (piece[y][x]) {
+            const boardX = newX + x;
+            const boardY = newY + y;
+            
+            if (boardX < 0 || boardX >= 10 || boardY >= 20) return false;
+            if (boardY >= 0 && game.board[boardY][boardX]) return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function movePieceDown(gameNum) {
+      const game = tetrisGames[gameNum];
+      if (canMove(gameNum, 0, 1)) {
+        game.pieceY++;
+      } else {
+        lockPiece(gameNum);
+        clearLines(gameNum);
+        spawnPiece(gameNum);
+      }
+    }
+
+    function lockPiece(gameNum) {
+      const game = tetrisGames[gameNum];
+      for (let y = 0; y < game.piece.length; y++) {
+        for (let x = 0; x < game.piece[y].length; x++) {
+          if (game.piece[y][x] && game.pieceY + y >= 0) {
+            game.board[game.pieceY + y][game.pieceX + x] = 1;
+          }
+        }
+      }
+    }
+
+    function clearLines(gameNum) {
+      const game = tetrisGames[gameNum];
+      let linesCleared = 0;
+      
+      for (let y = game.board.length - 1; y >= 0; y--) {
+        if (game.board[y].every(cell => cell)) {
+          game.board.splice(y, 1);
+          game.board.unshift(Array(10).fill(0));
+          linesCleared++;
+          y++;
+        }
+      }
+      
+      if (linesCleared > 0) {
+        game.score += linesCleared * 100 * linesCleared;
+        document.getElementById(`tetris-score-${gameNum}`).textContent = game.score;
+      }
+    }
+
+    function rotatePiece(gameNum) {
+      const game = tetrisGames[gameNum];
+      const rotated = game.piece[0].map((_, i) => 
+        game.piece.map(row => row[i]).reverse()
+      );
+      
+      if (canMove(gameNum, 0, 0, rotated)) {
+        game.piece = rotated;
+      }
+    }
+
+    function handleTetrisKey(e, gameNum) {
+      const game = tetrisGames[gameNum];
+      if (!game || !game.active) return;
+      
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        e.preventDefault();
+      }
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          if (canMove(gameNum, -1, 0)) game.pieceX--;
+          break;
+        case 'ArrowRight':
+          if (canMove(gameNum, 1, 0)) game.pieceX++;
+          break;
+        case 'ArrowDown':
+          movePieceDown(gameNum);
+          break;
+        case 'ArrowUp':
+          rotatePiece(gameNum);
+          break;
+      }
+      renderTetrisBoard(gameNum);
+    }
+
+    function renderTetrisBoard(gameNum) {
+      const game = tetrisGames[gameNum];
+      const board = document.getElementById(`tetris-board-${gameNum}`);
+      const cells = board.querySelectorAll('.tetris-cell');
+      
+      cells.forEach((cell, i) => {
+        const x = i % 10;
+        const y = Math.floor(i / 10);
+        
+        cell.classList.remove('filled', 'active');
+        
+        if (game.board[y][x]) {
+          cell.classList.add('filled');
+        }
+      });
+      
+      if (game.piece) {
+        for (let py = 0; py < game.piece.length; py++) {
+          for (let px = 0; px < game.piece[py].length; px++) {
+            if (game.piece[py][px]) {
+              const boardX = game.pieceX + px;
+              const boardY = game.pieceY + py;
+              if (boardY >= 0 && boardY < 20 && boardX >= 0 && boardX < 10) {
+                const index = boardY * 10 + boardX;
+                cells[index].classList.add('active');
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function updateTetrisTimer(gameNum) {
+      const game = tetrisGames[gameNum];
+      const mins = Math.floor(game.timeLeft / 60);
+      const secs = game.timeLeft % 60;
+      document.getElementById(`tetris-timer-${gameNum}`).textContent = 
+        `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function endTetris(gameNum) {
+      const game = tetrisGames[gameNum];
+      game.active = false;
+      
+      if (game.gameLoop) clearInterval(game.gameLoop);
+      if (game.timerLoop) clearInterval(game.timerLoop);
+      
+      document.getElementById(`continue-to-activity${gameNum + 1}`).classList.remove('hidden');
+      updateProgress(gameNum === 1 ? 37 : 62);
+    }
+
+    // Navigation
+    function startJourney() {
+      showSection('section-activity1');
+      updateProgress(10);
+    }
+
+    function startBrainBreak(num) {
+      showSection(`section-brainbreak${num}`);
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+      const section = document.getElementById(sectionId);
+      section.classList.remove('hidden');
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function updateProgress(value) {
+      progress = Math.max(progress, value);
+      document.getElementById('progress-fill').style.width = `${progress}%`;
+      document.getElementById('progress-text').textContent = `${progress}%`;
+    }
+
+    function completeJourney() {
+      const goal = document.getElementById('goal-input').value || 'My growth goal';
+      const why = document.getElementById('why-input').value || 'Because growth matters';
+      const steps = [
+        document.getElementById('step-1').value || 'Step 1',
+        document.getElementById('step-2').value || 'Step 2',
+        document.getElementById('step-3').value || 'Step 3'
+      ];
+      const mantra = document.getElementById('mantra-input').value || 'I am always growing';
+      
+      document.getElementById('goal-summary').innerHTML = `
+        <h3 class="text-xl font-bold text-purple-300 mb-4">📋 Your Growth Plan</h3>
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm text-slate-400">🎯 Goal</p>
+            <p class="font-medium">${goal}</p>
+          </div>
+          <div>
+            <p class="text-sm text-slate-400">💭 Why It Matters</p>
+            <p class="font-medium">${why}</p>
+          </div>
+          <div>
+            <p class="text-sm text-slate-400">📝 This Week's Steps</p>
+            <ul class="list-disc list-inside space-y-1">
+              ${steps.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="p-3 bg-purple-500/20 rounded-lg">
+            <p class="text-sm text-slate-400">💪 My Mantra</p>
+            <p class="font-bold text-purple-300 italic">"${mantra}"</p>
+          </div>
+        </div>
+      `;
+      
+      showSection('section-complete');
+      updateProgress(100);
+    }
+
+    function restartJourney() {
+      sortedCards = { fixed: [], growth: [] };
+      progress = 0;
+      tetrisGames = {};
+      
+      initApp();
+      
+      document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+      document.getElementById('activity1-result').classList.add('hidden');
+      document.getElementById('activity2-result').classList.add('hidden');
+      document.getElementById('check-activity1').classList.remove('hidden');
+      document.getElementById('check-activity1').disabled = true;
+      document.getElementById('check-activity2').classList.remove('hidden');
+      document.getElementById('brain-break-1-btn').classList.add('hidden');
+      document.getElementById('brain-break-2-btn').classList.add('hidden');
+      document.getElementById('continue-to-activity2').classList.add('hidden');
+      document.getElementById('continue-to-activity3').classList.add('hidden');
+      document.getElementById('start-tetris-1').classList.remove('hidden');
+      document.getElementById('start-tetris-2').classList.remove('hidden');
+      document.getElementById('tetris-timer-1').textContent = '1:00';
+      document.getElementById('tetris-timer-2').textContent = '1:00';
+      document.getElementById('tetris-score-1').textContent = '0';
+      document.getElementById('tetris-score-2').textContent = '0';
+      
+      updateProgress(0);
+      showSection('section-welcome');
+    }
+
+    // Element SDK
+    async function onConfigChange(cfg) {
+      document.getElementById('main-title').textContent = cfg.main_title || defaultConfig.main_title;
+      document.getElementById('welcome-msg').textContent = cfg.welcome_message || defaultConfig.welcome_message;
+      
+      const font = cfg.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${font}, sans-serif`;
+    }
+
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+          },
+          {
+            get: () => cfg.primary_color || defaultConfig.primary_color,
+            set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+          },
+          {
+            get: () => cfg.secondary_color || defaultConfig.secondary_color,
+            set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+          },
+          {
+            get: () => cfg.accent_color || defaultConfig.accent_color,
+            set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => cfg.font_family || defaultConfig.font_family,
+          set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+        },
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['main_title', cfg.main_title || defaultConfig.main_title],
+        ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+      ]);
+    }
+
+    // Initialize
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+      config = window.elementSdk.config;
+    }
+
+    initApp();
+    onConfigChange(config);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6588ee647f531e',t:'MTc3MjUwODMzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
