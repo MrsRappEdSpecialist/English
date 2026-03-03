@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night by Elie Wiesel - Chapter One Lesson</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #1a1a2e;
+      --text-primary: #e8e8f0;
+      --accent-primary: #4a90a4;
+      --accent-secondary: #6b4a7a;
+    }
+    
+    .high-contrast {
+      --bg-primary: #000000;
+      --bg-secondary: #1a1a1a;
+      --text-primary: #ffffff;
+      --accent-primary: #00ffff;
+      --accent-secondary: #ffff00;
+    }
+    
+    .sepia-mode {
+      --bg-primary: #2d2416;
+      --bg-secondary: #3d3426;
+      --text-primary: #f4e4c1;
+      --accent-primary: #c4a456;
+      --accent-secondary: #8b6b4a;
+    }
+    
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-family, 'Inter', sans-serif);
+      font-size: var(--font-size, 16px);
+    }
+    
+    .card-bg {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .accent-btn {
+      background: var(--accent-primary);
+    }
+    
+    .accent-btn:hover {
+      filter: brightness(1.1);
+    }
+    
+    .secondary-btn {
+      background: var(--accent-secondary);
+    }
+    
+    .drag-item {
+      cursor: grab;
+      transition: all 0.2s;
+    }
+    
+    .drag-item:active {
+      cursor: grabbing;
+    }
+    
+    .drop-zone {
+      min-height: 60px;
+      border: 2px dashed rgba(255,255,255,0.3);
+      transition: all 0.2s;
+    }
+    
+    .drop-zone.drag-over {
+      border-color: var(--accent-primary);
+      background: rgba(74, 144, 164, 0.1);
+    }
+    
+    .flashcard {
+      perspective: 1000px;
+    }
+    
+    .flashcard-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    
+    .flashcard.flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+    
+    .flashcard-front, .flashcard-back {
+      backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .flashcard-back {
+      transform: rotateY(180deg);
+    }
+    
+    .correct-feedback {
+      background: #1a4d2e;
+      border-color: #2d8b4e;
+    }
+    
+    .incorrect-feedback {
+      background: #4d1a1a;
+      border-color: #8b2d2d;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    }
+    
+    .tts-active {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+    
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .card-bg {
+        background: #f5f5f5 !important;
+        border: 1px solid #ccc !important;
+      }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full w-full"><!-- Progress Bar - Fixed at Top -->
+   <div class="no-print fixed top-0 left-0 right-0 z-40 w-full bg-gray-900 p-4 border-b border-gray-700">
+    <div class="max-w-4xl mx-auto">
+     <div class="flex justify-between text-sm mb-2"><span>Progress</span> <span id="progress-text">0% Complete</span>
+     </div>
+     <div class="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
+      <div id="progress-bar" class="progress-bar h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+     </div>
+    </div>
+   </div><!-- Main Content with Top Padding for Fixed Progress Bar -->
+   <div class="pt-24"><!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="no-print fixed bottom-4 left-4 z-50 flex flex-wrap gap-2 card-bg rounded-lg p-3 max-w-xs transition-all duration-300"><button onclick="toggleTTS()" class="p-2 rounded accent-btn text-white text-sm" title="Text to Speech" aria-label="Toggle text to speech"> 🔊 TTS </button> <button onclick="adjustFontSize(-2)" class="p-2 rounded accent-btn text-white text-sm" title="Decrease text size" aria-label="Decrease text size"> A- </button> <button onclick="adjustFontSize(2)" class="p-2 rounded accent-btn text-white text-sm" title="Increase text size" aria-label="Increase text size"> A+ </button> <select onchange="changeFont(this.value)" class="p-2 rounded bg-gray-700 text-white text-sm" aria-label="Select font"> <option value="Inter">Inter</option> <option value="Crimson Text">Serif</option> <option value="OpenDyslexic, sans-serif">Dyslexia</option> <option value="Arial">Arial</option> </select> <select onchange="changeContrast(this.value)" class="p-2 rounded bg-gray-700 text-white text-sm" aria-label="Select color contrast"> <option value="default">Night Mode</option> <option value="high-contrast">High Contrast</option> <option value="sepia-mode">Sepia</option> </select> <button onclick="minimizeAccessibilityToolbar()" class="p-2 rounded secondary-btn text-white text-sm" title="Minimize toolbar" aria-label="Minimize accessibility toolbar"> − </button>
+    </div><button id="accessibility-minimize-btn" class="no-print fixed bottom-4 left-4 z-50 hidden p-2 rounded accent-btn text-white text-sm" onclick="expandAccessibilityToolbar()" title="Show accessibility tools" aria-label="Expand accessibility toolbar"> ⚙️ </button><!-- Header -->
+    <header class="text-center mb-8 pt-16 md:pt-8">
+     <h1 id="main-title" class="text-3xl md:text-4xl font-bold mb-2" style="font-family: 'Crimson Text', serif;">Night by Elie Wiesel</h1>
+     <h2 class="text-xl md:text-2xl opacity-80">Chapter One Interactive Lesson</h2>
+     <div class="mt-4 flex flex-wrap justify-center gap-4 items-center"><label class="flex items-center gap-2"> <span>Student Name:</span> <input type="text" id="student-name" class="px-3 py-2 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none" placeholder="Enter your name" aria-label="Student name"> </label> <span id="save-status" class="text-sm opacity-70">Auto-saving enabled ✓</span>
+     </div>
+    </header><!-- Main Content -->
+    <main class="max-w-4xl mx-auto space-y-12"><!-- Section 1: Pre-Reading Agree/Disagree -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="prereading-title">
+      <h3 id="prereading-title" class="text-2xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">📚</span> Pre-Reading: Agree or Disagree?</h3>
+      <p class="mb-6 opacity-80 tts-text">Drag each statement to whether you AGREE or DISAGREE. These themes will emerge throughout the novel.</p>
+      <div class="grid md:grid-cols-3 gap-4"><!-- Statements to drag -->
+       <div id="statements-container" class="space-y-3">
+        <div class="drag-item card-bg rounded-lg p-3 text-sm tts-text" draggable="true" data-statement="1">
+         "Faith can be tested by extreme suffering."
+        </div>
+        <div class="drag-item card-bg rounded-lg p-3 text-sm tts-text" draggable="true" data-statement="2">
+         "Silence in the face of injustice is complicity."
+        </div>
+        <div class="drag-item card-bg rounded-lg p-3 text-sm tts-text" draggable="true" data-statement="3">
+         "People will ignore warnings that seem too terrible to be true."
+        </div>
+        <div class="drag-item card-bg rounded-lg p-3 text-sm tts-text" draggable="true" data-statement="4">
+         "Family bonds can survive anything."
+        </div>
+        <div class="drag-item card-bg rounded-lg p-3 text-sm tts-text" draggable="true" data-statement="5">
+         "Ordinary people are capable of extraordinary evil."
+        </div>
+       </div><!-- Agree Zone -->
+       <div>
+        <h4 class="text-center font-semibold mb-2 text-green-400">✓ AGREE</h4>
+        <div id="agree-zone" class="drop-zone rounded-lg p-3 min-h-40 space-y-2" data-zone="agree"></div>
+       </div><!-- Disagree Zone -->
+       <div>
+        <h4 class="text-center font-semibold mb-2 text-red-400">✗ DISAGREE</h4>
+        <div id="disagree-zone" class="drop-zone rounded-lg p-3 min-h-40 space-y-2" data-zone="disagree"></div>
+       </div>
+      </div>
+     </section><!-- Section 2: Vocabulary Flashcards -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="vocab-title">
+      <h3 id="vocab-title" class="text-2xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">📖</span> Vocabulary Flashcards</h3>
+      <p class="mb-6 opacity-80 tts-text">Click each card to flip and reveal the definition. Click the speaker icon to hear the word.</p>
+      <div id="flashcards-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"><!-- Flashcards will be generated by JS -->
+      </div>
+      <div class="mt-4 text-center"><span id="cards-flipped" class="text-sm opacity-70">0/5 cards studied</span>
+      </div>
+     </section><!-- Section 3: Vocabulary Matching -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="matching-title">
+      <h3 id="matching-title" class="text-2xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">🔗</span> Vocabulary Matching Activity</h3>
+      <p class="mb-6 opacity-80 tts-text">Match each vocabulary word with its correct usage in context.</p>
+      <div id="matching-activity" class="space-y-4"><!-- Matching items will be generated by JS -->
+      </div><button onclick="checkMatching()" class="mt-4 px-6 py-3 accent-btn rounded-lg font-semibold text-white"> Check Answers </button>
+      <div id="matching-feedback" class="mt-4 hidden p-4 rounded-lg"></div>
+     </section><!-- Section 4: Comprehension Questions -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="comprehension-title">
+      <h3 id="comprehension-title" class="text-2xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">❓</span> Comprehension Questions</h3>
+      <p class="mb-6 opacity-80 tts-text">Answer each question. You can revise your answer if incorrect.</p>
+      <div id="questions-container" class="space-y-8"><!-- Questions will be generated by JS -->
+      </div>
+     </section><!-- Section 5: CER Writing -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="cer-title">
+      <h3 id="cer-title" class="text-2xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">✍️</span> Claim-Evidence-Reasoning Response</h3>
+      <p class="mb-4 opacity-80 tts-text"><strong>Prompt:</strong> How did the arrival of the Germans transform life for the Jews of Sighet from seeming civility to systematic oppression? Analyze how the gradual nature of persecution made it difficult for the community to recognize the danger.</p><!-- Scaffolds -->
+      <div class="mb-6 card-bg rounded-lg p-4">
+       <h4 class="font-semibold mb-3 text-lg">📝 Writing Scaffolds</h4><!-- Claim -->
+       <div class="mb-4"><label class="block font-medium mb-2">CLAIM (Your argument):</label>
+        <p class="text-sm opacity-70 mb-2">Sentence frame: "When the Germans arrived in Sighet, they appeared civilized at first, but gradually implemented increasingly brutal restrictions that transformed daily life for Jews..."</p><textarea id="cer-claim" class="w-full p-3 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none min-h-20" placeholder="Write your claim here..." aria-label="Write your claim"></textarea>
+       </div><!-- Evidence Selection -->
+       <div class="mb-4"><label class="block font-medium mb-2">EVIDENCE (Choose one quote):</label>
+        <div class="space-y-2"><button onclick="selectEvidence(1)" id="evidence-1" class="w-full text-left p-3 rounded border-2 border-gray-600 hover:border-blue-400 transition-colors"> <span class="font-semibold">Option 1 (Initial Kindness):</span> "The Germans came to our street, and they were graceful, even buying chocolate for the ladies. At first, it seemed almost civilized." </button> <button onclick="selectEvidence(2)" id="evidence-2" class="w-full text-left p-3 rounded border-2 border-gray-600 hover:border-blue-400 transition-colors"> <span class="font-semibold">Option 2 (Escalating Persecution):</span> "Then came the laws. On pain of death, Jews could not leave their homes. Our leaders were arrested. We were banned from the synagogue. The yellow star was sown onto our clothes. The ghetto walls were built around us." </button>
+        </div>
+        <p class="text-sm opacity-70 mt-2">Sentence frame: "Wiesel's description of the Germans' arrival shows that..."</p><textarea id="cer-evidence" class="w-full p-3 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none min-h-20 mt-2" placeholder="Copy and cite your evidence here..." aria-label="Write your evidence"></textarea>
+       </div><!-- Reasoning -->
+       <div class="mb-4"><label class="block font-medium mb-2">REASONING (Explain how evidence supports claim):</label>
+        <p class="text-sm opacity-70 mb-2">Sentence frame: "This evidence shows that the shift from civility to oppression happened gradually, which means... This demonstrates how deceptive tyranny can be when it arrives slowly..."</p><textarea id="cer-reasoning" class="w-full p-3 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none min-h-24" placeholder="Explain your reasoning here..." aria-label="Write your reasoning"></textarea>
+       </div>
+      </div><!-- Generated CER Box -->
+      <div class="mb-4">
+       <h4 class="font-semibold mb-2">📄 Your Complete CER Response:</h4>
+       <div id="cer-output" class="w-full p-4 rounded bg-gray-900 border border-gray-600 min-h-32 whitespace-pre-wrap" style="font-family: 'Crimson Text', serif; line-height: 1.8;"><span class="opacity-50 italic">Your complete paragraph will appear here as you write...</span>
+       </div><button onclick="copyCER()" class="mt-3 px-4 py-2 accent-btn rounded-lg text-white flex items-center gap-2"> 📋 Copy to Clipboard </button> <span id="copy-feedback" class="ml-3 text-green-400 hidden">Copied!</span>
+      </div>
+     </section><!-- Section 6: Exit Ticket -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="exit-title">
+      <h3 id="exit-title" class="text-2xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">🎫</span> Critical Thinking: Connections &amp; Application</h3>
+      <p class="mb-4 text-gray-900 tts-text" style="background: #f4c430; padding: 0.75rem; border-radius: 0.5rem;">Create a question that explores how Moishe's warning connects to larger themes about how societies respond to threats, or how this applies to the world today.</p>
+      <div class="mb-4"><label class="block font-medium mb-2" style="color: var(--text-primary);">Question Starters (Connections &amp; Application):</label>
+       <div class="flex flex-wrap gap-2 mb-4"><button onclick="addStarter('How does Moishe\'s warning demonstrate that...')" class="px-3 py-1 rounded secondary-btn text-white text-sm">How does this demonstrate...</button> <button onclick="addStarter('Why does the community\'s refusal to believe Moishe connect to...')" class="px-3 py-1 rounded secondary-btn text-white text-sm">How does this connect to...</button> <button onclick="addStarter('What does this chapter reveal about how societies respond to...')" class="px-3 py-1 rounded secondary-btn text-white text-sm">What does this reveal about...</button> <button onclick="addStarter('How can we apply the lesson of ignored warnings to...')" class="px-3 py-1 rounded secondary-btn text-white text-sm">How can we apply this...</button>
+       </div><textarea id="exit-question" class="w-full p-3 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none min-h-24" placeholder="Write your critical thinking question here..." aria-label="Write your critical thinking question"></textarea>
+      </div>
+     </section><!-- Section 7: Student Reflection & Feedback -->
+     <section class="card-bg rounded-xl p-6" aria-labelledby="feedback-title">
+      <h3 id="feedback-title" class="text-2xl font-bold mb-6 flex items-center gap-2"><span class="text-2xl">💭</span> Student Reflection &amp; Feedback</h3>
+      <p class="mb-6 opacity-80 tts-text">Help me improve this lesson! Your honest feedback is valuable.</p><!-- Lesson Effectiveness Rating -->
+      <div class="mb-8"><label class="block font-semibold mb-3 tts-text">How effective was this lesson in helping you understand Chapter One?</label>
+       <div class="flex gap-4 items-center">
+        <div class="flex gap-2"><button onclick="setRating('lesson-rating', '1')" class="w-10 h-10 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:border-yellow-400 transition-colors" data-rating="1" aria-label="1 star - Not effective">⭐</button> <button onclick="setRating('lesson-rating', '2')" class="w-10 h-10 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:border-yellow-400 transition-colors" data-rating="2" aria-label="2 stars - Somewhat effective">⭐⭐</button> <button onclick="setRating('lesson-rating', '3')" class="w-10 h-10 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:border-yellow-400 transition-colors" data-rating="3" aria-label="3 stars - Moderately effective">⭐⭐⭐</button> <button onclick="setRating('lesson-rating', '4')" class="w-10 h-10 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:border-yellow-400 transition-colors" data-rating="4" aria-label="4 stars - Very effective">⭐⭐⭐⭐</button> <button onclick="setRating('lesson-rating', '5')" class="w-10 h-10 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:border-yellow-400 transition-colors" data-rating="5" aria-label="5 stars - Extremely effective">⭐⭐⭐⭐⭐</button>
+        </div><span id="lesson-rating-display" class="text-sm opacity-70"></span>
+       </div>
+      </div><!-- Difficulty Rating -->
+      <div class="mb-8"><label class="block font-semibold mb-3 tts-text">Was this lesson at the right difficulty level?</label>
+       <div class="flex gap-3"><button onclick="setDifficultyRating('easy')" class="px-4 py-2 rounded border-2 border-gray-500 cursor-pointer hover:border-yellow-400 transition-colors" data-difficulty="easy" aria-label="Too easy">Too Easy</button> <button onclick="setDifficultyRating('just-right')" class="px-4 py-2 rounded border-2 border-gray-500 cursor-pointer hover:border-yellow-400 transition-colors" data-difficulty="just-right" aria-label="Just right">Just Right</button> <button onclick="setDifficultyRating('hard')" class="px-4 py-2 rounded border-2 border-gray-500 cursor-pointer hover:border-yellow-400 transition-colors" data-difficulty="hard" aria-label="Too hard">Too Hard</button>
+       </div>
+      </div><!-- Improvement Suggestions -->
+      <div class="mb-8"><label for="feedback-text" class="block font-semibold mb-2 tts-text">What could I improve about this lesson?</label> <textarea id="feedback-text" class="w-full p-3 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none min-h-20" placeholder="Share your suggestions... (e.g., 'The vocabulary section was confusing', 'I'd like more examples', etc.)" aria-label="Improvement suggestions"></textarea>
+      </div><!-- Favorite Part -->
+      <div class="mb-4"><label for="favorite-part" class="block font-semibold mb-2 tts-text">What was your favorite part of this lesson?</label> <textarea id="favorite-part" class="w-full p-3 rounded bg-gray-800 border border-gray-600 focus:border-blue-400 outline-none min-h-20" placeholder="Share what you enjoyed most... (e.g., 'The drag-and-drop activity', 'The CER writing', etc.)" aria-label="Favorite part"></textarea>
+      </div>
+     </section><!-- Print to PDF -->
+     <section class="no-print card-bg rounded-xl p-6 text-center">
+      <h3 class="text-2xl font-bold mb-4">📄 Save Your Work</h3>
+      <p class="mb-4 opacity-80">Your work is automatically saved. You can also print or save as PDF.</p><button onclick="printToPDF()" class="px-8 py-4 accent-btn rounded-lg font-semibold text-white text-lg"> 🖨️ Print / Save as PDF </button>
+     </section>
+    </main><!-- Footer -->
+    <footer class="text-center mt-12 pb-8 opacity-60 text-sm">
+     <p>Night by Elie Wiesel - Chapter 1 Interactive Lesson</p>
+     <p class="mt-2">Remember: "For the dead and the living, we must bear witness."</p>
+    </footer>
+   </div>
+  </div><!-- Definition Tooltip -->
+  <div id="definition-tooltip" class="fixed hidden z-50 max-w-xs p-3 rounded-lg shadow-lg" style="background: var(--bg-secondary); border: 1px solid var(--accent-primary);">
+   <p id="tooltip-word" class="font-bold mb-1"></p>
+   <p id="tooltip-definition" class="text-sm opacity-90"></p><button onclick="speakWord()" class="mt-2 text-sm underline opacity-70 hover:opacity-100">🔊 Listen</button>
+  </div>
+  <script>
+    // Configuration
+    const defaultConfig = {
+      lesson_title: 'Night by Elie Wiesel - Chapter One',
+      student_name_label: 'Student Name',
+      font_family: 'Inter',
+      font_size: 16,
+      primary_color: '#4a90a4',
+      secondary_color: '#6b4a7a',
+      background_color: '#0a0a0f',
+      surface_color: '#1a1a2e',
+      text_color: '#e8e8f0'
+    };
+
+    let config = { ...defaultConfig };
+    let ttsEnabled = false;
+    let currentTooltipWord = '';
+    let selectedEvidence = null;
+    let flippedCards = new Set();
+    let answeredQuestions = new Set();
+
+    // Vocabulary data
+    const vocabulary = [
+      {
+        word: 'Kabbalah',
+        definition: 'A form of Jewish mysticism that seeks to explain the relationship between God, the universe, and humanity through hidden meanings in religious texts.',
+        context: 'Moishe the Beadle taught young Elie about Kabbalah and Jewish mysticism.'
+      },
+      {
+        word: 'Synagogue',
+        definition: 'A Jewish house of worship and community gathering place where religious services, study, and prayer take place.',
+        context: 'The Jews of Sighet gathered at the synagogue to pray and discuss the news.'
+      },
+      {
+        word: 'Ghetto',
+        definition: 'A section of a city where Jews were forced to live, separated from the rest of the population, often overcrowded and with poor conditions.',
+        context: 'The Germans forced all Jews into ghettos before deportation.'
+      },
+      {
+        word: 'Gestapo',
+        definition: 'The secret police of Nazi Germany, known for their brutal methods of enforcing Nazi policies and terrorizing populations.',
+        context: 'The Gestapo arrived in Sighet and began implementing anti-Jewish measures.'
+      },
+      {
+        word: 'Deportation',
+        definition: 'The forced removal and transport of people from their homes to another location, often concentration camps during the Holocaust.',
+        context: 'Moishe the Beadle survived deportation and returned to warn the community.'
+      }
+    ];
+
+    // Matching activity data
+    const matchingItems = [
+      { word: 'Kabbalah', sentence: 'Moishe spent hours teaching Elie about Jewish mysticism and the ____.' },
+      { word: 'Synagogue', sentence: 'The community gathered at the ____ to hear the latest news about the war.' },
+      { word: 'Ghetto', sentence: 'Jews were forced to leave their homes and move into the overcrowded ____.' },
+      { word: 'Gestapo', sentence: 'The ____ terrified the population with their brutal enforcement of Nazi laws.' },
+      { word: 'Deportation', sentence: 'Moishe escaped the ____ and returned to warn others of the dangers ahead.' }
+    ];
+
+    // Comprehension questions
+    const questions = [
+      {
+        id: 1,
+        question: 'Why does Elie first seek out Moishe the Beadle?',
+        options: [
+          'To learn about politics',
+          'To study Kabbalah and Jewish mysticism',
+          'To get help with schoolwork',
+          'To learn German'
+        ],
+        correct: 1,
+        explanation: 'Elie sought out Moishe the Beadle because he wanted to find someone to guide him in his study of Kabbalah, the Jewish mystical tradition.'
+      },
+      {
+        id: 2,
+        question: 'What happened to Moishe the Beadle after he was deported?',
+        options: [
+          'He was sent to a concentration camp',
+          'He escaped and returned to Sighet to warn others',
+          'He was killed immediately',
+          'He went into hiding in another country'
+        ],
+        correct: 1,
+        explanation: 'Moishe escaped after being shot and left for dead. He returned to Sighet to warn the Jewish community about the Nazi atrocities.'
+      },
+      {
+        id: 3,
+        question: 'How did the Jews of Sighet respond to Moishe\'s warnings?',
+        options: [
+          'They immediately fled the town',
+          'They reported him to authorities',
+          'They did not believe him and thought he had gone mad',
+          'They organized a resistance movement'
+        ],
+        correct: 2,
+        explanation: 'The Jews of Sighet refused to believe Moishe\'s stories. They thought he had lost his mind or was seeking attention.'
+      },
+      {
+        id: 4,
+        question: 'What does the community\'s reaction to Moishe reveal about human nature?',
+        options: [
+          'People always trust eyewitnesses',
+          'People often deny warnings that are too terrible to accept',
+          'Communities always protect their vulnerable members',
+          'Faith makes people immune to danger'
+        ],
+        correct: 1,
+        explanation: 'The community\'s denial reveals that people often refuse to believe warnings about terrible events because accepting them would mean confronting an unbearable reality.'
+      }
+    ];
+
+    // Word definitions for click-to-define
+    const wordDefinitions = {
+      'holocaust': 'The systematic genocide of six million Jews by Nazi Germany during World War II.',
+      'persecution': 'Harsh treatment or punishment, especially because of race, religion, or beliefs.',
+      'atrocity': 'An extremely cruel or violent act, especially during wartime.',
+      'witness': 'A person who sees an event and can give a firsthand account of what happened.',
+      'testimony': 'A formal statement, especially one given in a court or as evidence.',
+      'survival': 'The state of continuing to live, especially despite difficult conditions.',
+      'faith': 'Complete trust or belief in something, often religious.',
+      'denial': 'Refusal to accept or believe something.',
+      'identity': 'Who a person is, including their culture, beliefs, and background.',
+      'humanity': 'Human beings collectively; also the quality of being humane or compassionate.'
+    };
+
+    // Storage key for this instance
+    const STORAGE_KEY = 'night_chapter1_lesson_' + (new URLSearchParams(window.location.search).get('id') || 'default');
+
+    // Initialize the application
+    function init() {
+      loadFromStorage();
+      initializeFlashcards();
+      initializeMatching();
+      initializeQuestions();
+      initializeDragAndDrop();
+      setupAutoSave();
+      setupTextDefinitions();
+      updateProgress();
+      
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...defaultConfig, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.background_color || defaultConfig.background_color,
+                set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => cfg.surface_color || defaultConfig.surface_color,
+                set: (v) => { cfg.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.primary_color || defaultConfig.primary_color,
+                set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => cfg.font_family || defaultConfig.font_family,
+              set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+            },
+            fontSizeable: {
+              get: () => cfg.font_size || defaultConfig.font_size,
+              set: (v) => { cfg.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+            }
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['lesson_title', cfg.lesson_title || defaultConfig.lesson_title],
+            ['student_name_label', cfg.student_name_label || defaultConfig.student_name_label]
+          ])
+        });
+      }
+    }
+
+    function applyConfig() {
+      document.documentElement.style.setProperty('--bg-primary', config.background_color);
+      document.documentElement.style.setProperty('--bg-secondary', config.surface_color);
+      document.documentElement.style.setProperty('--text-primary', config.text_color);
+      document.documentElement.style.setProperty('--accent-primary', config.primary_color);
+      document.documentElement.style.setProperty('--accent-secondary', config.secondary_color);
+      document.documentElement.style.setProperty('--font-family', config.font_family);
+      document.documentElement.style.setProperty('--font-size', config.font_size + 'px');
+    }
+
+    // Flashcards
+    function initializeFlashcards() {
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = vocabulary.map((item, index) => `
+        <div class="flashcard h-48 cursor-pointer" onclick="flipCard(${index})" data-card="${index}" role="button" aria-label="Flashcard for ${item.word}. Click to flip.">
+          <div class="flashcard-inner relative w-full h-full">
+            <div class="flashcard-front absolute w-full h-full card-bg rounded-xl flex flex-col items-center justify-center p-4">
+              <span class="text-2xl font-bold">${item.word}</span>
+              <button onclick="event.stopPropagation(); speakText('${item.word}')" class="mt-2 p-2 rounded-full accent-btn text-white" aria-label="Listen to pronunciation">🔊</button>
+              <span class="text-sm opacity-50 mt-2">Click to flip</span>
+            </div>
+            <div class="flashcard-back absolute w-full h-full card-bg rounded-xl flex flex-col items-center justify-center p-4 text-center">
+              <p class="text-sm leading-relaxed">${item.definition}</p>
+              <span class="text-xs opacity-50 mt-3">Click to flip back</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function flipCard(index) {
+      const card = document.querySelector(`[data-card="${index}"]`);
+      card.classList.toggle('flipped');
+      flippedCards.add(index);
+      document.getElementById('cards-flipped').textContent = `${flippedCards.size}/5 cards studied`;
+      saveToStorage();
+      updateProgress();
+    }
+
+    // Matching Activity
+    function initializeMatching() {
+      const container = document.getElementById('matching-activity');
+      const shuffledWords = [...vocabulary.map(v => v.word)].sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = matchingItems.map((item, index) => `
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 card-bg rounded-lg" data-match="${index}">
+          <select class="match-select p-2 rounded bg-gray-800 border border-gray-600" data-index="${index}" aria-label="Select word for blank">
+            <option value="">Select word...</option>
+            ${shuffledWords.map(w => `<option value="${w}">${w}</option>`).join('')}
+          </select>
+          <p class="flex-1 tts-text">${item.sentence.replace('____', '<span class="underline font-bold">____</span>')}</p>
+        </div>
+      `).join('');
+    }
+
+    function checkMatching() {
+      const selects = document.querySelectorAll('.match-select');
+      let correct = 0;
+      
+      selects.forEach((select, index) => {
+        const parent = select.closest('[data-match]');
+        const isCorrect = select.value === matchingItems[index].word;
+        
+        if (isCorrect) {
+          correct++;
+          parent.classList.remove('incorrect-feedback');
+          parent.classList.add('correct-feedback');
+        } else {
+          parent.classList.remove('correct-feedback');
+          parent.classList.add('incorrect-feedback');
+        }
+      });
+      
+      const feedback = document.getElementById('matching-feedback');
+      feedback.classList.remove('hidden');
+      
+      if (correct === matchingItems.length) {
+        feedback.className = 'mt-4 p-4 rounded-lg correct-feedback';
+        feedback.innerHTML = '🎉 Perfect! All answers correct!';
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-lg incorrect-feedback';
+        feedback.innerHTML = `${correct}/${matchingItems.length} correct. Review the highlighted items and try again.`;
+      }
+      
+      saveToStorage();
+      updateProgress();
+    }
+
+    // Comprehension Questions
+    function initializeQuestions() {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = questions.map(q => `
+        <div class="question-block p-4 card-bg rounded-lg" data-question="${q.id}">
+          <p class="font-semibold mb-4 tts-text">${q.id}. ${q.question}</p>
+          <div class="space-y-2">
+            ${q.options.map((opt, i) => `
+              <label class="flex items-start gap-3 p-3 rounded cursor-pointer hover:bg-gray-700 transition-colors">
+                <input type="radio" name="q${q.id}" value="${i}" class="mt-1" onchange="checkAnswer(${q.id}, ${i})">
+                <span class="tts-text">${opt}</span>
+              </label>
+            `).join('')}
+          </div>
+          <div id="feedback-${q.id}" class="mt-4 p-3 rounded-lg hidden"></div>
+        </div>
+      `).join('');
+    }
+
+    function checkAnswer(questionId, selectedIndex) {
+      const question = questions.find(q => q.id === questionId);
+      const feedback = document.getElementById(`feedback-${questionId}`);
+      feedback.classList.remove('hidden');
+      
+      if (selectedIndex === question.correct) {
+        feedback.className = 'mt-4 p-3 rounded-lg correct-feedback';
+        feedback.innerHTML = `✅ Correct! ${question.explanation}`;
+        answeredQuestions.add(questionId);
+      } else {
+        feedback.className = 'mt-4 p-3 rounded-lg incorrect-feedback';
+        feedback.innerHTML = `❌ Not quite. Try again! Hint: Think about what Elie's main purpose was in the story.`;
+      }
+      
+      saveToStorage();
+      updateProgress();
+    }
+
+    // Drag and Drop with Touch Support
+    function initializeDragAndDrop() {
+      const items = document.querySelectorAll('.drag-item');
+      const zones = document.querySelectorAll('.drop-zone');
+      
+      items.forEach(item => {
+        // Desktop drag events
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+        
+        // Touch events for iPad/mobile
+        item.addEventListener('touchstart', handleTouchStart);
+        item.addEventListener('touchmove', handleTouchMove);
+        item.addEventListener('touchend', handleTouchEnd);
+      });
+      
+      zones.forEach(zone => {
+        zone.addEventListener('dragover', handleDragOver);
+        zone.addEventListener('dragleave', handleDragLeave);
+        zone.addEventListener('drop', handleDrop);
+        
+        // Touch events for drop zones
+        zone.addEventListener('touchenter', handleTouchEnter);
+        zone.addEventListener('touchleave', handleTouchLeave);
+      });
+    }
+
+    let draggedItem = null;
+    let touchItem = null;
+    let touchGhost = null;
+
+    // Desktop drag handlers
+    function handleDragStart(e) {
+      draggedItem = e.target;
+      e.target.style.opacity = '0.5';
+      saveToStorage();
+    }
+
+    function handleDragEnd(e) {
+      e.target.style.opacity = '1';
+      draggedItem = null;
+      saveToStorage();
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      
+      if (draggedItem) {
+        e.currentTarget.appendChild(draggedItem);
+        saveToStorage();
+        updateProgress();
+      }
+    }
+
+    // Touch handlers for iPad/mobile
+    function handleTouchStart(e) {
+      touchItem = e.currentTarget;
+      touchItem.style.opacity = '0.6';
+      touchItem.style.transform = 'scale(1.05)';
+      touchItem.style.zIndex = '1000';
+      
+      // Create ghost element that follows finger
+      touchGhost = touchItem.cloneNode(true);
+      touchGhost.style.position = 'fixed';
+      touchGhost.style.pointerEvents = 'none';
+      touchGhost.style.opacity = '0.8';
+      touchGhost.style.zIndex = '999';
+      document.body.appendChild(touchGhost);
+      
+      updateTouchGhostPosition(e);
+    }
+
+    function handleTouchMove(e) {
+      e.preventDefault();
+      if (touchGhost) {
+        updateTouchGhostPosition(e);
+        
+        // Check which zone is under the touch point
+        const touch = e.touches[0];
+        const zones = document.querySelectorAll('.drop-zone');
+        
+        zones.forEach(zone => {
+          zone.classList.remove('drag-over');
+          const rect = zone.getBoundingClientRect();
+          
+          if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+              touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            zone.classList.add('drag-over');
+          }
+        });
+      }
+    }
+
+    function handleTouchEnd(e) {
+      if (!touchItem || !touchGhost) return;
+      
+      const touch = e.changedTouches[0];
+      const zones = document.querySelectorAll('.drop-zone');
+      let dropped = false;
+      
+      // Check which zone the touch ended on
+      zones.forEach(zone => {
+        zone.classList.remove('drag-over');
+        const rect = zone.getBoundingClientRect();
+        
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+          zone.appendChild(touchItem);
+          dropped = true;
+        }
+      });
+      
+      // Clean up
+      if (touchGhost && touchGhost.parentNode) {
+        touchGhost.parentNode.removeChild(touchGhost);
+      }
+      
+      touchItem.style.opacity = '1';
+      touchItem.style.transform = 'scale(1)';
+      touchItem.style.zIndex = 'auto';
+      
+      touchItem = null;
+      touchGhost = null;
+      
+      if (dropped) {
+        saveToStorage();
+        updateProgress();
+      }
+    }
+
+    function updateTouchGhostPosition(e) {
+      if (!touchGhost) return;
+      const touch = e.touches[0];
+      touchGhost.style.left = (touch.clientX - 60) + 'px';
+      touchGhost.style.top = (touch.clientY - 30) + 'px';
+    }
+
+    function handleTouchEnter(e) {
+      // Placeholder for visual feedback if needed
+    }
+
+    function handleTouchLeave(e) {
+      // Placeholder for visual feedback if needed
+    }
+
+    // CER Functions
+    function selectEvidence(num) {
+      selectedEvidence = num;
+      document.getElementById('evidence-1').classList.toggle('border-blue-400', num === 1);
+      document.getElementById('evidence-1').classList.toggle('border-gray-600', num !== 1);
+      document.getElementById('evidence-2').classList.toggle('border-blue-400', num === 2);
+      document.getElementById('evidence-2').classList.toggle('border-gray-600', num !== 2);
+      
+      const evidenceText = num === 1 
+        ? '"The Germans came to our street, and they were graceful, even buying chocolate for the ladies. At first, it seemed almost civilized."'
+        : '"Then came the laws. On pain of death, Jews could not leave their homes. Our leaders were arrested. We were banned from the synagogue. The yellow star was sown onto our clothes. The ghetto walls were built around us."';
+      
+      document.getElementById('cer-evidence').value = `In the text, Wiesel writes, ${evidenceText}`;
+      updateCEROutput();
+      saveToStorage();
+    }
+
+    function updateCEROutput() {
+      const claim = document.getElementById('cer-claim').value;
+      const evidence = document.getElementById('cer-evidence').value;
+      const reasoning = document.getElementById('cer-reasoning').value;
+      
+      let output = '';
+      if (claim) output += claim + ' ';
+      if (evidence) output += evidence + ' ';
+      if (reasoning) output += reasoning;
+      
+      const outputDiv = document.getElementById('cer-output');
+      if (output.trim()) {
+        outputDiv.innerHTML = output;
+      } else {
+        outputDiv.innerHTML = '<span class="opacity-50 italic">Your complete paragraph will appear here as you write...</span>';
+      }
+      
+      saveToStorage();
+      updateProgress();
+    }
+
+    function copyCER() {
+      const text = document.getElementById('cer-output').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const feedback = document.getElementById('copy-feedback');
+        feedback.classList.remove('hidden');
+        setTimeout(() => feedback.classList.add('hidden'), 2000);
+      });
+    }
+
+    // Exit Ticket
+    function addStarter(starter) {
+      const textarea = document.getElementById('exit-question');
+      textarea.value = starter + ' ';
+      textarea.focus();
+      saveToStorage();
+    }
+
+    // Feedback Functions
+    function setRating(name, value) {
+      document.querySelectorAll(`button[data-rating]`).forEach(btn => {
+        btn.classList.remove('border-yellow-400');
+        btn.classList.add('border-gray-500');
+      });
+      
+      const selectedBtn = document.querySelector(`button[onclick="setRating('${name}', '${value}')"]`);
+      if (selectedBtn) {
+        selectedBtn.classList.add('border-yellow-400');
+        selectedBtn.classList.remove('border-gray-500');
+      }
+      
+      const labels = ['Not Effective', 'Somewhat Effective', 'Moderately Effective', 'Very Effective', 'Extremely Effective'];
+      document.getElementById('lesson-rating-display').textContent = labels[parseInt(value) - 1];
+      
+      saveToStorage();
+    }
+
+    function setDifficultyRating(level) {
+      document.querySelectorAll(`button[data-difficulty]`).forEach(btn => {
+        btn.classList.remove('border-yellow-400');
+        btn.classList.add('border-gray-500');
+      });
+      
+      const selectedBtn = document.querySelector(`button[onclick="setDifficultyRating('${level}')"]`);
+      if (selectedBtn) {
+        selectedBtn.classList.add('border-yellow-400');
+        selectedBtn.classList.remove('border-gray-500');
+      }
+      
+      saveToStorage();
+    }
+
+    // Accessibility Functions
+    function toggleTTS() {
+      ttsEnabled = !ttsEnabled;
+      document.body.classList.toggle('tts-mode', ttsEnabled);
+      
+      if (ttsEnabled) {
+        document.querySelectorAll('.tts-text').forEach(el => {
+          el.style.cursor = 'pointer';
+          el.classList.add('hover:underline');
+          el.onclick = () => speakText(el.innerText);
+        });
+      } else {
+        document.querySelectorAll('.tts-text').forEach(el => {
+          el.style.cursor = 'default';
+          el.classList.remove('hover:underline');
+          el.onclick = null;
+        });
+      }
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function speakWord() {
+      speakText(currentTooltipWord);
+    }
+
+    function adjustFontSize(delta) {
+      const current = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-size')) || 16;
+      const newSize = Math.max(12, Math.min(24, current + delta));
+      document.documentElement.style.setProperty('--font-size', newSize + 'px');
+      saveToStorage();
+    }
+
+    function changeFont(font) {
+      document.documentElement.style.setProperty('--font-family', font);
+      saveToStorage();
+    }
+
+    function changeContrast(mode) {
+      document.body.classList.remove('high-contrast', 'sepia-mode');
+      if (mode !== 'default') {
+        document.body.classList.add(mode);
+      }
+      saveToStorage();
+    }
+
+    function setupTextDefinitions() {
+      document.body.addEventListener('click', (e) => {
+        const tooltip = document.getElementById('definition-tooltip');
+        
+        if (e.target.closest('#definition-tooltip')) return;
+        
+        const selection = window.getSelection().toString().toLowerCase().trim();
+        if (selection && wordDefinitions[selection]) {
+          currentTooltipWord = selection;
+          document.getElementById('tooltip-word').textContent = selection.charAt(0).toUpperCase() + selection.slice(1);
+          document.getElementById('tooltip-definition').textContent = wordDefinitions[selection];
+          
+          tooltip.style.left = e.pageX + 'px';
+          tooltip.style.top = (e.pageY + 10) + 'px';
+          tooltip.classList.remove('hidden');
+        } else {
+          tooltip.classList.add('hidden');
+        }
+      });
+    }
+
+    // Storage Functions
+    function saveToStorage() {
+      const data = {
+        studentName: document.getElementById('student-name').value,
+        agreeZone: Array.from(document.getElementById('agree-zone').children).map(el => el.dataset.statement),
+        disagreeZone: Array.from(document.getElementById('disagree-zone').children).map(el => el.dataset.statement),
+        flippedCards: Array.from(flippedCards),
+        matchingAnswers: Array.from(document.querySelectorAll('.match-select')).map(s => s.value),
+        questionAnswers: Array.from(document.querySelectorAll('input[type="radio"]:checked')).map(r => ({
+          name: r.name,
+          value: r.value
+        })),
+        cerClaim: document.getElementById('cer-claim').value,
+        cerEvidence: document.getElementById('cer-evidence').value,
+        cerReasoning: document.getElementById('cer-reasoning').value,
+        selectedEvidence: selectedEvidence,
+        exitQuestion: document.getElementById('exit-question').value,
+        lessonRating: document.querySelector('button.border-yellow-400[data-rating]')?.dataset.rating,
+        difficultyRating: document.querySelector('button.border-yellow-400[data-difficulty]')?.dataset.difficulty,
+        feedbackText: document.getElementById('feedback-text')?.value || '',
+        favoritePart: document.getElementById('favorite-part')?.value || '',
+        fontSize: getComputedStyle(document.documentElement).getPropertyValue('--font-size'),
+        fontFamily: getComputedStyle(document.documentElement).getPropertyValue('--font-family'),
+        contrastMode: document.body.classList.contains('high-contrast') ? 'high-contrast' : 
+                      document.body.classList.contains('sepia-mode') ? 'sepia-mode' : 'default'
+      };
+      
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        document.getElementById('save-status').textContent = 'Saved ✓';
+      } catch (e) {
+        console.error('Storage error:', e);
+      }
+    }
+
+    function loadFromStorage() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        
+        const data = JSON.parse(saved);
+        
+        if (data.studentName) document.getElementById('student-name').value = data.studentName;
+        if (data.fontSize) document.documentElement.style.setProperty('--font-size', data.fontSize);
+        if (data.fontFamily) document.documentElement.style.setProperty('--font-family', data.fontFamily);
+        if (data.contrastMode && data.contrastMode !== 'default') {
+          document.body.classList.add(data.contrastMode);
+        }
+        
+        // Restore drag and drop after DOM is ready
+        setTimeout(() => {
+          if (data.agreeZone) {
+            data.agreeZone.forEach(stmt => {
+              const item = document.querySelector(`[data-statement="${stmt}"]`);
+              if (item) document.getElementById('agree-zone').appendChild(item);
+            });
+          }
+          if (data.disagreeZone) {
+            data.disagreeZone.forEach(stmt => {
+              const item = document.querySelector(`[data-statement="${stmt}"]`);
+              if (item) document.getElementById('disagree-zone').appendChild(item);
+            });
+          }
+        }, 100);
+        
+        if (data.flippedCards) flippedCards = new Set(data.flippedCards);
+        
+        if (data.matchingAnswers) {
+          setTimeout(() => {
+            document.querySelectorAll('.match-select').forEach((select, i) => {
+              if (data.matchingAnswers[i]) select.value = data.matchingAnswers[i];
+            });
+          }, 100);
+        }
+        
+        if (data.questionAnswers) {
+          setTimeout(() => {
+            data.questionAnswers.forEach(qa => {
+              const radio = document.querySelector(`input[name="${qa.name}"][value="${qa.value}"]`);
+              if (radio) radio.checked = true;
+            });
+          }, 100);
+        }
+        
+        if (data.cerClaim) document.getElementById('cer-claim').value = data.cerClaim;
+        if (data.cerEvidence) document.getElementById('cer-evidence').value = data.cerEvidence;
+        if (data.cerReasoning) document.getElementById('cer-reasoning').value = data.cerReasoning;
+        if (data.selectedEvidence) {
+          selectedEvidence = data.selectedEvidence;
+          document.getElementById(`evidence-${selectedEvidence}`).classList.add('border-blue-400');
+        }
+        if (data.exitQuestion) document.getElementById('exit-question').value = data.exitQuestion;
+        
+        // Load feedback data
+        if (data.lessonRating) {
+          setTimeout(() => {
+            const btn = document.querySelector(`button[data-rating="${data.lessonRating}"]`);
+            if (btn) setRating('lesson-rating', data.lessonRating);
+          }, 100);
+        }
+        if (data.difficultyRating) {
+          setTimeout(() => {
+            setDifficultyRating(data.difficultyRating);
+          }, 100);
+        }
+        if (data.feedbackText) document.getElementById('feedback-text').value = data.feedbackText;
+        if (data.favoritePart) document.getElementById('favorite-part').value = data.favoritePart;
+        
+        setTimeout(updateCEROutput, 150);
+        
+      } catch (e) {
+        console.error('Load error:', e);
+      }
+    }
+
+    function setupAutoSave() {
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        el.addEventListener('input', debounce(saveToStorage, 500));
+        el.addEventListener('change', saveToStorage);
+      });
+      
+      document.getElementById('cer-claim').addEventListener('input', updateCEROutput);
+      document.getElementById('cer-evidence').addEventListener('input', updateCEROutput);
+      document.getElementById('cer-reasoning').addEventListener('input', updateCEROutput);
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Progress Tracking
+    function updateProgress() {
+      const total = 7; // sections
+      let completed = 0;
+      
+      // Pre-reading
+      const agreeCount = document.getElementById('agree-zone').children.length;
+      const disagreeCount = document.getElementById('disagree-zone').children.length;
+      if (agreeCount + disagreeCount >= 3) completed++;
+      
+      // Flashcards
+      if (flippedCards.size >= 3) completed++;
+      
+      // Matching
+      const matchingCorrect = Array.from(document.querySelectorAll('.match-select')).filter((s, i) => s.value === matchingItems[i].word).length;
+      if (matchingCorrect >= 3) completed++;
+      
+      // Questions
+      if (answeredQuestions.size >= 2) completed++;
+      
+      // CER
+      if (document.getElementById('cer-claim').value && document.getElementById('cer-evidence').value && document.getElementById('cer-reasoning').value) completed++;
+      
+      // Exit ticket
+      if (document.getElementById('exit-question').value.length > 20) completed++;
+      
+      const percentage = Math.round((completed / total) * 100);
+      document.getElementById('progress-bar').style.width = percentage + '%';
+      document.getElementById('progress-text').textContent = percentage + '% Complete';
+    }
+
+    // Print Function
+    function printToPDF() {
+      window.print();
+    }
+
+    // Initialize on load
+    init();
+
+    // Accessibility Toolbar Toggle Functions
+    function minimizeAccessibilityToolbar() {
+      const toolbar = document.getElementById('accessibility-toolbar');
+      const minimizeBtn = document.getElementById('accessibility-minimize-btn');
+      
+      toolbar.classList.add('hidden');
+      minimizeBtn.classList.remove('hidden');
+    }
+
+    function expandAccessibilityToolbar() {
+      const toolbar = document.getElementById('accessibility-toolbar');
+      const minimizeBtn = document.getElementById('accessibility-minimize-btn');
+      
+      toolbar.classList.remove('hidden');
+      minimizeBtn.classList.add('hidden');
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6ac8e043672f08',t:'MTc3MjU2MzM4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
