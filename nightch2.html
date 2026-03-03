@@ -694,36 +694,59 @@
             }
         }
 
-        //function saveAsPDF() {
+        function saveAsPDF() {
     const element = document.getElementById('lesson-content');
-    
-    // 1. Convert textareas/inputs to divs so they expand
+    const wordBank = document.getElementById('wordBank');
+
+    // 1. Prepare the element for PDF (Remove shadows/borders)
+    element.style.boxShadow = 'none';
+    element.style.borderTop = 'none';
+    if (wordBank) wordBank.style.display = 'none';
+
+    // 2. Convert textareas/inputs to divs so they expand to show ALL text
     const inputs = element.querySelectorAll('textarea, input[type="text"]');
+    const createdReplacements = [];
+
     inputs.forEach(input => {
         const replacement = document.createElement('div');
         replacement.className = 'pdf-replacement';
         replacement.innerText = input.value;
-        // Copy some styles so it looks similar
-        replacement.style.border = '1px solid #ccc';
-        replacement.style.padding = '5px';
-        replacement.style.whiteSpace = 'pre-wrap'; // Preserves line breaks
         
+        // Match the styling of your inputs so the PDF looks consistent
+        replacement.style.border = '1px solid #ccc';
+        replacement.style.padding = '10px';
+        replacement.style.marginBottom = '10px';
+        replacement.style.whiteSpace = 'pre-wrap'; // This allows line breaks to show
+        replacement.style.minHeight = '20px';
+        replacement.style.backgroundColor = '#f9f9f9';
+
         input.style.display = 'none';
         input.parentNode.insertBefore(replacement, input);
+        createdReplacements.push({ input, replacement });
     });
 
-    const opt = { /* ... your existing options ... */ };
+    // 3. Set PDF options
+    const opt = {
+        margin:       0.4,
+        filename:     'Night_Chapter_2_Lesson.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
 
+    // 4. Generate the PDF
     html2pdf().set(opt).from(element).save().then(() => {
-        // 2. Clean up: Remove the divs and show the inputs again
-        const replacements = element.querySelectorAll('.pdf-replacement');
-        replacements.forEach(div => div.remove());
-        inputs.forEach(input => input.style.display = 'block');
-        
-        // ... your existing cleanup (boxShadow, wordBank, etc)
+        // 5. Cleanup: Restore the original interactive elements
+        createdReplacements.forEach(pair => {
+            pair.replacement.remove();
+            pair.input.style.display = 'block';
+        });
+
+        element.style.boxShadow = '0 15px 35px rgba(111, 45, 189, 0.15)';
+        element.style.borderTop = '10px solid var(--primary)';
+        if (wordBank) wordBank.style.display = 'flex';
     });
 }
-            };
             
             element.style.boxShadow = 'none';
             element.style.borderTop = 'none';
@@ -739,4 +762,5 @@
     </script>
 </body>
 </html>
+
 
