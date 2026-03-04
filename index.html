@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mrs. Rapp's Education Specialist Hub</title>
     <style>
-        /* General Page Styling */
+        /* Academic Professional Blue & Gold Theme */
         body {
-            background-color: #0d0e15; /* Deep dark background */
-            color: #e2e8f0;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #002147; /* Oxford Blue */
+            color: #f4f4f4;
+            font-family: 'Times New Roman', Times, serif; /* Professional Serif */
             text-align: center;
             padding: 50px;
             margin: 0;
+            background-image: linear-gradient(180deg, #002147 0%, #00152e 100%);
         }
 
         .hub-container {
@@ -22,19 +23,22 @@
 
         /* Header Styling */
         h1 { 
-            font-size: 3.2rem;
-            color: #ffffff; 
-            border-bottom: 4px solid #bc13fe; 
+            font-size: 3rem;
+            color: #D4AF37; /* Metallic Gold */
+            border-bottom: 3px double #D4AF37; 
             padding-bottom: 15px;
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         h2 { 
-            color: #a0aec0; 
-            font-size: 1.4rem; 
+            color: #C0C0C0; /* Silver / Light Grey */
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 1.1rem; 
             margin-bottom: 40px;
             font-weight: normal;
+            font-style: italic;
         }
 
         .assignment-list {
@@ -42,57 +46,50 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             align-items: center;
         }
 
         .assignment-item {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
         }
 
-        /* Base Button Styling */
+        /* Academic Button Styling */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 18px;
+            border-radius: 4px; /* Sharper, more professional corners */
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             transition: all 0.3s ease;
-            background: #1a1c29; /* Solid dark background to prevent graying out */
-            border: 3px solid transparent;
+            background: #002b5c; 
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
+        /* Hover Effects - Gold Fill */
         .assignment-link:hover {
-            transform: scale(1.05);
-            filter: brightness(1.2);
+            background: #D4AF37;
+            color: #002147;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
         }
 
-        /* The Moon Yellow Glow for Night */
-        .yellow-glow {
-            color: #fff9c4 !important;
-            border-color: #fff9c4 !important;
-            box-shadow: 0 0 15px #fff9c4, inset 0 0 5px #fff9c4;
-            text-shadow: 0 0 8px rgba(255, 249, 196, 0.7);
+        /* Subtle distinction for different categories while maintaining the theme */
+        .primary-link { border-width: 2px; }
+        
+        .break-link {
+            border-color: #C0C0C0;
+            color: #C0C0C0;
+            font-style: italic;
         }
-
-        .mint-glow {
-            color: #b2fba5;
-            border-color: #b2fba5;
-            box-shadow: 0 0 15px #b2fba5, inset 0 0 5px #b2fba5;
-        }
-
-        .lavender-glow {
-            color: #e1bee7;
-            border-color: #e1bee7;
-            box-shadow: 0 0 15px #e1bee7, inset 0 0 5px #e1bee7;
-        }
-
-        .blue-glow {
-            color: #b3e5fc;
-            border-color: #b3e5fc;
-            box-shadow: 0 0 15px #b3e5fc, inset 0 0 5px #b3e5fc;
+        
+        .break-link:hover {
+            background: #C0C0C0;
+            color: #002147;
         }
 
     </style>
@@ -101,29 +98,29 @@
 
 <div class="hub-container">
     <h1>Mrs. Rapp's English Assignments</h1>
-    <h2>Complete Assignment, Save as PDF, Turn into Ekadence</h2>
+    <h2>Instructional Hub &centerdot; Save as PDF &centerdot; Submit via Ekadence</h2>
 
     <ul class="assignment-list">
         <li class="assignment-item">
-            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link yellow-glow">
+            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link primary-link">
                 Night by Elie Wiesel Novel Study
             </a>
         </li>
 
         <li class="assignment-item">
-            <a href="Romeo&Juliet/index.html" class="assignment-link mint-glow">
+            <a href="Romeo&Juliet/index.html" class="assignment-link primary-link">
                 Romeo & Juliet by William Shakespeare Unit
             </a>
         </li>
 
         <li class="assignment-item">
-            <a href="5C=Character/index.html" class="assignment-link lavender-glow">
-                5C Lessons
+            <a href="5C=Character/index.html" class="assignment-link primary-link">
+                5C Lessons: Character & Ethics
             </a>
         </li>
 
         <li class="assignment-item">
-            <a href="BrainBreaks/index.html" class="assignment-link blue-glow">
+            <a href="BrainBreaks/index.html" class="assignment-link break-link">
                 Self-Monitored Break Zone
             </a>
         </li>
