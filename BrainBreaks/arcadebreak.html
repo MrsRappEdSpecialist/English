@@ -118,8 +118,7 @@
   <style>body { box-sizing: border-box; }</style>
  </head>
  <body class="h-full m-0 overflow-auto">
-  <div id="app-container" class="min-h-full w-full p-4" style="background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0a1628 100%);">
-   <!-- Decorative Elements -->
+  <div id="app-container" class="min-h-full w-full p-4" style="background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0a1628 100%);"><!-- Decorative Elements -->
    <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden" style="z-index: 0;">
     <div class="absolute top-10 left-10 text-6xl float-animation" style="animation-delay: 0s;">
      🕹️
@@ -134,14 +133,12 @@
      ⭐
     </div>
    </div>
-   <div class="relative z-10 max-w-6xl mx-auto">
-    <!-- Header -->
+   <div class="relative z-10 max-w-6xl mx-auto"><!-- Header -->
     <header class="text-center mb-8">
      <h1 id="app-title" class="font-arcade text-2xl md:text-4xl text-yellow-400 neon-text mb-4">🎮 ARCADE STUDY TIMER 🎮</h1>
      <p class="font-digital text-cyan-400 text-lg">Level Up Your Learning!</p>
     </header><!-- Main Timer Screen -->
-    <div id="main-screen" class="game-screen rounded-2xl p-6 mb-6 relative crt-effect">
-     <!-- Timer Display -->
+    <div id="main-screen" class="game-screen rounded-2xl p-6 mb-6 relative crt-effect"><!-- Timer Display -->
      <div class="timer-display rounded-xl p-6 mb-6 text-center">
       <div id="timer-label" class="font-arcade text-green-400 text-sm mb-2">
        WORK TIME
@@ -153,8 +150,7 @@
        Ready to Start!
       </div>
      </div><!-- Control Buttons -->
-     <div id="control-buttons" class="flex flex-wrap justify-center gap-4 mb-6">
-      <button id="start-work-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ▶ START WORK </button> <button id="end-work-btn" class="arcade-btn font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform hidden"> ⏹ END WORK </button> <button id="end-session-btn" class="arcade-btn arcade-btn-purple font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🏁 END SESSION </button>
+     <div id="control-buttons" class="flex flex-wrap justify-center gap-4 mb-6"><button id="start-work-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ▶ START WORK </button> <button id="end-work-btn" class="arcade-btn font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform hidden"> ⏹ END WORK </button> <button id="end-session-btn" class="arcade-btn arcade-btn-purple font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🏁 END SESSION </button>
      </div><!-- Session Stats -->
      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
       <div class="bg-black/50 rounded-lg p-3 border-2 border-cyan-500">
@@ -195,11 +191,9 @@
      <div class="game-screen rounded-2xl p-6 max-w-lg w-full">
       <h2 id="reflection-title" class="font-arcade text-xl text-yellow-400 text-center mb-6 neon-text">📝 REFLECTION TIME 📝</h2>
       <div class="space-y-4">
-       <div>
-        <label class="font-digital text-cyan-400 block mb-2">Which class did you work on?</label> <select id="class-select" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none"> <option value="">Select a class...</option> <option value="English">📚 English</option> <option value="Math">🔢 Math</option> <option value="Science">🔬 Science</option> <option value="History">📜 History</option> <option value="Elective">🎨 Elective</option> </select>
+       <div><label class="font-digital text-cyan-400 block mb-2">Which class did you work on?</label> <select id="class-select" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none"> <option value="">Select a class...</option> <option value="English">📚 English</option> <option value="Math">🔢 Math</option> <option value="Science">🔬 Science</option> <option value="History">📜 History</option> <option value="Elective">🎨 Elective</option> </select>
        </div>
-       <div>
-        <label class="font-digital text-cyan-400 block mb-2">What did you accomplish?</label> <textarea id="accomplishment-text" rows="4" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none resize-none" placeholder="Describe what you completed..."></textarea>
+       <div><label class="font-digital text-cyan-400 block mb-2">What did you accomplish?</label> <textarea id="accomplishment-text" rows="4" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none resize-none" placeholder="Describe what you completed..."></textarea>
        </div><button id="submit-reflection-btn" class="arcade-btn arcade-btn-green font-arcade text-white w-full py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ✓ SUBMIT &amp; START BREAK </button>
       </div>
      </div>
@@ -207,8 +201,7 @@
     <div id="break-selection" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
      <div class="game-screen rounded-2xl p-6 max-w-lg w-full text-center">
       <h2 class="font-arcade text-xl text-yellow-400 mb-6 neon-text">⏰ CHOOSE BREAK TIME ⏰</h2>
-      <div class="grid grid-cols-3 gap-4 mb-6">
-       <button class="break-btn arcade-btn arcade-btn-blue font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="2"> 2<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-green font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="3"> 3<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-purple font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="5"> 5<br><span class="text-xs">MIN</span> </button>
+      <div class="grid grid-cols-3 gap-4 mb-6"><button class="break-btn arcade-btn arcade-btn-blue font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="2"> 2<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-green font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="3"> 3<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-purple font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="5"> 5<br><span class="text-xs">MIN</span> </button>
       </div>
      </div>
     </div><!-- Break Time Screen with Games -->
@@ -222,50 +215,48 @@
         00:00
        </div>
       </div><!-- Game Tabs -->
-      <div class="flex flex-wrap justify-center gap-2 mb-4">
-       <button class="game-tab arcade-btn arcade-btn-blue font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="tetris">🧱 TETRIS</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="bounce">🏓 BOUNCE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="snake">🐍 SNAKE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="flappy">🐦 FLAPPY</button>
+      <div class="flex flex-wrap justify-center gap-2 mb-4"><button class="game-tab arcade-btn arcade-btn-blue font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="tetris">🧱 TETRIS</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="bounce">🏓 BOUNCE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="snake">🐍 SNAKE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="flappy">🐦 FLAPPY</button>
       </div><!-- Game Containers -->
-      <div id="game-container" class="bg-black rounded-xl overflow-hidden relative" style="height: 400px;">
-       <!-- Tetris Game -->
-       <div id="tetris-game" class="w-full h-full flex items-center justify-center">
+      <div id="game-container" class="bg-black rounded-xl overflow-hidden relative" style="height: 360px;"><!-- Tetris Game -->
+       <div id="tetris-game" class="w-full h-full flex items-center justify-center p-1">
         <div class="text-center">
-         <canvas id="tetris-canvas" width="200" height="400" class="border-2 border-cyan-500 bg-gray-900"></canvas>
-         <div class="mt-2 font-digital text-cyan-400">
+         <canvas id="tetris-canvas" width="140" height="280" class="border-2 border-cyan-500 bg-gray-900" style="width: 140px; height: 280px;"></canvas>
+         <div class="mt-1 font-digital text-cyan-400 text-xs">
           Score: <span id="tetris-score">0</span>
          </div>
-         <div class="mt-2 font-arcade text-xs text-gray-400">
-          Arrow Keys to Play
+         <div class="font-arcade text-xs text-gray-400">
+          Arrow Keys
          </div>
         </div>
        </div><!-- Bounce Game -->
-       <div id="bounce-game" class="w-full h-full hidden relative">
-        <canvas id="bounce-canvas" width="400" height="380" class="w-full h-full"></canvas>
-        <div class="absolute top-2 left-1/2 -translate-x-1/2 font-digital text-cyan-400">
+       <div id="bounce-game" class="w-full h-full hidden relative p-2">
+        <canvas id="bounce-canvas" width="360" height="320" class="w-full h-full border-2 border-cyan-500 bg-gray-900"></canvas>
+        <div class="absolute top-3 left-1/2 -translate-x-1/2 font-digital text-cyan-400 text-sm">
          Score: <span id="bounce-score">0</span>
         </div>
-        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 font-arcade text-xs text-gray-400">
-         Move Mouse / Touch to Play
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 font-arcade text-xs text-gray-400">
+         Move Mouse
         </div>
        </div><!-- Snake Game -->
-       <div id="snake-game" class="w-full h-full hidden flex items-center justify-center">
+       <div id="snake-game" class="w-full h-full hidden flex items-center justify-center p-2">
         <div class="text-center">
-         <canvas id="snake-canvas" width="300" height="300" class="border-2 border-cyan-500 bg-gray-900"></canvas>
-         <div class="mt-2 font-digital text-cyan-400">
+         <canvas id="snake-canvas" width="280" height="280" class="border-2 border-cyan-500 bg-gray-900"></canvas>
+         <div class="mt-1 font-digital text-cyan-400 text-sm">
           Score: <span id="snake-score">0</span>
          </div>
-         <div class="mt-2 font-arcade text-xs text-gray-400">
-          Arrow Keys to Play
+         <div class="font-arcade text-xs text-gray-400">
+          Arrow Keys
          </div>
         </div>
        </div><!-- Flappy Game -->
-       <div id="flappy-game" class="w-full h-full hidden flex items-center justify-center">
+       <div id="flappy-game" class="w-full h-full hidden flex items-center justify-center p-2">
         <div class="text-center">
-         <canvas id="flappy-canvas" width="320" height="380" class="border-2 border-cyan-500 bg-gray-900"></canvas>
-         <div class="mt-2 font-digital text-cyan-400">
+         <canvas id="flappy-canvas" width="280" height="320" class="border-2 border-cyan-500 bg-gray-900"></canvas>
+         <div class="mt-1 font-digital text-cyan-400 text-sm">
           Score: <span id="flappy-score">0</span>
          </div>
-         <div class="mt-2 font-arcade text-xs text-gray-400">
-          Click / Tap / SPACE to Fly
+         <div class="font-arcade text-xs text-gray-400">
+          Space / Click
          </div>
         </div>
        </div>
@@ -275,8 +266,7 @@
     <div id="progress-screen" class="hidden">
      <div class="game-screen rounded-2xl p-6">
       <h2 class="font-arcade text-2xl text-yellow-400 text-center mb-6 neon-text">🏆 SESSION COMPLETE 🏆</h2>
-      <div id="progress-content" class="space-y-4 mb-6 max-h-96 overflow-y-auto">
-       <!-- Progress entries will be inserted here -->
+      <div id="progress-content" class="space-y-4 mb-6 max-h-96 overflow-y-auto"><!-- Progress entries will be inserted here -->
       </div>
       <div class="grid grid-cols-2 gap-4 mb-6">
        <div class="bg-black/50 rounded-lg p-4 border-2 border-green-500 text-center">
@@ -296,8 +286,7 @@
         </div>
        </div>
       </div>
-      <div class="flex flex-wrap justify-center gap-4">
-       <button id="save-pdf-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 💾 SAVE AS PDF </button> <button id="new-session-btn" class="arcade-btn arcade-btn-blue font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🔄 NEW SESSION </button>
+      <div class="flex flex-wrap justify-center gap-4"><button id="save-pdf-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 💾 SAVE AS PDF </button> <button id="new-session-btn" class="arcade-btn arcade-btn-blue font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🔄 NEW SESSION </button>
       </div>
      </div>
     </div>
@@ -780,10 +769,16 @@
       }
       if (snakeGame) {
         cancelAnimationFrame(snakeGame.animationId);
+        if (snakeGame.keyHandler) {
+          document.removeEventListener('keydown', snakeGame.keyHandler);
+        }
         snakeGame = null;
       }
       if (flappyGame) {
         cancelAnimationFrame(flappyGame.animationId);
+        if (flappyGame.keyHandler) {
+          document.removeEventListener('keydown', flappyGame.keyHandler);
+        }
         flappyGame = null;
       }
     }
@@ -1077,6 +1072,8 @@
       let nextDirection = {x: 1, y: 0};
       let score = 0;
       let gameActive = true;
+      let updateCounter = 0;
+      let snakeKeyHandler = null;
       
       function draw() {
         ctx.fillStyle = '#1a1a2e';
@@ -1084,7 +1081,7 @@
         
         ctx.fillStyle = '#51cf66';
         snake.forEach(segment => {
-          ctx.fillRect(segment.x * BLOCK_SIZE, segment.y * BLOCK_SIZE, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
+          ctx.fillRect(segment.x * BLOCK_SIZE + 1, segment.y * BLOCK_SIZE + 1, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
         });
         
         ctx.fillStyle = '#ff6b6b';
@@ -1093,11 +1090,10 @@
         ctx.fill();
       }
       
-      function update() {
+      function updateGame() {
         if (!gameActive) return;
         
         direction = nextDirection;
-        
         const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
         
         if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
@@ -1123,30 +1119,35 @@
         } else {
           snake.pop();
         }
-        
-        draw();
-        snakeGame.animationId = requestAnimationFrame(update);
       }
       
-      function handleKey(e) {
+      snakeKeyHandler = (e) => {
         if (e.key === 'ArrowLeft' && direction.x === 0) nextDirection = {x: -1, y: 0};
         else if (e.key === 'ArrowRight' && direction.x === 0) nextDirection = {x: 1, y: 0};
         else if (e.key === 'ArrowUp' && direction.y === 0) nextDirection = {x: 0, y: -1};
         else if (e.key === 'ArrowDown' && direction.y === 0) nextDirection = {x: 0, y: 1};
-      }
+      };
       
-      document.addEventListener('keydown', handleKey);
+      document.addEventListener('keydown', snakeKeyHandler);
       
-      snakeGame = { animationId: null };
+      snakeGame = { 
+        animationId: null,
+        keyHandler: snakeKeyHandler
+      };
       
-      let lastTime = 0;
-      function loop(time) {
-        if (time - lastTime > 100) {
-          update();
-          lastTime = time;
+      function loop() {
+        updateCounter++;
+        if (updateCounter % 8 === 0) {
+          updateGame();
+          updateCounter = 0;
         }
-        snakeGame.animationId = requestAnimationFrame(loop);
+        
+        draw();
+        if (gameActive) {
+          snakeGame.animationId = requestAnimationFrame(loop);
+        }
       }
+      
       snakeGame.animationId = requestAnimationFrame(loop);
     }
 
@@ -1157,100 +1158,139 @@
       
       let birdY = canvas.height / 2;
       let birdVelocity = 0;
-      const gravity = 0.6;
-      const jumpPower = -12;
-      const birdSize = 20;
+      const gravity = 0.5;
+      const jumpPower = -10;
+      const birdSize = 12;
       
       let pipes = [];
-      let pipeGap = 120;
-      let pipeWidth = 60;
-      let pipeSpeed = 4;
+      let pipeGap = 100;
+      let pipeWidth = 50;
+      let pipeSpeed = 3;
       let score = 0;
       let gameActive = true;
       let frameCount = 0;
+      let lastPipeFrame = 0;
+      let flappyKeyHandler = null;
+      let flappyClickHandler = null;
+      
+      function jump() {
+        if (gameActive) {
+          birdVelocity = jumpPower;
+        }
+      }
       
       function draw() {
+        // Background
         ctx.fillStyle = '#1a1a2e';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         // Draw bird
         ctx.fillStyle = '#ffd43b';
         ctx.beginPath();
-        ctx.arc(50, birdY, birdSize, 0, Math.PI * 2);
+        ctx.arc(40, birdY, birdSize, 0, Math.PI * 2);
         ctx.fill();
         
-        // Draw eye
+        // Draw bird eye
         ctx.fillStyle = '#000';
         ctx.beginPath();
-        ctx.arc(55, birdY - 5, 4, 0, Math.PI * 2);
+        ctx.arc(44, birdY - 4, 3, 0, Math.PI * 2);
         ctx.fill();
         
         // Draw pipes
-        ctx.fillStyle = '#4dabf7';
+        ctx.fillStyle = '#51cf66';
         pipes.forEach(pipe => {
+          // Top pipe
           ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
-          ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
+          // Bottom pipe
+          ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - (pipe.topHeight + pipeGap));
         });
       }
       
-      function update() {
+      function updateGame() {
         if (!gameActive) return;
         
+        frameCount++;
+        
+        // Apply gravity
         birdVelocity += gravity;
         birdY += birdVelocity;
         
+        // Check ceiling and floor collision
         if (birdY - birdSize < 0 || birdY + birdSize > canvas.height) {
           gameActive = false;
-          score = 0;
-          document.getElementById('flappy-score').textContent = score;
           return;
         }
         
-        frameCount++;
-        if (frameCount % 100 === 0) {
-          const topHeight = Math.random() * (canvas.height - pipeGap - 50) + 30;
-          pipes.push({x: canvas.width, topHeight});
+        // Generate pipes
+        if (frameCount - lastPipeFrame > 120) {
+          const minHeight = 30;
+          const maxHeight = canvas.height - pipeGap - 30;
+          const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+          pipes.push({x: canvas.width, topHeight: topHeight, scored: false});
+          lastPipeFrame = frameCount;
         }
         
+        // Update pipes
         pipes = pipes.filter(pipe => {
           pipe.x -= pipeSpeed;
           
-          if (pipe.x + pipeWidth < 50 && !pipe.scored) {
+          // Check if bird passed through pipe
+          if (!pipe.scored && pipe.x + pipeWidth < 40) {
             pipe.scored = true;
             score++;
             document.getElementById('flappy-score').textContent = score;
           }
           
-          if (50 > pipe.x && 50 < pipe.x + pipeWidth) {
+          // Check collision with pipes
+          if (40 - birdSize < pipe.x + pipeWidth && 40 + birdSize > pipe.x) {
             if (birdY - birdSize < pipe.topHeight || birdY + birdSize > pipe.topHeight + pipeGap) {
               gameActive = false;
-              score = 0;
-              document.getElementById('flappy-score').textContent = score;
+              return true;
             }
           }
           
           return pipe.x > -pipeWidth;
         });
-        
-        draw();
-        flappyGame.animationId = requestAnimationFrame(update);
       }
       
-      function jump() {
-        birdVelocity = jumpPower;
-      }
-      
-      document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
+      flappyKeyHandler = (e) => {
+        if (e.code === 'Space' || e.key === ' ') {
           e.preventDefault();
           jump();
         }
-      });
-      canvas.addEventListener('click', jump);
-      canvas.addEventListener('touchstart', jump);
+      };
       
-      flappyGame = { animationId: null };
-      update();
+      flappyClickHandler = (e) => {
+        e.preventDefault();
+        jump();
+      };
+      
+      document.addEventListener('keydown', flappyKeyHandler);
+      canvas.addEventListener('click', flappyClickHandler);
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        jump();
+      });
+      
+      flappyGame = { 
+        animationId: null,
+        keyHandler: flappyKeyHandler
+      };
+      
+      function loop() {
+        updateGame();
+        draw();
+        
+        if (gameActive) {
+          flappyGame.animationId = requestAnimationFrame(loop);
+        } else {
+          // Game over - reset
+          score = 0;
+          document.getElementById('flappy-score').textContent = score;
+        }
+      }
+      
+      flappyGame.animationId = requestAnimationFrame(loop);
     }
 
     // ==================== EVENT LISTENERS ====================
@@ -1278,5 +1318,5 @@
     applyConfig();
     updateStats();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d725b3207f34f1a',t:'MTc3MjY0Mjc3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d7281b4a3184f1a',t:'MTc3MjY0NDM1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
