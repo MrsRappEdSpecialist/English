@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mrs. Rapp's English Dashboard</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&display=swap');
 
         body {
-            /* Crisp & Feminine: Soft Lavender to Peachy-Pink Glow */
-            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1f9 40%, #fff1eb 100%);
+            /* Sophisticated Warm Palette: Cream to Rose Sand */
+            background: linear-gradient(135deg, #fffcf9 0%, #f7ebe1 50%, #fce4ec 100%);
             background-attachment: fixed;
-            color: #4a4a4a; /* Modern Soft Charcoal */
+            color: #3d3d3d; /* Soft charcoal for high readability */
             font-family: 'Poppins', sans-serif; 
             text-align: center;
             padding: 50px 20px;
@@ -21,7 +21,7 @@
             position: relative;
         }
 
-        /* --- Floating Hearts/Sparkles (Feminine Drift) --- */
+        /* --- Floating Literary Elements --- */
         .quote-layer {
             position: fixed;
             top: 0;
@@ -34,34 +34,40 @@
 
         .floating-quote {
             position: absolute;
-            color: rgba(214, 158, 255, 0.3); /* Lavender Mist */
+            color: rgba(190, 140, 130, 0.25); /* Muted Rose Gold */
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 400;
+            font-style: italic;
             white-space: nowrap;
             animation: drift linear infinite;
         }
 
         @keyframes drift {
-            from { transform: translateX(100vw) rotate(0deg); }
-            to { transform: translateX(-110%) rotate(10deg); }
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-110%); }
         }
 
-        /* --- Header: Crisp & Stylized --- */
+        /* --- Sophisticated 3D Header --- */
         h1 { 
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3.2rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
             margin-bottom: 5px;
-            color: #7c3aed; /* Vibrant Purple */
-            letter-spacing: -1px;
-            text-shadow: 2px 2px 0px #ffffff, 4px 4px 15px rgba(124, 58, 237, 0.2);
+            color: #bc8c84; /* Dusty Rose */
+            /* Subtle Sophisticated 3D shadow */
+            text-shadow: 
+                1px 1px 0px #ffffff, 
+                2px 2px 0px rgba(188, 140, 132, 0.3),
+                5px 10px 20px rgba(0,0,0,0.05);
         }
 
         h2 { 
-            font-family: 'Dancing Script', cursive; /* Fun Teacher Script */
-            color: #db2777; /* Deep Pink/Berry */
-            font-size: 1.8rem; 
+            font-family: 'Poppins', sans-serif;
+            color: #8e8e8e; 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
             margin-bottom: 50px;
-            margin-top: 0;
+            font-weight: 300;
         }
 
         .assignment-list {
@@ -78,40 +84,42 @@
             max-width: 550px;
         }
 
-        /* --- Button Styling: Clean Glass & Soft Borders --- */
+        /* --- Sophisticated Button Styling --- */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 18px;
-            border-radius: 20px;
+            padding: 20px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 1.25rem;
-            transition: all 0.4s ease;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            border: 2px solid #fbcfe8; /* Soft Pink Border */
-            color: #5b21b6; /* Deep Purple Text */
-            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.05);
-        }
-
-        /* --- Hover State: Berry-Pink Pop --- */
-        .assignment-link:hover {
-            transform: translateY(-5px);
+            font-size: 1.2rem;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             background: #ffffff;
-            border-color: #db2777; /* Berry Pink */
-            color: #db2777;
-            animation: pulse-pink 1.5s infinite;
-            box-shadow: 0 10px 25px rgba(219, 39, 119, 0.2);
+            border: 1.5px solid #e0d0ca; 
+            color: #5a4a42; /* Deep Earthy Bronze */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
-        @keyframes pulse-pink {
-            0% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(219, 39, 119, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0); }
+        /* --- Hover State: Warm Glow --- */
+        .assignment-link:hover {
+            transform: translateY(-3px);
+            background: #fdfaf9;
+            border-color: #bc8c84; /* Rose Gold */
+            color: #bc8c84;
+            animation: pulse-rose 1.5s infinite;
+            box-shadow: 0 10px 25px rgba(188, 140, 132, 0.15);
         }
 
+        @keyframes pulse-rose {
+            0% { box-shadow: 0 0 0 0 rgba(188, 140, 132, 0.3); }
+            70% { box-shadow: 0 0 0 10px rgba(188, 140, 132, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(188, 140, 132, 0); }
+        }
+
+        /* The Dotted Border for the Break Zone as requested */
         .break-link {
-            border-style: dashed; /* Playful dashed border for break zone */
+            border-style: dotted;
+            border-width: 3px;
+            background: rgba(255, 255, 255, 0.5);
         }
 
     </style>
@@ -119,16 +127,16 @@
 <body>
 
     <div class="quote-layer">
-        <div class="floating-quote" style="top: 15%; animation-duration: 40s;">"You've got this! ✨"</div>
-        <div class="floating-quote" style="top: 35%; animation-duration: 50s; animation-delay: -5s;">"Your voice matters 💖"</div>
-        <div class="floating-quote" style="top: 55%; animation-duration: 45s; animation-delay: -15s;">"Dream big, write often 🖋️"</div>
-        <div class="floating-quote" style="top: 75%; animation-duration: 55s;">"Make today beautiful 🌸"</div>
-        <div class="floating-quote" style="top: 90%; animation-duration: 35s; animation-delay: -10s;">"Always believe in yourself!"</div>
+        <div class="floating-quote" style="top: 15%; animation-duration: 45s;">"Words have the power to change the world."</div>
+        <div class="floating-quote" style="top: 35%; animation-duration: 55s; animation-delay: -5s;">"Your perspective is unique and valued."</div>
+        <div class="floating-quote" style="top: 55%; animation-duration: 50s; animation-delay: -15s;">"Read with purpose, write with passion."</div>
+        <div class="floating-quote" style="top: 75%; animation-duration: 60s;">"Every story matters."</div>
+        <div class="floating-quote" style="top: 90%; animation-duration: 40s; animation-delay: -10s;">"The future belongs to those who tell stories."</div>
     </div>
 
     <div class="hub-container">
         <h1>Mrs. Rapp's English Dashboard</h1>
-        <h2>Where stories come to life...</h2>
+        <h2>Literature &centerdot; Composition &centerdot; Growth</h2>
 
         <ul class="assignment-list">
             <li class="assignment-item">
