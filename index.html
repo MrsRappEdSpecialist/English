@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mrs. Rapp's English Dashboard</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap');
 
         body {
-            /* Vibrant & Fun: Electric Teal to Bright Royal Blue with a Sunny Glow */
-            background: radial-gradient(circle at top, #0ea5e9 0%, #2563eb 35%, #1e40af 70%, #fbbf24 100%);
+            /* Crisp & Feminine: Soft Lavender to Peachy-Pink Glow */
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1f9 40%, #fff1eb 100%);
             background-attachment: fixed;
-            color: #f8fafc;
+            color: #4a4a4a; /* Modern Soft Charcoal */
             font-family: 'Poppins', sans-serif; 
             text-align: center;
             padding: 50px 20px;
@@ -21,7 +21,7 @@
             position: relative;
         }
 
-        /* --- Floating Inspirational Quotes --- */
+        /* --- Floating Hearts/Sparkles (Feminine Drift) --- */
         .quote-layer {
             position: fixed;
             top: 0;
@@ -34,41 +34,34 @@
 
         .floating-quote {
             position: absolute;
-            color: rgba(255, 255, 255, 0.2); /* Slightly brighter for engagement */
-            font-size: 1.1rem;
-            font-style: italic;
+            color: rgba(214, 158, 255, 0.3); /* Lavender Mist */
+            font-size: 1rem;
+            font-weight: 600;
             white-space: nowrap;
             animation: drift linear infinite;
-            letter-spacing: 0.5px;
         }
 
         @keyframes drift {
-            from { transform: translateX(100vw); }
-            to { transform: translateX(-110%); }
+            from { transform: translateX(100vw) rotate(0deg); }
+            to { transform: translateX(-110%) rotate(10deg); }
         }
 
-        /* --- Header with 3D Depth: Bright Sunshine Yellow --- */
+        /* --- Header: Crisp & Stylized --- */
         h1 { 
             font-family: 'Montserrat', sans-serif;
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            color: #fbbf24; /* Bright Sunny Yellow */
-            /* Energetic 3D Depth */
-            text-shadow: 
-                0 1px 0 #d97706,
-                0 2px 0 #b45309,
-                0 4px 0 #92400e,
-                0 10px 20px rgba(0,0,0,0.4);
+            font-size: 3.2rem;
+            margin-bottom: 5px;
+            color: #7c3aed; /* Vibrant Purple */
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 0px #ffffff, 4px 4px 15px rgba(124, 58, 237, 0.2);
         }
 
         h2 { 
-            color: #f0f9ff; 
-            font-size: 1.2rem; 
+            font-family: 'Dancing Script', cursive; /* Fun Teacher Script */
+            color: #db2777; /* Deep Pink/Berry */
+            font-size: 1.8rem; 
             margin-bottom: 50px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-top: 0;
         }
 
         .assignment-list {
@@ -76,51 +69,49 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             align-items: center;
         }
 
         .assignment-item {
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
         }
 
-        /* --- Button Styling: Bright & Modern --- */
+        /* --- Button Styling: Clean Glass & Soft Borders --- */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 22px;
-            border-radius: 16px; /* Slightly more rounded for a "fun" feel */
-            font-weight: 700;
-            font-size: 1.4rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(15, 23, 42, 0.7); /* Deep blue-black with transparency */
-            border: 3px solid #fbbf24; /* Bold Sunny Border */
-            
-            /* Solid White Text for Readability */
-            color: #ffffff; 
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            padding: 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.25rem;
+            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid #fbcfe8; /* Soft Pink Border */
+            color: #5b21b6; /* Deep Purple Text */
+            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.05);
         }
 
-        /* --- Hover State: Bright Yellow Pop --- */
+        /* --- Hover State: Berry-Pink Pop --- */
         .assignment-link:hover {
-            transform: translateY(-8px) scale(1.04);
-            background: #fbbf24; /* Bright Yellow Fill */
-            color: #1e3a8a; /* Bold Blue Text */
-            animation: pulse-border 1.5s infinite;
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
+            transform: translateY(-5px);
+            background: #ffffff;
+            border-color: #db2777; /* Berry Pink */
+            color: #db2777;
+            animation: pulse-pink 1.5s infinite;
+            box-shadow: 0 10px 25px rgba(219, 39, 119, 0.2);
         }
 
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.8); }
-            70% { box-shadow: 0 0 0 15px rgba(251, 191, 36, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+        @keyframes pulse-pink {
+            0% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(219, 39, 119, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0); }
         }
 
-        /* Self-Monitored Break Zone Matching */
         .break-link {
-            border-color: #fbbf24; 
+            border-style: dashed; /* Playful dashed border for break zone */
         }
 
     </style>
@@ -128,16 +119,16 @@
 <body>
 
     <div class="quote-layer">
-        <div class="floating-quote" style="top: 15%; animation-duration: 35s;">"I believe in you! <3 Mrs. Rapp."</div>
-        <div class="floating-quote" style="top: 35%; animation-duration: 45s; animation-delay: -5s;">"Reading, Writing, Listening, & Speaking"</div>
-        <div class="floating-quote" style="top: 55%; animation-duration: 40s; animation-delay: -15s;">"Your voice is powerful."</div>
-        <div class="floating-quote" style="top: 75%; animation-duration: 50s;">"Who has it better than us? Nobody! AHS!"</div>
-        <div class="floating-quote" style="top: 90%; animation-duration: 32s; animation-delay: -10s;">"Write your own beautiful future."</div>
+        <div class="floating-quote" style="top: 15%; animation-duration: 40s;">"You've got this! ✨"</div>
+        <div class="floating-quote" style="top: 35%; animation-duration: 50s; animation-delay: -5s;">"Your voice matters 💖"</div>
+        <div class="floating-quote" style="top: 55%; animation-duration: 45s; animation-delay: -15s;">"Dream big, write often 🖋️"</div>
+        <div class="floating-quote" style="top: 75%; animation-duration: 55s;">"Make today beautiful 🌸"</div>
+        <div class="floating-quote" style="top: 90%; animation-duration: 35s; animation-delay: -10s;">"Always believe in yourself!"</div>
     </div>
 
     <div class="hub-container">
         <h1>Mrs. Rapp's English Dashboard</h1>
-        <h2>Explore a Unit of Study &centerdot; Immerse Yourself In Learning</h2>
+        <h2>Where stories come to life...</h2>
 
         <ul class="assignment-list">
             <li class="assignment-item">
