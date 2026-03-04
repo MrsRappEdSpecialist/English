@@ -70,12 +70,23 @@
             filter: brightness(1.2);
         }
 
-        /* Specific Pastel Neon Glow Colors */
-        .grey-glow {
-            color: #ffd1dc;
-            border-color: #ffd1dc;
-            box-shadow: 0 0 15px #ffd1dc, inset 0 0 5px #ffd1dc;
-        }
+       /* A respectful, memorial-style glow */
+.pink-glow {
+    color: #ffd1dc;
+    border: 1px solid rgba(255, 209, 220, 0.5); /* 50% transparent border */
+    border-radius: 4px;
+    /* This shadow is wider but "softer" (less bright) */
+    box-shadow: 0 0 10px rgba(255, 209, 220, 0.2); 
+    background-color: rgba(255, 209, 220, 0.05); /* Very faint background tint */
+    padding: 15px;
+    transition: all 0.5s ease;
+}
+
+.pink-glow:hover {
+    /* When they hover, it brightens just a tiny bit, like a candle catching a breeze */
+    border-color: rgba(255, 209, 220, 0.8);
+    box-shadow: 0 0 15px rgba(255, 209, 220, 0.4);
+}
 
         .mint-glow {
             color: #b2fba5;
