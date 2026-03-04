@@ -70,23 +70,13 @@
             filter: brightness(1.2);
         }
 
-    /* Uniform Yellow Moon Glow for all boxes */
-.moon-glow {
-    color: #fff9c4; /* Pale Moon Yellow */
-    border: 1px solid #fff9c4;
+  .yellow-glow {
+    color: #fff9c4;
+    border: 2px solid #fff9c4;
+    box-shadow: 0 0 15px #fff9c4, inset 0 0 5px #fff9c4;
+    padding: 15px;
     border-radius: 8px;
-    /* Soft, steady glow like a moon or candle */
-    box-shadow: 0 0 12px #fff9c4, inset 0 0 4px #fff9c4;
-    padding: 20px;
     margin-bottom: 20px;
-    background-color: rgba(255, 249, 196, 0.05); /* Very faint warm tint */
-    transition: transform 0.3s ease;
-}
-
-.moon-glow:hover {
-    /* Subtle lift when they hover to help with focus */
-    transform: translateY(-3px);
-    box-shadow: 0 0 20px #fff9c4, inset 0 0 6px #fff9c4;
 }
 
 .pink-glow:hover {
