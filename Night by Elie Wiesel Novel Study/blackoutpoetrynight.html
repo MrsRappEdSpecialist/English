@@ -93,7 +93,7 @@
 
         .word.blacked-out {
             background-color: var(--blackout-color);
-            color: var(--blackout-color); /* Hides the text by making it the same color as the background */
+            color: var(--blackout-color);
             user-select: none;
         }
 
@@ -132,6 +132,44 @@
                 font-size: 1.1rem;
             }
         }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            
+            /* Hide everything except the book page */
+            .assignment-header, .controls {
+                display: none !important;
+            }
+
+            .book-container {
+                margin: 0;
+            }
+
+            /* Strip the background colors and shadows for saving ink */
+            .book-page {
+                background-color: #ffffff !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                min-height: auto !important;
+                color: #000000 !important;
+            }
+
+            .book-page::before {
+                display: none !important;
+            }
+
+            /* Force the browser to print the blacked-out words */
+            .word.blacked-out {
+                background-color: #000000 !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -158,38 +196,26 @@
     </div>
 
     <script>
-        // --- TEACHER INSTRUCTIONS ---
-        // You can change the text inside the quotes below to any excerpt from the book you prefer.
         const excerptText = "Never shall I forget that night, the first night in camp, that turned my life into one long night seven times sealed. Never shall I forget that smoke. Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky. Never shall I forget those flames that consumed my faith forever. Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live. Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes. Never shall I forget those things, even were I condemned to live as long as God Himself. Never.";
 
         const pageContent = document.getElementById('page-content');
-        
-        // Load saved state from localStorage
         let savedState = JSON.parse(localStorage.getItem('nightBlackoutState')) || {};
 
         function initializePage() {
             pageContent.innerHTML = '';
-            
-            // Split text by spaces, preserving the words
             const words = excerptText.split(' ');
 
             words.forEach((word, index) => {
                 const span = document.createElement('span');
                 span.className = 'word';
-                
-                // Add a space after the word, except for the last word
                 span.textContent = word + (index < words.length - 1 ? ' ' : '');
                 
-                // Restore state if it was previously blacked out
                 if (savedState[index]) {
                     span.classList.add('blacked-out');
                 }
 
-                // Click event to toggle blackout
                 span.addEventListener('click', function() {
                     this.classList.toggle('blacked-out');
-                    
-                    // Update and save state
                     savedState[index] = this.classList.contains('blacked-out');
                     localStorage.setItem('nightBlackoutState', JSON.stringify(savedState));
                 });
@@ -198,7 +224,6 @@
             });
         }
 
-        // Function to clear everything and start over
         function resetPage() {
             if(confirm("Are you sure you want to erase all your work and start over?")) {
                 savedState = {};
@@ -207,7 +232,6 @@
             }
         }
 
-        // Run on load
         initializePage();
     </script>
 
