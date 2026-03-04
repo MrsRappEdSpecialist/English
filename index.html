@@ -3,79 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mrs. Rapp's English Hub</title>
+    <title>Mrs. Rapp's English Dashboard</title>
     <style>
-        /* Enganging Sunset Vibe Theme */
-        
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
 
         body {
-            /* Sunset Gradient Background */
-            background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 35%, #ca8a04 80%, #ea580c 100%);
+            /* Lightly radiant background: Deep Blue to Sunshine Golden */
+            background: radial-gradient(circle at top, #1e3a8a 0%, #0f172a 40%, #854d0e 85%, #fbbf24 100%);
+            background-attachment: fixed;
             color: #f4f4f4;
-            /* Modern, clean font stack */
             font-family: 'Poppins', sans-serif; 
             text-align: center;
             padding: 50px 20px;
             margin: 0;
             min-height: 100vh;
-            position: relative;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* --- Dynamic English Background Effect --- */
-        body::before {
-            content: "a b c d e f g h i j k l m n o p q r s t u v w x y z { } < > / ? ! @ # $ % ^ & * ( ) _ + A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
+        /* --- Floating Inspirational Quotes --- */
+        .quote-layer {
             position: fixed;
             top: 0;
             left: 0;
-            font-family: monospace;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.03); /* Very subtle */
-            width: 200%;
-            height: 200%;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            transform: rotate(-15deg);
-            white-space: wrap;
-            animation: textScroll 60s linear infinite;
+            pointer-events: none;
         }
 
-        @keyframes textScroll {
-            from { transform: rotate(-15deg) translateY(0); }
-            to { transform: rotate(-15deg) translateY(-50%); }
-        }
-        /* --- End Background Effect --- */
-
-        .hub-container {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative; /* Stays above background text */
+        .floating-quote {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 1.2rem;
+            font-style: italic;
+            white-space: nowrap;
+            animation: drift linear infinite;
         }
 
-        /* Header Styling with Outline Text */
+        @keyframes drift {
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-100%); }
+        }
+
+        /* --- Header with 3D Depth --- */
         h1 { 
             font-family: 'Montserrat', sans-serif;
-            font-size: 4rem;
-            margin-bottom: 5px;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: -2px;
-            
-            /* Outline Text Styling (Sunshine/Gold) */
-            color: transparent; 
-            -webkit-text-stroke: 2px #facc15; /* Tailwind Yellow 400 */
-            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.5));
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; -webkit-text-stroke: 1px #facc15; }
+            color: #fbbf24;
+            /* 3D Depth Effect */
+            text-shadow: 
+                0 1px 0 #b45309,
+                0 2px 0 #92400e,
+                0 3px 0 #78350f,
+                0 4px 0 #451a03,
+                0 10px 20px rgba(0,0,0,0.5);
         }
 
         h2 { 
-            color: #e2e8f0; 
-            font-size: 1.2rem; 
+            color: #d1d5db; 
+            font-size: 1.1rem; 
             margin-bottom: 50px;
             font-weight: 400;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
 
         .assignment-list {
@@ -83,7 +75,7 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
             align-items: center;
         }
 
@@ -92,103 +84,88 @@
             max-width: 600px;
         }
 
-        /* --- Link Styling (Button Style) --- */
+        /* --- Button Styling with 3D Outline Text --- */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 22px;
-            border-radius: 50px; /* Fully rounded "pill" buttons */
-            font-weight: 600;
-            font-size: 1.3rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy animation */
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            background: rgba(15, 23, 42, 0.8);
+            border: 3px solid #fbbf24;
             
-            background: rgba(15, 23, 42, 0.6); /* Semi-transparent background */
-            backdrop-filter: blur(5px); /* Frost effect */
-            
-            /* Outline Text Style inside buttons */
+            /* Outline Text Style */
             color: transparent;
-            -webkit-text-stroke: 1px #ffffff;
-
-            position: relative;
-            overflow: hidden;
+            -webkit-text-stroke: 1px #fbbf24;
+            letter-spacing: 1px;
         }
 
-        /* --- Standard Link Pulsating Border --- */
-        .standard-link {
-            border: 3px solid #facc15; /* Sunshine Yellow */
-            animation: pulse-yellow 2.5s infinite;
-        }
-
-        @keyframes pulse-yellow {
-            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(250, 204, 21, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
-        }
-
-        /* --- Break Zone Link Pulsating Border --- */
-        .break-link {
-            border: 3px solid #f97316; /* Orange */
-            animation: pulse-orange 2.5s infinite;
-        }
-
-        @keyframes pulse-orange {
-            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(249, 115, 22, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
-        }
-
-        /* Hover Effects */
+        /* --- Hover State: Pulsate Only on Hover --- */
         .assignment-link:hover {
-            transform: scale(1.05) translateY(-3px);
-            background: #fff; /* Fills with white on hover */
-            -webkit-text-stroke: 0px transparent; /* Turns off outline text */
-            animation-duration: 1s; /* Speeds up the pulse on hover */
+            transform: translateY(-5px) scale(1.02);
+            background: #fbbf24;
+            color: #0f172a;
+            -webkit-text-stroke: 0px transparent;
+            animation: pulse-border 1.5s infinite;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
         }
 
-        .standard-link:hover {
-            color: #ca8a04; /* Dark gold text color on white background */
-            box-shadow: 0 10px 20px rgba(250, 204, 21, 0.4);
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(251, 191, 36, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
         }
 
-        .break-link:hover {
-            color: #ea580c; /* Orange text color on white background */
-            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.4);
+        /* Specific Yellow border for Break Zone as requested */
+        .break-link {
+            border-color: #fbbf24; 
+            -webkit-text-stroke: 1px #fbbf24;
         }
 
     </style>
 </head>
 <body>
 
-<div class="hub-container">
-    <h1>English Hub</h1>
-    <h2>Complete Assignment &centerdot; Save as PDF &centerdot; Turn into Ekadence</h2>
+    <div class="quote-layer">
+        <div class="floating-quote" style="top: 10%; animation-duration: 25s;">"Words are our most inexhaustible source of magic."</div>
+        <div class="floating-quote" style="top: 30%; animation-duration: 35s; animation-delay: -5s;">"Be the protagonist of your own story."</div>
+        <div class="floating-quote" style="top: 50%; animation-duration: 30s; animation-delay: -15s;">"The pen is mightier than the sword."</div>
+        <div class="floating-quote" style="top: 70%; animation-duration: 40s;">"Every secret of a writer's soul is written in their work."</div>
+        <div class="floating-quote" style="top: 85%; animation-duration: 28s; animation-delay: -10s;">"Write your own future."</div>
+    </div>
 
-    <ul class="assignment-list">
-        <li class="assignment-item">
-            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link standard-link">
-                Night Novel Study
-            </a>
-        </li>
+    <div class="hub-container">
+        <h1>Mrs. Rapp's English Dashboard</h1>
+        <h2>Select an assignment to begin &centerdot; Submit as PDF to Ekadence</h2>
 
-        <li class="assignment-item">
-            <a href="Romeo&Juliet/index.html" class="assignment-link standard-link">
-                Romeo & Juliet Unit
-            </a>
-        </li>
+        <ul class="assignment-list">
+            <li class="assignment-item">
+                <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link">
+                    Night Novel Study
+                </a>
+            </li>
 
-        <li class="assignment-item">
-            <a href="5C=Character/index.html" class="assignment-link standard-link">
-                5C Lessons
-            </a>
-        </li>
+            <li class="assignment-item">
+                <a href="Romeo&Juliet/index.html" class="assignment-link">
+                    Romeo & Juliet Unit
+                </a>
+            </li>
 
-        <li class="assignment-item">
-            <a href="BrainBreaks/index.html" class="assignment-link break-link">
-                Self-Monitored Break Zone
-            </a>
-        </li>
-    </ul>
-</div>
+            <li class="assignment-item">
+                <a href="5C=Character/index.html" class="assignment-link">
+                    5C Lessons
+                </a>
+            </li>
+
+            <li class="assignment-item">
+                <a href="BrainBreaks/index.html" class="assignment-link break-link">
+                    Self-Monitored Break Zone
+                </a>
+            </li>
+        </ul>
+    </div>
 
 </body>
 </html>
