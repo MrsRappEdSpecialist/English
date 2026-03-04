@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mrs. Rapp's Spring English Hub 🌸</title>
     <style>
-        /* Trendy Retro & Bubbly Font Stack */
+        /* Bouncy Retro-Y2K Font Stack - based on image_1.png and image_3.png vibes */
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Bungee&family=Nunito:wght@400;800&display=swap');
 
         body {
-            /* Vibrant Spring Morning: Bright Sky to Soft Peach */
-            background: linear-gradient(135deg, #00f2fe 0%, #fdfbfb 45%, #fff1eb 75%, #ff007a 100%);
+            /* VIBRANT & EXCITED: 
+               Background gradient from Sky Blue (#00f2fe from image_3.png) 
+               to Peachy-Pink (#ff007a from image_1.png and image_2.png) 
+            */
+            background: linear-gradient(135deg, #00f2fe 0%, #fdfbfb 40%, #fff1eb 70%, #ff007a 100%);
             background-attachment: fixed;
             color: #1e293b; 
             font-family: 'Nunito', sans-serif; 
@@ -18,72 +21,84 @@
             padding: 50px 20px;
             margin: 0;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden; /* Stops scrolling to keep graphics static */
             position: relative;
         }
 
-        /* --- Floating Retro-Spring Graphics --- */
-        .vibe-layer {
+        /* --- STATIC (NON-FLOATING) BACKGROUND GRAPHICS --- */
+        .static-vibe-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -2; /* Stays behind everything */
             pointer-events: none;
         }
 
-        .floating-element {
+        /* Image_1.png flower style - Top Left */
+        .top-flower-graphic {
             position: absolute;
-            font-size: 3rem;
-            animation: floatUp linear infinite;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+            width: 150px;
+            top: 5%;
+            left: 5%;
+            opacity: 0.15; /* Subdued so it's clearly a background element */
+            filter: hue-rotate(20deg); /* Adjusts lavender to a teal/cyan vibe */
         }
 
-        .floating-affirmation {
+        /* Image_4.png notebook style - Top Right */
+        .notebook-graphic {
             position: absolute;
-            color: #ff007a; /* Hot Pink */
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            white-space: nowrap;
-            animation: driftAcross linear infinite;
-            text-shadow: 2px 2px 0px white;
+            width: 180px;
+            top: 10%;
+            right: 8%;
+            opacity: 0.12;
+            transform: rotate(15deg);
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        /* Image_2.png pencil/paper style - Bottom Left */
+        .bottom-gear-graphic {
+            position: absolute;
+            width: 160px;
+            bottom: 5%;
+            left: 8%;
+            opacity: 0.1;
+            transform: rotate(-10deg);
         }
 
-        @keyframes driftAcross {
-            0% { transform: translateX(-100%); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateX(100vw); opacity: 0; }
+        /* Image_3.png smiley/rainbow style - Bottom Right */
+        .smiley-graphic {
+            position: absolute;
+            width: 170px;
+            bottom: 8%;
+            right: 5%;
+            opacity: 0.15;
+            filter: brightness(1.2); /* Boosts the yellow *center* from images */
         }
 
-        /* --- Header: Bubbly, Vibrant & Layered --- */
+        /* --- Header: Bouncy & Layered, very Gen-Z --- */
         h1 { 
             font-family: 'Bungee', cursive;
-            font-size: 4rem;
+            font-size: 4.5rem;
             margin-bottom: 5px;
-            color: #00f2fe; /* Electric Teal */
-            text-shadow: 4px 4px 0px #ff007a, 8px 8px 0px rgba(0,0,0,0.1);
-            -webkit-text-stroke: 1px white;
+            color: #ff007a; /* Neon Pink */
+            text-shadow: 
+                4px 4px 0px #00f2fe, /* Neon Cyan Layer */
+                8px 8px 0px rgba(0,0,0,0.1);
+            letter-spacing: -2px;
+            -webkit-text-stroke: 1.5px white; /* Chic outline */
         }
 
         h2 { 
             font-family: 'Fredoka', sans-serif;
-            color: #334155;
-            font-size: 1.3rem; 
+            color: #334155; /* Soft Dark Slate */
+            font-size: 1.25rem; 
             margin-top: 0;
-            margin-bottom: 50px;
-            background: rgba(255, 255, 255, 0.6);
+            margin-bottom: 60px;
+            font-weight: 400;
+            background: rgba(255, 255, 255, 0.7); /* Readable background panel */
             display: inline-block;
-            padding: 5px 15px;
+            padding: 5px 20px;
             border-radius: 50px;
         }
 
@@ -92,7 +107,7 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 28px;
             align-items: center;
         }
 
@@ -101,40 +116,40 @@
             max-width: 580px;
         }
 
-        /* --- GLOWING CHIC DOUBLE BORDERS --- */
+        /* --- CHIC & EXCITED DOUBLE BORDERS --- */
         .assignment-link {
             display: block;
             text-decoration: none;
             padding: 22px;
-            border-radius: 25px;
+            border-radius: 20px;
             font-family: 'Fredoka', sans-serif;
             font-size: 1.5rem;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: #ffffff; 
-            color: #0f172a; 
+            background: rgba(255, 255, 255, 0.9); /* Solid white/very readable card */
+            color: #0f172a; /* Main text */
             
-            /* The Animated Double Border Style */
-            border: 6px double #ff007a;
-            box-shadow: 10px 10px 0px #00f2fe;
+            /* The Base Double Border - using image center yellow from image_1.png/image_4.png */
+            border: 6px double rgba(15, 23, 42, 0.2); 
+            box-shadow: 10px 10px 0px #ff007a; /* 3D Pink Shadow Panel */
             position: relative;
         }
 
-        /* --- Hover State: Border Swap & Glow --- */
+        /* --- Hover State: EXPLOSIVE COLOR CHANGE --- */
         .assignment-link:hover {
-            transform: translate(-5px, -5px);
-            background: #0f172a; /* Dark Contrast */
-            color: white; 
-            border-color: #00f2fe; /* Border changes to Teal */
-            box-shadow: 15px 15px 0px #ff007a; /* Shadow changes to Pink */
+            transform: translate(-5px, -5px) scale(1.02);
+            background: #0f172a; /* Dark card panel pops */
+            color: white; /* Contrast text pops */
+            border-color: #00f2fe; /* Base border pops to Cyan */
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.3); /* Panel moves/shadow fades */
         }
 
-        /* Inner Glitter Ring on Hover */
+        /* Adds a secondary inner glitter ring *only* on hover */
         .assignment-link:hover::after {
             content: '';
             position: absolute;
             top: 4px; bottom: 4px; left: 4px; right: 4px;
-            border: 2px dashed #ff007a;
-            border-radius: 18px;
+            border: 2px dashed #ff007a; /* Pink/Red 'leopard' texture on inner ring */
+            border-radius: 14px;
             pointer-events: none;
         }
 
@@ -142,40 +157,39 @@
 </head>
 <body>
 
-  <div class="vibe-layer">
-    <div class="floating-element" style="left: 10%; bottom: -10%; animation-duration: 10s;">🌈</div> <div class="floating-element" style="left: 30%; bottom: -10%; animation-duration: 14s; animation-delay: -3s;">📒</div> <div class="floating-element" style="left: 55%; bottom: -10%; animation-duration: 12s; animation-delay: -5s;">🎀</div> <div class="floating-element" style="left: 75%; bottom: -10%; animation-duration: 16s; animation-delay: -2s;">✍️</div> <div class="floating-element" style="left: 90%; bottom: -10%; animation-duration: 11s; animation-delay: -8s;">😊</div> <div class="floating-affirmation" style="top: 15%; animation-duration: 18s; animation-delay: -5s;">"Fresh start, new chapters 📖"</div>
-    <div class="floating-affirmation" style="top: 35%; animation-duration: 22s;">"You are the main character ✨"</div>
-    <div class="floating-affirmation" style="top: 55%; animation-duration: 20s; animation-delay: -10s;">"Slay the assignment 💅"</div>
-    <div class="floating-affirmation" style="top: 75%; animation-duration: 24s; animation-delay: -2s;">"Bloom with every word 🌸"</div>
-    <div class="floating-affirmation" style="top: 90%; animation-duration: 19s; animation-delay: -15s;">"Top tier student vibes ✌️"</div>
-</div>
+  <div class="static-vibe-layer">
+    <img src="https://i.ibb.co/VDPgDms/image-1.png" class="top-flower-graphic">
+    <img src="https://i.ibb.co/sK6t3Wz/image-4.png" class="notebook-graphic">
+    <img src="https://i.ibb.co/6y4tW6j/image-2.png" class="bottom-gear-graphic">
+    <img src="https://i.ibb.co/6y4tW6j/image-3.png" class="smiley-graphic">
+  </div>
 
     <div class="hub-container">
-        <h1>Mrs. Rapp 🌸 English Hub</h1>
+        <h1>Mrs. Rapp 🌸 English Bloom</h1>
         
-        <h2>Bloom &centerdot; Growth &centerdot; Creativity</h2>
+        <h2>Explore a Unit &centerdot; Submit your PDF to Ekadence!</h2>
 
         <ul class="assignment-list">
             <li class="assignment-item">
-                <a href="Night_Novel_Study.html" class="assignment-link">
+                <a href="Night Novel Study/index.html" class="assignment-link">
                     Night Novel Study
                 </a>
             </li>
 
             <li class="assignment-item">
-                <a href="Romeo_Juliet.html" class="assignment-link">
+                <a href="Romeo&Juliet/index.html" class="assignment-link">
                     Romeo & Juliet Unit
                 </a>
             </li>
 
             <li class="assignment-item">
-                <a href="5C_Character.html" class="assignment-link">
+                <a href="5C=Character/index.html" class="assignment-link">
                     5C Lessons
                 </a>
             </li>
 
             <li class="assignment-item">
-                <a href="BrainBreaks.html" class="assignment-link">
+                <a href="BrainBreaks/index.html" class="assignment-link">
                     Self-Monitored Break Zone
                 </a>
             </li>
