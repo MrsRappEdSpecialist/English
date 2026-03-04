@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Polo Brain Break</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', sans-serif; }
+    .wave-bg {
+      background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+    }
+    .pool-tile {
+      background: repeating-linear-gradient(
+        90deg,
+        #38bdf8 0px,
+        #38bdf8 20px,
+        #0ea5e9 20px,
+        #0ea5e9 40px
+      );
+    }
+    .water-shimmer {
+      animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    .bounce-ball {
+      animation: bounce 0.6s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.8); }
+    }
+    .float-up {
+      animation: floatUp 4s ease-in-out infinite;
+    }
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .game-container {
+      min-height: 300px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full wave-bg overflow-auto"><!-- Decorative water elements -->
+   <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-10 left-10 text-6xl water-shimmer">
+     🌊
+    </div>
+    <div class="absolute top-20 right-16 text-4xl water-shimmer" style="animation-delay: 1s;">
+     💧
+    </div>
+    <div class="absolute bottom-32 left-20 text-5xl water-shimmer" style="animation-delay: 0.5s;">
+     🌊
+    </div>
+    <div class="absolute bottom-20 right-10 text-4xl water-shimmer" style="animation-delay: 1.5s;">
+     💧
+    </div>
+   </div><!-- Main Content -->
+   <div class="relative z-10 max-w-2xl mx-auto px-4 py-8"><!-- Header -->
+    <div class="text-center mb-8">
+     <div class="text-6xl mb-4 bounce-ball">
+      🤽
+     </div>
+     <h1 id="app-title" class="text-4xl font-bold text-white drop-shadow-lg mb-2">Water Polo Brain Break</h1>
+     <p id="encouragement" class="text-xl text-sky-100">You've got this, champion!</p>
+    </div><!-- Screen: Setup -->
+    <div id="setup-screen" class="bg-white/95 rounded-3xl p-6 shadow-2xl">
+     <h2 class="text-2xl font-bold text-sky-800 mb-6 text-center">⏱️ Set Your Timer</h2><!-- Work Time Selection -->
+     <div class="mb-6"><label class="block text-lg font-semibold text-sky-700 mb-3">🏊 Work Time (minutes)</label>
+      <div class="flex flex-wrap gap-2 justify-center"><button onclick="selectWorkTime(5)" class="work-btn px-5 py-3 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold transition-all" data-time="5">5</button> <button onclick="selectWorkTime(10)" class="work-btn px-5 py-3 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold transition-all" data-time="10">10</button> <button onclick="selectWorkTime(15)" class="work-btn px-5 py-3 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold transition-all" data-time="15">15</button> <button onclick="selectWorkTime(20)" class="work-btn px-5 py-3 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold transition-all" data-time="20">20</button> <button onclick="selectWorkTime(25)" class="work-btn px-5 py-3 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold transition-all" data-time="25">25</button> <button onclick="selectWorkTime(30)" class="work-btn px-5 py-3 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold transition-all" data-time="30">30</button>
+      </div>
+      <p id="work-selected" class="text-center mt-2 text-sky-600 font-medium"></p>
+     </div><!-- Break Time Selection -->
+     <div class="mb-6"><label class="block text-lg font-semibold text-sky-700 mb-3">🎮 Break Time (minutes, max 5)</label>
+      <div class="flex flex-wrap gap-2 justify-center"><button onclick="selectBreakTime(1)" class="break-btn px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-all" data-time="1">1</button> <button onclick="selectBreakTime(2)" class="break-btn px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-all" data-time="2">2</button> <button onclick="selectBreakTime(3)" class="break-btn px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-all" data-time="3">3</button> <button onclick="selectBreakTime(4)" class="break-btn px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-all" data-time="4">4</button> <button onclick="selectBreakTime(5)" class="break-btn px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-all" data-time="5">5</button>
+      </div>
+      <p id="break-selected" class="text-center mt-2 text-amber-600 font-medium"></p>
+     </div><button onclick="startWorkTime()" id="start-btn" class="w-full py-4 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled> 🏊 Start Working! </button>
+    </div><!-- Screen: Work Timer -->
+    <div id="work-screen" class="hidden bg-white/95 rounded-3xl p-6 shadow-2xl text-center">
+     <h2 class="text-2xl font-bold text-sky-800 mb-2">🏊 Work Time!</h2>
+     <p class="text-sky-600 mb-6">Stay focused, you're doing amazing!</p>
+     <div class="relative inline-block mb-6">
+      <div class="w-48 h-48 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center pulse-glow">
+       <div class="text-5xl font-bold text-white" id="work-timer">
+        00:00
+       </div>
+      </div>
+     </div>
+     <div class="pool-tile h-4 rounded-full mb-6"></div>
+     <p class="text-lg text-sky-700 font-medium">Keep swimming toward your goal! 🏆</p>
+    </div><!-- Screen: Reflection -->
+    <div id="reflection-screen" class="hidden bg-white/95 rounded-3xl p-6 shadow-2xl">
+     <div class="text-center mb-6">
+      <div class="text-5xl mb-3">
+       🎉
+      </div>
+      <h2 class="text-2xl font-bold text-sky-800 mb-2">Great Work, Champion!</h2>
+      <p class="text-sky-600">Before your break, take a moment to reflect:</p>
+     </div>
+     <div class="mb-6"><label class="block text-lg font-semibold text-sky-700 mb-3">📝 What did you work on?</label> <textarea id="reflection-input" class="w-full p-4 border-2 border-sky-200 rounded-xl focus:border-sky-400 focus:outline-none resize-none text-sky-800" rows="3" placeholder="I worked on..."></textarea>
+     </div>
+     <div class="mb-6"><label class="block text-lg font-semibold text-sky-700 mb-3">⭐ How do you feel about your work?</label>
+      <div class="flex justify-center gap-4"><button onclick="selectFeeling('😊')" class="feeling-btn text-4xl p-3 rounded-xl hover:bg-sky-100 transition-all">😊</button> <button onclick="selectFeeling('😐')" class="feeling-btn text-4xl p-3 rounded-xl hover:bg-sky-100 transition-all">😐</button> <button onclick="selectFeeling('😤')" class="feeling-btn text-4xl p-3 rounded-xl hover:bg-sky-100 transition-all">😤</button> <button onclick="selectFeeling('🤔')" class="feeling-btn text-4xl p-3 rounded-xl hover:bg-sky-100 transition-all">🤔</button>
+      </div>
+      <p id="feeling-selected" class="text-center mt-2 text-sky-600"></p>
+     </div><button onclick="showBreakSelection()" id="earn-break-btn" class="w-full py-4 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 text-amber-900 text-xl font-bold rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled> 🎮 Earn Your Break! </button>
+    </div><!-- Screen: Break Selection -->
+    <div id="break-selection-screen" class="hidden bg-white/95 rounded-3xl p-6 shadow-2xl">
+     <div class="text-center mb-6">
+      <div class="text-5xl mb-3">
+       🏆
+      </div>
+      <h2 class="text-2xl font-bold text-amber-700 mb-2">Choose Your Break Activity!</h2>
+      <p class="text-amber-600">You earned <span id="break-time-display">0</span> minutes of fun!</p>
+     </div>
+     <div class="grid grid-cols-4 gap-3 mb-4"><button onclick="selectActivity('tetris')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🧱</span> <span class="text-xs text-sky-700 mt-1">Tetris</span> </button> <button onclick="selectActivity('matching')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🃏</span> <span class="text-xs text-sky-700 mt-1">Match</span> </button> <button onclick="selectActivity('breathing')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🌬️</span> <span class="text-xs text-sky-700 mt-1">Breathe</span> </button> <button onclick="selectActivity('bounce')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">⚽</span> <span class="text-xs text-sky-700 mt-1">Bounce</span> </button> <button onclick="selectActivity('snake')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🐍</span> <span class="text-xs text-sky-700 mt-1">Snake</span> </button> <button onclick="selectActivity('coloring')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🎨</span> <span class="text-xs text-sky-700 mt-1">Color</span> </button> <button onclick="selectActivity('trivia')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">❓</span> <span class="text-xs text-sky-700 mt-1">Trivia</span> </button> <button onclick="selectActivity('puzzle')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🧩</span> <span class="text-xs text-sky-700 mt-1">Puzzle</span> </button> <button onclick="selectActivity('doodle')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">✏️</span> <span class="text-xs text-sky-700 mt-1">Doodle</span> </button> <button onclick="selectActivity('stretch')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🤸</span> <span class="text-xs text-sky-700 mt-1">Stretch</span> </button> <button onclick="selectActivity('music')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🎵</span> <span class="text-xs text-sky-700 mt-1">Rhythm</span> </button> <button onclick="selectActivity('maze')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🌀</span> <span class="text-xs text-sky-700 mt-1">Maze</span> </button> <button onclick="selectActivity('bubbles')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🫧</span> <span class="text-xs text-sky-700 mt-1">Bubbles</span> </button> <button onclick="selectActivity('catchgame')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🧤</span> <span class="text-xs text-sky-700 mt-1">Catch</span> </button> <button onclick="selectActivity('simon')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🔴</span> <span class="text-xs text-sky-700 mt-1">Simon</span> </button> <button onclick="selectActivity('wordscramble')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🔤</span> <span class="text-xs text-sky-700 mt-1">Words</span> </button> <button onclick="selectActivity('reaction')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">⚡</span> <span class="text-xs text-sky-700 mt-1">React</span> </button> <button onclick="selectActivity('counting')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🔢</span> <span class="text-xs text-sky-700 mt-1">Count</span> </button> <button onclick="selectActivity('waterpolo')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🤽</span> <span class="text-xs text-sky-700 mt-1">W.Polo</span> </button> <button onclick="selectActivity('meditation')" class="activity-btn p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all flex flex-col items-center"> <span class="text-2xl">🧘</span> <span class="text-xs text-sky-700 mt-1">Calm</span> </button>
+     </div>
+    </div><!-- Screen: Break Activity -->
+    <div id="break-screen" class="hidden bg-white/95 rounded-3xl p-6 shadow-2xl">
+     <div class="flex justify-between items-center mb-4">
+      <h2 id="activity-title" class="text-xl font-bold text-amber-700">Break Time!</h2>
+      <div class="flex items-center gap-2"><span class="text-amber-600">⏱️</span> <span id="break-timer" class="text-xl font-bold text-amber-700">00:00</span>
+      </div>
+     </div>
+     <div id="activity-container" class="game-container bg-sky-50 rounded-xl p-4 mb-4"><!-- Activity content loads here -->
+     </div><button onclick="endBreakEarly()" class="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl transition-all"> 🏊 Back to Work Early </button>
+    </div><!-- Screen: Complete -->
+    <div id="complete-screen" class="hidden bg-white/95 rounded-3xl p-6 shadow-2xl text-center">
+     <div class="text-6xl mb-4">
+      🏆
+     </div>
+     <h2 class="text-2xl font-bold text-sky-800 mb-4">Break Time's Over!</h2>
+     <p class="text-sky-600 mb-6">Great job taking a brain break. Ready for another round?</p><button onclick="resetApp()" class="w-full py-4 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all"> 🏊 Start New Session </button>
+    </div>
+   </div>
+  </div>
+  <script>
+    // State
+    let workMinutes = 0;
+    let breakMinutes = 0;
+    let selectedFeeling = '';
+    let workInterval = null;
+    let breakInterval = null;
+    let currentActivity = '';
+
+    // Config
+    const defaultConfig = {
+      app_title: 'Water Polo Brain Break',
+      encouragement_text: "You've got this, champion!"
+    };
+
+    // Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
+          document.getElementById('encouragement').textContent = config.encouragement_text || defaultConfig.encouragement_text;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['app_title', config.app_title || defaultConfig.app_title],
+          ['encouragement_text', config.encouragement_text || defaultConfig.encouragement_text]
+        ])
+      });
+    }
+
+    // Utility functions
+    function showScreen(screenId) {
+      ['setup-screen', 'work-screen', 'reflection-screen', 'break-selection-screen', 'break-screen', 'complete-screen'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(screenId).classList.remove('hidden');
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function selectWorkTime(mins) {
+      workMinutes = mins;
+      document.querySelectorAll('.work-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-500', 'text-white');
+        btn.classList.add('bg-sky-100', 'text-sky-800');
+      });
+      document.querySelector(`.work-btn[data-time="${mins}"]`).classList.remove('bg-sky-100', 'text-sky-800');
+      document.querySelector(`.work-btn[data-time="${mins}"]`).classList.add('bg-sky-500', 'text-white');
+      document.getElementById('work-selected').textContent = `${mins} minutes selected`;
+      updateStartButton();
+    }
+
+    function selectBreakTime(mins) {
+      breakMinutes = mins;
+      document.querySelectorAll('.break-btn').forEach(btn => {
+        btn.classList.remove('bg-amber-500', 'text-white');
+        btn.classList.add('bg-amber-100', 'text-amber-800');
+      });
+      document.querySelector(`.break-btn[data-time="${mins}"]`).classList.remove('bg-amber-100', 'text-amber-800');
+      document.querySelector(`.break-btn[data-time="${mins}"]`).classList.add('bg-amber-500', 'text-white');
+      document.getElementById('break-selected').textContent = `${mins} minutes selected`;
+      updateStartButton();
+    }
+
+    function updateStartButton() {
+      document.getElementById('start-btn').disabled = !(workMinutes > 0 && breakMinutes > 0);
+    }
+
+    function startWorkTime() {
+      showScreen('work-screen');
+      let seconds = workMinutes * 60;
+      document.getElementById('work-timer').textContent = formatTime(seconds);
+      
+      workInterval = setInterval(() => {
+        seconds--;
+        document.getElementById('work-timer').textContent = formatTime(seconds);
+        if (seconds <= 0) {
+          clearInterval(workInterval);
+          showScreen('reflection-screen');
+        }
+      }, 1000);
+    }
+
+    function selectFeeling(feeling) {
+      selectedFeeling = feeling;
+      document.querySelectorAll('.feeling-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-200', 'ring-2', 'ring-sky-400');
+      });
+      event.target.closest('.feeling-btn').classList.add('bg-sky-200', 'ring-2', 'ring-sky-400');
+      document.getElementById('feeling-selected').textContent = `You selected ${feeling}`;
+      updateEarnButton();
+    }
+
+    function updateEarnButton() {
+      const hasReflection = document.getElementById('reflection-input').value.trim().length > 0;
+      document.getElementById('earn-break-btn').disabled = !(hasReflection && selectedFeeling);
+    }
+
+    document.getElementById('reflection-input')?.addEventListener('input', updateEarnButton);
+
+    function showBreakSelection() {
+      document.getElementById('break-time-display').textContent = breakMinutes;
+      showScreen('break-selection-screen');
+    }
+
+    function selectActivity(activity) {
+      currentActivity = activity;
+      showScreen('break-screen');
+      startBreakTimer();
+      loadActivity(activity);
+    }
+
+    function startBreakTimer() {
+      let seconds = breakMinutes * 60;
+      document.getElementById('break-timer').textContent = formatTime(seconds);
+      
+      breakInterval = setInterval(() => {
+        seconds--;
+        document.getElementById('break-timer').textContent = formatTime(seconds);
+        if (seconds <= 0) {
+          clearInterval(breakInterval);
+          showScreen('complete-screen');
+        }
+      }, 1000);
+    }
+
+    function endBreakEarly() {
+      clearInterval(breakInterval);
+      showScreen('complete-screen');
+    }
+
+    function resetApp() {
+      workMinutes = 0;
+      breakMinutes = 0;
+      selectedFeeling = '';
+      document.querySelectorAll('.work-btn, .break-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-500', 'bg-amber-500', 'text-white');
+      });
+      document.querySelectorAll('.work-btn').forEach(btn => {
+        btn.classList.add('bg-sky-100', 'text-sky-800');
+      });
+      document.querySelectorAll('.break-btn').forEach(btn => {
+        btn.classList.add('bg-amber-100', 'text-amber-800');
+      });
+      document.getElementById('work-selected').textContent = '';
+      document.getElementById('break-selected').textContent = '';
+      document.getElementById('reflection-input').value = '';
+      document.getElementById('feeling-selected').textContent = '';
+      document.querySelectorAll('.feeling-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-200', 'ring-2', 'ring-sky-400');
+      });
+      updateStartButton();
+      showScreen('setup-screen');
+    }
+
+    // Activity Loaders
+    function loadActivity(activity) {
+      const container = document.getElementById('activity-container');
+      const titleEl = document.getElementById('activity-title');
+      
+      const activities = {
+        tetris: { title: '🧱 Tetris', load: loadTetris },
+        matching: { title: '🃏 Memory Match', load: loadMatching },
+        breathing: { title: '🌬️ Deep Breathing', load: loadBreathing },
+        bounce: { title: '⚽ Ball Bounce', load: loadBounce },
+        snake: { title: '🐍 Snake Game', load: loadSnake },
+        coloring: { title: '🎨 Color Fill', load: loadColoring },
+        trivia: { title: '❓ Water Polo Trivia', load: loadTrivia },
+        puzzle: { title: '🧩 Sliding Puzzle', load: loadPuzzle },
+        doodle: { title: '✏️ Free Doodle', load: loadDoodle },
+        stretch: { title: '🤸 Stretch Break', load: loadStretch },
+        music: { title: '🎵 Rhythm Tap', load: loadMusic },
+        maze: { title: '🌀 Maze Runner', load: loadMaze },
+        bubbles: { title: '🫧 Pop Bubbles', load: loadBubbles },
+        catchgame: { title: '🧤 Catch Game', load: loadCatch },
+        simon: { title: '🔴 Simon Says', load: loadSimon },
+        wordscramble: { title: '🔤 Word Scramble', load: loadWordScramble },
+        reaction: { title: '⚡ Reaction Test', load: loadReaction },
+        counting: { title: '🔢 Number Click', load: loadCounting },
+        waterpolo: { title: '🤽 Water Polo Shooter', load: loadWaterPolo },
+        meditation: { title: '🧘 Calm Waves', load: loadMeditation }
+      };
+
+      const act = activities[activity];
+      titleEl.textContent = act.title;
+      act.load(container);
+    }
+
+    // Individual Activity Implementations
+    function loadTetris(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Tap blocks to rotate and clear rows!</p>
+          <div id="tetris-board" class="inline-grid grid-cols-8 gap-0.5 bg-sky-200 p-2 rounded-lg"></div>
+          <p class="mt-3 text-sky-600">Score: <span id="tetris-score">0</span></p>
+        </div>
+      `;
+      const board = document.getElementById('tetris-board');
+      let score = 0;
+      for (let i = 0; i < 64; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'w-6 h-6 rounded cursor-pointer transition-all';
+        cell.style.backgroundColor = Math.random() > 0.6 ? ['#0ea5e9', '#fbbf24', '#22c55e', '#ef4444'][Math.floor(Math.random() * 4)] : '#e0f2fe';
+        cell.onclick = () => {
+          cell.style.backgroundColor = '#e0f2fe';
+          score += 10;
+          document.getElementById('tetris-score').textContent = score;
+        };
+        board.appendChild(cell);
+      }
+    }
+
+    function loadMatching(container) {
+      const emojis = ['🤽', '🏊', '🌊', '💧', '🏆', '⚽', '🤽', '🏊', '🌊', '💧', '🏆', '⚽'];
+      const shuffled = emojis.sort(() => Math.random() - 0.5);
+      let flipped = [];
+      let matched = 0;
+      
+      container.innerHTML = `
+        <p class="text-sky-700 mb-4 text-center">Find matching pairs!</p>
+        <div id="match-grid" class="grid grid-cols-4 gap-2 max-w-xs mx-auto"></div>
+        <p class="mt-3 text-center text-sky-600">Pairs: <span id="match-count">0</span>/6</p>
+      `;
+      
+      const grid = document.getElementById('match-grid');
+      shuffled.forEach((emoji, i) => {
+        const card = document.createElement('button');
+        card.className = 'w-14 h-14 bg-sky-400 rounded-lg text-2xl flex items-center justify-center transition-all hover:bg-sky-300';
+        card.dataset.emoji = emoji;
+        card.dataset.index = i;
+        card.textContent = '❓';
+        card.onclick = () => flipCard(card);
+        grid.appendChild(card);
+      });
+
+      function flipCard(card) {
+        if (flipped.length >= 2 || card.dataset.flipped) return;
+        card.textContent = card.dataset.emoji;
+        card.dataset.flipped = 'true';
+        card.classList.add('bg-white');
+        flipped.push(card);
+        
+        if (flipped.length === 2) {
+          setTimeout(() => {
+            if (flipped[0].dataset.emoji === flipped[1].dataset.emoji) {
+              matched++;
+              document.getElementById('match-count').textContent = matched;
+              flipped = [];
+            } else {
+              flipped.forEach(c => {
+                c.textContent = '❓';
+                c.dataset.flipped = '';
+                c.classList.remove('bg-white');
+              });
+              flipped = [];
+            }
+          }, 800);
+        }
+      }
+    }
+
+    function loadBreathing(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-6">Follow the circle - breathe in as it grows, out as it shrinks</p>
+          <div id="breath-circle" class="w-24 h-24 mx-auto bg-gradient-to-br from-sky-400 to-cyan-400 rounded-full transition-all duration-[4000ms] ease-in-out"></div>
+          <p id="breath-text" class="mt-4 text-2xl font-bold text-sky-700">Breathe In...</p>
+        </div>
+      `;
+      
+      const circle = document.getElementById('breath-circle');
+      const text = document.getElementById('breath-text');
+      let inhale = true;
+      
+      function breathe() {
+        if (inhale) {
+          circle.style.transform = 'scale(1.8)';
+          text.textContent = 'Breathe In...';
+        } else {
+          circle.style.transform = 'scale(1)';
+          text.textContent = 'Breathe Out...';
+        }
+        inhale = !inhale;
+      }
+      
+      breathe();
+      setInterval(breathe, 4000);
+    }
+
+    function loadBounce(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Click the ball to keep it bouncing!</p>
+          <div id="bounce-area" class="relative h-48 bg-gradient-to-b from-sky-100 to-sky-200 rounded-xl overflow-hidden">
+            <div id="ball" class="absolute w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full cursor-pointer shadow-lg" style="left: 50%; top: 20%; transform: translateX(-50%);">
+              <span class="absolute inset-0 flex items-center justify-center text-2xl">🤽</span>
+            </div>
+          </div>
+          <p class="mt-3 text-sky-600">Bounces: <span id="bounce-count">0</span></p>
+        </div>
+      `;
+      
+      const ball = document.getElementById('ball');
+      const area = document.getElementById('bounce-area');
+      let bounces = 0;
+      let pos = 20;
+      let velocity = 0;
+      
+      function update() {
+        velocity += 0.5;
+        pos += velocity;
+        if (pos > 75) {
+          pos = 75;
+          velocity = 0;
+        }
+        ball.style.top = pos + '%';
+        requestAnimationFrame(update);
+      }
+      
+      ball.onclick = () => {
+        velocity = -8;
+        bounces++;
+        document.getElementById('bounce-count').textContent = bounces;
+      };
+      
+      update();
+    }
+
+    function loadSnake(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Use arrow buttons to catch water drops!</p>
+          <div id="snake-board" class="inline-grid grid-cols-10 gap-0.5 bg-sky-200 p-2 rounded-lg mb-3"></div>
+          <div class="flex justify-center gap-2">
+            <button onclick="moveSnake('up')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">↑</button>
+            <button onclick="moveSnake('down')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">↓</button>
+            <button onclick="moveSnake('left')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">←</button>
+            <button onclick="moveSnake('right')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">→</button>
+          </div>
+          <p class="mt-2 text-sky-600">Score: <span id="snake-score">0</span></p>
+        </div>
+      `;
+      
+      const board = document.getElementById('snake-board');
+      window.snakePos = 45;
+      window.snakeScore = 0;
+      window.foodPos = Math.floor(Math.random() * 100);
+      
+      for (let i = 0; i < 100; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'w-5 h-5 rounded';
+        cell.id = 'snake-cell-' + i;
+        cell.style.backgroundColor = i === window.snakePos ? '#0ea5e9' : i === window.foodPos ? '#fbbf24' : '#e0f2fe';
+        board.appendChild(cell);
+      }
+    }
+
+    window.moveSnake = function(dir) {
+      const oldPos = window.snakePos;
+      if (dir === 'up' && window.snakePos >= 10) window.snakePos -= 10;
+      if (dir === 'down' && window.snakePos < 90) window.snakePos += 10;
+      if (dir === 'left' && window.snakePos % 10 !== 0) window.snakePos -= 1;
+      if (dir === 'right' && window.snakePos % 10 !== 9) window.snakePos += 1;
+      
+      document.getElementById('snake-cell-' + oldPos).style.backgroundColor = '#e0f2fe';
+      document.getElementById('snake-cell-' + window.snakePos).style.backgroundColor = '#0ea5e9';
+      
+      if (window.snakePos === window.foodPos) {
+        window.snakeScore += 10;
+        document.getElementById('snake-score').textContent = window.snakeScore;
+        window.foodPos = Math.floor(Math.random() * 100);
+        document.getElementById('snake-cell-' + window.foodPos).style.backgroundColor = '#fbbf24';
+      }
+    };
+
+    function loadColoring(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Pick a color and tap shapes to fill!</p>
+          <div class="flex justify-center gap-2 mb-4">
+            <button onclick="setColor('#0ea5e9')" class="w-8 h-8 rounded-full bg-sky-500 border-2 border-white"></button>
+            <button onclick="setColor('#fbbf24')" class="w-8 h-8 rounded-full bg-amber-400 border-2 border-white"></button>
+            <button onclick="setColor('#22c55e')" class="w-8 h-8 rounded-full bg-green-500 border-2 border-white"></button>
+            <button onclick="setColor('#ef4444')" class="w-8 h-8 rounded-full bg-red-500 border-2 border-white"></button>
+            <button onclick="setColor('#a855f7')" class="w-8 h-8 rounded-full bg-purple-500 border-2 border-white"></button>
+          </div>
+          <div class="grid grid-cols-4 gap-3 max-w-xs mx-auto">
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 rounded-lg cursor-pointer bg-white"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 rounded-full cursor-pointer bg-white"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 cursor-pointer bg-white" style="clip-path: polygon(50% 0%, 100% 100%, 0% 100%);"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 rounded-lg cursor-pointer bg-white"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 rounded-full cursor-pointer bg-white"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 cursor-pointer bg-white"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 rounded-full cursor-pointer bg-white"></div>
+            <div onclick="fillShape(this)" class="w-14 h-14 border-2 border-sky-300 rounded-lg cursor-pointer bg-white"></div>
+          </div>
+        </div>
+      `;
+      window.currentColor = '#0ea5e9';
+    }
+
+    window.setColor = function(color) {
+      window.currentColor = color;
+    };
+
+    window.fillShape = function(el) {
+      el.style.backgroundColor = window.currentColor;
+    };
+
+    function loadTrivia(container) {
+      const questions = [
+        { q: "How many players per team in water polo?", a: "7", opts: ["5", "7", "9", "11"] },
+        { q: "How long is a water polo quarter?", a: "8 minutes", opts: ["5 minutes", "8 minutes", "10 minutes", "12 minutes"] },
+        { q: "What color cap does the goalie wear?", a: "Red", opts: ["Blue", "White", "Red", "Yellow"] },
+      ];
+      let current = 0;
+      let score = 0;
+
+      function showQuestion() {
+        const q = questions[current];
+        container.innerHTML = `
+          <div class="text-center">
+            <p class="text-sky-700 font-bold mb-4">${q.q}</p>
+            <div class="space-y-2">
+              ${q.opts.map(opt => `
+                <button onclick="checkAnswer('${opt}', '${q.a}')" class="w-full py-2 px-4 bg-sky-100 hover:bg-sky-200 rounded-lg text-sky-800 transition-all">${opt}</button>
+              `).join('')}
+            </div>
+            <p class="mt-4 text-sky-600">Score: ${score}/${questions.length}</p>
+          </div>
+        `;
+      }
+
+      window.checkAnswer = function(selected, correct) {
+        if (selected === correct) score++;
+        current++;
+        if (current < questions.length) {
+          showQuestion();
+        } else {
+          container.innerHTML = `
+            <div class="text-center">
+              <p class="text-3xl mb-4">🏆</p>
+              <p class="text-xl font-bold text-sky-700">Quiz Complete!</p>
+              <p class="text-sky-600">You got ${score}/${questions.length} correct!</p>
+            </div>
+          `;
+        }
+      };
+
+      showQuestion();
+    }
+
+    function loadPuzzle(container) {
+      const tiles = [1, 2, 3, 4, 5, 6, 7, 8, ''];
+      let puzzleState = [...tiles].sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Click tiles to slide them into order!</p>
+          <div id="puzzle-grid" class="inline-grid grid-cols-3 gap-1 bg-sky-200 p-2 rounded-lg"></div>
+        </div>
+      `;
+      
+      function renderPuzzle() {
+        const grid = document.getElementById('puzzle-grid');
+        grid.innerHTML = '';
+        puzzleState.forEach((tile, i) => {
+          const el = document.createElement('button');
+          el.className = tile ? 'w-14 h-14 bg-sky-500 text-white font-bold text-xl rounded-lg hover:bg-sky-400 transition-all' : 'w-14 h-14 bg-sky-100 rounded-lg';
+          el.textContent = tile;
+          el.onclick = () => slideTile(i);
+          grid.appendChild(el);
+        });
+      }
+      
+      function slideTile(i) {
+        const emptyIndex = puzzleState.indexOf('');
+        const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 3, emptyIndex + 3];
+        if (validMoves.includes(i)) {
+          [puzzleState[i], puzzleState[emptyIndex]] = [puzzleState[emptyIndex], puzzleState[i]];
+          renderPuzzle();
+        }
+      }
+      
+      renderPuzzle();
+    }
+
+    function loadDoodle(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-2">Draw anything you like!</p>
+          <canvas id="doodle-canvas" width="280" height="200" class="bg-white rounded-lg border-2 border-sky-200 cursor-crosshair mx-auto block"></canvas>
+          <div class="flex justify-center gap-2 mt-3">
+            <button onclick="setDoodleColor('#0ea5e9')" class="w-6 h-6 rounded-full bg-sky-500"></button>
+            <button onclick="setDoodleColor('#ef4444')" class="w-6 h-6 rounded-full bg-red-500"></button>
+            <button onclick="setDoodleColor('#22c55e')" class="w-6 h-6 rounded-full bg-green-500"></button>
+            <button onclick="setDoodleColor('#000')" class="w-6 h-6 rounded-full bg-black"></button>
+            <button onclick="clearDoodle()" class="px-3 py-1 bg-gray-200 rounded text-sm">Clear</button>
+          </div>
+        </div>
+      `;
+      
+      const canvas = document.getElementById('doodle-canvas');
+      const ctx = canvas.getContext('2d');
+      let drawing = false;
+      window.doodleColor = '#0ea5e9';
+      
+      canvas.onmousedown = (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+      canvas.onmouseup = () => drawing = false;
+      canvas.onmousemove = (e) => {
+        if (!drawing) return;
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle = window.doodleColor;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      };
+      
+      canvas.ontouchstart = (e) => { e.preventDefault(); drawing = true; const touch = e.touches[0]; const rect = canvas.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top); };
+      canvas.ontouchend = () => drawing = false;
+      canvas.ontouchmove = (e) => {
+        e.preventDefault();
+        if (!drawing) return;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.strokeStyle = window.doodleColor;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      };
+    }
+
+    window.setDoodleColor = function(c) { window.doodleColor = c; };
+    window.clearDoodle = function() {
+      const canvas = document.getElementById('doodle-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    function loadStretch(container) {
+      const stretches = [
+        { name: "Arm Circles", emoji: "🙆", instruction: "Make big circles with your arms" },
+        { name: "Neck Roll", emoji: "😌", instruction: "Slowly roll your head in a circle" },
+        { name: "Shoulder Shrugs", emoji: "🤷", instruction: "Lift shoulders up, then relax" },
+        { name: "Touch Toes", emoji: "🙇", instruction: "Bend down and reach for your toes" },
+        { name: "Side Stretch", emoji: "🧘", instruction: "Reach up and lean to each side" },
+      ];
+      let current = 0;
+      
+      function showStretch() {
+        const s = stretches[current];
+        container.innerHTML = `
+          <div class="text-center">
+            <div class="text-6xl mb-4">${s.emoji}</div>
+            <h3 class="text-xl font-bold text-sky-700 mb-2">${s.name}</h3>
+            <p class="text-sky-600 mb-4">${s.instruction}</p>
+            <button onclick="nextStretch()" class="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-all">Next Stretch →</button>
+            <p class="mt-3 text-sm text-sky-500">${current + 1} of ${stretches.length}</p>
+          </div>
+        `;
+      }
+      
+      window.nextStretch = function() {
+        current = (current + 1) % stretches.length;
+        showStretch();
+      };
+      
+      showStretch();
+    }
+
+    function loadMusic(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Tap the buttons to the beat!</p>
+          <div class="flex justify-center gap-4 mb-4">
+            <button onclick="tapButton(this, 'red')" class="w-16 h-16 rounded-full bg-red-500 hover:bg-red-400 transition-all active:scale-90"></button>
+            <button onclick="tapButton(this, 'yellow')" class="w-16 h-16 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-all active:scale-90"></button>
+            <button onclick="tapButton(this, 'green')" class="w-16 h-16 rounded-full bg-green-500 hover:bg-green-400 transition-all active:scale-90"></button>
+            <button onclick="tapButton(this, 'blue')" class="w-16 h-16 rounded-full bg-blue-500 hover:bg-blue-400 transition-all active:scale-90"></button>
+          </div>
+          <p class="text-sky-600">Taps: <span id="tap-count">0</span></p>
+        </div>
+      `;
+      window.tapCount = 0;
+    }
+
+    window.tapButton = function(btn, color) {
+      window.tapCount++;
+      document.getElementById('tap-count').textContent = window.tapCount;
+      btn.style.transform = 'scale(0.9)';
+      setTimeout(() => btn.style.transform = '', 100);
+    };
+
+    function loadMaze(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Guide the ball to the goal! 🏆</p>
+          <div id="maze-grid" class="inline-grid grid-cols-8 gap-0.5 bg-sky-200 p-2 rounded-lg mb-3"></div>
+          <div class="flex justify-center gap-2">
+            <button onclick="moveMaze('up')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">↑</button>
+            <button onclick="moveMaze('down')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">↓</button>
+            <button onclick="moveMaze('left')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">←</button>
+            <button onclick="moveMaze('right')" class="px-4 py-2 bg-sky-500 text-white rounded-lg">→</button>
+          </div>
+        </div>
+      `;
+      
+      const maze = document.getElementById('maze-grid');
+      window.mazePos = 0;
+      window.mazeGoal = 63;
+      const walls = [5, 6, 13, 14, 21, 22, 29, 41, 42, 43, 50, 51];
+      
+      for (let i = 0; i < 64; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'w-5 h-5 rounded';
+        cell.id = 'maze-cell-' + i;
+        if (walls.includes(i)) {
+          cell.style.backgroundColor = '#64748b';
+        } else if (i === window.mazePos) {
+          cell.style.backgroundColor = '#0ea5e9';
+        } else if (i === window.mazeGoal) {
+          cell.style.backgroundColor = '#fbbf24';
+          cell.textContent = '🏆';
+          cell.className += ' flex items-center justify-center text-xs';
+        } else {
+          cell.style.backgroundColor = '#e0f2fe';
+        }
+        maze.appendChild(cell);
+      }
+    }
+
+    window.moveMaze = function(dir) {
+      const walls = [5, 6, 13, 14, 21, 22, 29, 41, 42, 43, 50, 51];
+      const oldPos = window.mazePos;
+      let newPos = oldPos;
+      
+      if (dir === 'up' && oldPos >= 8) newPos = oldPos - 8;
+      if (dir === 'down' && oldPos < 56) newPos = oldPos + 8;
+      if (dir === 'left' && oldPos % 8 !== 0) newPos = oldPos - 1;
+      if (dir === 'right' && oldPos % 8 !== 7) newPos = oldPos + 1;
+      
+      if (!walls.includes(newPos)) {
+        document.getElementById('maze-cell-' + oldPos).style.backgroundColor = '#e0f2fe';
+        window.mazePos = newPos;
+        document.getElementById('maze-cell-' + newPos).style.backgroundColor = '#0ea5e9';
+        
+        if (newPos === window.mazeGoal) {
+          document.getElementById('activity-container').innerHTML = `
+            <div class="text-center py-8">
+              <p class="text-4xl mb-4">🎉</p>
+              <p class="text-xl font-bold text-sky-700">You escaped the maze!</p>
+            </div>
+          `;
+        }
+      }
+    };
+
+    function loadBubbles(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Pop all the bubbles!</p>
+          <div id="bubble-area" class="relative h-48 bg-gradient-to-b from-sky-100 to-sky-200 rounded-xl overflow-hidden"></div>
+          <p class="mt-3 text-sky-600">Popped: <span id="bubble-count">0</span></p>
+        </div>
+      `;
+      
+      const area = document.getElementById('bubble-area');
+      window.bubbleCount = 0;
+      
+      function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.className = 'absolute w-10 h-10 rounded-full bg-gradient-to-br from-sky-300 to-cyan-400 cursor-pointer flex items-center justify-center text-lg transition-transform hover:scale-110';
+        bubble.style.left = Math.random() * 80 + '%';
+        bubble.style.top = Math.random() * 80 + '%';
+        bubble.textContent = '🫧';
+        bubble.onclick = () => {
+          bubble.remove();
+          window.bubbleCount++;
+          document.getElementById('bubble-count').textContent = window.bubbleCount;
+          createBubble();
+        };
+        area.appendChild(bubble);
+      }
+      
+      for (let i = 0; i < 8; i++) createBubble();
+    }
+
+    function loadCatch(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Click the falling balls!</p>
+          <div id="catch-area" class="relative h-48 bg-gradient-to-b from-sky-100 to-sky-200 rounded-xl overflow-hidden"></div>
+          <p class="mt-3 text-sky-600">Caught: <span id="catch-count">0</span></p>
+        </div>
+      `;
+      
+      const area = document.getElementById('catch-area');
+      window.catchCount = 0;
+      
+      function dropBall() {
+        const ball = document.createElement('div');
+        ball.className = 'absolute w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 cursor-pointer flex items-center justify-center text-lg';
+        ball.style.left = Math.random() * 80 + '%';
+        ball.style.top = '-10%';
+        ball.textContent = '🤽';
+        
+        ball.onclick = () => {
+          ball.remove();
+          window.catchCount++;
+          document.getElementById('catch-count').textContent = window.catchCount;
+        };
+        
+        area.appendChild(ball);
+        
+        let pos = -10;
+        const fall = setInterval(() => {
+          pos += 3;
+          ball.style.top = pos + '%';
+          if (pos > 100) {
+            clearInterval(fall);
+            ball.remove();
+          }
+        }, 50);
+      }
+      
+      setInterval(dropBall, 1000);
+      dropBall();
+    }
+
+    function loadSimon(container) {
+      const colors = ['red', 'blue', 'green', 'yellow'];
+      let sequence = [];
+      let playerIndex = 0;
+      let score = 0;
+      
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Watch the pattern, then repeat it!</p>
+          <div class="grid grid-cols-2 gap-2 max-w-xs mx-auto mb-4">
+            <button id="simon-red" onclick="simonClick('red')" class="h-16 bg-red-500 rounded-lg hover:bg-red-400 transition-all"></button>
+            <button id="simon-blue" onclick="simonClick('blue')" class="h-16 bg-blue-500 rounded-lg hover:bg-blue-400 transition-all"></button>
+            <button id="simon-green" onclick="simonClick('green')" class="h-16 bg-green-500 rounded-lg hover:bg-green-400 transition-all"></button>
+            <button id="simon-yellow" onclick="simonClick('yellow')" class="h-16 bg-yellow-500 rounded-lg hover:bg-yellow-400 transition-all"></button>
+          </div>
+          <button id="simon-start" onclick="startSimon()" class="px-6 py-2 bg-sky-500 text-white rounded-lg">Start</button>
+          <p class="mt-2 text-sky-600">Score: <span id="simon-score">0</span></p>
+        </div>
+      `;
+      
+      window.startSimon = function() {
+        sequence.push(colors[Math.floor(Math.random() * 4)]);
+        playerIndex = 0;
+        document.getElementById('simon-start').disabled = true;
+        playSequence();
+      };
+      
+      function playSequence() {
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i >= sequence.length) {
+            clearInterval(interval);
+            document.getElementById('simon-start').disabled = false;
+            return;
+          }
+          flashColor(sequence[i]);
+          i++;
+        }, 600);
+      }
+      
+      function flashColor(color) {
+        const btn = document.getElementById('simon-' + color);
+        btn.style.filter = 'brightness(1.5)';
+        setTimeout(() => btn.style.filter = '', 300);
+      }
+      
+      window.simonClick = function(color) {
+        flashColor(color);
+        if (color === sequence[playerIndex]) {
+          playerIndex++;
+          if (playerIndex === sequence.length) {
+            score++;
+            document.getElementById('simon-score').textContent = score;
+            setTimeout(window.startSimon, 500);
+          }
+        } else {
+          score = 0;
+          sequence = [];
+          document.getElementById('simon-score').textContent = score;
+        }
+      };
+    }
+
+    function loadWordScramble(container) {
+      const words = ['WATER', 'POLO', 'GOAL', 'SWIM', 'BALL', 'TEAM', 'POOL', 'WAVE'];
+      let currentWord = '';
+      let scrambled = '';
+      
+      function newWord() {
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        scrambled = currentWord.split('').sort(() => Math.random() - 0.5).join('');
+        render();
+      }
+      
+      function render() {
+        container.innerHTML = `
+          <div class="text-center">
+            <p class="text-sky-700 mb-4">Unscramble the water polo word!</p>
+            <p class="text-3xl font-bold text-amber-500 mb-4 tracking-widest">${scrambled}</p>
+            <input type="text" id="word-input" class="px-4 py-2 border-2 border-sky-200 rounded-lg text-center text-xl uppercase w-40" placeholder="Your answer" maxlength="${currentWord.length}">
+            <button onclick="checkWord()" class="ml-2 px-4 py-2 bg-sky-500 text-white rounded-lg">Check</button>
+            <p id="word-result" class="mt-3 text-lg"></p>
+          </div>
+        `;
+      }
+      
+      window.checkWord = function() {
+        const input = document.getElementById('word-input').value.toUpperCase();
+        const result = document.getElementById('word-result');
+        if (input === currentWord) {
+          result.textContent = '🎉 Correct!';
+          result.className = 'mt-3 text-lg text-green-600 font-bold';
+          setTimeout(newWord, 1000);
+        } else {
+          result.textContent = 'Try again!';
+          result.className = 'mt-3 text-lg text-red-500';
+        }
+      };
+      
+      newWord();
+    }
+
+    function loadReaction(container) {
+      let waiting = false;
+      let startTime = 0;
+      
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Click when the circle turns green!</p>
+          <div id="reaction-circle" onclick="reactionClick()" class="w-32 h-32 mx-auto rounded-full bg-red-500 cursor-pointer flex items-center justify-center transition-colors">
+            <span class="text-white font-bold">Wait...</span>
+          </div>
+          <p id="reaction-result" class="mt-4 text-xl font-bold text-sky-700"></p>
+          <button onclick="startReaction()" class="mt-3 px-6 py-2 bg-sky-500 text-white rounded-lg">Start</button>
+        </div>
+      `;
+      
+      window.startReaction = function() {
+        const circle = document.getElementById('reaction-circle');
+        circle.className = 'w-32 h-32 mx-auto rounded-full bg-red-500 cursor-pointer flex items-center justify-center transition-colors';
+        circle.innerHTML = '<span class="text-white font-bold">Wait...</span>';
+        document.getElementById('reaction-result').textContent = '';
+        
+        const delay = Math.random() * 3000 + 1000;
+        setTimeout(() => {
+          circle.className = 'w-32 h-32 mx-auto rounded-full bg-green-500 cursor-pointer flex items-center justify-center transition-colors';
+          circle.innerHTML = '<span class="text-white font-bold">Click!</span>';
+          startTime = Date.now();
+          waiting = true;
+        }, delay);
+      };
+      
+      window.reactionClick = function() {
+        if (waiting) {
+          const time = Date.now() - startTime;
+          document.getElementById('reaction-result').textContent = time + 'ms - ' + (time < 300 ? '⚡ Lightning fast!' : time < 500 ? '🏊 Great!' : '👍 Good!');
+          waiting = false;
+        }
+      };
+    }
+
+    function loadCounting(container) {
+      let numbers = [];
+      let current = 1;
+      let score = 0;
+      
+      function generateNumbers() {
+        numbers = [];
+        for (let i = 1; i <= 12; i++) numbers.push(i);
+        numbers.sort(() => Math.random() - 0.5);
+        current = 1;
+        render();
+      }
+      
+      function render() {
+        container.innerHTML = `
+          <div class="text-center">
+            <p class="text-sky-700 mb-4">Click numbers in order: 1, 2, 3...</p>
+            <div class="grid grid-cols-4 gap-2 max-w-xs mx-auto">
+              ${numbers.map(n => `
+                <button onclick="clickNumber(${n})" class="num-btn h-12 bg-sky-100 hover:bg-sky-200 rounded-lg font-bold text-sky-700 text-lg transition-all" data-num="${n}">${n}</button>
+              `).join('')}
+            </div>
+            <p class="mt-3 text-sky-600">Next: <span id="next-num">${current}</span> | Score: <span id="count-score">${score}</span></p>
+          </div>
+        `;
+      }
+      
+      window.clickNumber = function(n) {
+        if (n === current) {
+          document.querySelector(`[data-num="${n}"]`).classList.add('bg-green-400');
+          document.querySelector(`[data-num="${n}"]`).disabled = true;
+          current++;
+          score++;
+          document.getElementById('count-score').textContent = score;
+          document.getElementById('next-num').textContent = current;
+          if (current > 12) {
+            setTimeout(generateNumbers, 500);
+          }
+        }
+      };
+      
+      generateNumbers();
+    }
+
+    function loadWaterPolo(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Click to shoot at the goal!</p>
+          <div id="wp-area" class="relative h-48 bg-gradient-to-b from-sky-300 to-sky-400 rounded-xl overflow-hidden">
+            <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-32 h-16 border-4 border-white rounded-b-lg flex items-center justify-center">
+              <span class="text-4xl">🥅</span>
+            </div>
+            <div id="wp-goalie" class="absolute top-8 left-1/2 transform -translate-x-1/2 text-3xl transition-all duration-200">🤽</div>
+            <button onclick="shoot()" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-2 bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-lg">🏐 Shoot!</button>
+          </div>
+          <p class="mt-3 text-sky-600">Goals: <span id="wp-goals">0</span></p>
+        </div>
+      `;
+      
+      window.wpGoals = 0;
+      
+      window.shoot = function() {
+        const goalie = document.getElementById('wp-goalie');
+        const goaliePos = Math.random() > 0.5 ? '-30px' : '30px';
+        const shotPos = Math.random() > 0.5 ? 'left' : 'right';
+        
+        goalie.style.marginLeft = goaliePos;
+        
+        setTimeout(() => {
+          const scored = (goaliePos === '-30px' && shotPos === 'right') || (goaliePos === '30px' && shotPos === 'left');
+          if (scored) {
+            window.wpGoals++;
+            document.getElementById('wp-goals').textContent = window.wpGoals;
+          }
+          goalie.style.marginLeft = '0';
+        }, 300);
+      };
+    }
+
+    function loadMeditation(container) {
+      container.innerHTML = `
+        <div class="text-center">
+          <p class="text-sky-700 mb-4">Watch the waves and relax...</p>
+          <div class="relative h-48 bg-gradient-to-b from-sky-200 to-sky-400 rounded-xl overflow-hidden">
+            <div class="absolute bottom-0 left-0 right-0 h-24">
+              <div class="wave-1 absolute bottom-0 left-0 right-0 h-16 bg-sky-300 opacity-60" style="animation: wave 3s ease-in-out infinite;"></div>
+              <div class="wave-2 absolute bottom-0 left-0 right-0 h-12 bg-sky-400 opacity-50" style="animation: wave 4s ease-in-out infinite reverse;"></div>
+              <div class="wave-3 absolute bottom-0 left-0 right-0 h-8 bg-sky-500 opacity-40" style="animation: wave 5s ease-in-out infinite;"></div>
+            </div>
+            <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-4xl float-up">🌅</div>
+          </div>
+          <p class="mt-4 text-sky-600 italic">"Be like water - calm and powerful."</p>
+        </div>
+        <style>
+          @keyframes wave {
+            0%, 100% { transform: translateX(-10%) scaleY(1); border-radius: 50% 50% 0 0; }
+            50% { transform: translateX(10%) scaleY(1.2); border-radius: 40% 60% 0 0; }
+          }
+        </style>
+      `;
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6cd7f146102f08',t:'MTc3MjU4NDk3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
