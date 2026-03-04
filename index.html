@@ -3,73 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mrs. Rapp's Eduation Specialist Hub</title>
+    <title>Mrs. Rapp's Education Specialist Hub</title>
     <style>
+        /* General Page Styling */
         body {
-            background-color: #0d0e15;
+            background-color: #0d0e15; /* Deep dark background for glow effect */
             color: #e2e8f0;
             font-family: 'Segoe UI', sans-serif;
             text-align: center;
             padding: 50px;
         }
+
         .hub-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            border: 2px solid #00f3ff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
         }
-        h1 { color: #00f3ff; border-bottom: 2px solid #bc13fe; padding-bottom: 10px; }
-        p { color: #a0aec0; font-size: 1.1rem; }
+
+        /* Header Styling: Larger with underline */
+        h1 { 
+            font-size: 3.2rem;
+            color: #ffffff; 
+            border-bottom: 4px solid #bc13fe; 
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
+        }
+
+        /* Subheading Styling: Smaller */
+        h2 { 
+            color: #a0aec0; 
+            font-size: 1.4rem; 
+            margin-bottom: 40px;
+            font-weight: normal;
+        }
+
         .assignment-list {
             list-style: none;
             padding: 0;
-            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Space between buttons */
+            align-items: center;
         }
+
         .assignment-item {
-            margin: 15px 0;
+            width: 100%;
+            max-width: 600px;
         }
+
+        /* Base Button Styling */
         .assignment-link {
             display: block;
-            color: #fff;
             text-decoration: none;
-            background: linear-gradient(90deg, #1a1c29, #2d3748);
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 5px solid #ff007f;
-            transition: 0.3s;
+            padding: 20px;
+            border-radius: 15px;
             font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            background: rgba(26, 28, 41, 0.8);
+            border: 3px solid transparent;
         }
+
+        /* Hover Effect for all buttons */
         .assignment-link:hover {
-            transform: scale(1.02);
-            background: #bc13fe;
-            border-left: 5px solid #00f3ff;
+            transform: scale(1.05);
+            filter: brightness(1.2);
         }
+
+        /* Specific Pastel Neon Glow Colors */
+        .pink-glow {
+            color: #ffd1dc;
+            border-color: #ffd1dc;
+            box-shadow: 0 0 15px #ffd1dc, inset 0 0 5px #ffd1dc;
+        }
+
+        .mint-glow {
+            color: #b2fba5;
+            border-color: #b2fba5;
+            box-shadow: 0 0 15px #b2fba5, inset 0 0 5px #b2fba5;
+        }
+
+        .lavender-glow {
+            color: #e1bee7;
+            border-color: #e1bee7;
+            box-shadow: 0 0 15px #e1bee7, inset 0 0 5px #e1bee7;
+        }
+
+        .blue-glow {
+            color: #b3e5fc;
+            border-color: #b3e5fc;
+            box-shadow: 0 0 15px #b3e5fc, inset 0 0 5px #b3e5fc;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="hub-container">
-    <h1>Mrs. Rapp's English Assignments Dashboard</h1>
-    <p>Complete Assignment, Save as PDF, Turn into Ekadence</p>
+    <h1>Mrs. Rapp's English Assignments</h1>
+    <h2>Complete Assignment, Save as PDF, Turn into Ekadence</h2>
 
     <ul class="assignment-list">
+        <li class="assignment-item">
+            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link pink-glow">
+                Night by Elie Wiesel Novel Study
+            </a>
+        </li>
 
+        <li class="assignment-item">
+            <a href="Romeo&Juliet/index.html" class="assignment-link mint-glow">
+                Romeo & Juliet by William Shakespeare Unit
+            </a>
+        </li>
 
-  <li><a href="Night by Elie Wiesel Novel Study/index.html">Night by Elie Wiesel Novel Study</a></li>
+        <li class="assignment-item">
+            <a href="5C=Character/index.html" class="assignment-link lavender-glow">
+                5C Lessons
+            </a>
+        </li>
 
-          <li><a href="Romeo&Juliet/index.html">Romeo & Juliet by William Shakespeare Unit</a></li>
-
-        
-
-  <li><a href="5C=Character/index.html">5C Lessons</a></li>
-
-        
-
-  <li><a href="BrainBreaks/index.html">Self-Regulartory & Self-Monitoring Activities</a></li>
-
-        
+        <li class="assignment-item">
+            <a href="BrainBreaks/index.html" class="assignment-link blue-glow">
+                Self-Regulatory & Self-Monitoring Activities
+            </a>
+        </li>
     </ul>
 </div>
 
