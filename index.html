@@ -22,50 +22,70 @@
             position: relative;
         }
 
-        /* --- Floating Vaporwave/Teen Graphics & Affirmations --- */
-        .vibe-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
+    /* --- Floating Vaporwave/Teen Graphics & Affirmations --- */
+.vibe-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden; /* Prevents scrollbars during animation */
+}
 
-        .floating-element {
-            position: absolute;
-            font-size: 2.5rem;
-            animation: floatUp linear infinite;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
-        }
+.floating-element {
+    position: absolute;
+    font-size: 2.5rem;
+    /* Links to the vertical animation below */
+    animation-name: floatUp;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
 
-        .floating-affirmation {
-            position: absolute;
-            color: #00f2fe; /* Neon Cyan/Teal */
-            font-family: 'Nunito', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 900;
-            white-space: nowrap;
-            animation: driftAcross linear infinite;
-            opacity: 0.8;
-            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6); /* Glowing text */
-        }
+.floating-affirmation {
+    position: absolute;
+    color: #00f2fe; /* Neon Cyan/Teal */
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    white-space: nowrap;
+    /* Links to the horizontal animation below */
+    animation-name: driftAcross;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    opacity: 0.8;
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.6); 
+}
 
-        /* Animations split so graphics go UP and quotes go ACROSS */
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
+/* GRAPHICS: Move from bottom to top */
+@keyframes floatUp {
+    0% { 
+        transform: translateY(110vh) rotate(0deg); 
+        opacity: 0; 
+    }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { 
+        transform: translateY(-20vh) rotate(360deg); 
+        opacity: 0; 
+    }
+}
 
-      @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
-        }
+/* QUOTES: Move from left to right */
+@keyframes driftAcross {
+    0% { 
+        transform: translateX(-100%); 
+        opacity: 0; 
+    }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { 
+        transform: translateX(110vw); 
+        opacity: 0; 
+    }
+}
 
         /* --- Main Header: Neon Pink Shimmer & Glitter --- */
         h1 { 
@@ -160,7 +180,8 @@
 <body>
 
   <div class="vibe-layer">
-    <div class="floating-element" style="left: 10%; bottom: -10%; animation-duration: 12s;">🪩</div> <div class="floating-element" style="left: 30%; bottom: -10%; animation-duration: 16s; animation-delay: -3s;">🎧</div> <div class="floating-element" style="left: 50%; bottom: -10%; animation-duration: 14s; animation-delay: -7s;">⚡</div> <div class="floating-element" style="left: 70%; bottom: -10%; animation-duration: 18s; animation-delay: -2s;">💖</div> <div class="floating-element" style="left: 90%; bottom: -10%; animation-duration: 13s; animation-delay: -9s;"> ✨</div> <div class="floating-element" style="left: 15%; bottom: -10%; animation-duration: 19s; animation-delay: -5s;">☕</div> <div class="floating-affirmation" style="top: 15%; animation-duration: 20s; animation-delay: -4s;">"Main Character Energy ✨"</div>
+    <div class="floating-element" style="left: 10%; bottom: -10%; animation-duration: 12s;">📖</div> <div class="floating-element" style="left: 30%; bottom: -10%; animation-duration: 16s; animation-delay: -3s;">🎧</div> <div class="floating-element" style="left: 50%; bottom: -10%; animation-duration: 14s; animation-delay: -7s;">⚡</div> <div class="floating-element" style="left: 70%; bottom: -10%; animation-duration: 18s; animation-delay: -2s;">💖</div> <div class="floating-element" style="left: 90%; bottom: -10%; animation-duration: 13s; animation-delay: -9s;"> ✨</div> <div class="floating-element" style="left: 15%; bottom: -10%; animation-duration: 19s; animation-delay: -5s;">📓</div> <div class="floating-affirmation" style="top: 15%; animation-duration: 20s; animation-delay: -4s;">"Main Character Energy ✨"</div>
+      
     <div class="floating-affirmation" style="top: 35%; animation-duration: 25s; animation-delay: -12s;">"You are music to my ears 🎧"</div>
     <div class="floating-affirmation" style="top: 55%; animation-duration: 18s; animation-delay: -8s;">"Vibe check: You're doing great ✌️"</div>
     <div class="floating-affirmation" style="top: 75%; animation-duration: 22s; animation-delay: -2s;">"Slay the day with kindness! "</div>
@@ -168,9 +189,9 @@
 </div>
 
     <div class="hub-container">
-        <h1>Mrs. Rapp 🪩 9th Grade </h1>
+        <h1>Mrs. Rapp 📝 9th Grade English </h1>
         
-        <h2>Reading & Writing &centerdot; Engaging in the 5Cs &centerdot; Listening & Speaking</h2>
+        <h2>Reading & Writing ✏️; Engaging in the 5Cs ✏️; Listening & Speaking</h2>
 
         <ul class="assignment-list">
             <li class="assignment-item">
