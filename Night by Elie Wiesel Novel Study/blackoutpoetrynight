@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night by Elie Wiesel - Blackout Poetry</title>
+    <style>
+        :root {
+            --paper-color: #f4ecd8;
+            --ink-color: #1a1a1a;
+            --blackout-color: #111111;
+            --bg-color: #2b2b2b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #eaeaea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .assignment-header {
+            max-width: 800px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .assignment-header h1 {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .prompt-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-left: 4px solid #8c8c8c;
+            border-radius: 4px;
+            text-align: left;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Book Page Styling */
+        .book-container {
+            perspective: 1000px;
+            margin-bottom: 40px;
+        }
+
+        .book-page {
+            background-color: var(--paper-color);
+            color: var(--ink-color);
+            font-family: 'Georgia', serif;
+            font-size: 1.25rem;
+            line-height: 2.2;
+            padding: 60px 80px;
+            max-width: 600px;
+            min-height: 800px;
+            box-shadow: 
+                inset 5px 0 20px rgba(0,0,0,0.05), 
+                inset -5px 0 20px rgba(0,0,0,0.05),
+                10px 10px 30px rgba(0,0,0,0.5);
+            border-radius: 2px 5px 5px 2px;
+            position: relative;
+            text-align: justify;
+        }
+
+        /* Page texture overlay */
+        .book-page::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 5%, rgba(255,255,255,0) 10%);
+            pointer-events: none;
+        }
+
+        /* Interactive Words */
+        .word {
+            cursor: pointer;
+            padding: 2px 1px;
+            border-radius: 2px;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .word:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .word.blacked-out {
+            background-color: var(--blackout-color);
+            color: var(--blackout-color); /* Hides the text by making it the same color as the background */
+            user-select: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+
+        .reset-btn {
+            background-color: #8b3535;
+        }
+
+        .reset-btn:hover {
+            background-color: #a84242;
+        }
+
+        @media (max-width: 768px) {
+            .book-page {
+                padding: 40px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="assignment-header">
+        <h1>Night by Elie Wiesel</h1>
+        <h2>Cumulative Blackout Poetry Assignment</h2>
+        <div class="prompt-box">
+            <strong>Prompt:</strong> How do our surroundings and experiences shape our humanity and identity? 
+            <br><br>
+            Using the excerpt below from Elie Wiesel's <em>Night</em>, create a blackout poem that reflects on the loss, preservation, or transformation of identity and humanity. Click on words to black them out. Leave only the words visible that create your new poem. 
+            <em>(Your progress is automatically saved to your browser).</em>
+        </div>
+    </div>
+
+    <div class="book-container">
+        <div class="book-page" id="page-content">
+            </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="window.print()">Print / Save as PDF</button>
+        <button class="reset-btn" onclick="resetPage()">Start Over</button>
+    </div>
+
+    <script>
+        // --- TEACHER INSTRUCTIONS ---
+        // You can change the text inside the quotes below to any excerpt from the book you prefer.
+        const excerptText = "Never shall I forget that night, the first night in camp, that turned my life into one long night seven times sealed. Never shall I forget that smoke. Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky. Never shall I forget those flames that consumed my faith forever. Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live. Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes. Never shall I forget those things, even were I condemned to live as long as God Himself. Never.";
+
+        const pageContent = document.getElementById('page-content');
+        
+        // Load saved state from localStorage
+        let savedState = JSON.parse(localStorage.getItem('nightBlackoutState')) || {};
+
+        function initializePage() {
+            pageContent.innerHTML = '';
+            
+            // Split text by spaces, preserving the words
+            const words = excerptText.split(' ');
+
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                
+                // Add a space after the word, except for the last word
+                span.textContent = word + (index < words.length - 1 ? ' ' : '');
+                
+                // Restore state if it was previously blacked out
+                if (savedState[index]) {
+                    span.classList.add('blacked-out');
+                }
+
+                // Click event to toggle blackout
+                span.addEventListener('click', function() {
+                    this.classList.toggle('blacked-out');
+                    
+                    // Update and save state
+                    savedState[index] = this.classList.contains('blacked-out');
+                    localStorage.setItem('nightBlackoutState', JSON.stringify(savedState));
+                });
+
+                pageContent.appendChild(span);
+            });
+        }
+
+        // Function to clear everything and start over
+        function resetPage() {
+            if(confirm("Are you sure you want to erase all your work and start over?")) {
+                savedState = {};
+                localStorage.removeItem('nightBlackoutState');
+                initializePage();
+            }
+        }
+
+        // Run on load
+        initializePage();
+    </script>
+
+</body>
+</html>
