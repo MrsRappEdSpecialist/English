@@ -1,8 +1,136 @@
-<h2>Brain Breaks</h2>
-<ul>
-  <li><a href="brainbreaks.html">Self-Monitoring Timed Brain Breaks</a></li>
-  <li><a href="week2.html">ADD Here </a></li>
-  <li><a href="week3.html">ADD Here</a></li>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Break Arcade</title>
+    <style>
+        /* Retro Game Background Pattern */
+        body {
+            background-color: #0d0e15;
+            /* Creates a subtle grid/dot pattern like an old screen */
+            background-image: radial-gradient(#1a1c29 2px, transparent 2px);
+            background-size: 30px 30px; 
+            color: #e2e8f0;
+            font-family: 'Courier New', Courier, monospace; /* More "game" feel */
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+
+        .hub-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Quirky Arcade Header */
+        h1 { 
+            font-size: 3.5rem;
+            color: #f0f; /* Hot Pink */
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            /* Double glow effect */
+            text-shadow: 3px 3px 0px #0ff, 0 0 20px #f0f;
+            margin-bottom: 5px;
+        }
+
+        h2 { 
+            color: #0ff; /* Cyber Cyan */
+            font-size: 1.2rem; 
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .assignment-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .assignment-item {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Arcade Button Styling */
+        .arcade-btn {
+            display: block;
+            text-decoration: none;
+            padding: 25px;
+            border-radius: 0px; /* Square/Blocky for Arcade feel */
+            font-weight: bold;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+            background: #111;
+            /* The requested Dotted Border */
+            border: 4px dotted; 
+        }
+
+        /* Cartoon Quirky Glows */
+        .arcade-pink {
+            color: #ff00ff;
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        .arcade-cyan {
+            color: #00ffff;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .arcade-lime {
+            color: #39ff14;
+            border-color: #39ff14;
+            box-shadow: 0 0 15px #39ff14;
+        }
+
+        /* Hover: Make it "Pop" like a game button */
+        .arcade-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            filter: brightness(1.5);
+            background: #222;
+            border-style: solid; /* Change dotted to solid on hover for "activation" */
+        }
+
+        .arcade-btn:active {
+            transform: translateY(2px); /* Click effect */
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="hub-container">
+    <h1>LEVEL UP!</h1>
+    <h2>Select Your Brain Break Activity</h2>
+
+    <ul class="assignment-list">
+        <li class="assignment-item">
+            <a href="brainbreaks.html.html" class="arcade-btn arcade-pink">
+                👾 SELF-REGULATION ZONE
+            </a>
+        </li>
+
+        <li class="assignment-item">
+            <a href="Monitoring/index.html" class="arcade-btn arcade-cyan">
+                🕹️ SELF-MONITORING LAB
+            </a>
+        </li>
+
+        <li class="assignment-item">
+            <a href="QuickBreaks/index.html" class="arcade-btn arcade-lime">
+                ⚡ QUICK BRAIN BOOSTERS
+            </a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
 
 <p><a href="../index.html">← Back to Main Classroom Menu</a></p>
