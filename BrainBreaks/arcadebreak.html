@@ -1,0 +1,1282 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arcade Study Timer</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Orbitron:wght@400;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    .font-arcade { font-family: 'Press Start 2P', cursive; }
+    .font-digital { font-family: 'Orbitron', sans-serif; }
+    
+    @keyframes neon-pulse {
+      0%, 100% { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor; }
+      50% { text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px currentColor; }
+    }
+    
+    @keyframes rainbow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes scanlines {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 4px; }
+    }
+    
+    .neon-text { animation: neon-pulse 2s ease-in-out infinite; }
+    .rainbow-border { animation: rainbow 3s linear infinite; }
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    
+    .arcade-btn {
+      background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
+      border: 4px solid #ffd43b;
+      box-shadow: 0 6px 0 #862e9c, 0 8px 20px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.3);
+      transition: all 0.1s;
+    }
+    .arcade-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #862e9c, 0 10px 25px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.3); }
+    .arcade-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #862e9c, 0 4px 10px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.3); }
+    
+    .arcade-btn-green {
+      background: linear-gradient(180deg, #51cf66 0%, #2f9e44 100%);
+    }
+    .arcade-btn-blue {
+      background: linear-gradient(180deg, #4dabf7 0%, #1971c2 100%);
+    }
+    .arcade-btn-purple {
+      background: linear-gradient(180deg, #da77f2 0%, #9c36b5 100%);
+    }
+    
+    .game-screen {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 4px solid #ffd43b;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,212,59,0.3);
+    }
+    
+    .tetris-block { border: 2px solid rgba(255,255,255,0.3); }
+    
+    .crt-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+      pointer-events: none;
+      animation: scanlines 0.1s linear infinite;
+    }
+    
+    .pixel-border {
+      border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect width='12' height='12' fill='%23ffd43b'/%3E%3Crect x='2' y='2' width='8' height='8' fill='%231a1a2e'/%3E%3C/svg%3E") 4 stretch;
+    }
+
+    .timer-display {
+      background: #000;
+      border: 3px solid #00ff00;
+      box-shadow: 0 0 20px rgba(0,255,0,0.5), inset 0 0 20px rgba(0,255,0,0.1);
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, #ff6b6b, #ffd43b, #51cf66, #4dabf7, #da77f2);
+      background-size: 200% 100%;
+      animation: rainbow 2s linear infinite;
+    }
+
+    select, input, textarea {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .bounce-ball {
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle at 30% 30%, #ff6b6b, #c92a2a);
+      border-radius: 50%;
+      position: absolute;
+      box-shadow: 0 0 10px rgba(255,107,107,0.8);
+    }
+
+    .bounce-paddle {
+      width: 80px;
+      height: 12px;
+      background: linear-gradient(180deg, #4dabf7, #1971c2);
+      border-radius: 6px;
+      position: absolute;
+      bottom: 10px;
+      box-shadow: 0 0 10px rgba(77,171,247,0.8);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full m-0 overflow-auto">
+  <div id="app-container" class="min-h-full w-full p-4" style="background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0a1628 100%);">
+   <!-- Decorative Elements -->
+   <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden" style="z-index: 0;">
+    <div class="absolute top-10 left-10 text-6xl float-animation" style="animation-delay: 0s;">
+     🕹️
+    </div>
+    <div class="absolute top-20 right-20 text-5xl float-animation" style="animation-delay: 0.5s;">
+     👾
+    </div>
+    <div class="absolute bottom-20 left-20 text-5xl float-animation" style="animation-delay: 1s;">
+     🎮
+    </div>
+    <div class="absolute bottom-10 right-10 text-6xl float-animation" style="animation-delay: 1.5s;">
+     ⭐
+    </div>
+   </div>
+   <div class="relative z-10 max-w-6xl mx-auto">
+    <!-- Header -->
+    <header class="text-center mb-8">
+     <h1 id="app-title" class="font-arcade text-2xl md:text-4xl text-yellow-400 neon-text mb-4">🎮 ARCADE STUDY TIMER 🎮</h1>
+     <p class="font-digital text-cyan-400 text-lg">Level Up Your Learning!</p>
+    </header><!-- Main Timer Screen -->
+    <div id="main-screen" class="game-screen rounded-2xl p-6 mb-6 relative crt-effect">
+     <!-- Timer Display -->
+     <div class="timer-display rounded-xl p-6 mb-6 text-center">
+      <div id="timer-label" class="font-arcade text-green-400 text-sm mb-2">
+       WORK TIME
+      </div>
+      <div id="timer-display" class="font-digital text-6xl md:text-8xl text-green-400 tracking-wider">
+       00:00:00
+      </div>
+      <div id="status-text" class="font-digital text-yellow-400 mt-2 text-lg">
+       Ready to Start!
+      </div>
+     </div><!-- Control Buttons -->
+     <div id="control-buttons" class="flex flex-wrap justify-center gap-4 mb-6">
+      <button id="start-work-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ▶ START WORK </button> <button id="end-work-btn" class="arcade-btn font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform hidden"> ⏹ END WORK </button> <button id="end-session-btn" class="arcade-btn arcade-btn-purple font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🏁 END SESSION </button>
+     </div><!-- Session Stats -->
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <div class="bg-black/50 rounded-lg p-3 border-2 border-cyan-500">
+       <div class="font-arcade text-xs text-cyan-400 mb-1">
+        SESSIONS
+       </div>
+       <div id="session-count" class="font-digital text-2xl text-white">
+        0
+       </div>
+      </div>
+      <div class="bg-black/50 rounded-lg p-3 border-2 border-green-500">
+       <div class="font-arcade text-xs text-green-400 mb-1">
+        TOTAL WORK
+       </div>
+       <div id="total-work" class="font-digital text-2xl text-white">
+        00:00
+       </div>
+      </div>
+      <div class="bg-black/50 rounded-lg p-3 border-2 border-yellow-500">
+       <div class="font-arcade text-xs text-yellow-400 mb-1">
+        TOTAL BREAK
+       </div>
+       <div id="total-break" class="font-digital text-2xl text-white">
+        00:00
+       </div>
+      </div>
+      <div class="bg-black/50 rounded-lg p-3 border-2 border-pink-500">
+       <div class="font-arcade text-xs text-pink-400 mb-1">
+        HIGH SCORE
+       </div>
+       <div id="high-score" class="font-digital text-2xl text-white">
+        0
+       </div>
+      </div>
+     </div>
+    </div><!-- Reflection Modal -->
+    <div id="reflection-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+     <div class="game-screen rounded-2xl p-6 max-w-lg w-full">
+      <h2 id="reflection-title" class="font-arcade text-xl text-yellow-400 text-center mb-6 neon-text">📝 REFLECTION TIME 📝</h2>
+      <div class="space-y-4">
+       <div>
+        <label class="font-digital text-cyan-400 block mb-2">Which class did you work on?</label> <select id="class-select" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none"> <option value="">Select a class...</option> <option value="English">📚 English</option> <option value="Math">🔢 Math</option> <option value="Science">🔬 Science</option> <option value="History">📜 History</option> <option value="Elective">🎨 Elective</option> </select>
+       </div>
+       <div>
+        <label class="font-digital text-cyan-400 block mb-2">What did you accomplish?</label> <textarea id="accomplishment-text" rows="4" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none resize-none" placeholder="Describe what you completed..."></textarea>
+       </div><button id="submit-reflection-btn" class="arcade-btn arcade-btn-green font-arcade text-white w-full py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ✓ SUBMIT &amp; START BREAK </button>
+      </div>
+     </div>
+    </div><!-- Break Time Selection -->
+    <div id="break-selection" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+     <div class="game-screen rounded-2xl p-6 max-w-lg w-full text-center">
+      <h2 class="font-arcade text-xl text-yellow-400 mb-6 neon-text">⏰ CHOOSE BREAK TIME ⏰</h2>
+      <div class="grid grid-cols-3 gap-4 mb-6">
+       <button class="break-btn arcade-btn arcade-btn-blue font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="2"> 2<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-green font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="3"> 3<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-purple font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="5"> 5<br><span class="text-xs">MIN</span> </button>
+      </div>
+     </div>
+    </div><!-- Break Time Screen with Games -->
+    <div id="break-screen" class="hidden">
+     <div class="game-screen rounded-2xl p-6 mb-6">
+      <div class="text-center mb-4">
+       <div class="font-arcade text-yellow-400 text-lg mb-2">
+        🎮 BREAK TIME 🎮
+       </div>
+       <div id="break-timer" class="font-digital text-5xl text-green-400">
+        00:00
+       </div>
+      </div><!-- Game Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
+       <button class="game-tab arcade-btn arcade-btn-blue font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="tetris">🧱 TETRIS</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="bounce">🏓 BOUNCE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="snake">🐍 SNAKE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="flappy">🐦 FLAPPY</button>
+      </div><!-- Game Containers -->
+      <div id="game-container" class="bg-black rounded-xl overflow-hidden relative" style="height: 400px;">
+       <!-- Tetris Game -->
+       <div id="tetris-game" class="w-full h-full flex items-center justify-center">
+        <div class="text-center">
+         <canvas id="tetris-canvas" width="200" height="400" class="border-2 border-cyan-500 bg-gray-900"></canvas>
+         <div class="mt-2 font-digital text-cyan-400">
+          Score: <span id="tetris-score">0</span>
+         </div>
+         <div class="mt-2 font-arcade text-xs text-gray-400">
+          Arrow Keys to Play
+         </div>
+        </div>
+       </div><!-- Bounce Game -->
+       <div id="bounce-game" class="w-full h-full hidden relative">
+        <canvas id="bounce-canvas" width="400" height="380" class="w-full h-full"></canvas>
+        <div class="absolute top-2 left-1/2 -translate-x-1/2 font-digital text-cyan-400">
+         Score: <span id="bounce-score">0</span>
+        </div>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 font-arcade text-xs text-gray-400">
+         Move Mouse / Touch to Play
+        </div>
+       </div><!-- Snake Game -->
+       <div id="snake-game" class="w-full h-full hidden flex items-center justify-center">
+        <div class="text-center">
+         <canvas id="snake-canvas" width="300" height="300" class="border-2 border-cyan-500 bg-gray-900"></canvas>
+         <div class="mt-2 font-digital text-cyan-400">
+          Score: <span id="snake-score">0</span>
+         </div>
+         <div class="mt-2 font-arcade text-xs text-gray-400">
+          Arrow Keys to Play
+         </div>
+        </div>
+       </div><!-- Flappy Game -->
+       <div id="flappy-game" class="w-full h-full hidden flex items-center justify-center">
+        <div class="text-center">
+         <canvas id="flappy-canvas" width="320" height="380" class="border-2 border-cyan-500 bg-gray-900"></canvas>
+         <div class="mt-2 font-digital text-cyan-400">
+          Score: <span id="flappy-score">0</span>
+         </div>
+         <div class="mt-2 font-arcade text-xs text-gray-400">
+          Click / Tap / SPACE to Fly
+         </div>
+        </div>
+       </div>
+      </div><button id="skip-break-btn" class="arcade-btn font-arcade text-white px-6 py-3 rounded-xl text-xs mt-4 w-full hover:scale-105 transition-transform"> ⏭ SKIP BREAK &amp; CONTINUE WORKING </button>
+     </div>
+    </div><!-- Progress/Report Screen -->
+    <div id="progress-screen" class="hidden">
+     <div class="game-screen rounded-2xl p-6">
+      <h2 class="font-arcade text-2xl text-yellow-400 text-center mb-6 neon-text">🏆 SESSION COMPLETE 🏆</h2>
+      <div id="progress-content" class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+       <!-- Progress entries will be inserted here -->
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-6">
+       <div class="bg-black/50 rounded-lg p-4 border-2 border-green-500 text-center">
+        <div class="font-arcade text-xs text-green-400 mb-1">
+         TOTAL WORK TIME
+        </div>
+        <div id="final-work-time" class="font-digital text-3xl text-white">
+         00:00:00
+        </div>
+       </div>
+       <div class="bg-black/50 rounded-lg p-4 border-2 border-yellow-500 text-center">
+        <div class="font-arcade text-xs text-yellow-400 mb-1">
+         TOTAL BREAK TIME
+        </div>
+        <div id="final-break-time" class="font-digital text-3xl text-white">
+         00:00:00
+        </div>
+       </div>
+      </div>
+      <div class="flex flex-wrap justify-center gap-4">
+       <button id="save-pdf-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 💾 SAVE AS PDF </button> <button id="new-session-btn" class="arcade-btn arcade-btn-blue font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🔄 NEW SESSION </button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Audio for break end -->
+  <script>
+    // Audio context for break end sound
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playBreakEndSound() {
+      // Create a fun arcade-style sound sequence
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.frequency.value = freq;
+        osc.type = 'square';
+        
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime + i * 0.15);
+        gain.gain.exponentialDecayTo && gain.gain.exponentialDecayTo(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
+        
+        osc.start(audioCtx.currentTime + i * 0.15);
+        osc.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+      });
+      
+      // Add a longer victory sound
+      setTimeout(() => {
+        const finalOsc = audioCtx.createOscillator();
+        const finalGain = audioCtx.createGain();
+        finalOsc.connect(finalGain);
+        finalGain.connect(audioCtx.destination);
+        finalOsc.frequency.value = 1318.51; // E6
+        finalOsc.type = 'square';
+        finalGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        finalOsc.start();
+        finalOsc.stop(audioCtx.currentTime + 0.5);
+      }, 600);
+    }
+  </script>
+  <script>
+    // ==================== STATE MANAGEMENT ====================
+    const defaultConfig = {
+      app_title: '🎮 ARCADE STUDY TIMER 🎮',
+      work_button_text: '▶ START WORK',
+      break_prompt: '📝 REFLECTION TIME 📝',
+      background_color: '#0f0f23',
+      surface_color: '#1a1a2e',
+      text_color: '#ffd43b',
+      primary_action_color: '#51cf66',
+      secondary_action_color: '#4dabf7',
+      font_family: 'Press Start 2P',
+      font_size: 14
+    };
+
+    let currentConfig = { ...defaultConfig };
+    let allSessions = [];
+    let currentSession = null;
+    let workStartTime = null;
+    let workTimerInterval = null;
+    let breakTimerInterval = null;
+    let breakTimeRemaining = 0;
+    let totalWorkSeconds = 0;
+    let totalBreakSeconds = 0;
+    let sessionId = Date.now().toString();
+
+    // ==================== ELEMENT SDK SETUP ====================
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          currentConfig = { ...defaultConfig, ...config };
+          applyConfig();
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (v) => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['app_title', config.app_title || defaultConfig.app_title],
+          ['work_button_text', config.work_button_text || defaultConfig.work_button_text],
+          ['break_prompt', config.break_prompt || defaultConfig.break_prompt]
+        ])
+      });
+    }
+
+    function applyConfig() {
+      const title = document.getElementById('app-title');
+      const startBtn = document.getElementById('start-work-btn');
+      const reflectionTitle = document.getElementById('reflection-title');
+      const container = document.getElementById('app-container');
+      
+      if (title) title.textContent = currentConfig.app_title;
+      if (startBtn) startBtn.innerHTML = currentConfig.work_button_text;
+      if (reflectionTitle) reflectionTitle.textContent = currentConfig.break_prompt;
+      
+      // Apply colors
+      if (container) {
+        container.style.background = `linear-gradient(135deg, ${currentConfig.background_color} 0%, ${currentConfig.surface_color} 50%, ${currentConfig.background_color} 100%)`;
+      }
+      
+      document.querySelectorAll('.font-arcade').forEach(el => {
+        el.style.fontFamily = `${currentConfig.font_family}, cursive`;
+        el.style.color = currentConfig.text_color;
+      });
+      
+      document.querySelectorAll('.arcade-btn-green').forEach(el => {
+        el.style.background = `linear-gradient(180deg, ${currentConfig.primary_action_color} 0%, ${adjustColor(currentConfig.primary_action_color, -30)} 100%)`;
+      });
+      
+      document.querySelectorAll('.arcade-btn-blue').forEach(el => {
+        el.style.background = `linear-gradient(180deg, ${currentConfig.secondary_action_color} 0%, ${adjustColor(currentConfig.secondary_action_color, -30)} 100%)`;
+      });
+    }
+
+    function adjustColor(hex, amount) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const r = Math.max(0, Math.min(255, (num >> 16) + amount));
+      const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
+      const b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+      return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+    }
+
+    // ==================== DATA SDK SETUP ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        allSessions = data;
+        updateStats();
+      }
+    };
+
+    if (window.dataSdk) {
+      window.dataSdk.init(dataHandler);
+    }
+
+    // ==================== TIMER FUNCTIONS ====================
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function formatTimeShort(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function startWorkTimer() {
+      workStartTime = new Date();
+      document.getElementById('start-work-btn').classList.add('hidden');
+      document.getElementById('end-work-btn').classList.remove('hidden');
+      document.getElementById('status-text').textContent = 'Working Hard! 💪';
+      document.getElementById('timer-label').textContent = 'WORK TIME';
+      
+      let seconds = 0;
+      workTimerInterval = setInterval(() => {
+        seconds++;
+        document.getElementById('timer-display').textContent = formatTime(seconds);
+      }, 1000);
+    }
+
+    function endWorkTimer() {
+      clearInterval(workTimerInterval);
+      const workEndTime = new Date();
+      const workDuration = Math.floor((workEndTime - workStartTime) / 1000);
+      totalWorkSeconds += workDuration;
+      
+      currentSession = {
+        session_id: sessionId,
+        work_start: workStartTime.toISOString(),
+        work_end: workEndTime.toISOString(),
+        work_duration: workDuration,
+        subject: '',
+        accomplishment: '',
+        break_duration: 0,
+        created_at: new Date().toISOString()
+      };
+      
+      document.getElementById('end-work-btn').classList.add('hidden');
+      showReflectionModal();
+    }
+
+    function showReflectionModal() {
+      document.getElementById('reflection-modal').classList.remove('hidden');
+      document.getElementById('class-select').value = '';
+      document.getElementById('accomplishment-text').value = '';
+    }
+
+    async function submitReflection() {
+      const subject = document.getElementById('class-select').value;
+      const accomplishment = document.getElementById('accomplishment-text').value;
+      
+      if (!subject) {
+        document.getElementById('class-select').style.borderColor = '#ff6b6b';
+        return;
+      }
+      
+      currentSession.subject = subject;
+      currentSession.accomplishment = accomplishment;
+      
+      document.getElementById('reflection-modal').classList.add('hidden');
+      document.getElementById('break-selection').classList.remove('hidden');
+    }
+
+    function selectBreakTime(minutes) {
+      currentSession.break_duration = minutes * 60;
+      totalBreakSeconds += minutes * 60;
+      
+      document.getElementById('break-selection').classList.add('hidden');
+      document.getElementById('main-screen').classList.add('hidden');
+      document.getElementById('break-screen').classList.remove('hidden');
+      
+      breakTimeRemaining = minutes * 60;
+      startBreakTimer();
+      showGame('tetris');
+    }
+
+    function startBreakTimer() {
+      updateBreakDisplay();
+      
+      breakTimerInterval = setInterval(() => {
+        breakTimeRemaining--;
+        updateBreakDisplay();
+        
+        if (breakTimeRemaining <= 0) {
+          endBreak();
+        }
+      }, 1000);
+    }
+
+    function updateBreakDisplay() {
+      document.getElementById('break-timer').textContent = formatTimeShort(Math.max(0, breakTimeRemaining));
+    }
+
+    async function endBreak() {
+      clearInterval(breakTimerInterval);
+      
+      // Play sound
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+      playBreakEndSound();
+      
+      // Save session to data SDK
+      if (window.dataSdk && allSessions.length < 999) {
+        const result = await window.dataSdk.create(currentSession);
+        if (!result.isOk) {
+          console.error('Failed to save session');
+        }
+      }
+      
+      // Reset for next work session
+      document.getElementById('break-screen').classList.add('hidden');
+      document.getElementById('main-screen').classList.remove('hidden');
+      document.getElementById('start-work-btn').classList.remove('hidden');
+      document.getElementById('status-text').textContent = 'Ready for More!';
+      document.getElementById('timer-display').textContent = '00:00:00';
+      
+      updateStats();
+      stopAllGames();
+    }
+
+    function skipBreak() {
+      clearInterval(breakTimerInterval);
+      
+      // Adjust break time to actual time taken
+      const actualBreak = currentSession.break_duration - breakTimeRemaining;
+      currentSession.break_duration = actualBreak;
+      totalBreakSeconds = totalBreakSeconds - breakTimeRemaining;
+      
+      endBreak();
+    }
+
+    function updateStats() {
+      document.getElementById('session-count').textContent = allSessions.length;
+      document.getElementById('total-work').textContent = formatTimeShort(totalWorkSeconds);
+      document.getElementById('total-break').textContent = formatTimeShort(totalBreakSeconds);
+      
+      // Calculate high score (longest work session)
+      const maxWork = allSessions.reduce((max, s) => Math.max(max, s.work_duration || 0), 0);
+      document.getElementById('high-score').textContent = Math.floor(maxWork / 60);
+    }
+
+    // ==================== END SESSION ====================
+    function endSession() {
+      clearInterval(workTimerInterval);
+      clearInterval(breakTimerInterval);
+      
+      document.getElementById('main-screen').classList.add('hidden');
+      document.getElementById('break-screen').classList.add('hidden');
+      document.getElementById('progress-screen').classList.remove('hidden');
+      
+      generateProgressReport();
+    }
+
+    function generateProgressReport() {
+      const content = document.getElementById('progress-content');
+      content.innerHTML = '';
+      
+      if (allSessions.length === 0) {
+        content.innerHTML = '<div class="text-center text-gray-400 font-digital py-8">No sessions recorded yet!</div>';
+      } else {
+        allSessions.forEach((session, index) => {
+          const entry = document.createElement('div');
+          entry.className = 'bg-black/50 rounded-lg p-4 border-2 border-cyan-500';
+          
+          const startTime = new Date(session.work_start);
+          const endTime = new Date(session.work_end);
+          
+          entry.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+              <div class="font-arcade text-xs text-yellow-400">SESSION ${index + 1}</div>
+              <div class="font-digital text-xs text-gray-400">${startTime.toLocaleTimeString()} - ${endTime.toLocaleTimeString()}</div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+              <div class="font-digital text-sm text-cyan-400">📚 ${session.subject || 'N/A'}</div>
+              <div class="font-digital text-sm text-green-400">⏱ ${formatTimeShort(session.work_duration || 0)}</div>
+            </div>
+            <div class="font-digital text-sm text-gray-300">${session.accomplishment || 'No notes'}</div>
+            <div class="font-digital text-xs text-yellow-400 mt-2">Break: ${formatTimeShort(session.break_duration || 0)}</div>
+          `;
+          
+          content.appendChild(entry);
+        });
+      }
+      
+      // Calculate totals
+      const totalWork = allSessions.reduce((sum, s) => sum + (s.work_duration || 0), 0);
+      const totalBreak = allSessions.reduce((sum, s) => sum + (s.break_duration || 0), 0);
+      
+      document.getElementById('final-work-time').textContent = formatTime(totalWork);
+      document.getElementById('final-break-time').textContent = formatTime(totalBreak);
+    }
+
+    function saveToPDF() {
+      // Generate printable content
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Study Session Report</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { color: #333; border-bottom: 2px solid #ffd43b; padding-bottom: 10px; }
+            .session { border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 8px; }
+            .stats { display: flex; gap: 20px; margin: 20px 0; }
+            .stat-box { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; }
+            .timestamp { color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <h1>🎮 Arcade Study Timer - Session Report</h1>
+          <p>Generated: ${new Date().toLocaleString()}</p>
+          
+          <div class="stats">
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #2f9e44;">${formatTime(allSessions.reduce((s, x) => s + (x.work_duration || 0), 0))}</div>
+              <div>Total Work Time</div>
+            </div>
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #1971c2;">${formatTime(allSessions.reduce((s, x) => s + (x.break_duration || 0), 0))}</div>
+              <div>Total Break Time</div>
+            </div>
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #9c36b5;">${allSessions.length}</div>
+              <div>Sessions</div>
+            </div>
+          </div>
+          
+          <h2>Session Details</h2>
+          ${allSessions.map((s, i) => `
+            <div class="session">
+              <strong>Session ${i + 1} - ${s.subject || 'N/A'}</strong>
+              <p class="timestamp">${new Date(s.work_start).toLocaleString()} - ${new Date(s.work_end).toLocaleString()}</p>
+              <p><strong>Work Duration:</strong> ${formatTimeShort(s.work_duration || 0)}</p>
+              <p><strong>Break Duration:</strong> ${formatTimeShort(s.break_duration || 0)}</p>
+              <p><strong>Accomplishments:</strong> ${s.accomplishment || 'No notes recorded'}</p>
+            </div>
+          `).join('')}
+        </body>
+        </html>
+      `;
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    function newSession() {
+      sessionId = Date.now().toString();
+      totalWorkSeconds = 0;
+      totalBreakSeconds = 0;
+      
+      document.getElementById('progress-screen').classList.add('hidden');
+      document.getElementById('main-screen').classList.remove('hidden');
+      document.getElementById('start-work-btn').classList.remove('hidden');
+      document.getElementById('end-work-btn').classList.add('hidden');
+      document.getElementById('timer-display').textContent = '00:00:00';
+      document.getElementById('status-text').textContent = 'Ready to Start!';
+      
+      updateStats();
+    }
+
+    // ==================== GAMES ====================
+    let tetrisGame = null;
+    let bounceGame = null;
+    let snakeGame = null;
+    let flappyGame = null;
+
+    function showGame(gameId) {
+      document.getElementById('tetris-game').classList.add('hidden');
+      document.getElementById('bounce-game').classList.add('hidden');
+      document.getElementById('snake-game').classList.add('hidden');
+      document.getElementById('flappy-game').classList.add('hidden');
+      
+      document.querySelectorAll('.game-tab').forEach(tab => {
+        tab.classList.remove('arcade-btn-blue');
+      });
+      
+      document.querySelector(`[data-game="${gameId}"]`).classList.add('arcade-btn-blue');
+      document.getElementById(`${gameId}-game`).classList.remove('hidden');
+      
+      stopAllGames();
+      
+      if (gameId === 'tetris') {
+        initTetris();
+      } else if (gameId === 'bounce') {
+        initBounce();
+      } else if (gameId === 'snake') {
+        initSnake();
+      } else if (gameId === 'flappy') {
+        initFlappy();
+      }
+    }
+
+    function stopAllGames() {
+      if (tetrisGame) {
+        cancelAnimationFrame(tetrisGame.animationId);
+        tetrisGame = null;
+      }
+      if (bounceGame) {
+        cancelAnimationFrame(bounceGame.animationId);
+        bounceGame = null;
+      }
+      if (snakeGame) {
+        cancelAnimationFrame(snakeGame.animationId);
+        snakeGame = null;
+      }
+      if (flappyGame) {
+        cancelAnimationFrame(flappyGame.animationId);
+        flappyGame = null;
+      }
+    }
+
+    // ==================== TETRIS GAME ====================
+    function initTetris() {
+      const canvas = document.getElementById('tetris-canvas');
+      const ctx = canvas.getContext('2d');
+      const COLS = 10;
+      const ROWS = 20;
+      const BLOCK_SIZE = 20;
+      
+      const SHAPES = [
+        [[1,1,1,1]], // I
+        [[1,1],[1,1]], // O
+        [[0,1,0],[1,1,1]], // T
+        [[1,0,0],[1,1,1]], // L
+        [[0,0,1],[1,1,1]], // J
+        [[0,1,1],[1,1,0]], // S
+        [[1,1,0],[0,1,1]]  // Z
+      ];
+      
+      const COLORS = ['#00f5ff', '#ffd43b', '#da77f2', '#ff6b6b', '#4dabf7', '#51cf66', '#ff922b'];
+      
+      let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+      let score = 0;
+      let currentPiece = null;
+      let currentColor = null;
+      let pieceX = 0;
+      let pieceY = 0;
+      let dropCounter = 0;
+      let lastTime = 0;
+      
+      function newPiece() {
+        const idx = Math.floor(Math.random() * SHAPES.length);
+        currentPiece = SHAPES[idx].map(row => [...row]);
+        currentColor = COLORS[idx];
+        pieceX = Math.floor(COLS / 2) - Math.floor(currentPiece[0].length / 2);
+        pieceY = 0;
+        
+        if (collision()) {
+          board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+          score = 0;
+        }
+      }
+      
+      function collision() {
+        for (let y = 0; y < currentPiece.length; y++) {
+          for (let x = 0; x < currentPiece[y].length; x++) {
+            if (currentPiece[y][x]) {
+              const newX = pieceX + x;
+              const newY = pieceY + y;
+              if (newX < 0 || newX >= COLS || newY >= ROWS || (newY >= 0 && board[newY][newX])) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      }
+      
+      function merge() {
+        for (let y = 0; y < currentPiece.length; y++) {
+          for (let x = 0; x < currentPiece[y].length; x++) {
+            if (currentPiece[y][x] && pieceY + y >= 0) {
+              board[pieceY + y][pieceX + x] = currentColor;
+            }
+          }
+        }
+      }
+      
+      function clearLines() {
+        let linesCleared = 0;
+        for (let y = ROWS - 1; y >= 0; y--) {
+          if (board[y].every(cell => cell !== 0)) {
+            board.splice(y, 1);
+            board.unshift(Array(COLS).fill(0));
+            linesCleared++;
+            y++;
+          }
+        }
+        score += linesCleared * 100;
+        document.getElementById('tetris-score').textContent = score;
+      }
+      
+      function rotate() {
+        const rotated = currentPiece[0].map((_, i) => currentPiece.map(row => row[i]).reverse());
+        const prevPiece = currentPiece;
+        currentPiece = rotated;
+        if (collision()) {
+          currentPiece = prevPiece;
+        }
+      }
+      
+      function draw() {
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        for (let y = 0; y < ROWS; y++) {
+          for (let x = 0; x < COLS; x++) {
+            if (board[y][x]) {
+              ctx.fillStyle = board[y][x];
+              ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+            }
+          }
+        }
+        
+        if (currentPiece) {
+          ctx.fillStyle = currentColor;
+          for (let y = 0; y < currentPiece.length; y++) {
+            for (let x = 0; x < currentPiece[y].length; x++) {
+              if (currentPiece[y][x]) {
+                ctx.fillRect((pieceX + x) * BLOCK_SIZE, (pieceY + y) * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+              }
+            }
+          }
+        }
+        
+        ctx.strokeStyle = '#333';
+        for (let x = 0; x <= COLS; x++) {
+          ctx.beginPath();
+          ctx.moveTo(x * BLOCK_SIZE, 0);
+          ctx.lineTo(x * BLOCK_SIZE, canvas.height);
+          ctx.stroke();
+        }
+        for (let y = 0; y <= ROWS; y++) {
+          ctx.beginPath();
+          ctx.moveTo(0, y * BLOCK_SIZE);
+          ctx.lineTo(canvas.width, y * BLOCK_SIZE);
+          ctx.stroke();
+        }
+      }
+      
+      function update(time = 0) {
+        const deltaTime = time - lastTime;
+        lastTime = time;
+        dropCounter += deltaTime;
+        
+        if (dropCounter > 1000) {
+          pieceY++;
+          if (collision()) {
+            pieceY--;
+            merge();
+            clearLines();
+            newPiece();
+          }
+          dropCounter = 0;
+        }
+        
+        draw();
+        tetrisGame.animationId = requestAnimationFrame(update);
+      }
+      
+      function handleKey(e) {
+        if (!currentPiece) return;
+        
+        if (e.key === 'ArrowLeft') {
+          pieceX--;
+          if (collision()) pieceX++;
+        } else if (e.key === 'ArrowRight') {
+          pieceX++;
+          if (collision()) pieceX--;
+        } else if (e.key === 'ArrowDown') {
+          pieceY++;
+          if (collision()) {
+            pieceY--;
+            merge();
+            clearLines();
+            newPiece();
+          }
+          dropCounter = 0;
+        } else if (e.key === 'ArrowUp') {
+          rotate();
+        }
+      }
+      
+      document.addEventListener('keydown', handleKey);
+      
+      tetrisGame = { animationId: null };
+      newPiece();
+      update();
+    }
+
+    // ==================== BOUNCE GAME ====================
+    function initBounce() {
+      const canvas = document.getElementById('bounce-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      let ballX = canvas.width / 2;
+      let ballY = canvas.height / 2;
+      let ballSpeedX = 4;
+      let ballSpeedY = -4;
+      const ballRadius = 10;
+      
+      let paddleX = canvas.width / 2 - 40;
+      const paddleY = canvas.height - 20;
+      const paddleWidth = 80;
+      const paddleHeight = 12;
+      
+      let score = 0;
+      
+      function draw() {
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const gradient = ctx.createRadialGradient(ballX - 3, ballY - 3, 0, ballX, ballY, ballRadius);
+        gradient.addColorStop(0, '#ff6b6b');
+        gradient.addColorStop(1, '#c92a2a');
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        ctx.closePath();
+        
+        const paddleGradient = ctx.createLinearGradient(paddleX, paddleY, paddleX, paddleY + paddleHeight);
+        paddleGradient.addColorStop(0, '#4dabf7');
+        paddleGradient.addColorStop(1, '#1971c2');
+        ctx.beginPath();
+        ctx.roundRect(paddleX, paddleY, paddleWidth, paddleHeight, 6);
+        ctx.fillStyle = paddleGradient;
+        ctx.fill();
+        ctx.closePath();
+      }
+      
+      function update() {
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+        
+        if (ballX - ballRadius < 0 || ballX + ballRadius > canvas.width) {
+          ballSpeedX = -ballSpeedX;
+        }
+        if (ballY - ballRadius < 0) {
+          ballSpeedY = -ballSpeedY;
+        }
+        
+        if (ballY + ballRadius > paddleY && ballY - ballRadius < paddleY + paddleHeight &&
+            ballX > paddleX && ballX < paddleX + paddleWidth) {
+          ballSpeedY = -Math.abs(ballSpeedY);
+          score++;
+          document.getElementById('bounce-score').textContent = score;
+          
+          const hitPos = (ballX - paddleX) / paddleWidth;
+          ballSpeedX = (hitPos - 0.5) * 10;
+        }
+        
+        if (ballY > canvas.height) {
+          ballX = canvas.width / 2;
+          ballY = canvas.height / 2;
+          ballSpeedX = 4 * (Math.random() > 0.5 ? 1 : -1);
+          ballSpeedY = -4;
+          score = 0;
+          document.getElementById('bounce-score').textContent = score;
+        }
+        
+        draw();
+        bounceGame.animationId = requestAnimationFrame(update);
+      }
+      
+      function handleMouseMove(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        paddleX = (e.clientX - rect.left) * scaleX - paddleWidth / 2;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, paddleX));
+      }
+      
+      function handleTouchMove(e) {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        paddleX = (e.touches[0].clientX - rect.left) * scaleX - paddleWidth / 2;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, paddleX));
+      }
+      
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+      
+      bounceGame = { animationId: null };
+      update();
+    }
+
+    // ==================== SNAKE GAME ====================
+    function initSnake() {
+      const canvas = document.getElementById('snake-canvas');
+      const ctx = canvas.getContext('2d');
+      const GRID_SIZE = 15;
+      const BLOCK_SIZE = canvas.width / GRID_SIZE;
+      
+      let snake = [{x: 7, y: 7}];
+      let food = {x: 12, y: 12};
+      let direction = {x: 1, y: 0};
+      let nextDirection = {x: 1, y: 0};
+      let score = 0;
+      let gameActive = true;
+      
+      function draw() {
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#51cf66';
+        snake.forEach(segment => {
+          ctx.fillRect(segment.x * BLOCK_SIZE, segment.y * BLOCK_SIZE, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
+        });
+        
+        ctx.fillStyle = '#ff6b6b';
+        ctx.beginPath();
+        ctx.arc(food.x * BLOCK_SIZE + BLOCK_SIZE/2, food.y * BLOCK_SIZE + BLOCK_SIZE/2, BLOCK_SIZE/2 - 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      function update() {
+        if (!gameActive) return;
+        
+        direction = nextDirection;
+        
+        const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+        
+        if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
+          gameActive = false;
+          score = 0;
+          document.getElementById('snake-score').textContent = score;
+          return;
+        }
+        
+        if (snake.some(s => s.x === head.x && s.y === head.y)) {
+          gameActive = false;
+          score = 0;
+          document.getElementById('snake-score').textContent = score;
+          return;
+        }
+        
+        snake.unshift(head);
+        
+        if (head.x === food.x && head.y === food.y) {
+          score++;
+          document.getElementById('snake-score').textContent = score;
+          food = {x: Math.floor(Math.random() * GRID_SIZE), y: Math.floor(Math.random() * GRID_SIZE)};
+        } else {
+          snake.pop();
+        }
+        
+        draw();
+        snakeGame.animationId = requestAnimationFrame(update);
+      }
+      
+      function handleKey(e) {
+        if (e.key === 'ArrowLeft' && direction.x === 0) nextDirection = {x: -1, y: 0};
+        else if (e.key === 'ArrowRight' && direction.x === 0) nextDirection = {x: 1, y: 0};
+        else if (e.key === 'ArrowUp' && direction.y === 0) nextDirection = {x: 0, y: -1};
+        else if (e.key === 'ArrowDown' && direction.y === 0) nextDirection = {x: 0, y: 1};
+      }
+      
+      document.addEventListener('keydown', handleKey);
+      
+      snakeGame = { animationId: null };
+      
+      let lastTime = 0;
+      function loop(time) {
+        if (time - lastTime > 100) {
+          update();
+          lastTime = time;
+        }
+        snakeGame.animationId = requestAnimationFrame(loop);
+      }
+      snakeGame.animationId = requestAnimationFrame(loop);
+    }
+
+    // ==================== FLAPPY GAME ====================
+    function initFlappy() {
+      const canvas = document.getElementById('flappy-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      let birdY = canvas.height / 2;
+      let birdVelocity = 0;
+      const gravity = 0.6;
+      const jumpPower = -12;
+      const birdSize = 20;
+      
+      let pipes = [];
+      let pipeGap = 120;
+      let pipeWidth = 60;
+      let pipeSpeed = 4;
+      let score = 0;
+      let gameActive = true;
+      let frameCount = 0;
+      
+      function draw() {
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw bird
+        ctx.fillStyle = '#ffd43b';
+        ctx.beginPath();
+        ctx.arc(50, birdY, birdSize, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw eye
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(55, birdY - 5, 4, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw pipes
+        ctx.fillStyle = '#4dabf7';
+        pipes.forEach(pipe => {
+          ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+          ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
+        });
+      }
+      
+      function update() {
+        if (!gameActive) return;
+        
+        birdVelocity += gravity;
+        birdY += birdVelocity;
+        
+        if (birdY - birdSize < 0 || birdY + birdSize > canvas.height) {
+          gameActive = false;
+          score = 0;
+          document.getElementById('flappy-score').textContent = score;
+          return;
+        }
+        
+        frameCount++;
+        if (frameCount % 100 === 0) {
+          const topHeight = Math.random() * (canvas.height - pipeGap - 50) + 30;
+          pipes.push({x: canvas.width, topHeight});
+        }
+        
+        pipes = pipes.filter(pipe => {
+          pipe.x -= pipeSpeed;
+          
+          if (pipe.x + pipeWidth < 50 && !pipe.scored) {
+            pipe.scored = true;
+            score++;
+            document.getElementById('flappy-score').textContent = score;
+          }
+          
+          if (50 > pipe.x && 50 < pipe.x + pipeWidth) {
+            if (birdY - birdSize < pipe.topHeight || birdY + birdSize > pipe.topHeight + pipeGap) {
+              gameActive = false;
+              score = 0;
+              document.getElementById('flappy-score').textContent = score;
+            }
+          }
+          
+          return pipe.x > -pipeWidth;
+        });
+        
+        draw();
+        flappyGame.animationId = requestAnimationFrame(update);
+      }
+      
+      function jump() {
+        birdVelocity = jumpPower;
+      }
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          jump();
+        }
+      });
+      canvas.addEventListener('click', jump);
+      canvas.addEventListener('touchstart', jump);
+      
+      flappyGame = { animationId: null };
+      update();
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById('start-work-btn').addEventListener('click', startWorkTimer);
+    document.getElementById('end-work-btn').addEventListener('click', endWorkTimer);
+    document.getElementById('end-session-btn').addEventListener('click', endSession);
+    document.getElementById('submit-reflection-btn').addEventListener('click', submitReflection);
+    document.getElementById('skip-break-btn').addEventListener('click', skipBreak);
+    document.getElementById('save-pdf-btn').addEventListener('click', saveToPDF);
+    document.getElementById('new-session-btn').addEventListener('click', newSession);
+
+    document.querySelectorAll('.break-btn').forEach(btn => {
+      btn.addEventListener('click', () => selectBreakTime(parseInt(btn.dataset.minutes)));
+    });
+
+    document.querySelectorAll('.game-tab').forEach(tab => {
+      tab.addEventListener('click', () => showGame(tab.dataset.game));
+    });
+
+    document.getElementById('class-select').addEventListener('change', function() {
+      this.style.borderColor = '#22d3ee';
+    });
+
+    // Initial setup
+    applyConfig();
+    updateStats();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d725b3207f34f1a',t:'MTc3MjY0Mjc3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
