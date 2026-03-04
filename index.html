@@ -5,118 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mrs. Rapp's English Hub ✨</title>
     <style>
-        /* Trendy, Clean, & Vibrant Font Stack */
         @import url('https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;700;900&display=swap');
 
         body {
-            /* Deep Midnight Violet to make the neon glow POP */
             background: radial-gradient(circle at top right, #1f0b2e 0%, #0f172a 50%, #082f3a 100%);
             background-attachment: fixed;
             color: #f8fafc; 
             font-family: 'Nunito', sans-serif; 
             text-align: center;
-            padding: 50px 20px;
+            padding: 40px 15px;
             margin: 0;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
         }
 
-    /* --- Floating Vaporwave/Teen Graphics & Affirmations --- */
-.vibe-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden; /* Prevents scrollbars during animation */
-}
+        /* --- Floating Layer --- */
+        .vibe-layer {
+            position: fixed; /* UPDATED: Stays in place during scroll */
+            top: 0;
+            left: 0;
+            width: 100vw; /* UPDATED: Full screen width */
+            height: 100vh; /* UPDATED: Full screen height */
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
 
-.floating-element {
-    position: absolute;
-    font-size: 2.5rem;
-    /* Links to the vertical animation below */
-    animation-name: floatUp;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
-}
+        .floating-element {
+            position: absolute;
+            font-size: 2.5rem;
+            animation-name: floatUp;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite; /* UPDATED: Repeats forever */
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        }
 
-.floating-affirmation {
-    position: absolute;
-    color: #00f2fe; /* Neon Cyan/Teal */
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 900;
-    white-space: nowrap;
-    /* Links to the horizontal animation below */
-    animation-name: driftAcross;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    opacity: 0.8;
-    text-shadow: 0 0 8px rgba(0, 242, 254, 0.6); 
-}
+        .floating-affirmation {
+            position: absolute;
+            color: #00f2fe;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            white-space: nowrap;
+            animation-name: driftAcross;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite; /* UPDATED: Repeats forever */
+            opacity: 0.7;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6); 
+        }
 
-/* GRAPHICS: Move from bottom to top */
-@keyframes floatUp {
-    0% { 
-        transform: translateY(110vh) rotate(0deg); 
-        opacity: 0; 
-    }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { 
-        transform: translateY(-20vh) rotate(360deg); 
-        opacity: 0; 
-    }
-}
+        /* --- Animations --- */
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
 
-/* QUOTES: Move from left to right */
-@keyframes driftAcross {
-    0% { 
-        transform: translateX(-100%); 
-        opacity: 0; 
-    }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { 
-        transform: translateX(110vw); 
-        opacity: 0; 
-    }
-}
+        @keyframes driftAcross {
+            0% { transform: translateX(-100%); opacity: 0; } /* UPDATED: Starts off-screen left */
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(110vw); opacity: 0; } /* UPDATED: Ends off-screen right */
+        }
 
-        /* --- Main Header: Neon Pink Shimmer & Glitter --- */
+        /* --- UI Styles --- */
         h1 { 
             font-family: 'Righteous', cursive;
-            font-size: 4.8rem;
-            margin-bottom: 5px;
+            font-size: 3rem;
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            /* Shimmering Text Effect */
             background: linear-gradient(45deg, #ff007a, #00f2fe, #ff007a);
             background-size: 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glitterText 4s linear infinite;
-            filter: drop-shadow(0px 0px 10px rgba(255, 0, 122, 0.4));
-        }
-
-        @keyframes glitterText {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
         }
 
         h2 { 
             font-family: 'Nunito', sans-serif;
-            color: #7dd3fc; /* Cool Minty Teal */
-            font-size: 1.4rem; 
-            margin-top: 0;
-            margin-bottom: 50px;
+            color: #7dd3fc;
+            font-size: 1.1rem; 
+            margin-bottom: 40px;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(125, 211, 252, 0.3);
         }
 
         .assignment-list {
@@ -124,99 +97,70 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 20px;
             align-items: center;
         }
 
         .assignment-item {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
         }
 
-        /* --- THE GLOWING, ANIMATED BORDERS --- */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 24px;
-            border-radius: 20px;
+            padding: 20px;
+            border-radius: 15px;
             font-family: 'Righteous', cursive;
-            font-size: 1.6rem;
-            letter-spacing: 1.5px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(15, 23, 42, 0.8); /* Dark Slate Card */
+            font-size: 1.3rem;
+            background: rgba(15, 23, 42, 0.8);
             color: #ffffff; 
-            
-            /* Neon Pulse Animation for Border & Shadow */
-            border: 4px solid #ff007a;
+            border: 3px solid #ff007a;
             animation: neonPulse 3s infinite alternate;
-            position: relative;
+            transition: 0.3s;
         }
 
-        /* Makes the border literally pulse between Pink and Teal */
         @keyframes neonPulse {
-            0% { 
-                box-shadow: 0 0 15px rgba(255, 0, 122, 0.6), inset 0 0 10px rgba(255, 0, 122, 0.4); 
-                border-color: #ff007a; 
-            }
-            100% { 
-                box-shadow: 0 0 25px rgba(0, 242, 254, 0.8), inset 0 0 15px rgba(0, 242, 254, 0.5); 
-                border-color: #00f2fe; 
-            }
+            0% { box-shadow: 0 0 10px rgba(255, 0, 122, 0.4); border-color: #ff007a; }
+            100% { box-shadow: 0 0 20px rgba(0, 242, 254, 0.6); border-color: #00f2fe; }
         }
 
-        /* --- Hover State: The EXPLOSION of Glow --- */
-        .assignment-link:hover {
-            transform: translateY(-8px) scale(1.03);
-            background: #ff007a; /* Pops to solid Hot Pink */
-            color: #ffffff; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
-            border-color: #ffffff; /* Brilliant White Border */
-            animation: none; /* Stops the slow pulse for instant bright hover */
-            box-shadow: 0 15px 40px rgba(255, 0, 122, 0.9), inset 0 0 20px rgba(255,255,255,0.5);
+        @keyframes glitterText {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1rem; }
+            .assignment-link { font-size: 1.1rem; padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
-  <div class="vibe-layer">
-    <div class="floating-element" style="left: 10%; bottom: -10%; animation-duration: 12s;">📖</div> <div class="floating-element" style="left: 30%; bottom: -10%; animation-duration: 16s; animation-delay: -3s;">🎧</div> <div class="floating-element" style="left: 50%; bottom: -10%; animation-duration: 14s; animation-delay: -7s;">⚡</div> <div class="floating-element" style="left: 70%; bottom: -10%; animation-duration: 18s; animation-delay: -2s;">💖</div> <div class="floating-element" style="left: 90%; bottom: -10%; animation-duration: 13s; animation-delay: -9s;"> ✨</div> <div class="floating-element" style="left: 15%; bottom: -10%; animation-duration: 19s; animation-delay: -5s;">📓</div> <div class="floating-affirmation" style="top: 15%; animation-duration: 20s; animation-delay: -4s;">"Main Character Energy ✨"</div>
-      
-    <div class="floating-affirmation" style="top: 35%; animation-duration: 25s; animation-delay: -12s;">"You are music to my ears 🎧"</div>
-    <div class="floating-affirmation" style="top: 55%; animation-duration: 18s; animation-delay: -8s;">"Vibe check: You're doing great ✌️"</div>
-    <div class="floating-affirmation" style="top: 75%; animation-duration: 22s; animation-delay: -2s;">"Slay the day with kindness! "</div>
-    <div class="floating-affirmation" style="top: 90%; animation-duration: 26s; animation-delay: -15s;">"Your voice is top tier 🗣️"</div>
-</div>
+    <div class="vibe-layer">
+        <div class="floating-element" style="left: 10%; animation-duration: 35s;">📖</div> 
+        <div class="floating-element" style="left: 30%; animation-duration: 42s; animation-delay: -5s;">🎧</div> 
+        <div class="floating-element" style="left: 50%; animation-duration: 38s; animation-delay: -15s;">⚡</div> 
+        <div class="floating-element" style="left: 75%; animation-duration: 45s; animation-delay: -10s;">💖</div> 
+        <div class="floating-element" style="left: 90%; animation-duration: 40s; animation-delay: -20s;"> ✨</div> 
+        
+        <div class="floating-affirmation" style="top: 20%; animation-duration: 50s;">"Main Character Energy ✨"</div>
+        <div class="floating-affirmation" style="top: 45%; animation-duration: 55s; animation-delay: -25s;">"You are music to my ears 🎧"</div>
+        <div class="floating-affirmation" style="top: 70%; animation-duration: 48s; animation-delay: -10s;">"Vibe check: You're doing great ✌️"</div>
+        <div class="floating-affirmation" style="top: 85%; animation-duration: 60s; animation-delay: -30s;">"Slay the day! 🗣️"</div>
+    </div>
 
     <div class="hub-container">
-        <h1>Mrs. Rapp 📝 9th Grade English </h1>
-        
-        <h2>Reading & Writing ✏️; Engaging in the 5Cs ✏️; Listening & Speaking</h2>
+        <h1>Mrs. Rapp 📝<br>9th Grade English</h1>
+        <h2>Reading & Writing • Engaging in the 5Cs • Listening & Speaking</h2>
 
         <ul class="assignment-list">
-            <li class="assignment-item">
-                <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link">
-                    Night Novel Study
-                </a>
-            </li>
-
-            <li class="assignment-item">
-                <a href="Romeo&Juliet/index.html" class="assignment-link">
-                    Romeo & Juliet Unit
-                </a>
-            </li>
-
-            <li class="assignment-item">
-                <a href="5C=Character/index.html" class="assignment-link">
-                    5C Lessons
-                </a>
-            </li>
-
-            <li class="assignment-item">
-                <a href="BrainBreaks/index.html" class="assignment-link">
-                    Self-Monitored Break Zone
-                </a>
-            </li>
+            <li class="assignment-item"><a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link">Night Novel Study</a></li>
+            <li class="assignment-item"><a href="Romeo&Juliet/index.html" class="assignment-link">Romeo & Juliet Unit</a></li>
+            <li class="assignment-item"><a href="5C=Character/index.html" class="assignment-link">5C Lessons</a></li>
+            <li class="assignment-item"><a href="BrainBreaks/index.html" class="assignment-link">Self-Monitored Break Zone</a></li>
         </ul>
     </div>
 
