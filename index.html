@@ -3,42 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mrs. Rapp's Education Specialist Hub</title>
+    <title>Mrs. Rapp's English Hub</title>
     <style>
-        /* Academic Professional Blue & Gold Theme */
+        /* Enganging Sunset Vibe Theme */
+        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;600&display=swap');
+
         body {
-            background-color: #002147; /* Oxford Blue */
+            /* Sunset Gradient Background */
+            background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 35%, #ca8a04 80%, #ea580c 100%);
             color: #f4f4f4;
-            font-family: 'Times New Roman', Times, serif; /* Professional Serif */
+            /* Modern, clean font stack */
+            font-family: 'Poppins', sans-serif; 
             text-align: center;
-            padding: 50px;
+            padding: 50px 20px;
             margin: 0;
-            background-image: linear-gradient(180deg, #002147 0%, #00152e 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* --- Dynamic English Background Effect --- */
+        body::before {
+            content: "a b c d e f g h i j k l m n o p q r s t u v w x y z { } < > / ? ! @ # $ % ^ & * ( ) _ + A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
+            position: fixed;
+            top: 0;
+            left: 0;
+            font-family: monospace;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.03); /* Very subtle */
+            width: 200%;
+            height: 200%;
+            z-index: -1;
+            transform: rotate(-15deg);
+            white-space: wrap;
+            animation: textScroll 60s linear infinite;
+        }
+
+        @keyframes textScroll {
+            from { transform: rotate(-15deg) translateY(0); }
+            to { transform: rotate(-15deg) translateY(-50%); }
+        }
+        /* --- End Background Effect --- */
 
         .hub-container {
             max-width: 900px;
             margin: 0 auto;
+            position: relative; /* Stays above background text */
         }
 
-        /* Header Styling */
+        /* Header Styling with Outline Text */
         h1 { 
-            font-size: 3rem;
-            color: #D4AF37; /* Metallic Gold */
-            border-bottom: 3px double #D4AF37; 
-            padding-bottom: 15px;
-            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 5px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: -2px;
+            
+            /* Outline Text Styling (Sunshine/Gold) */
+            color: transparent; 
+            -webkit-text-stroke: 2px #facc15; /* Tailwind Yellow 400 */
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.5));
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; -webkit-text-stroke: 1px #facc15; }
         }
 
         h2 { 
-            color: #C0C0C0; /* Silver / Light Grey */
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 1.1rem; 
-            margin-bottom: 40px;
-            font-weight: normal;
-            font-style: italic;
+            color: #e2e8f0; 
+            font-size: 1.2rem; 
+            margin-bottom: 50px;
+            font-weight: 400;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .assignment-list {
@@ -46,50 +83,76 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 30px;
             align-items: center;
         }
 
         .assignment-item {
             width: 100%;
-            max-width: 650px;
+            max-width: 600px;
         }
 
-        /* Academic Button Styling */
+        /* --- Link Styling (Button Style) --- */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 18px;
-            border-radius: 4px; /* Sharper, more professional corners */
-            font-weight: bold;
-            font-size: 1.25rem;
-            transition: all 0.3s ease;
-            background: #002b5c; 
-            border: 1px solid #D4AF37;
-            color: #D4AF37;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            padding: 22px;
+            border-radius: 50px; /* Fully rounded "pill" buttons */
+            font-weight: 600;
+            font-size: 1.3rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy animation */
+            
+            background: rgba(15, 23, 42, 0.6); /* Semi-transparent background */
+            backdrop-filter: blur(5px); /* Frost effect */
+            
+            /* Outline Text Style inside buttons */
+            color: transparent;
+            -webkit-text-stroke: 1px #ffffff;
+
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Hover Effects - Gold Fill */
-        .assignment-link:hover {
-            background: #D4AF37;
-            color: #002147;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
+        /* --- Standard Link Pulsating Border --- */
+        .standard-link {
+            border: 3px solid #facc15; /* Sunshine Yellow */
+            animation: pulse-yellow 2.5s infinite;
         }
 
-        /* Subtle distinction for different categories while maintaining the theme */
-        .primary-link { border-width: 2px; }
-        
+        @keyframes pulse-yellow {
+            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(250, 204, 21, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+
+        /* --- Break Zone Link Pulsating Border --- */
         .break-link {
-            border-color: #C0C0C0;
-            color: #C0C0C0;
-            font-style: italic;
+            border: 3px solid #f97316; /* Orange */
+            animation: pulse-orange 2.5s infinite;
         }
-        
+
+        @keyframes pulse-orange {
+            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(249, 115, 22, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+
+        /* Hover Effects */
+        .assignment-link:hover {
+            transform: scale(1.05) translateY(-3px);
+            background: #fff; /* Fills with white on hover */
+            -webkit-text-stroke: 0px transparent; /* Turns off outline text */
+            animation-duration: 1s; /* Speeds up the pulse on hover */
+        }
+
+        .standard-link:hover {
+            color: #ca8a04; /* Dark gold text color on white background */
+            box-shadow: 0 10px 20px rgba(250, 204, 21, 0.4);
+        }
+
         .break-link:hover {
-            background: #C0C0C0;
-            color: #002147;
+            color: #ea580c; /* Orange text color on white background */
+            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.4);
         }
 
     </style>
@@ -97,25 +160,25 @@
 <body>
 
 <div class="hub-container">
-    <h1>Mrs. Rapp's English Assignments</h1>
-    <h2>Instructional Hub &centerdot; Save as PDF &centerdot; Submit via Ekadence</h2>
+    <h1>English Hub</h1>
+    <h2>Complete Assignment &centerdot; Save as PDF &centerdot; Turn into Ekadence</h2>
 
     <ul class="assignment-list">
         <li class="assignment-item">
-            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link primary-link">
-                Night by Elie Wiesel Novel Study
+            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link standard-link">
+                Night Novel Study
             </a>
         </li>
 
         <li class="assignment-item">
-            <a href="Romeo&Juliet/index.html" class="assignment-link primary-link">
-                Romeo & Juliet by William Shakespeare Unit
+            <a href="Romeo&Juliet/index.html" class="assignment-link standard-link">
+                Romeo & Juliet Unit
             </a>
         </li>
 
         <li class="assignment-item">
-            <a href="5C=Character/index.html" class="assignment-link primary-link">
-                5C Lessons: Character & Ethics
+            <a href="5C=Character/index.html" class="assignment-link standard-link">
+                5C Lessons
             </a>
         </li>
 
