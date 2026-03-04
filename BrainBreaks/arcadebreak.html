@@ -118,7 +118,8 @@
   <style>body { box-sizing: border-box; }</style>
  </head>
  <body class="h-full m-0 overflow-auto">
-  <div id="app-container" class="min-h-full w-full p-4" style="background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0a1628 100%);"><!-- Decorative Elements -->
+  <div id="app-container" class="min-h-full w-full p-4" style="background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0a1628 100%);">
+   <!-- Decorative Elements -->
    <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden" style="z-index: 0;">
     <div class="absolute top-10 left-10 text-6xl float-animation" style="animation-delay: 0s;">
      🕹️
@@ -133,12 +134,14 @@
      ⭐
     </div>
    </div>
-   <div class="relative z-10 max-w-6xl mx-auto"><!-- Header -->
+   <div class="relative z-10 max-w-6xl mx-auto">
+    <!-- Header -->
     <header class="text-center mb-8">
      <h1 id="app-title" class="font-arcade text-2xl md:text-4xl text-yellow-400 neon-text mb-4">🎮 ARCADE STUDY TIMER 🎮</h1>
      <p class="font-digital text-cyan-400 text-lg">Level Up Your Learning!</p>
     </header><!-- Main Timer Screen -->
-    <div id="main-screen" class="game-screen rounded-2xl p-6 mb-6 relative crt-effect"><!-- Timer Display -->
+    <div id="main-screen" class="game-screen rounded-2xl p-6 mb-6 relative crt-effect">
+     <!-- Timer Display -->
      <div class="timer-display rounded-xl p-6 mb-6 text-center">
       <div id="timer-label" class="font-arcade text-green-400 text-sm mb-2">
        WORK TIME
@@ -150,7 +153,8 @@
        Ready to Start!
       </div>
      </div><!-- Control Buttons -->
-     <div id="control-buttons" class="flex flex-wrap justify-center gap-4 mb-6"><button id="start-work-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ▶ START WORK </button> <button id="end-work-btn" class="arcade-btn font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform hidden"> ⏹ END WORK </button> <button id="end-session-btn" class="arcade-btn arcade-btn-purple font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🏁 END SESSION </button>
+     <div id="control-buttons" class="flex flex-wrap justify-center gap-4 mb-6">
+      <button id="start-work-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ▶ START WORK </button> <button id="end-work-btn" class="arcade-btn font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform hidden"> ⏹ END WORK </button> <button id="end-session-btn" class="arcade-btn arcade-btn-purple font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🏁 END SESSION </button>
      </div><!-- Session Stats -->
      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
       <div class="bg-black/50 rounded-lg p-3 border-2 border-cyan-500">
@@ -191,9 +195,11 @@
      <div class="game-screen rounded-2xl p-6 max-w-lg w-full">
       <h2 id="reflection-title" class="font-arcade text-xl text-yellow-400 text-center mb-6 neon-text">📝 REFLECTION TIME 📝</h2>
       <div class="space-y-4">
-       <div><label class="font-digital text-cyan-400 block mb-2">Which class did you work on?</label> <select id="class-select" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none"> <option value="">Select a class...</option> <option value="English">📚 English</option> <option value="Math">🔢 Math</option> <option value="Science">🔬 Science</option> <option value="History">📜 History</option> <option value="Elective">🎨 Elective</option> </select>
+       <div>
+        <label class="font-digital text-cyan-400 block mb-2">Which class did you work on?</label> <select id="class-select" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none"> <option value="">Select a class...</option> <option value="English">📚 English</option> <option value="Math">🔢 Math</option> <option value="Science">🔬 Science</option> <option value="History">📜 History</option> <option value="Elective">🎨 Elective</option> </select>
        </div>
-       <div><label class="font-digital text-cyan-400 block mb-2">What did you accomplish?</label> <textarea id="accomplishment-text" rows="4" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none resize-none" placeholder="Describe what you completed..."></textarea>
+       <div>
+        <label class="font-digital text-cyan-400 block mb-2">What did you accomplish?</label> <textarea id="accomplishment-text" rows="4" class="w-full bg-black border-2 border-cyan-500 rounded-lg p-3 text-white font-digital focus:border-yellow-400 outline-none resize-none" placeholder="Describe what you completed..."></textarea>
        </div><button id="submit-reflection-btn" class="arcade-btn arcade-btn-green font-arcade text-white w-full py-4 rounded-xl text-sm hover:scale-105 transition-transform"> ✓ SUBMIT &amp; START BREAK </button>
       </div>
      </div>
@@ -201,7 +207,8 @@
     <div id="break-selection" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
      <div class="game-screen rounded-2xl p-6 max-w-lg w-full text-center">
       <h2 class="font-arcade text-xl text-yellow-400 mb-6 neon-text">⏰ CHOOSE BREAK TIME ⏰</h2>
-      <div class="grid grid-cols-3 gap-4 mb-6"><button class="break-btn arcade-btn arcade-btn-blue font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="2"> 2<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-green font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="3"> 3<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-purple font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="5"> 5<br><span class="text-xs">MIN</span> </button>
+      <div class="grid grid-cols-3 gap-4 mb-6">
+       <button class="break-btn arcade-btn arcade-btn-blue font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="2"> 2<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-green font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="3"> 3<br><span class="text-xs">MIN</span> </button> <button class="break-btn arcade-btn arcade-btn-purple font-arcade text-white py-6 rounded-xl text-lg hover:scale-105 transition-transform" data-minutes="5"> 5<br><span class="text-xs">MIN</span> </button>
       </div>
      </div>
     </div><!-- Break Time Screen with Games -->
@@ -215,9 +222,11 @@
         00:00
        </div>
       </div><!-- Game Tabs -->
-      <div class="flex flex-wrap justify-center gap-2 mb-4"><button class="game-tab arcade-btn arcade-btn-blue font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="tetris">🧱 TETRIS</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="bounce">🏓 BOUNCE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="snake">🐍 SNAKE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="flappy">🐦 FLAPPY</button>
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
+       <button class="game-tab arcade-btn arcade-btn-blue font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="tetris">🧱 TETRIS</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="bounce">🏓 BOUNCE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="snake">🐍 SNAKE</button> <button class="game-tab arcade-btn font-arcade text-white px-4 py-2 rounded-lg text-xs" data-game="flappy">🐦 FLAPPY</button>
       </div><!-- Game Containers -->
-      <div id="game-container" class="bg-black rounded-xl overflow-hidden relative" style="height: 360px;"><!-- Tetris Game -->
+      <div id="game-container" class="bg-black rounded-xl overflow-hidden relative" style="height: 360px;">
+       <!-- Tetris Game -->
        <div id="tetris-game" class="w-full h-full flex items-center justify-center p-1">
         <div class="text-center">
          <canvas id="tetris-canvas" width="140" height="280" class="border-2 border-cyan-500 bg-gray-900" style="width: 140px; height: 280px;"></canvas>
@@ -266,7 +275,8 @@
     <div id="progress-screen" class="hidden">
      <div class="game-screen rounded-2xl p-6">
       <h2 class="font-arcade text-2xl text-yellow-400 text-center mb-6 neon-text">🏆 SESSION COMPLETE 🏆</h2>
-      <div id="progress-content" class="space-y-4 mb-6 max-h-96 overflow-y-auto"><!-- Progress entries will be inserted here -->
+      <div id="progress-content" class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+       <!-- Progress entries will be inserted here -->
       </div>
       <div class="grid grid-cols-2 gap-4 mb-6">
        <div class="bg-black/50 rounded-lg p-4 border-2 border-green-500 text-center">
@@ -286,7 +296,8 @@
         </div>
        </div>
       </div>
-      <div class="flex flex-wrap justify-center gap-4"><button id="save-pdf-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 💾 SAVE AS PDF </button> <button id="new-session-btn" class="arcade-btn arcade-btn-blue font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🔄 NEW SESSION </button>
+      <div class="flex flex-wrap justify-center gap-4">
+       <button id="save-pdf-btn" class="arcade-btn arcade-btn-green font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 💾 SAVE AS PDF </button> <button id="new-session-btn" class="arcade-btn arcade-btn-blue font-arcade text-white px-8 py-4 rounded-xl text-sm hover:scale-105 transition-transform"> 🔄 NEW SESSION </button>
       </div>
      </div>
     </div>
@@ -779,6 +790,10 @@
         if (flappyGame.keyHandler) {
           document.removeEventListener('keydown', flappyGame.keyHandler);
         }
+        if (flappyGame.clickHandler) {
+          const canvas = document.getElementById('flappy-canvas');
+          canvas.removeEventListener('click', flappyGame.clickHandler);
+        }
         flappyGame = null;
       }
     }
@@ -1122,10 +1137,22 @@
       }
       
       snakeKeyHandler = (e) => {
-        if (e.key === 'ArrowLeft' && direction.x === 0) nextDirection = {x: -1, y: 0};
-        else if (e.key === 'ArrowRight' && direction.x === 0) nextDirection = {x: 1, y: 0};
-        else if (e.key === 'ArrowUp' && direction.y === 0) nextDirection = {x: 0, y: -1};
-        else if (e.key === 'ArrowDown' && direction.y === 0) nextDirection = {x: 0, y: 1};
+        if (e.key === 'ArrowLeft' && direction.x === 0) {
+          e.preventDefault();
+          nextDirection = {x: -1, y: 0};
+        }
+        else if (e.key === 'ArrowRight' && direction.x === 0) {
+          e.preventDefault();
+          nextDirection = {x: 1, y: 0};
+        }
+        else if (e.key === 'ArrowUp' && direction.y === 0) {
+          e.preventDefault();
+          nextDirection = {x: 0, y: -1};
+        }
+        else if (e.key === 'ArrowDown' && direction.y === 0) {
+          e.preventDefault();
+          nextDirection = {x: 0, y: 1};
+        }
       };
       
       document.addEventListener('keydown', snakeKeyHandler);
@@ -1260,8 +1287,7 @@
         }
       };
       
-      flappyClickHandler = (e) => {
-        e.preventDefault();
+      flappyClickHandler = () => {
         jump();
       };
       
@@ -1270,11 +1296,12 @@
       canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         jump();
-      });
+      }, { passive: false });
       
       flappyGame = { 
         animationId: null,
-        keyHandler: flappyKeyHandler
+        keyHandler: flappyKeyHandler,
+        clickHandler: flappyClickHandler
       };
       
       function loop() {
@@ -1318,5 +1345,5 @@
     applyConfig();
     updateStats();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d7281b4a3184f1a',t:'MTc3MjY0NDM1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d734a63b6127bfb',t:'MTc3MjY1MjU3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
