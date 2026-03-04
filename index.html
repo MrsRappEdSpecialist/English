@@ -7,11 +7,12 @@
     <style>
         /* General Page Styling */
         body {
-            background-color: #0d0e15; /* Deep dark background for glow effect */
+            background-color: #0d0e15; /* Deep dark background */
             color: #e2e8f0;
             font-family: 'Segoe UI', sans-serif;
             text-align: center;
             padding: 50px;
+            margin: 0;
         }
 
         .hub-container {
@@ -19,7 +20,7 @@
             margin: 0 auto;
         }
 
-        /* Header Styling: Larger with underline */
+        /* Header Styling */
         h1 { 
             font-size: 3.2rem;
             color: #ffffff; 
@@ -29,7 +30,6 @@
             text-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
         }
 
-        /* Subheading Styling: Smaller */
         h2 { 
             color: #a0aec0; 
             font-size: 1.4rem; 
@@ -42,7 +42,7 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 25px; /* Space between buttons */
+            gap: 25px;
             align-items: center;
         }
 
@@ -60,21 +60,22 @@
             font-weight: bold;
             font-size: 1.2rem;
             transition: all 0.3s ease;
-            background: rgba(26, 28, 41, 0.8);
+            background: #1a1c29; /* Solid dark background to prevent graying out */
             border: 3px solid transparent;
         }
 
-        /* Hover Effect for all buttons */
         .assignment-link:hover {
             transform: scale(1.05);
             filter: brightness(1.2);
         }
 
-  .yellow-glow {
-    color: #fff9c4;
-    border: 2px solid #fff9c4;
-    box-shadow: 0 0 15px #fff9c4, inset 0 0 5px #fff9c4;
-}
+        /* The Moon Yellow Glow for Night */
+        .yellow-glow {
+            color: #fff9c4 !important;
+            border-color: #fff9c4 !important;
+            box-shadow: 0 0 15px #fff9c4, inset 0 0 5px #fff9c4;
+            text-shadow: 0 0 8px rgba(255, 249, 196, 0.7);
+        }
 
         .mint-glow {
             color: #b2fba5;
@@ -104,7 +105,7 @@
 
     <ul class="assignment-list">
         <li class="assignment-item">
-            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link pink-glow">
+            <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link yellow-glow">
                 Night by Elie Wiesel Novel Study
             </a>
         </li>
