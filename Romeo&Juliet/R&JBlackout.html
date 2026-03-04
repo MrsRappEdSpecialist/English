@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackout Poetry Creator</title>
+    <style>
+        :root {
+            --paper-color: #f4ecd8;
+            --ink-color: #1a1a1a;
+            --blackout-color: #111111;
+            --bg-color: #2b2b2b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #eaeaea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .assignment-header {
+            max-width: 800px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .assignment-header h1 {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .prompt-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-left: 4px solid #8c8c8c;
+            border-radius: 4px;
+            text-align: left;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* --- SETUP BOX --- */
+        .setup-box {
+            background-color: #3a3a3a;
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .setup-box h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 15px;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #888;
+        }
+
+        /* Hidden Print Header (Name/Class) */
+        .print-header {
+            display: none;
+        }
+
+        /* Two-Column Open Book Layout */
+        .book-container {
+            perspective: 1000px;
+            margin-bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .book-spread {
+            background-color: var(--paper-color);
+            color: var(--ink-color);
+            font-family: 'Georgia', serif;
+            font-size: 1.25rem;
+            line-height: 2.2;
+            padding: 60px 80px;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            box-shadow: 
+                inset 5px 0 20px rgba(0,0,0,0.05), 
+                inset -5px 0 20px rgba(0,0,0,0.05),
+                10px 10px 30px rgba(0,0,0,0.5);
+            border-radius: 5px;
+            position: relative;
+            text-align: justify;
+            
+            column-count: 2;
+            column-gap: 120px;
+            
+            background-image: linear-gradient(
+                to right, 
+                var(--paper-color) 46%, 
+                rgba(0,0,0,0.05) 48%, 
+                rgba(0,0,0,0.15) 50%, 
+                rgba(0,0,0,0.05) 52%, 
+                var(--paper-color) 54%
+            );
+        }
+
+        /* Interactive Words */
+        .word {
+            cursor: pointer;
+            padding: 2px 1px;
+            border-radius: 2px;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .word:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .word.blacked-out {
+            background-color: var(--blackout-color);
+            color: var(--blackout-color);
+            user-select: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+
+        .action-btn { background-color: #2b6cb0; }
+        .action-btn:hover { background-color: #3182ce; }
+        
+        .reset-btn { background-color: #8b3535; }
+        .reset-btn:hover { background-color: #a84242; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 900px) {
+            .book-spread {
+                column-count: 1;
+                background-image: none;
+                padding: 40px 30px;
+            }
+        }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            @page { margin: 0.5in; }
+            
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            
+            .assignment-header, .controls, .setup-box {
+                display: none !important;
+            }
+
+            .print-header {
+                display: block !important;
+                color: #000;
+                font-family: Arial, sans-serif;
+                font-size: 1rem;
+                margin-bottom: 30px;
+                font-weight: bold;
+            }
+
+            .book-container {
+                margin: 0;
+                display: block;
+            }
+
+            .book-spread {
+                background-color: #ffffff !important;
+                background-image: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                min-height: auto !important;
+                color: #000000 !important;
+                column-rule: 1px solid #cccccc;
+                column-gap: 60px;
+            }
+
+            .word.blacked-out {
+                background-color: #000000 !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="assignment-header">
+        <h1>Blackout Poetry Assignment</h1>
+        <div class="prompt-box">
+            <strong>Instructions:</strong> Paste the text provided by your teacher into the box below and click Start. Create a blackout poem that answers the prompt by clicking words to hide them. Leave only the words visible that create your new poem. 
+            <em>(Your progress automatically saves).</em>
+        </div>
+    </div>
+
+    <div class="setup-box" id="setup-section">
+        <h3>Step 1: Paste Your Text Here</h3>
+        <textarea id="custom-text-input" placeholder="Paste the reading passage here..."></textarea>
+        <button class="action-btn" onclick="startAssignment()">Start Assignment</button>
+    </div>
+
+    <div class="book-container hidden" id="book-section">
+        <div class="print-header">
+            Name: ___________________________ &nbsp;&nbsp;&nbsp;&nbsp; Class Period: _______
+        </div>
+        <div class="book-spread" id="page-content">
+            </div>
+    </div>
+
+    <div class="controls hidden" id="controls-section">
+        <button onclick="window.print()">Print / Save as PDF</button>
+        <button class="reset-btn" onclick="resetBlackout()">Erase Blackout Progress</button>
+        <button onclick="changeText()">Change Text / Start Over</button>
+    </div>
+
+    <script>
+        const setupSection = document.getElementById('setup-section');
+        const bookSection = document.getElementById('book-section');
+        const controlsSection = document.getElementById('controls-section');
+        const customTextInput = document.getElementById('custom-text-input');
+        const pageContent = document.getElementById('page-content');
+        
+        let savedState = {};
+
+        // Run when the page loads
+        function init() {
+            // Check if they already saved custom text previously
+            const savedText = localStorage.getItem('customPoetryText');
+            if (savedText) {
+                savedState = JSON.parse(localStorage.getItem('customPoetryState')) || {};
+                renderBook(savedText);
+                showBook();
+            } else {
+                // Pre-fill with the default Night text just in case!
+                customTextInput.value = "Never shall I forget that night, the first night in camp, that turned my life into one long night seven times sealed. Never shall I forget that smoke. Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky. Never shall I forget those flames that consumed my faith forever. Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live. Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes. Never shall I forget those things, even were I condemned to live as long as God Himself. Never.\n\nThe beloved objects that we had carried with us from place to place were now left behind in the wagon and, with them, finally, our illusions. Every few yards, there stood an SS man, his machine gun trained on us. Hand in hand we followed the throng. An SS came toward us wielding a club. He commanded: 'Men to the left! Women to the right!' Eight words spoken quietly, indifferently, without emotion. Eight short, simple words. Yet that was the moment when I left my mother. There was no time to think, and I already felt my father's hand press against mine: we were alone.";
+            }
+        }
+
+        // Triggered when student clicks "Start Assignment"
+        function startAssignment() {
+            const text = customTextInput.value.trim();
+            if (!text) {
+                alert("Please paste some text first!");
+                return;
+            }
+
+            // If the text is different from what was saved, erase previous blackout progress
+            if (text !== localStorage.getItem('customPoetryText')) {
+                savedState = {};
+                localStorage.removeItem('customPoetryState');
+            }
+
+            // Save the text to their browser
+            localStorage.setItem('customPoetryText', text);
+            
+            renderBook(text);
+            showBook();
+        }
+
+        // Processes the text and turns it into clickable words
+        function renderBook(text) {
+            pageContent.innerHTML = '';
+            
+            // Split by line breaks to keep paragraph structure
+            const paragraphs = text.split('\n');
+            let globalWordIndex = 0;
+
+            paragraphs.forEach(paragraph => {
+                if (paragraph.trim() === '') {
+                    pageContent.appendChild(document.createElement('br'));
+                    return;
+                }
+
+                const words = paragraph.split(/\s+/); // Splits by spaces/tabs
+                
+                words.forEach((word) => {
+                    const span = document.createElement('span');
+                    span.className = 'word';
+                    span.textContent = word + ' ';
+                    span.dataset.index = globalWordIndex;
+                    
+                    if (savedState[globalWordIndex]) {
+                        span.classList.add('blacked-out');
+                    }
+
+                    span.addEventListener('click', function() {
+                        this.classList.toggle('blacked-out');
+                        const idx = this.dataset.index;
+                        savedState[idx] = this.classList.contains('blacked-out');
+                        localStorage.setItem('customPoetryState', JSON.stringify(savedState));
+                    });
+
+                    pageContent.appendChild(span);
+                    globalWordIndex++;
+                });
+
+                // Add paragraph breaks
+                pageContent.appendChild(document.createElement('br'));
+                pageContent.appendChild(document.createElement('br'));
+            });
+        }
+
+        // UI toggles
+        function showBook() {
+            setupSection.classList.add('hidden');
+            bookSection.classList.remove('hidden');
+            controlsSection.classList.remove('hidden');
+        }
+
+        function changeText() {
+            if(confirm("Going back will allow you to change the text. Your current text will remain in the box. Proceed?")) {
+                customTextInput.value = localStorage.getItem('customPoetryText') || "";
+                bookSection.classList.add('hidden');
+                controlsSection.classList.add('hidden');
+                setupSection.classList.remove('hidden');
+            }
+        }
+
+        function resetBlackout() {
+            if(confirm("Are you sure you want to erase all your blackout progress and uncover all words?")) {
+                savedState = {};
+                localStorage.removeItem('customPoetryState');
+                renderBook(localStorage.getItem('customPoetryText'));
+            }
+        }
+
+        // Start the app
+        init();
+    </script>
+
+</body>
+</html>
