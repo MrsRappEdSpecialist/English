@@ -46,37 +46,51 @@
             margin-bottom: 30px;
         }
 
-        /* Book Page Styling */
+        /* Hidden Print Header (Name/Class) */
+        .print-header {
+            display: none;
+        }
+
+        /* Two-Column Open Book Layout */
         .book-container {
             perspective: 1000px;
             margin-bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
-        .book-page {
+        .book-spread {
             background-color: var(--paper-color);
             color: var(--ink-color);
             font-family: 'Georgia', serif;
             font-size: 1.25rem;
             line-height: 2.2;
             padding: 60px 80px;
-            max-width: 600px;
-            min-height: 800px;
+            width: 100%;
+            max-width: 1000px; /* Wider to fit two pages */
+            min-height: 600px;
             box-shadow: 
                 inset 5px 0 20px rgba(0,0,0,0.05), 
                 inset -5px 0 20px rgba(0,0,0,0.05),
                 10px 10px 30px rgba(0,0,0,0.5);
-            border-radius: 2px 5px 5px 2px;
+            border-radius: 5px;
             position: relative;
             text-align: justify;
-        }
-
-        /* Page texture overlay */
-        .book-page::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 5%, rgba(255,255,255,0) 10%);
-            pointer-events: none;
+            
+            /* CSS Columns for the text flow */
+            column-count: 2;
+            column-gap: 120px; /* Space in the middle for the spine */
+            
+            /* The book spine shading gradient */
+            background-image: linear-gradient(
+                to right, 
+                var(--paper-color) 46%, 
+                rgba(0,0,0,0.05) 48%, 
+                rgba(0,0,0,0.15) 50%, 
+                rgba(0,0,0,0.05) 52%, 
+                var(--paper-color) 54%
+            );
         }
 
         /* Interactive Words */
@@ -126,40 +140,53 @@
             background-color: #a84242;
         }
 
-        @media (max-width: 768px) {
-            .book-page {
+        @media (max-width: 900px) {
+            .book-spread {
+                column-count: 1; /* Drops to a single page on smaller screens/phones */
+                background-image: none;
                 padding: 40px 30px;
-                font-size: 1.1rem;
             }
         }
 
         /* --- PRINT STYLES --- */
         @media print {
+            @page { margin: 0.5in; } /* Gives a nice margin on the printed PDF */
+            
             body {
                 background-color: #ffffff;
                 padding: 0;
             }
             
-            /* Hide everything except the book page */
+            /* Hide the instructions and buttons */
             .assignment-header, .controls {
                 display: none !important;
             }
 
-            .book-container {
-                margin: 0;
+            /* Show the student name/class lines */
+            .print-header {
+                display: block !important;
+                color: #000;
+                font-family: Arial, sans-serif;
+                font-size: 1rem;
+                margin-bottom: 30px;
+                font-weight: bold;
             }
 
-            /* Strip the background colors and shadows for saving ink */
-            .book-page {
+            .book-container {
+                margin: 0;
+                display: block;
+            }
+
+            /* Strip background colors and shadows, but keep columns */
+            .book-spread {
                 background-color: #ffffff !important;
+                background-image: none !important; /* Removes the spine shadow to save ink */
                 box-shadow: none !important;
                 padding: 0 !important;
                 min-height: auto !important;
                 color: #000000 !important;
-            }
-
-            .book-page::before {
-                display: none !important;
+                column-rule: 1px solid #cccccc; /* Adds a clean, thin line down the middle for the printed version */
+                column-gap: 60px;
             }
 
             /* Force the browser to print the blacked-out words */
@@ -180,13 +207,17 @@
         <div class="prompt-box">
             <strong>Prompt:</strong> How do our surroundings and experiences shape our humanity and identity? 
             <br><br>
-            Using the excerpt below from Elie Wiesel's <em>Night</em>, create a blackout poem that reflects on the loss, preservation, or transformation of identity and humanity. Click on words to black them out. Leave only the words visible that create your new poem. 
+            Using the excerpt from Elie Wiesel's <em>Night</em>, create a blackout poem that reflects on the loss, preservation, or transformation of identity and humanity. Click on words to black them out. Leave only the words visible that create your new poem. 
             <em>(Your progress is automatically saved to your browser).</em>
         </div>
     </div>
 
     <div class="book-container">
-        <div class="book-page" id="page-content">
+        <div class="print-header">
+            Name: ___________________________ &nbsp;&nbsp;&nbsp;&nbsp; Class Period: _______
+        </div>
+        
+        <div class="book-spread" id="page-content">
             </div>
     </div>
 
@@ -196,7 +227,8 @@
     </div>
 
     <script>
-        const excerptText = "Never shall I forget that night, the first night in camp, that turned my life into one long night seven times sealed. Never shall I forget that smoke. Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky. Never shall I forget those flames that consumed my faith forever. Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live. Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes. Never shall I forget those things, even were I condemned to live as long as God Himself. Never.";
+        // Note: I added a little more text to ensure it naturally flows over into the second column!
+        const excerptText = "Never shall I forget that night, the first night in camp, that turned my life into one long night seven times sealed. Never shall I forget that smoke. Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky. Never shall I forget those flames that consumed my faith forever. Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live. Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes. Never shall I forget those things, even were I condemned to live as long as God Himself. Never. \n\n The beloved objects that we had carried with us from place to place were now left behind in the wagon and, with them, finally, our illusions. Every few yards, there stood an SS man, his machine gun trained on us. Hand in hand we followed the throng. An SS came toward us wielding a club. He commanded: 'Men to the left! Women to the right!' Eight words spoken quietly, indifferently, without emotion. Eight short, simple words. Yet that was the moment when I left my mother. There was no time to think, and I already felt my father's hand press against mine: we were alone.";
 
         const pageContent = document.getElementById('page-content');
         let savedState = JSON.parse(localStorage.getItem('nightBlackoutState')) || {};
