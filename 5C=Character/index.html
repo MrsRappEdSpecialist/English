@@ -1,8 +1,178 @@
-<h2>5C: Character</h2>
-<ul>
-  <li><a href="growthmindset.html">Brain Breaks</a></li>
-  <li><a href="NAME.html">ADD HERE</a></li>
-  <li><a href="NAME.html">ADD HERE</a></li>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5C: Character Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
 
-<p><a href="../index.html">← Back to Main Classroom Menu</a></p>
+        body {
+            /* Color Splash Background: Vibrant & Energetic */
+            background: #0f172a; /* Base dark blue */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.2) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Floating 5C Core Values Background --- */
+        .splash-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-word {
+            position: absolute;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.05);
+            font-size: 3rem;
+            animation: moveWord linear infinite;
+        }
+
+        @keyframes moveWord {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10vw, 5vh) rotate(5deg); }
+            50% { transform: translate(0, 10vh) rotate(0deg); }
+            75% { transform: translate(-10vw, 5vh) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* --- Main Content Box with Creative Border --- */
+        .hub-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            /* Multi-color Animated Border */
+            border: 5px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .hub-container::before {
+            content: '';
+            position: absolute;
+            top: -5px; bottom: -5px; left: -5px; right: -5px;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6, #10b981, #f59e0b);
+            z-index: -1;
+            border-radius: 35px;
+            animation: borderRotate 5s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* --- Header with 3D Pop --- */
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 
+                2px 2px 0px #ec4899,
+                4px 4px 0px #8b5cf6,
+                6px 6px 15px rgba(0,0,0,0.5);
+        }
+
+        .unit-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .unit-item {
+            width: 100%;
+        }
+
+        /* --- Creative Link Styling --- */
+        .unit-link {
+            display: block;
+            text-decoration: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        /* --- Hover State: Color Splash Fill --- */
+        .unit-link:hover {
+            transform: scale(1.05);
+            background: #ffffff;
+            color: #8b5cf6;
+            border-color: #ffffff;
+            box-shadow: 0 0 20px #8b5cf6;
+        }
+
+        /* --- Back Button --- */
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover { color: #ec4899; }
+
+    </style>
+</head>
+<body>
+
+    <div class="splash-layer">
+        <div class="floating-word" style="top: 10%; left: 5%; animation-duration: 12s;">Communication</div>
+        <div class="floating-word" style="top: 25%; right: 5%; animation-duration: 15s;">Character</div>
+        <div class="floating-word" style="top: 50%; left: 10%; animation-duration: 10s;">Collaboration</div>
+        <div class="floating-word" style="top: 70%; right: 10%; animation-duration: 14s;">Creativity</div>
+        <div class="floating-word" style="top: 85%; left: 20%; animation-duration: 18s;">Critical-Thinking</div>
+    </div>
+
+    <div class="hub-container">
+        <h2>5C: Character</h2>
+
+        <ul class="unit-list">
+            <li class="unit-item">
+                <a href="growthmindset.html" class="unit-link">Brain Breaks</a>
+            </li>
+            <li class="unit-item">
+                <a href="#" class="unit-link">Coming Soon: Skill Mastery</a>
+            </li>
+            <li class="unit-item">
+                <a href="#" class="unit-link">Coming Soon: Team Project</a>
+            </li>
+        </ul>
+
+        <p><a href="../index.html" class="back-btn">← Back to Main Classroom Menu</a></p>
+    </div>
+
+</body>
+</html>
