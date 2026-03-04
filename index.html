@@ -8,8 +8,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
 
         body {
-            /* Calm Radiant Blue to Soft Gold: Focus on Deep Blues */
-            background: radial-gradient(circle at top, #1e40af 0%, #0f172a 45%, #1e3a8a 75%, #fef3c7 100%);
+            /* Vibrant & Fun: Electric Teal to Bright Royal Blue with a Sunny Glow */
+            background: radial-gradient(circle at top, #0ea5e9 0%, #2563eb 35%, #1e40af 70%, #fbbf24 100%);
             background-attachment: fixed;
             color: #f8fafc;
             font-family: 'Poppins', sans-serif; 
@@ -34,7 +34,7 @@
 
         .floating-quote {
             position: absolute;
-            color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.2); /* Slightly brighter for engagement */
             font-size: 1.1rem;
             font-style: italic;
             white-space: nowrap;
@@ -47,27 +47,28 @@
             to { transform: translateX(-110%); }
         }
 
-        /* --- Header with 3D Depth: Champagne Gold Accent --- */
+        /* --- Header with 3D Depth: Bright Sunshine Yellow --- */
         h1 { 
             font-family: 'Montserrat', sans-serif;
             font-size: 3.5rem;
             margin-bottom: 10px;
             text-transform: uppercase;
-            color: #fde68a; /* Lighter Sunshine Gold */
-            /* Clean 3D Depth */
+            color: #fbbf24; /* Bright Sunny Yellow */
+            /* Energetic 3D Depth */
             text-shadow: 
                 0 1px 0 #d97706,
                 0 2px 0 #b45309,
-                0 3px 0 #78350f,
-                0 10px 20px rgba(0,0,0,0.6);
+                0 4px 0 #92400e,
+                0 10px 20px rgba(0,0,0,0.4);
         }
 
         h2 { 
-            color: #cbd5e1; 
-            font-size: 1.1rem; 
+            color: #f0f9ff; 
+            font-size: 1.2rem; 
             margin-bottom: 50px;
-            font-weight: 400;
+            font-weight: 700;
             letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .assignment-list {
@@ -84,42 +85,42 @@
             max-width: 600px;
         }
 
-        /* --- Button Styling: High Readability Solid Text --- */
+        /* --- Button Styling: Bright & Modern --- */
         .assignment-link {
             display: block;
             text-decoration: none;
             padding: 22px;
-            border-radius: 12px;
+            border-radius: 16px; /* Slightly more rounded for a "fun" feel */
             font-weight: 700;
             font-size: 1.4rem;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(15, 23, 42, 0.85); /* Darker Blue-Black for contrast */
-            border: 2px solid #fde68a; /* Sunshine Gold border */
+            background: rgba(15, 23, 42, 0.7); /* Deep blue-black with transparency */
+            border: 3px solid #fbbf24; /* Bold Sunny Border */
             
-            /* Solid Text for Readability */
+            /* Solid White Text for Readability */
             color: #ffffff; 
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
         }
 
-        /* --- Hover State: Pulsate Only on Hover --- */
+        /* --- Hover State: Bright Yellow Pop --- */
         .assignment-link:hover {
-            transform: translateY(-5px) scale(1.02);
-            background: #fde68a; /* Sunshine Gold Fill */
-            color: #0f172a; /* Deep Navy Text */
+            transform: translateY(-8px) scale(1.04);
+            background: #fbbf24; /* Bright Yellow Fill */
+            color: #1e3a8a; /* Bold Blue Text */
             animation: pulse-border 1.5s infinite;
-            box-shadow: 0 0 25px rgba(253, 230, 138, 0.5);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
         }
 
         @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(253, 230, 138, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(253, 230, 138, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(253, 230, 138, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.8); }
+            70% { box-shadow: 0 0 0 15px rgba(251, 191, 36, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
         }
 
-        /* Matching border for Break Zone */
+        /* Self-Monitored Break Zone Matching */
         .break-link {
-            border-color: #fde68a; 
+            border-color: #fbbf24; 
         }
 
     </style>
@@ -127,7 +128,7 @@
 <body>
 
     <div class="quote-layer">
-        <div class="floating-quote" style="top: 15%; animation-duration: 35s;">"I beleive in you! <3 Mrs. Rapp."</div>
+        <div class="floating-quote" style="top: 15%; animation-duration: 35s;">"I believe in you! <3 Mrs. Rapp."</div>
         <div class="floating-quote" style="top: 35%; animation-duration: 45s; animation-delay: -5s;">"Reading, Writing, Listening, & Speaking"</div>
         <div class="floating-quote" style="top: 55%; animation-duration: 40s; animation-delay: -15s;">"Your voice is powerful."</div>
         <div class="floating-quote" style="top: 75%; animation-duration: 50s;">"Who has it better than us? Nobody! AHS!"</div>
