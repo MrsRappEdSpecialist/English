@@ -8,10 +8,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
 
         body {
-            /* Ocean Breeze: Deep Sea Blue to soft Turquoise with a hint of mist */
-            background: radial-gradient(circle at top, #0ea5e9 0%, #0c4a6e 40%, #075985 70%, #082f49 100%);
+            /* Calm Radiant Blue to Soft Gold: Focus on Deep Blues */
+            background: radial-gradient(circle at top, #1e40af 0%, #0f172a 45%, #1e3a8a 75%, #fef3c7 100%);
             background-attachment: fixed;
-            color: #f0f9ff;
+            color: #f8fafc;
             font-family: 'Poppins', sans-serif; 
             text-align: center;
             padding: 50px 20px;
@@ -21,7 +21,7 @@
             position: relative;
         }
 
-        /* --- Floating Inspirational Quotes (Calm Drift) --- */
+        /* --- Floating Inspirational Quotes --- */
         .quote-layer {
             position: fixed;
             top: 0;
@@ -36,10 +36,10 @@
             position: absolute;
             color: rgba(255, 255, 255, 0.12);
             font-size: 1.1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
+            font-style: italic;
             white-space: nowrap;
             animation: drift linear infinite;
+            letter-spacing: 0.5px;
         }
 
         @keyframes drift {
@@ -47,34 +47,27 @@
             to { transform: translateX(-110%); }
         }
 
-        /* --- Header with 3D Depth & Sunshine Touch --- */
+        /* --- Header with 3D Depth: Champagne Gold Accent --- */
         h1 { 
             font-family: 'Montserrat', sans-serif;
             font-size: 3.5rem;
             margin-bottom: 10px;
             text-transform: uppercase;
-            color: #f0f9ff; /* Soft White/Mist */
-            /* 3D Depth Effect with Gold Accent */
+            color: #fde68a; /* Lighter Sunshine Gold */
+            /* Clean 3D Depth */
             text-shadow: 
-                0 1px 0 #fbbf24,  /* Sunshine Gold layer */
-                0 2px 0 #0369a1, 
-                0 3px 0 #075985, 
-                0 4px 0 #0c4a6e,
-                0 10px 25px rgba(0,0,0,0.4);
-            letter-spacing: -1px;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
+                0 1px 0 #d97706,
+                0 2px 0 #b45309,
+                0 3px 0 #78350f,
+                0 10px 20px rgba(0,0,0,0.6);
         }
 
         h2 { 
-            color: #bae6fd; 
+            color: #cbd5e1; 
             font-size: 1.1rem; 
             margin-bottom: 50px;
             font-weight: 400;
-            letter-spacing: 1.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
         }
 
         .assignment-list {
@@ -82,7 +75,7 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 25px;
             align-items: center;
         }
 
@@ -91,84 +84,32 @@
             max-width: 600px;
         }
 
-        /* --- Button Styling: Calm & Breezy --- */
+        /* --- Button Styling: High Readability Solid Text --- */
         .assignment-link {
             display: block;
             text-decoration: none;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 22px;
+            border-radius: 12px;
             font-weight: 700;
             font-size: 1.4rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255, 255, 255, 0.08); /* Frosted Glass Look */
-            backdrop-filter: blur(8px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(15, 23, 42, 0.85); /* Darker Blue-Black for contrast */
+            border: 2px solid #fde68a; /* Sunshine Gold border */
             
-            /* Outline Text Style */
-            color: transparent;
-            -webkit-text-stroke: 1px #bae6fd;
-            letter-spacing: 1px;
+            /* Solid Text for Readability */
+            color: #ffffff; 
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* --- Hover State: Sunshine Gold Pulse & Fill --- */
+        /* --- Hover State: Pulsate Only on Hover --- */
         .assignment-link:hover {
-            transform: translateY(-4px) scale(1.03);
-            background: #fbbf24; /* Sunshine Gold Fill */
-            color: #0c4a6e; /* Deep blue text on gold */
-            -webkit-text-stroke: 0px transparent;
-            border-color: #fbbf24;
-            animation: pulse-gold 1.5s infinite;
-            box-shadow: 0 15px 30px rgba(251, 191, 36, 0.3);
+            transform: translateY(-5px) scale(1.02);
+            background: #fde68a; /* Sunshine Gold Fill */
+            color: #0f172a; /* Deep Navy Text */
+            animation: pulse-border 1.5s infinite;
+            box-shadow: 0 0 25px rgba(253, 230, 138, 0.5);
         }
 
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(251, 191, 36, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="quote-layer">
-        <div class="floating-quote" style="top: 15%; animation-duration: 45s; animation-delay: 0s;">"There is no frigate like a book to take us lands away."</div>
-        <div class="floating-quote" style="top: 35%; animation-duration: 55s; animation-delay: -10s;">"Who has it better than us? Nobody! AHS!."</div>
-        <div class="floating-quote" style="top: 55%; animation-duration: 50s; animation-delay: -25s;">"I am not afraid of storms, for I am learning how to sail my ship."</div>
-        <div class="floating-quote" style="top: 75%; animation-duration: 60s; animation-delay: -5s;">"Definitions belong to the definers, not the defined."</div>
-        <div class="floating-quote" style="top: 90%; animation-duration: 40s; animation-delay: -15s;">"The world was hers for the reading."</div>
-    </div>
-
-    <div class="hub-container">
-        <h1>Mrs. Rapp's English Dashboard</h1>
-        <h2>Breathe in &centerdot; Read on &centerdot; Submit as PDF</h2>
-
-        <ul class="assignment-list">
-            <li class="assignment-item">
-                <a href="Night by Elie Wiesel Novel Study/index.html" class="assignment-link">
-                    Night Novel Study
-                </a>
-            </li>
-
-            <li class="assignment-item">
-                <a href="Romeo&Juliet/index.html" class="assignment-link">
-                    Romeo & Juliet Unit
-                </a>
-            </li>
-
-            <li class="assignment-item">
-                <a href="5C=Character/index.html" class="assignment-link">
-                    5C Lessons
-                </a>
-            </li>
-
-            <li class="assignment-item">
-                <a href="BrainBreaks/index.html" class="assignment-link">
-                    Self-Monitored Break Zone
-                </a>
-            </li>
-        </ul>
-    </div>
-
-</body>
-</html>
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(253, 230, 138, 0
