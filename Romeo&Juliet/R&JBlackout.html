@@ -3,24 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackout Poetry Creator</title>
+    <title>Blackout Poetry Creator - Romeo & Juliet</title>
     <style>
+        /* Importing Dramatic & Classic Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
+
         :root {
             --paper-color: #f4ecd8;
             --ink-color: #1a1a1a;
             --blackout-color: #111111;
-            --bg-color: #2b2b2b;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: #eaeaea;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Tragic Midnight to Crimson Gradient */
+            background: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #4c0519 100%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            font-family: 'Lora', serif;
             margin: 0;
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Falling Rose Petals Background --- */
+        .petal-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #9f1239;
+            border-radius: 15px 0 15px 0;
+            opacity: 0.5;
+            box-shadow: 0 0 10px rgba(159, 18, 57, 0.4);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
         }
 
         .assignment-header {
@@ -30,64 +64,74 @@
         }
 
         .assignment-header h1 {
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            font-family: 'Cinzel Decorative', serif; 
+            color: #fef3c7; 
+            font-size: 2.5rem; 
+            text-shadow: 0 0 15px rgba(225, 29, 72, 0.6);
+            margin-bottom: 15px;
         }
 
         .prompt-box {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
             padding: 20px;
-            border-left: 4px solid #8c8c8c;
-            border-radius: 4px;
+            border-left: 4px solid #be123c;
+            border-radius: 8px;
             text-align: left;
             line-height: 1.6;
             margin-bottom: 30px;
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #be123c;
         }
 
-        /* --- SETUP BOX --- */
+        /* --- SETUP BOX (Glassmorphism) --- */
         .setup-box {
-            background-color: #3a3a3a;
-            padding: 25px;
-            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             width: 100%;
             max-width: 800px;
             box-sizing: border-box;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .setup-box h3 {
+            font-family: 'Cinzel Decorative', serif; 
             margin-top: 0;
-            color: #fff;
+            color: #fca5a5;
+            border-bottom: 1px solid rgba(225, 29, 72, 0.3); 
+            padding-bottom: 10px; 
         }
 
         textarea {
             width: 100%;
-            height: 150px;
-            background-color: #222;
-            color: #fff;
-            border: 1px solid #555;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fef3c7;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 15px;
-            font-family: 'Georgia', serif;
+            font-family: 'Lora', serif;
             font-size: 1.1rem;
             line-height: 1.5;
-            border-radius: 4px;
+            border-radius: 8px;
             box-sizing: border-box;
             resize: vertical;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #888;
+            border-color: #be123c; 
+            box-shadow: 0 0 8px rgba(225, 29, 72, 0.5);
         }
 
         /* Hidden Print Header (Name/Class) */
-        .print-header {
-            display: none;
-        }
+        .print-header { display: none; }
 
         /* Two-Column Open Book Layout */
         .book-container {
@@ -96,12 +140,14 @@
             width: 100%;
             display: flex;
             justify-content: center;
+            position: relative;
+            z-index: 10;
         }
 
         .book-spread {
             background-color: var(--paper-color);
             color: var(--ink-color);
-            font-family: 'Georgia', serif;
+            font-family: 'Lora', serif;
             font-size: 1.25rem;
             line-height: 2.2;
             padding: 60px 80px;
@@ -111,7 +157,7 @@
             box-shadow: 
                 inset 5px 0 20px rgba(0,0,0,0.05), 
                 inset -5px 0 20px rgba(0,0,0,0.05),
-                10px 10px 30px rgba(0,0,0,0.5);
+                0 30px 60px -15px rgba(0,0,0,0.8); /* Stronger shadow to pop against dark bg */
             border-radius: 5px;
             position: relative;
             text-align: justify;
@@ -138,7 +184,7 @@
         }
 
         .word:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(159, 18, 57, 0.2); /* Subtle crimson hover */
         }
 
         .word.blacked-out {
@@ -150,32 +196,48 @@
         .controls {
             display: flex;
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 10px;
             flex-wrap: wrap;
             justify-content: center;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         button {
-            background-color: #4a4a4a;
-            color: white;
-            border: none;
+            background-color: rgba(255, 255, 255, 0.1); 
+            color: #cbd5e1; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
             padding: 12px 24px;
             font-size: 1rem;
+            font-family: 'Lora', serif;
             font-weight: bold;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         button:hover {
-            background-color: #666;
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
+        button:active { transform: scale(0.95); }
 
-        .action-btn { background-color: #2b6cb0; }
-        .action-btn:hover { background-color: #3182ce; }
+        .action-btn { 
+            background-color: #be123c; 
+            color: #fef3c7; 
+            border-color: #9f1239; 
+            font-size: 1.2rem;
+            width: 100%;
+        }
+        .action-btn:hover { background-color: #e11d48; }
         
-        .reset-btn { background-color: #8b3535; }
-        .reset-btn:hover { background-color: #a84242; }
+        .reset-btn { background-color: #881337; color: #fef3c7; border-color: #4c0519; }
+        .reset-btn:hover { background-color: #be123c; }
 
         .hidden { display: none !important; }
 
@@ -187,16 +249,17 @@
             }
         }
 
-        /* --- PRINT STYLES --- */
+        /* --- PRINT STYLES (Kept pristine for PDF generation) --- */
         @media print {
             @page { margin: 0.5in; }
             
             body {
+                background: none;
                 background-color: #ffffff;
                 padding: 0;
             }
             
-            .assignment-header, .controls, .setup-box {
+            .petal-layer, .assignment-header, .controls, .setup-box {
                 display: none !important;
             }
 
@@ -212,6 +275,7 @@
             .book-container {
                 margin: 0;
                 display: block;
+                box-shadow: none;
             }
 
             .book-spread {
@@ -236,16 +300,25 @@
 </head>
 <body>
 
+    <div class="petal-layer">
+        <div class="petal" style="left: 10%; animation-duration: 12s; animation-delay: 0s;"></div>
+        <div class="petal" style="left: 25%; animation-duration: 18s; animation-delay: -5s; width: 12px; height: 12px;"></div>
+        <div class="petal" style="left: 45%; animation-duration: 15s; animation-delay: -2s; width: 18px; height: 18px;"></div>
+        <div class="petal" style="left: 65%; animation-duration: 20s; animation-delay: -10s;"></div>
+        <div class="petal" style="left: 85%; animation-duration: 14s; animation-delay: -7s; width: 10px; height: 10px;"></div>
+        <div class="petal" style="left: 95%; animation-duration: 17s; animation-delay: -3s;"></div>
+    </div>
+
     <div class="assignment-header">
-        <h1>Blackout Poetry Assignment</h1>
+        <h1>Blackout Poetry</h1>
         <div class="prompt-box">
-            <strong>Instructions:</strong> Use the text provided or paste a preferred passage into the box below and click Start. Create a blackout poem that answers the prompt by clicking words to hide them. Leave only the words visible that create your new poem. 
-            <em>(Your progress automatically saves).</em>
+            <strong style="color: #fca5a5;">Instructions:</strong> Use the text provided or paste a preferred passage into the box below and click Start. Create a blackout poem that answers the prompt by clicking words to hide them in shadow. Leave only the words visible that create your new poem. 
+            <br><br><em style="font-size: 0.9rem; color: #94a3b8;">(Your progress automatically saves).</em>
         </div>
     </div>
 
     <div class="setup-box" id="setup-section">
-        <h3>Step 1: Paste Your Text Here</h3>
+        <h3>Step 1: Prepare the Manuscript</h3>
         <textarea id="custom-text-input" placeholder="Paste the reading passage here..."></textarea>
         <button class="action-btn" onclick="startAssignment()">Start Assignment</button>
     </div>
@@ -259,9 +332,9 @@
     </div>
 
     <div class="controls hidden" id="controls-section">
-        <button onclick="window.print()">Print / Save as PDF</button>
-        <button class="reset-btn" onclick="resetBlackout()">Erase Blackout Progress</button>
-        <button onclick="changeText()">Change Text / Start Over</button>
+        <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+        <button class="reset-btn" onclick="resetBlackout()">🩸 Erase Blackout Progress</button>
+        <button onclick="changeText()">📜 Change Text / Start Over</button>
     </div>
 
     <script>
@@ -282,43 +355,8 @@
                 renderBook(savedText);
                 showBook();
             } else {
-                // Pre-fill with the default Night text just in case!
-                customTextInput.value = "Two households, both alike in dignity
-(In fair Verona, where we lay our scene),
-From ancient grudge break to new mutiny,
-Where civil blood makes civil hands unclean.
-From forth the fatal loins of these two foes
-A pair of star-crossed lovers take their life;
-Whose misadventured piteous overthrows
-Doth with their death bury their parents’ strife.
-The fearful passage of their death-marked love
-And the continuance of their parents’ rage,
-Which, but their children’s end, naught could remove,
-Is now the two hours’ traffic of our stage;
-The which, if you with patient ears attend,
-What here shall miss, our toil shall strive to mend.
-    !ROMEO: 
-If I profane with my unworthiest hand 
-This holy shrine, the gentle sin is this: 
-My lips, two blushing pilgrims, ready stand 
-To smooth that rough touch with a tender kiss. 
- 
-JULIET: 
-Good pilgrim, you do wrong your hand too much,  Which mannerly devotion shows in this; 
-For saints have hands that pilgrims' hands do touch,  And palm to palm is holy palmers' kiss. 
- 
-ROMEO: 
-Have not saints lips, and holy palmers too? 
- 
-JULIET: 
-Ay, pilgrim, lips that they must use in prayer. 
- 
-ROMEO: 
-O, then, dear saint, let lips do what hands do; 
-They pray — grant thou, lest faith turn to despair. 
-Saints do not move, though grant for prayers' sake.  ! 
-ROMEO: 
-Then move not, while my prayer's effect I take.";
+                // Pre-fill with Romeo & Juliet Prologue & Act 1 Scene 5 snippet
+                customTextInput.value = "Two households, both alike in dignity\n(In fair Verona, where we lay our scene),\nFrom ancient grudge break to new mutiny,\nWhere civil blood makes civil hands unclean.\nFrom forth the fatal loins of these two foes\nA pair of star-crossed lovers take their life;\nWhose misadventured piteous overthrows\nDoth with their death bury their parents’ strife.\nThe fearful passage of their death-marked love\nAnd the continuance of their parents’ rage,\nWhich, but their children’s end, naught could remove,\nIs now the two hours’ traffic of our stage;\nThe which, if you with patient ears attend,\nWhat here shall miss, our toil shall strive to mend.\n\nROMEO:\nIf I profane with my unworthiest hand\nThis holy shrine, the gentle sin is this:\nMy lips, two blushing pilgrims, ready stand\nTo smooth that rough touch with a tender kiss.\n\nJULIET:\nGood pilgrim, you do wrong your hand too much,\nWhich mannerly devotion shows in this;\nFor saints have hands that pilgrims' hands do touch,\nAnd palm to palm is holy palmers' kiss.\n\nROMEO:\nHave not saints lips, and holy palmers too?\n\nJULIET:\nAy, pilgrim, lips that they must use in prayer.\n\nROMEO:\nO, then, dear saint, let lips do what hands do;\nThey pray — grant thou, lest faith turn to despair.\nSaints do not move, though grant for prayers' sake.\n\nROMEO:\nThen move not, while my prayer's effect I take.";
             }
         }
 
@@ -381,7 +419,6 @@ Then move not, while my prayer's effect I take.";
                 });
 
                 // Add paragraph breaks
-                pageContent.appendChild(document.createElement('br'));
                 pageContent.appendChild(document.createElement('br'));
             });
         }
