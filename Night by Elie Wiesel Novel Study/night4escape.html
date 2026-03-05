@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Chapter 4 Escape Room</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&amp;family=Bitter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    .barbed-wire-border {
+      border-image: repeating-linear-gradient(
+        90deg,
+        #4a4a4a 0px,
+        #4a4a4a 8px,
+        #8b0000 8px,
+        #8b0000 12px,
+        #4a4a4a 12px,
+        #4a4a4a 20px
+      ) 1;
+      border-width: 6px;
+      border-style: solid;
+    }
+    .barbed-wire-top {
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 15px,
+        #4a4a4a 15px,
+        #4a4a4a 17px,
+        transparent 17px,
+        transparent 25px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #8b0000 0px,
+        #8b0000 3px,
+        transparent 3px,
+        transparent 12px,
+        #8b0000 12px,
+        #8b0000 15px,
+        transparent 15px,
+        transparent 25px
+      );
+      background-size: 50px 100%;
+      height: 12px;
+    }
+    .puzzle-card {
+      background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+      box-shadow: 0 4px 20px rgba(139, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .bold-statement {
+      font-family: 'Special Elite', monospace;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+    .hint-box {
+      background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+      border-left: 4px solid #d4a574;
+    }
+    .scaffold-box {
+      background: linear-gradient(135deg, #1e2a1e 0%, #1a251a 100%);
+      border-left: 4px solid #6b8e6b;
+    }
+    .text-highlight {
+      background: rgba(212, 165, 116, 0.3);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    .speaking {
+      outline: 3px solid #d4a574;
+      outline-offset: 2px;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(139, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(139, 0, 0, 0.8); }
+    }
+    .unlocked {
+      animation: pulse-glow 2s ease-in-out infinite;
+      border-color: #22c55e !important;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    :focus {
+      outline: 3px solid #d4a574;
+      outline-offset: 2px;
+    }
+    .high-contrast {
+      filter: contrast(1.2);
+    }
+    .large-text body {
+      font-size: 1.2em;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-black text-gray-100 overflow-auto" style="font-family: 'Bitter', serif;">
+  <div id="app-container" class="min-h-full w-full"><!-- Skip Navigation --> <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-amber-700 text-white px-4 py-2 rounded z-50"> Skip to main content </a> <!-- Accessibility Controls -->
+   <div class="bg-gray-900 p-3 flex flex-wrap gap-3 justify-center items-center border-b border-gray-700" role="toolbar" aria-label="Accessibility controls"><button onclick="toggleHighContrast()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm flex items-center gap-2 transition-colors" aria-pressed="false" id="contrast-btn">
+     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" stroke-width="2" /><path d="M12 2v20" stroke-width="2" /><path d="M12 2a10 10 0 0 1 0 20" fill="currentColor" />
+     </svg> High Contrast </button> <button onclick="adjustFontSize(1)" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-colors" aria-label="Increase text size"> A+ </button> <button onclick="adjustFontSize(-1)" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-colors" aria-label="Decrease text size"> A- </button> <button onclick="toggleTextToSpeech()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm flex items-center gap-2 transition-colors" aria-pressed="false" id="tts-btn">
+     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+     </svg><span id="tts-label">Enable Read Aloud</span> </button> <button onclick="speakSelected()" class="px-3 py-2 bg-amber-700 hover:bg-amber-600 rounded text-sm flex items-center gap-2 transition-colors" aria-label="Read highlighted text">
+     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+     </svg> Read Selection </button>
+   </div><!-- Barbed Wire Top Border -->
+   <div class="barbed-wire-top w-full" role="presentation" aria-hidden="true"></div><!-- Main Content -->
+   <main id="main-content" class="max-w-5xl mx-auto p-4 md:p-6"><!-- Header Section -->
+    <header class="barbed-wire-border p-6 mb-6 text-center puzzle-card">
+     <h1 id="main-title" class="text-3xl md:text-4xl font-bold text-red-700 bold-statement mb-2">ESCAPE THE DARKNESS</h1>
+     <p class="text-xl text-amber-400 bold-statement">Night: Chapter 4 — Buna &amp; The Hanging of the Pipel</p>
+     <p class="text-amber-200 mt-2 italic">"Where is God now?"</p><!-- Student Info -->
+     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+      <div><label for="student-name" class="block text-amber-400 text-sm font-semibold mb-1">Student Name:</label> <input type="text" id="student-name" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-amber-500" placeholder="Enter your name" aria-required="true">
+      </div>
+      <div><label for="period" class="block text-amber-400 text-sm font-semibold mb-1">Period:</label> <input type="text" id="period" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-amber-500" placeholder="Enter period" aria-required="true">
+      </div>
+      <div><label class="block text-amber-400 text-sm font-semibold mb-1">Date:</label>
+       <div id="date-stamp" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white"></div>
+      </div>
+     </div><!-- Learning Standard -->
+     <div class="mt-4 p-3 bg-gray-800 rounded text-left">
+      <p class="text-sm text-amber-300"><strong>Standard Focus:</strong> CCSS.ELA-LITERACY.RL.9-10.2 — Determine a theme and analyze its development, including how it is shaped and refined by specific details.</p>
+     </div>
+    </header><!-- Bold Statement Banner -->
+    <div class="bg-red-900 barbed-wire-border p-4 mb-6 text-center" role="banner">
+     <p class="text-2xl md:text-3xl text-white bold-statement" id="bold-statement">"THAT NIGHT THE SOUP TASTED OF CORPSES."</p>
+     <p class="text-amber-300 mt-2 text-sm">— Elie Wiesel, Night</p>
+    </div><!-- Progress Tracker -->
+    <div class="mb-6 p-4 puzzle-card barbed-wire-border" role="region" aria-label="Progress tracker">
+     <h2 class="text-lg font-bold text-amber-400 mb-3">🔓 Escape Progress</h2>
+     <div class="flex flex-wrap gap-2 justify-center">
+      <div id="lock-1" class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center border-2 border-red-800 transition-all" aria-label="Puzzle 1 status: locked">
+       🔒
+      </div>
+      <div id="lock-2" class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center border-2 border-red-800 transition-all" aria-label="Puzzle 2 status: locked">
+       🔒
+      </div>
+      <div id="lock-3" class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center border-2 border-red-800 transition-all" aria-label="Puzzle 3 status: locked">
+       🔒
+      </div>
+      <div id="lock-4" class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center border-2 border-red-800 transition-all" aria-label="Puzzle 4 status: locked">
+       🔒
+      </div>
+      <div id="final-lock" class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center border-2 border-red-800 transition-all" aria-label="Final reflection status: locked">
+       🚪
+      </div>
+     </div>
+     <p id="progress-text" class="text-center mt-3 text-gray-300">Complete all puzzles to unlock the final reflection</p>
+    </div><!-- Puzzle 1: The Sad-Eyed Angel -->
+    <section id="puzzle-1" class="mb-6 puzzle-card barbed-wire-border p-5" aria-labelledby="puzzle-1-title">
+     <div class="flex justify-between items-start mb-4">
+      <h2 id="puzzle-1-title" class="text-xl font-bold text-red-600"><span aria-hidden="true">🔐</span> Puzzle 1: The Sad-Eyed Angel</h2><span class="text-xs bg-gray-700 px-2 py-1 rounded">Symbolism</span>
+     </div>
+     <div class="readable-text mb-4 text-gray-200 leading-relaxed">
+      <p class="mb-3">Wiesel describes the young pipel (a young servant to a Kapo) as having <span class="text-highlight">"the face of a sad angel"</span>. This boy, beloved by all prisoners, was hanged for his alleged involvement in sabotage.</p>
+      <p>Unlike the adults who died quickly, the child struggled for over half an hour between life and death.</p>
+     </div><!-- Scaffold Box -->
+     <div class="scaffold-box p-4 rounded mb-4" role="note">
+      <p class="text-green-400 font-semibold text-sm mb-2">📚 Literary Scaffold:</p>
+      <p class="text-gray-300 text-sm"><strong>Symbolism</strong> is when an object, person, or event represents something beyond its literal meaning. The "sad-eyed angel" represents more than just a boy — consider what "angel" traditionally symbolizes and what happens when that symbol is destroyed.</p>
+     </div>
+     <fieldset class="mb-4"><legend class="text-amber-400 font-semibold mb-3">What does the "sad-eyed angel" most likely symbolize? Select the best answer:</legend>
+      <div class="space-y-2"><label class="flex items-start gap-3 p-3 bg-gray-800 rounded cursor-pointer hover:bg-gray-750 transition-colors"> <input type="radio" name="puzzle1" value="a" class="mt-1 w-5 h-5" aria-describedby="p1-option-a"> <span id="p1-option-a">A) The physical beauty of youth in contrast to the ugliness of the camps</span> </label> <label class="flex items-start gap-3 p-3 bg-gray-800 rounded cursor-pointer hover:bg-gray-750 transition-colors"> <input type="radio" name="puzzle1" value="b" class="mt-1 w-5 h-5" aria-describedby="p1-option-b"> <span id="p1-option-b">B) Innocence, divine presence, and humanity's spiritual hope being destroyed</span> </label> <label class="flex items-start gap-3 p-3 bg-gray-800 rounded cursor-pointer hover:bg-gray-750 transition-colors"> <input type="radio" name="puzzle1" value="c" class="mt-1 w-5 h-5" aria-describedby="p1-option-c"> <span id="p1-option-c">C) A literal angel sent by God to test the prisoners' faith</span> </label> <label class="flex items-start gap-3 p-3 bg-gray-800 rounded cursor-pointer hover:bg-gray-750 transition-colors"> <input type="radio" name="puzzle1" value="d" class="mt-1 w-5 h-5" aria-describedby="p1-option-d"> <span id="p1-option-d">D) The pipel's role as a messenger between prisoners</span> </label>
+      </div>
+     </fieldset><!-- Hint Box -->
+     <details class="hint-box p-3 rounded mb-4"><summary class="text-amber-400 cursor-pointer font-semibold">💡 Need a Hint? Click here</summary>
+      <p class="text-gray-300 mt-2 text-sm">Think about what angels represent in religious traditions. They are messengers of God, symbols of purity and innocence. What happens to faith when such a symbol is violently destroyed?</p>
+     </details><button onclick="checkPuzzle1()" class="w-full bg-red-800 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors" aria-describedby="puzzle1-feedback"> Submit Answer </button>
+     <div id="puzzle1-feedback" class="mt-3 p-3 rounded hidden" role="alert" aria-live="polite"></div>
+    </section><!-- Puzzle 2: The Death of God -->
+    <section id="puzzle-2" class="mb-6 puzzle-card barbed-wire-border p-5" aria-labelledby="puzzle-2-title">
+     <div class="flex justify-between items-start mb-4">
+      <h2 id="puzzle-2-title" class="text-xl font-bold text-red-600"><span aria-hidden="true">🔐</span> Puzzle 2: "Where is God Now?"</h2><span class="text-xs bg-gray-700 px-2 py-1 rounded">Theme</span>
+     </div>
+     <div class="readable-text mb-4 text-gray-200 leading-relaxed">
+      <p class="mb-3">During the hanging, a prisoner asks: <span class="text-highlight">"Where is God? Where is He?"</span></p>
+      <p class="mb-3">Wiesel writes that he heard a voice within himself answer: <span class="text-highlight">"Where is He? Here He is — He is hanging here on this gallows..."</span></p>
+     </div><!-- Scaffold Box -->
+     <div class="scaffold-box p-4 rounded mb-4" role="note">
+      <p class="text-green-400 font-semibold text-sm mb-2">📚 Theme Analysis Scaffold:</p>
+      <p class="text-gray-300 text-sm">The "Death of God" theme doesn't necessarily mean Wiesel believes God literally died. Consider these interpretations:</p>
+      <ul class="text-gray-300 text-sm mt-2 list-disc ml-5 space-y-1">
+       <li>Death of Wiesel's <em>faith</em> in a just, protective God</li>
+       <li>Death of <em>innocence</em> — the ability to believe in divine justice</li>
+       <li>God <em>suffering</em> alongside the victims</li>
+      </ul>
+     </div>
+     <fieldset class="mb-4"><legend class="text-amber-400 font-semibold mb-3">Arrange these statements in order from what happened FIRST to LAST in Wiesel's spiritual journey:</legend>
+      <div id="sortable-container" class="space-y-2">
+       <div draggable="true" data-order="2" class="sort-item p-3 bg-gray-800 rounded cursor-move flex items-center gap-3 hover:bg-gray-750" tabindex="0" role="listitem" aria-grabbed="false"><span class="text-amber-400">⋮⋮</span> <span>Wiesel questions why a just God would allow such suffering</span>
+       </div>
+       <div draggable="true" data-order="1" class="sort-item p-3 bg-gray-800 rounded cursor-move flex items-center gap-3 hover:bg-gray-750" tabindex="0" role="listitem" aria-grabbed="false"><span class="text-amber-400">⋮⋮</span> <span>Wiesel arrives at the camp with strong faith in God</span>
+       </div>
+       <div draggable="true" data-order="4" class="sort-item p-3 bg-gray-800 rounded cursor-move flex items-center gap-3 hover:bg-gray-750" tabindex="0" role="listitem" aria-grabbed="false"><span class="text-amber-400">⋮⋮</span> <span>The hanging of the pipel marks a turning point in Wiesel's faith</span>
+       </div>
+       <div draggable="true" data-order="3" class="sort-item p-3 bg-gray-800 rounded cursor-move flex items-center gap-3 hover:bg-gray-750" tabindex="0" role="listitem" aria-grabbed="false"><span class="text-amber-400">⋮⋮</span> <span>Wiesel witnesses repeated violence and death at Buna</span>
+       </div>
+      </div>
+     </fieldset><!-- Hint Box -->
+     <details class="hint-box p-3 rounded mb-4"><summary class="text-amber-400 cursor-pointer font-semibold">💡 Need a Hint? Click here</summary>
+      <p class="text-gray-300 mt-2 text-sm">Think about cause and effect. Faith doesn't disappear instantly — it erodes over time. What happened at the beginning of Wiesel's journey? What accumulated experiences led to the crisis moment?</p>
+     </details><button onclick="checkPuzzle2()" class="w-full bg-red-800 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors" aria-describedby="puzzle2-feedback"> Check Order </button>
+     <div id="puzzle2-feedback" class="mt-3 p-3 rounded hidden" role="alert" aria-live="polite"></div>
+    </section><!-- Puzzle 3: Loss of Innocence -->
+    <section id="puzzle-3" class="mb-6 puzzle-card barbed-wire-border p-5" aria-labelledby="puzzle-3-title">
+     <div class="flex justify-between items-start mb-4">
+      <h2 id="puzzle-3-title" class="text-xl font-bold text-red-600"><span aria-hidden="true">🔐</span> Puzzle 3: The Soup's Meaning</h2><span class="text-xs bg-gray-700 px-2 py-1 rounded">Symbolism &amp; Theme</span>
+     </div>
+     <div class="readable-text mb-4 text-gray-200 leading-relaxed">
+      <p class="mb-3">Wiesel describes two hangings in Chapter 4. After the first hanging of adult prisoners, he writes: <span class="text-highlight">"I remember that I found the soup excellent that evening."</span></p>
+      <p class="mb-3">But after the hanging of the young pipel, he writes: <span class="text-highlight">"That night the soup tasted of corpses."</span></p>
+     </div><!-- Scaffold Box -->
+     <div class="scaffold-box p-4 rounded mb-4" role="note">
+      <p class="text-green-400 font-semibold text-sm mb-2">📚 Contrast Analysis Scaffold:</p>
+      <p class="text-gray-300 text-sm">When authors use contrasting images or statements, they're highlighting a significant change. Ask yourself:</p>
+      <ul class="text-gray-300 text-sm mt-2 list-disc ml-5 space-y-1">
+       <li>What changed between these two moments?</li>
+       <li>Why would the same soup "taste" different?</li>
+       <li>What does this reveal about Wiesel's internal transformation?</li>
+      </ul>
+     </div>
+     <div class="mb-4"><label for="puzzle3-answer" class="text-amber-400 font-semibold block mb-3"> In 2-3 sentences, explain what the contrast between "excellent soup" and "soup that tasted of corpses" reveals about Wiesel's loss of innocence: </label> <textarea id="puzzle3-answer" rows="4" class="w-full bg-gray-800 border border-gray-600 rounded px-4 py-3 text-white focus:border-amber-500 resize-none" placeholder="Type your analysis here..." aria-describedby="puzzle3-hint"></textarea>
+      <p id="puzzle3-hint" class="text-gray-500 text-sm mt-1">Aim for at least 40 words. Include specific references to innocence or faith.</p>
+     </div><!-- Hint Box -->
+     <details class="hint-box p-3 rounded mb-4"><summary class="text-amber-400 cursor-pointer font-semibold">💡 Need a Hint? Click here</summary>
+      <p class="text-gray-300 mt-2 text-sm">Consider: The soup is the same both nights. What changed is Wiesel himself. After seeing an innocent child suffer and die slowly, something inside him died too. The "taste of corpses" is not literal — it represents how this event poisoned his ability to find any comfort or normalcy in the camp.</p>
+     </details><!-- Sentence Starters -->
+     <details class="scaffold-box p-3 rounded mb-4"><summary class="text-green-400 cursor-pointer font-semibold">✏️ Sentence Starters (Click to expand)</summary>
+      <div class="text-gray-300 mt-2 text-sm space-y-2">
+       <p class="cursor-pointer hover:text-amber-300" onclick="insertStarter('The contrast between the two soup descriptions shows that Wiesel...')">• "The contrast between the two soup descriptions shows that Wiesel..."</p>
+       <p class="cursor-pointer hover:text-amber-300" onclick="insertStarter('When Wiesel says the soup tasted of corpses, he reveals that...')">• "When Wiesel says the soup 'tasted of corpses,' he reveals that..."</p>
+       <p class="cursor-pointer hover:text-amber-300" onclick="insertStarter('The death of the pipel fundamentally changed Wiesel because...')">• "The death of the pipel fundamentally changed Wiesel because..."</p>
+      </div>
+     </details><button onclick="checkPuzzle3()" class="w-full bg-red-800 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors" aria-describedby="puzzle3-feedback"> Submit Analysis </button>
+     <div id="puzzle3-feedback" class="mt-3 p-3 rounded hidden" role="alert" aria-live="polite"></div>
+    </section><!-- Puzzle 4: Making Connections -->
+    <section id="puzzle-4" class="mb-6 puzzle-card barbed-wire-border p-5" aria-labelledby="puzzle-4-title">
+     <div class="flex justify-between items-start mb-4">
+      <h2 id="puzzle-4-title" class="text-xl font-bold text-red-600"><span aria-hidden="true">🔐</span> Puzzle 4: Theme Web</h2><span class="text-xs bg-gray-700 px-2 py-1 rounded">Theme Development</span>
+     </div>
+     <div class="readable-text mb-4 text-gray-200 leading-relaxed">
+      <p>Connect each quote or event to the theme it most directly develops. Drag each item to its matching theme.</p>
+     </div><!-- Scaffold Box -->
+     <div class="scaffold-box p-4 rounded mb-4" role="note">
+      <p class="text-green-400 font-semibold text-sm mb-2">📚 Theme Recognition Scaffold:</p>
+      <p class="text-gray-300 text-sm"><strong>Death of God/Faith:</strong> Moments questioning divine justice or losing religious belief</p>
+      <p class="text-gray-300 text-sm"><strong>Loss of Innocence:</strong> Moments where normal human responses are destroyed</p>
+      <p class="text-gray-300 text-sm"><strong>Dehumanization:</strong> Treatment that strips away human dignity and identity</p>
+     </div>
+     <div class="grid md:grid-cols-2 gap-4 mb-4"><!-- Quotes to Match -->
+      <div class="space-y-2">
+       <p class="text-amber-400 font-semibold text-sm mb-2">Quotes/Events:</p>
+       <div id="quote-1" draggable="true" data-theme="faith" class="match-item p-3 bg-gray-800 rounded cursor-move border-2 border-transparent hover:border-amber-500" tabindex="0">
+        "Where is God? Where is He?"
+       </div>
+       <div id="quote-2" draggable="true" data-theme="innocence" class="match-item p-3 bg-gray-800 rounded cursor-move border-2 border-transparent hover:border-amber-500" tabindex="0">
+        "The soup tasted of corpses"
+       </div>
+       <div id="quote-3" draggable="true" data-theme="dehumanization" class="match-item p-3 bg-gray-800 rounded cursor-move border-2 border-transparent hover:border-amber-500" tabindex="0">
+        Prisoners forced to watch hangings
+       </div>
+       <div id="quote-4" draggable="true" data-theme="faith" class="match-item p-3 bg-gray-800 rounded cursor-move border-2 border-transparent hover:border-amber-500" tabindex="0">
+        "He is hanging here on this gallows"
+       </div>
+      </div><!-- Theme Boxes -->
+      <div class="space-y-2">
+       <p class="text-amber-400 font-semibold text-sm mb-2">Themes (Drop here):</p>
+       <div id="faith-box" data-accepts="faith" class="theme-drop p-4 bg-gray-900 rounded border-2 border-dashed border-red-800 min-h-20" aria-label="Death of God/Faith theme drop zone">
+        <p class="text-red-500 font-semibold text-sm mb-2">Death of God / Loss of Faith</p>
+        <div class="dropped-items space-y-1"></div>
+       </div>
+       <div id="innocence-box" data-accepts="innocence" class="theme-drop p-4 bg-gray-900 rounded border-2 border-dashed border-amber-800 min-h-20" aria-label="Loss of Innocence theme drop zone">
+        <p class="text-amber-500 font-semibold text-sm mb-2">Loss of Innocence</p>
+        <div class="dropped-items space-y-1"></div>
+       </div>
+       <div id="dehumanization-box" data-accepts="dehumanization" class="theme-drop p-4 bg-gray-900 rounded border-2 border-dashed border-gray-500 min-h-20" aria-label="Dehumanization theme drop zone">
+        <p class="text-gray-400 font-semibold text-sm mb-2">Dehumanization</p>
+        <div class="dropped-items space-y-1"></div>
+       </div>
+      </div>
+     </div><!-- Hint Box -->
+     <details class="hint-box p-3 rounded mb-4"><summary class="text-amber-400 cursor-pointer font-semibold">💡 Need a Hint? Click here</summary>
+      <p class="text-gray-300 mt-2 text-sm">Two quotes directly relate to faith and God. One quote describes how witnessing death changed Wiesel's basic human responses. One event describes how the Nazis treated prisoners as less than human by forcing them to witness cruelty.</p>
+     </details><button onclick="checkPuzzle4()" class="w-full bg-red-800 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors" aria-describedby="puzzle4-feedback"> Check Matches </button>
+     <div id="puzzle4-feedback" class="mt-3 p-3 rounded hidden" role="alert" aria-live="polite"></div>
+    </section><!-- Final Reflection -->
+    <section id="final-reflection" class="mb-6 puzzle-card barbed-wire-border p-5 opacity-50 pointer-events-none" aria-labelledby="reflection-title" aria-disabled="true">
+     <div class="flex justify-between items-start mb-4">
+      <h2 id="reflection-title" class="text-xl font-bold text-amber-500"><span aria-hidden="true">🚪</span> Final Reflection: Escape Through Understanding</h2><span id="lock-status" class="text-xs bg-red-900 px-2 py-1 rounded">🔒 Complete all puzzles to unlock</span>
+     </div>
+     <div class="readable-text mb-4 text-gray-200 leading-relaxed">
+      <p class="mb-3 font-semibold">The hanging of the pipel is considered one of the most powerful and disturbing scenes in Holocaust literature. Respond to the following prompt:</p>
+      <div class="bg-gray-900 p-4 rounded border-l-4 border-amber-500">
+       <p class="text-amber-200 italic">"How does the hanging of the young pipel refine and crystallize the book's central themes? In your response, analyze how this specific event develops BOTH the 'Death of God' theme AND the theme of lost innocence. Use specific textual evidence and explain the significance of Wiesel's symbolic language."</p>
+      </div>
+     </div><!-- Scaffold Box -->
+     <div class="scaffold-box p-4 rounded mb-4" role="note">
+      <p class="text-green-400 font-semibold text-sm mb-2">📚 Response Framework:</p>
+      <ul class="text-gray-300 text-sm space-y-1 list-disc ml-5">
+       <li><strong>Introduction:</strong> State your thesis about how this scene develops the central themes</li>
+       <li><strong>Body 1:</strong> Analyze the "Death of God" theme with textual evidence</li>
+       <li><strong>Body 2:</strong> Analyze the loss of innocence theme with textual evidence</li>
+       <li><strong>Conclusion:</strong> Explain the lasting significance of this moment</li>
+      </ul>
+     </div>
+     <div class="mb-4"><label for="final-response" class="text-amber-400 font-semibold block mb-3">Your Response (minimum 150 words):</label> <textarea id="final-response" rows="10" class="w-full bg-gray-800 border border-gray-600 rounded px-4 py-3 text-white focus:border-amber-500 resize-none" placeholder="Write your analytical response here..." aria-describedby="word-count"></textarea>
+      <p id="word-count" class="text-gray-400 text-sm mt-2">Word count: <span id="wc-number">0</span>/150 minimum</p>
+     </div><!-- Save Options -->
+     <div class="flex flex-wrap gap-3 mb-4"><button onclick="copyToClipboard()" class="flex-1 min-w-32 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+       </svg> Copy to Clipboard </button> <button onclick="saveToPDF()" class="flex-1 min-w-32 bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+       </svg> Save as PDF </button> <button onclick="saveToGoogleDocs()" class="flex-1 min-w-32 bg-blue-700 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2">
+       <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor">
+        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M9,13V19H7V13H9M15,15V19H17V15H15M11,11V19H13V11H11Z" />
+       </svg> Open in Google Docs </button> <button onclick="saveLocally()" class="flex-1 min-w-32 bg-green-700 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+       </svg> Save Locally </button>
+     </div>
+     <div id="save-feedback" class="p-3 rounded hidden" role="alert" aria-live="polite"></div>
+    </section><!-- Completion Certificate -->
+    <section id="completion-section" class="hidden mb-6 puzzle-card barbed-wire-border p-6 text-center bg-gradient-to-b from-gray-900 to-black">
+     <div class="text-6xl mb-4">
+      🏆
+     </div>
+     <h2 class="text-2xl font-bold text-amber-400 bold-statement mb-2">ESCAPE COMPLETE!</h2>
+     <p class="text-gray-300 mb-4">You have successfully analyzed Chapter 4 of Night and demonstrated understanding of its central themes.</p>
+     <div class="bg-gray-800 p-4 rounded inline-block">
+      <p class="text-amber-300">Completed by: <span id="cert-name" class="font-bold"></span></p>
+      <p class="text-gray-400">Date: <span id="cert-date"></span></p>
+     </div>
+    </section>
+   </main><!-- Barbed Wire Bottom Border -->
+   <div class="barbed-wire-top w-full" role="presentation" aria-hidden="true"></div><!-- Footer -->
+   <footer class="bg-gray-900 p-4 text-center text-gray-500 text-sm">
+    <p>Night by Elie Wiesel — Chapter 4 Analysis</p>
+    <p class="mt-1">CCSS.ELA-LITERACY.RL.9-10.2: Theme Development</p>
+   </footer>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-50" role="alert" aria-live="polite"></div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: 'ESCAPE THE DARKNESS',
+      teacher_name: '',
+      font_family: 'Bitter',
+      font_size: 16,
+      background_color: '#000000',
+      surface_color: '#1a1a1a',
+      text_color: '#e5e5e5',
+      primary_action_color: '#991b1b',
+      secondary_action_color: '#d4a574'
+    };
+
+    // State management
+    let puzzlesCompleted = { 1: false, 2: false, 3: false, 4: false };
+    let ttsEnabled = false;
+    let currentFontSize = 100;
+    let highContrastEnabled = false;
+    let currentlySpeaking = null;
+
+    // Initialize date stamp
+    function initializeDateStamp() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('date-stamp').textContent = now.toLocaleDateString('en-US', options);
+    }
+
+    // Text-to-Speech functions
+    function toggleTextToSpeech() {
+      ttsEnabled = !ttsEnabled;
+      const btn = document.getElementById('tts-btn');
+      const label = document.getElementById('tts-label');
+      btn.setAttribute('aria-pressed', ttsEnabled);
+      label.textContent = ttsEnabled ? 'Disable Read Aloud' : 'Enable Read Aloud';
+      
+      if (ttsEnabled) {
+        showToast('Read Aloud enabled. Click any text to hear it spoken.');
+        document.querySelectorAll('.readable-text, .text-highlight, h1, h2, p, label, span').forEach(el => {
+          el.style.cursor = 'pointer';
+          el.addEventListener('click', handleTextClick);
+        });
+      } else {
+        if (currentlySpeaking) {
+          speechSynthesis.cancel();
+          currentlySpeaking.classList.remove('speaking');
+          currentlySpeaking = null;
+        }
+        document.querySelectorAll('.readable-text, .text-highlight, h1, h2, p, label, span').forEach(el => {
+          el.style.cursor = '';
+          el.removeEventListener('click', handleTextClick);
+        });
+        showToast('Read Aloud disabled.');
+      }
+    }
+
+    function handleTextClick(e) {
+      if (!ttsEnabled) return;
+      e.stopPropagation();
+      const text = e.target.innerText || e.target.textContent;
+      speakText(text, e.target);
+    }
+
+    function speakText(text, element = null) {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        if (currentlySpeaking) {
+          currentlySpeaking.classList.remove('speaking');
+        }
+      }
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      
+      if (element) {
+        currentlySpeaking = element;
+        element.classList.add('speaking');
+        utterance.onend = () => {
+          element.classList.remove('speaking');
+          currentlySpeaking = null;
+        };
+      }
+      
+      speechSynthesis.speak(utterance);
+    }
+
+    function speakSelected() {
+      const selection = window.getSelection();
+      const text = selection.toString().trim();
+      if (text) {
+        speakText(text);
+        showToast('Reading selected text...');
+      } else {
+        showToast('Please highlight some text first.');
+      }
+    }
+
+    // Accessibility functions
+    function toggleHighContrast() {
+      highContrastEnabled = !highContrastEnabled;
+      document.documentElement.classList.toggle('high-contrast', highContrastEnabled);
+      document.getElementById('contrast-btn').setAttribute('aria-pressed', highContrastEnabled);
+      showToast(highContrastEnabled ? 'High contrast enabled' : 'High contrast disabled');
+    }
+
+    function adjustFontSize(direction) {
+      currentFontSize = Math.max(80, Math.min(150, currentFontSize + (direction * 10)));
+      document.body.style.fontSize = `${currentFontSize}%`;
+      showToast(`Font size: ${currentFontSize}%`);
+    }
+
+    // Toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('translate-y-full', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-full', 'opacity-0');
+      }, 3000);
+    }
+
+    // Sentence starter helper
+    function insertStarter(starter) {
+      const textarea = document.getElementById('puzzle3-answer');
+      textarea.value = starter + ' ';
+      textarea.focus();
+      showToast('Sentence starter added!');
+    }
+
+    // Puzzle 1: Multiple Choice
+    function checkPuzzle1() {
+      const selected = document.querySelector('input[name="puzzle1"]:checked');
+      const feedback = document.getElementById('puzzle1-feedback');
+      feedback.classList.remove('hidden');
+      
+      if (!selected) {
+        feedback.className = 'mt-3 p-3 rounded bg-yellow-900 text-yellow-200';
+        feedback.innerHTML = '⚠️ Please select an answer before submitting.';
+        return;
+      }
+      
+      if (selected.value === 'b') {
+        feedback.className = 'mt-3 p-3 rounded bg-green-900 text-green-200';
+        feedback.innerHTML = '✅ <strong>Correct!</strong> The "sad-eyed angel" symbolizes innocence, divine presence, and spiritual hope. When this angel-like child is executed, it represents the death of innocence and the destruction of faith in divine protection.';
+        unlockPuzzle(1);
+      } else {
+        feedback.className = 'mt-3 p-3 rounded bg-red-900 text-red-200';
+        let hint = '';
+        if (selected.value === 'a') {
+          hint = 'While the contrast with beauty is present, think deeper about what "angel" symbolizes religiously.';
+        } else if (selected.value === 'c') {
+          hint = 'Remember, symbolism represents abstract ideas, not literal interpretations.';
+        } else {
+          hint = 'Consider the religious connotations of the word "angel" and what its destruction represents.';
+        }
+        feedback.innerHTML = `❌ <strong>Not quite.</strong> ${hint} Try again!`;
+      }
+    }
+
+    // Puzzle 2: Sorting
+    let draggedItem = null;
+
+    function initializeSortable() {
+      const items = document.querySelectorAll('.sort-item');
+      items.forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        // Keyboard accessibility
+        item.addEventListener('keydown', handleSortKeydown);
+      });
+    }
+
+    function handleDragStart(e) {
+      draggedItem = this;
+      this.classList.add('opacity-50');
+    }
+
+    function handleDragEnd(e) {
+      this.classList.remove('opacity-50');
+      draggedItem = null;
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      if (draggedItem !== this) {
+        const container = document.getElementById('sortable-container');
+        const items = Array.from(container.children);
+        const draggedIndex = items.indexOf(draggedItem);
+        const targetIndex = items.indexOf(this);
+        
+        if (draggedIndex < targetIndex) {
+          this.parentNode.insertBefore(draggedItem, this.nextSibling);
+        } else {
+          this.parentNode.insertBefore(draggedItem, this);
+        }
+      }
+    }
+
+    function handleSortKeydown(e) {
+      const container = document.getElementById('sortable-container');
+      const items = Array.from(container.children);
+      const currentIndex = items.indexOf(this);
+      
+      if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        container.insertBefore(this, items[currentIndex - 1]);
+        this.focus();
+      } else if (e.key === 'ArrowDown' && currentIndex < items.length - 1) {
+        e.preventDefault();
+        container.insertBefore(this, items[currentIndex + 2] || null);
+        this.focus();
+      }
+    }
+
+    function checkPuzzle2() {
+      const container = document.getElementById('sortable-container');
+      const items = Array.from(container.children);
+      const currentOrder = items.map(item => parseInt(item.dataset.order));
+      const correctOrder = [1, 2, 3, 4];
+      
+      const feedback = document.getElementById('puzzle2-feedback');
+      feedback.classList.remove('hidden');
+      
+      const isCorrect = JSON.stringify(currentOrder) === JSON.stringify(correctOrder);
+      
+      if (isCorrect) {
+        feedback.className = 'mt-3 p-3 rounded bg-green-900 text-green-200';
+        feedback.innerHTML = '✅ <strong>Correct!</strong> Wiesel\'s spiritual journey follows this progression: arrival with faith → questioning → witnessing repeated horrors → the pipel\'s death as the breaking point. This sequence shows how faith erodes gradually until a single event crystallizes the loss.';
+        unlockPuzzle(2);
+      } else {
+        feedback.className = 'mt-3 p-3 rounded bg-red-900 text-red-200';
+        const correct = currentOrder.filter((val, idx) => val === correctOrder[idx]).length;
+        feedback.innerHTML = `❌ <strong>${correct} of 4 in correct position.</strong> Think about the chronological and emotional progression. What did Wiesel bring WITH him to the camps? What accumulated before the breaking point?`;
+      }
+    }
+
+    // Puzzle 3: Written Response
+    function checkPuzzle3() {
+      const answer = document.getElementById('puzzle3-answer').value.trim();
+      const feedback = document.getElementById('puzzle3-feedback');
+      feedback.classList.remove('hidden');
+      
+      const wordCount = answer.split(/\s+/).filter(w => w.length > 0).length;
+      const hasKeywords = /innocen|faith|death|corpse|change|transform|lost|destroy|internal|spiritual/i.test(answer);
+      
+      if (wordCount < 20) {
+        feedback.className = 'mt-3 p-3 rounded bg-yellow-900 text-yellow-200';
+        feedback.innerHTML = `⚠️ Your response has ${wordCount} words. Please write at least 40 words for a complete analysis. Use the sentence starters if you need help getting started!`;
+      } else if (!hasKeywords) {
+        feedback.className = 'mt-3 p-3 rounded bg-yellow-900 text-yellow-200';
+        feedback.innerHTML = '⚠️ Good start! Try to include specific references to innocence, faith, or Wiesel\'s internal transformation. How did this event change him spiritually?';
+      } else if (wordCount >= 30 && hasKeywords) {
+        feedback.className = 'mt-3 p-3 rounded bg-green-900 text-green-200';
+        feedback.innerHTML = '✅ <strong>Excellent analysis!</strong> You\'ve demonstrated understanding of how this symbolic contrast reveals Wiesel\'s profound psychological and spiritual transformation. The same soup becomes inedible because Wiesel himself has been fundamentally changed.';
+        unlockPuzzle(3);
+      } else {
+        feedback.className = 'mt-3 p-3 rounded bg-yellow-900 text-yellow-200';
+        feedback.innerHTML = `⚠️ Good progress (${wordCount} words)! Expand your response to fully explain the symbolic significance of the soup contrast. What specifically changed in Wiesel?`;
+      }
+    }
+
+    // Puzzle 4: Drag and Drop Matching
+    function initializeMatching() {
+      const items = document.querySelectorAll('.match-item');
+      const dropZones = document.querySelectorAll('.theme-drop');
+      
+      items.forEach(item => {
+        item.addEventListener('dragstart', matchDragStart);
+        item.addEventListener('dragend', matchDragEnd);
+      });
+      
+      dropZones.forEach(zone => {
+        zone.addEventListener('dragover', matchDragOver);
+        zone.addEventListener('drop', matchDrop);
+        zone.addEventListener('dragleave', matchDragLeave);
+      });
+    }
+
+    function matchDragStart(e) {
+      draggedItem = this;
+      this.classList.add('opacity-50');
+      e.dataTransfer.setData('text/plain', this.id);
+    }
+
+    function matchDragEnd(e) {
+      this.classList.remove('opacity-50');
+      draggedItem = null;
+    }
+
+    function matchDragOver(e) {
+      e.preventDefault();
+      this.classList.add('border-amber-500');
+    }
+
+    function matchDragLeave(e) {
+      this.classList.remove('border-amber-500');
+    }
+
+    function matchDrop(e) {
+      e.preventDefault();
+      this.classList.remove('border-amber-500');
+      
+      const itemId = e.dataTransfer.getData('text/plain');
+      const item = document.getElementById(itemId);
+      
+      if (item) {
+        const droppedContainer = this.querySelector('.dropped-items');
+        const clone = item.cloneNode(true);
+        clone.classList.add('text-sm', 'py-1');
+        clone.draggable = false;
+        droppedContainer.appendChild(clone);
+        item.style.display = 'none';
+      }
+    }
+
+    function checkPuzzle4() {
+      const feedback = document.getElementById('puzzle4-feedback');
+      feedback.classList.remove('hidden');
+      
+      const faithBox = document.getElementById('faith-box');
+      const innocenceBox = document.getElementById('innocence-box');
+      const dehumanizationBox = document.getElementById('dehumanization-box');
+      
+      let correct = 0;
+      
+      // Check faith box (should have quote-1 and quote-4)
+      const faithItems = faithBox.querySelectorAll('.dropped-items > div');
+      faithItems.forEach(item => {
+        if (item.id === 'quote-1' || item.id === 'quote-4') correct++;
+      });
+      
+      // Check innocence box (should have quote-2)
+      const innocenceItems = innocenceBox.querySelectorAll('.dropped-items > div');
+      innocenceItems.forEach(item => {
+        if (item.id === 'quote-2') correct++;
+      });
+      
+      // Check dehumanization box (should have quote-3)
+      const dehumanizationItems = dehumanizationBox.querySelectorAll('.dropped-items > div');
+      dehumanizationItems.forEach(item => {
+        if (item.id === 'quote-3') correct++;
+      });
+      
+      if (correct === 4) {
+        feedback.className = 'mt-3 p-3 rounded bg-green-900 text-green-200';
+        feedback.innerHTML = '✅ <strong>Perfect!</strong> You\'ve correctly identified how each quote/event connects to its theme. The questions about God relate to faith; the soup\'s taste relates to lost innocence; and forced witnessing relates to dehumanization.';
+        unlockPuzzle(4);
+      } else if (correct >= 2) {
+        feedback.className = 'mt-3 p-3 rounded bg-yellow-900 text-yellow-200';
+        feedback.innerHTML = `⚠️ ${correct} of 4 correct. Review the scaffold box above. Which quotes directly mention God? Which describes a change in basic human response?`;
+      } else {
+        feedback.className = 'mt-3 p-3 rounded bg-red-900 text-red-200';
+        feedback.innerHTML = '❌ Try again. Drag each quote to the theme drop zone. Use the scaffold definitions to help match each quote to its corresponding theme.';
+      }
+    }
+
+    // Unlock puzzle and update progress
+    function unlockPuzzle(num) {
+      if (puzzlesCompleted[num]) return;
+      
+      puzzlesCompleted[num] = true;
+      const lock = document.getElementById(`lock-${num}`);
+      lock.innerHTML = '🔓';
+      lock.classList.add('unlocked');
+      lock.setAttribute('aria-label', `Puzzle ${num} status: unlocked`);
+      
+      const allCompleted = Object.values(puzzlesCompleted).every(v => v);
+      
+      if (allCompleted) {
+        unlockFinalReflection();
+      } else {
+        const completed = Object.values(puzzlesCompleted).filter(v => v).length;
+        document.getElementById('progress-text').textContent = `${completed}/4 puzzles completed. Keep going!`;
+      }
+      
+      showToast(`🔓 Puzzle ${num} unlocked!`);
+    }
+
+    function unlockFinalReflection() {
+      const reflection = document.getElementById('final-reflection');
+      reflection.classList.remove('opacity-50', 'pointer-events-none');
+      reflection.setAttribute('aria-disabled', 'false');
+      
+      document.getElementById('lock-status').textContent = '🔓 Unlocked!';
+      document.getElementById('lock-status').className = 'text-xs bg-green-900 px-2 py-1 rounded';
+      
+      const finalLock = document.getElementById('final-lock');
+      finalLock.innerHTML = '🚪';
+      finalLock.classList.add('unlocked');
+      
+      document.getElementById('progress-text').textContent = '🎉 All puzzles completed! Write your final reflection.';
+      document.getElementById('progress-text').className = 'text-center mt-3 text-green-400 font-semibold';
+      
+      showToast('🎉 All puzzles complete! Final reflection unlocked!');
+      
+      // Scroll to reflection
+      reflection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Word count for final response
+    function updateWordCount() {
+      const text = document.getElementById('final-response').value;
+      const count = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      const wcNumber = document.getElementById('wc-number');
+      wcNumber.textContent = count;
+      
+      if (count >= 150) {
+        wcNumber.className = 'text-green-400 font-bold';
+      } else if (count >= 100) {
+        wcNumber.className = 'text-yellow-400';
+      } else {
+        wcNumber.className = '';
+      }
+    }
+
+    // Save functions
+    function getFullContent() {
+      const name = document.getElementById('student-name').value || 'Student';
+      const period = document.getElementById('period').value || 'N/A';
+      const date = document.getElementById('date-stamp').textContent;
+      const response = document.getElementById('final-response').value;
+      
+      return `NIGHT CHAPTER 4 ESCAPE ROOM - FINAL REFLECTION
+      
+Student: ${name}
+Period: ${period}
+Date: ${date}
+
+Standard: CCSS.ELA-LITERACY.RL.9-10.2 - Theme Development
+Focus: The Hanging of the Pipel - "Death of God" and Loss of Innocence
+
+---
+
+PROMPT: How does the hanging of the young pipel refine and crystallize the book's central themes? Analyze how this specific event develops BOTH the "Death of God" theme AND the theme of lost innocence.
+
+RESPONSE:
+${response}
+
+---
+Generated from Night Chapter 4 Escape Room Activity`;
+    }
+
+    function copyToClipboard() {
+      const content = getFullContent();
+      navigator.clipboard.writeText(content).then(() => {
+        showSaveFeedback('✅ Copied to clipboard successfully!', 'success');
+      }).catch(() => {
+        showSaveFeedback('❌ Failed to copy. Please try again.', 'error');
+      });
+    }
+
+    function saveToPDF() {
+      const name = document.getElementById('student-name').value || 'Student';
+      
+      const element = document.createElement('div');
+      element.innerHTML = `
+        <div style="font-family: Georgia, serif; padding: 40px; max-width: 800px; margin: 0 auto;">
+          <h1 style="color: #991b1b; text-align: center; border-bottom: 3px solid #991b1b; padding-bottom: 10px;">Night Chapter 4 Escape Room</h1>
+          <h2 style="color: #333; text-align: center;">Final Reflection</h2>
+          
+          <div style="background: #f5f5f5; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <p><strong>Student:</strong> ${document.getElementById('student-name').value || 'N/A'}</p>
+            <p><strong>Period:</strong> ${document.getElementById('period').value || 'N/A'}</p>
+            <p><strong>Date:</strong> ${document.getElementById('date-stamp').textContent}</p>
+          </div>
+          
+          <div style="background: #fff3cd; padding: 15px; margin: 20px 0; border-left: 4px solid #d4a574;">
+            <p style="font-style: italic; margin: 0;"><strong>Standard:</strong> CCSS.ELA-LITERACY.RL.9-10.2 - Theme Development</p>
+          </div>
+          
+          <h3 style="color: #991b1b;">Prompt:</h3>
+          <p style="font-style: italic; background: #f9f9f9; padding: 15px; border-radius: 5px;">How does the hanging of the young pipel refine and crystallize the book's central themes? Analyze how this specific event develops BOTH the "Death of God" theme AND the theme of lost innocence. Use specific textual evidence and explain the significance of Wiesel's symbolic language.</p>
+          
+          <h3 style="color: #991b1b;">Response:</h3>
+          <div style="line-height: 1.8; text-align: justify; white-space: pre-wrap;">${document.getElementById('final-response').value || 'No response provided.'}</div>
+          
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 12px;">
+            <p>Night by Elie Wiesel - Chapter 4 Analysis</p>
+          </div>
+        </div>
+      `;
+      
+      const opt = {
+        margin: 0.5,
+        filename: `Night_Ch4_Reflection_${name.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      
+      showSaveFeedback('📄 Generating PDF...', 'info');
+      
+      html2pdf().set(opt).from(element).save().then(() => {
+        showSaveFeedback('✅ PDF saved successfully!', 'success');
+      }).catch(() => {
+        showSaveFeedback('❌ Failed to generate PDF. Please try again.', 'error');
+      });
+    }
+
+    function saveToGoogleDocs() {
+      const content = getFullContent();
+      const encodedContent = encodeURIComponent(content);
+      const googleDocsUrl = `https://docs.google.com/document/create?title=Night_Ch4_Reflection&body=${encodedContent}`;
+      
+      window.open(googleDocsUrl, '_blank');
+      showSaveFeedback('✅ Opening Google Docs... You may need to sign in.', 'success');
+    }
+
+    function saveLocally() {
+      const content = getFullContent();
+      const name = document.getElementById('student-name').value || 'Student';
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Night_Ch4_Reflection_${name.replace(/\s+/g, '_')}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showSaveFeedback('✅ File saved locally!', 'success');
+    }
+
+    function showSaveFeedback(message, type) {
+      const feedback = document.getElementById('save-feedback');
+      feedback.classList.remove('hidden', 'bg-green-900', 'bg-red-900', 'bg-blue-900');
+      
+      if (type === 'success') {
+        feedback.className = 'p-3 rounded bg-green-900 text-green-200';
+      } else if (type === 'error') {
+        feedback.className = 'p-3 rounded bg-red-900 text-red-200';
+      } else {
+        feedback.className = 'p-3 rounded bg-blue-900 text-blue-200';
+      }
+      
+      feedback.innerHTML = message;
+      
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+      }, 4000);
+    }
+
+    // Element SDK integration
+    async function onConfigChange(config) {
+      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+      
+      // Apply font family
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${fontFamily}, serif`;
+      
+      // Apply colors
+      document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+      
+      document.querySelectorAll('.puzzle-card').forEach(el => {
+        el.style.background = `linear-gradient(145deg, ${config.surface_color || defaultConfig.surface_color} 0%, #2d2d2d 100%)`;
+      });
+      
+      document.querySelectorAll('.readable-text, .text-gray-200').forEach(el => {
+        el.style.color = config.text_color || defaultConfig.text_color;
+      });
+      
+      document.querySelectorAll('.bg-red-800').forEach(el => {
+        el.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+      });
+      
+      document.querySelectorAll('.text-amber-400, .text-amber-500').forEach(el => {
+        el.style.color = config.secondary_action_color || defaultConfig.secondary_action_color;
+      });
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => { config.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => { config.primary_action_color = value; window.elementSdk.setConfig({ primary_action_color: value }); }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => { config.secondary_action_color = value; window.elementSdk.setConfig({ secondary_action_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['teacher_name', config.teacher_name || defaultConfig.teacher_name]
+      ]);
+    }
+
+    // Initialize application
+    function init() {
+      initializeDateStamp();
+      initializeSortable();
+      initializeMatching();
+      
+      document.getElementById('final-response').addEventListener('input', updateWordCount);
+      
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    // Run on load
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d768281807e531e',t:'MTc3MjY4NjMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
