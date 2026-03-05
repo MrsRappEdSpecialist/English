@@ -3,159 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Builder: Open House Edition</title>
+    <title>AI Prompt Forge: Open House Edition</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #334155;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             line-height: 1.6;
             margin: 0;
             padding: 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
         }
         h1 {
-            text-align: center;
-            color: #2c3e50;
+            color: var(--accent);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         h2 {
             font-size: 1.2rem;
-            color: #34495e;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 5px;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-top: 0;
         }
-        .form-group {
-            margin-bottom: 20px;
+        .section-card {
+            background: var(--panel-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+        .form-group { margin-bottom: 20px; }
         label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
         }
-        select, textarea {
+        .hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+        select, textarea, input[type="text"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
             font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
         }
+        select:focus, textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        textarea { height: 80px; resize: vertical; }
         .checkbox-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
         }
         .checkbox-label {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             font-weight: normal;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
         }
+        .checkbox-label:hover { background: rgba(255,255,255,0.05); }
         .checkbox-label input {
-            margin-right: 10px;
+            margin-top: 4px;
+            margin-right: 12px;
+            accent-color: var(--accent);
+            transform: scale(1.2);
         }
         .button-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
-            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.1s, opacity 0.3s;
         }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-primary:hover { background: #2980b9; }
-        .btn-success { background: #2ecc71; color: white; }
-        .btn-success:hover { background: #27ae60; }
-        .btn-warning { background: #f1c40f; color: #333; }
-        .btn-warning:hover { background: #f39c12; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-danger:hover { background: #c0392b; }
+        button:active { transform: scale(0.98); }
+        button:hover { opacity: 0.9; }
+        .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-warning { background: var(--warning); color: #1e293b; }
+        .btn-danger { background: var(--danger); color: #fff; }
         
         #output-area {
-            margin-top: 30px;
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 5px;
-            border: 1px dashed #7f8c8d;
+            margin-top: 40px;
+            background: #000;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--accent);
         }
         textarea#promptOutput {
-            height: 150px;
-            resize: vertical;
-            font-family: monospace;
-            background: #fff;
+            height: 250px;
+            font-family: 'Courier New', Courier, monospace;
+            background: #000;
+            color: #10b981;
+            border: none;
+            font-size: 0.95rem;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🚀 Open House AI Prompt Builder</h1>
-    <p>Select the features you want for your web app, then generate the prompt to paste into your AI!</p>
+    <header>
+        <h1>⚡ Prompt Forge</h1>
+        <p style="color: var(--text-muted);">Engineer your AI prompt. Build something your parents will never forget.</p>
+    </header>
 
-    <div class="form-group">
-        <h2>1. Core Activity (English Connection)</h2>
-        <label for="activityType">What interactive experience will your parents have?</label>
-        <select id="activityType">
-            <option value="A '10-Year Time Capsule' quiz predicting my future (character analysis/reflection).">10-Year Time Capsule (Predictive Narrative)</option>
-            <option value="A 'Choose Your Own Adventure' story featuring my family (plot structure and pacing).">Choose Your Own Adventure Family Story</option>
-            <option value="An interactive Mad Libs game using 9th-grade vocabulary words.">9th Grade Vocab Mad Libs</option>
-            <option value="A digital interview where parents guess my favorite literary quotes and books.">Parent Pop-Quiz: Literary Edition</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <h2>2. Visuals & Aesthetics</h2>
-        <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dark mode toggle"> Dark Mode Toggle</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Neon glowing borders on buttons"> Neon Glowing Borders</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="School colors theme (Blue and Gold)"> School Colors Theme</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Vintage typewriter font style"> Vintage Typewriter Font</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Confetti animation on completion"> Confetti Animation</label>
+    <div class="section-card">
+        <h2>1. The Core Experience (English 9 Connections)</h2>
+        <div class="form-group">
+            <label for="activityType">What is the central mechanic of your app?</label>
+            <select id="activityType" class="save-state">
+                <option value="A '10-Year Time Capsule' quiz predicting my future based on my current traits (Character Analysis & Predictive Narrative).">10-Year Time Capsule (Predictive Narrative)</option>
+                <option value="A 'Choose Your Own Adventure' interactive fiction featuring my family as the main characters (Plot Structure, Climax, Resolution).">Choose Your Own Adventure: Family Edition</option>
+                <option value="An interactive Escape Room based on surviving my Freshman year (Logic puzzles & Syllabus integration).">Freshman Year Escape Room</option>
+                <option value="The 'Hero's Journey' Family Map, charting my family's history using Joseph Campbell's monomyth structure.">The Hero's Journey Family Map</option>
+                <option value="An interactive Character Foil Generator, comparing my personality traits to my parents' traits with humorous results.">Character Foil Generator (Student vs. Parent)</option>
+                <option value="A high-stakes Interactive Poetry Slam where parents generate haikus or sonnets about chores, curfews, and teen life.">Interactive Poetry Slam Generator</option>
+            </select>
         </div>
     </div>
 
-    <div class="form-group">
-        <h2>3. Accessibility & Language</h2>
+    <div class="section-card">
+        <h2>2. Inject Your Creativity (Tell the AI details)</h2>
+        
+        <div class="form-group">
+            <label for="inputTone">App Tone & Personality</label>
+            <span class="hint">How should the app "talk" to your parents? (e.g., Sarcastic and witty, dramatic and epic, super formal, like a 1920s detective...)</span>
+            <input type="text" id="inputTone" class="save-state custom-input" placeholder="e.g., Sarcastic but loving, like a late-night talk show host...">
+        </div>
+
+        <div class="form-group">
+            <label for="inputLore">Family Lore & Inside Jokes</label>
+            <span class="hint">Give the AI 1 or 2 specific inside jokes, family catchphrases, or funny memories to weave into the story/quiz.</span>
+            <textarea id="inputLore" class="save-state custom-input" placeholder="e.g., Mention Dad's obsession with the thermostat, or the time we got lost in Yellowstone..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="inputVocab">Mandatory Vocabulary Words</label>
+            <span class="hint">List 3-5 English vocabulary words or literary terms the AI MUST force into the app's text.</span>
+            <input type="text" id="inputVocab" class="save-state custom-input" placeholder="e.g., Juxtaposition, Melancholy, Catharsis, Omniscient...">
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>3. Advanced UI & Aesthetics</h2>
+        <span class="hint" style="margin-bottom: 15px;">Check the visual features you want your web app to have.</span>
         <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dyslexia-friendly font toggle"> Dyslexia-Friendly Font</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="High contrast color mode"> High Contrast Mode</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Bilingual toggle (English/Spanish)"> Spanish Translation Toggle</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Text-to-speech button for reading text aloud"> Text-to-Speech Button</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Glassmorphism UI (frosted glass panels over a gradient background)"> Glassmorphism (Frosted Glass)</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Cyberpunk aesthetic with neon glowing text and grid backgrounds"> Cyberpunk / Neon Grid</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="8-bit Retro Video Game pixel art style and fonts"> 8-Bit Retro Video Game Style</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Interactive Particle.js background (floating nodes connecting via lines)"> Particle Node Background</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Custom CSS Cursor (e.g., a magic wand, sword, or custom shape)"> Custom CSS Cursor</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Parallax scrolling effects on background images"> Parallax Scrolling Effects</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dark Mode / Light Mode toggle switch"> Dark/Light Mode Toggle</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Typewriter effect for text loading onto the screen"> Typewriter Text Reveal Effect</label>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>4. Gamification & Interactivity</h2>
+        <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Embedded Lofi study beats audio player (auto-looping)"> Lofi Background Music Player</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="'Achievement Unlocked' toast notifications that pop up when tasks are completed"> Achievement Unlocked Popups</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="A hidden Easter Egg unlocked by typing the Konami code (up up down down left right left right b a)"> Konami Code Easter Egg</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Sound effects triggered on button clicks and hover states"> UI Sound Effects</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="A progress bar stuck to the top of the screen tracking completion"> Top Progress Bar</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Drag-and-drop elements to arrange items or answers"> Drag-and-Drop Elements</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="A countdown timer adding urgency to a specific task"> Countdown Timer</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Confetti cannon animation bursting from the bottom on final screen"> Full-Screen Confetti Finale</label>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>5. Accessibility & Translation</h2>
+        <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dyslexia-friendly font toggle (e.g., OpenDyslexic or Comic Sans)"> Dyslexia-Friendly Font Toggle</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Multi-language dropdown translator (English, Spanish, Mandarin, French, Tagalog)"> 5-Language Translator</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Text-to-speech API integration allowing the browser to read text aloud"> Text-to-Speech (Read Aloud)</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Colorblind-friendly high-contrast palette toggle"> Colorblind-Friendly Palette</label>
         </div>
     </div>
 
     <div class="button-group">
-        <button class="btn-primary" onclick="generatePrompt()">1. Generate Prompt</button>
+        <button class="btn-primary" onclick="generatePrompt()">1. Forge Prompt</button>
         <button class="btn-success" onclick="copyPrompt()">2. Copy to Clipboard</button>
-        <button class="btn-warning" onclick="saveData()">Save My Choices</button>
-        <button class="btn-danger" onclick="resetForm()">Reset All</button>
+        <button class="btn-warning" onclick="saveData()">Save Progress</button>
+        <button class="btn-danger" onclick="resetForm()">Clear All</button>
     </div>
 
     <div id="output-area">
-        <h2>Your AI Prompt:</h2>
-        <textarea id="promptOutput" readonly placeholder="Your generated prompt will appear here..."></textarea>
+        <h2 style="border:none; margin-bottom: 10px;">>_ SYSTEM.PROMPT_GENERATED:</h2>
+        <textarea id="promptOutput" readonly placeholder="Awaiting inputs..."></textarea>
     </div>
 </div>
 
 <script>
     // Load saved data on page load
     window.onload = function() {
-        if(localStorage.getItem('savedActivity')) {
-            document.getElementById('activityType').value = localStorage.getItem('savedActivity');
-        }
+        // Load text inputs and selects
+        const saveStates = document.querySelectorAll('.save-state');
+        saveStates.forEach(el => {
+            if(localStorage.getItem(el.id)) {
+                el.value = localStorage.getItem(el.id);
+            }
+        });
         
+        // Load checkboxes
         const checkboxes = document.querySelectorAll('.feature-checkbox');
         checkboxes.forEach((cb, index) => {
             if(localStorage.getItem('cb_' + index) === 'true') {
@@ -163,6 +263,7 @@
             }
         });
         
+        // Load output
         if(localStorage.getItem('savedPrompt')) {
             document.getElementById('promptOutput').value = localStorage.getItem('savedPrompt');
         }
@@ -170,6 +271,10 @@
 
     function generatePrompt() {
         const activity = document.getElementById('activityType').value;
+        const tone = document.getElementById('inputTone').value;
+        const lore = document.getElementById('inputLore').value;
+        const vocab = document.getElementById('inputVocab').value;
+        
         const checkboxes = document.querySelectorAll('.feature-checkbox');
         let selectedFeatures = [];
         
@@ -179,18 +284,29 @@
             }
         });
 
-        let prompt = `Act as an expert frontend web developer. I am a 9th-grade student building an interactive web app for my parents for Open House. \n\n`;
-        prompt += `Please write a single-file web app (HTML, CSS, and JS all in one file) with the following core activity:\n${activity}\n\n`;
+        let prompt = `Act as an expert Full-Stack Web Developer. I am a 9th-grade student building a highly interactive, complex web app to showcase my creativity to my parents at Open House.\n\n`;
+        prompt += `### CORE TASK\n`;
+        prompt += `Write a single-file web app (HTML, CSS, and JS strictly combined in one file). Do not give me partial code; provide the complete, functional file.\n\n`;
         
+        prompt += `### APP CONCEPT & CONTENT\n`;
+        prompt += `**Main Activity:** ${activity}\n`;
+        if (tone) prompt += `**Tone/Personality:** The app should be written in this tone: "${tone}"\n`;
+        if (lore) prompt += `**Family Lore to Include:** Weave this specific detail/joke into the experience: "${lore}"\n`;
+        if (vocab) prompt += `**Mandatory Vocabulary:** You MUST naturally integrate these 9th-grade vocabulary/literary words into the text: ${vocab}\n\n`;
+
         if(selectedFeatures.length > 0) {
-            prompt += `Please include the following design and accessibility features:\n${selectedFeatures.join('\n')}\n\n`;
+            prompt += `### ADVANCED UI, GAMIFICATION, & ACCESSIBILITY\n`;
+            prompt += `Please implement the following complex features using raw CSS/JS (no external libraries unless absolutely necessary, like particles.js via CDN):\n`;
+            prompt += `${selectedFeatures.join('\n')}\n\n`;
         }
 
-        prompt += `MANDATORY TECHNICAL REQUIREMENTS:\n`;
-        prompt += `- Include local storage (localStorage) so the user's progress or answers are saved if they refresh the page.\n`;
-        prompt += `- Include a 'Copy to Clipboard' button that allows parents to copy their final results or story.\n`;
-        prompt += `- Include a 'Save to PDF' or 'Print' button so parents can keep a physical copy of their experience.\n\n`;
-        prompt += `Ensure the code is heavily commented so I can understand how it works. Use clean, modern UI design.`;
+        prompt += `### MANDATORY TECHNICAL REQUIREMENTS\n`;
+        prompt += `1. **Local Storage:** Use localStorage so if the user refreshes, their progress, choices, or input text is perfectly saved and restored.\n`;
+        prompt += `2. **Copy to Clipboard:** Include a feature where the user's final result/story can be easily copied to their clipboard with a button.\n`;
+        prompt += `3. **Save/Print to PDF:** Include a button that triggers window.print() formatted nicely so parents can keep a physical/PDF copy.\n`;
+        prompt += `4. **Responsive Design:** It must look beautiful on a Chromebook and a mobile phone.\n\n`;
+        
+        prompt += `Write clean, well-commented code so I can read it, understand the logic, and explain it to my teacher.`;
 
         document.getElementById('promptOutput').value = prompt;
     }
@@ -198,33 +314,47 @@
     function copyPrompt() {
         const output = document.getElementById('promptOutput');
         if(output.value === "") {
-            alert("Please generate a prompt first!");
+            alert("Please forge your prompt first!");
             return;
         }
         output.select();
         navigator.clipboard.writeText(output.value).then(() => {
-            alert("Prompt copied to clipboard! Paste this into your AI.");
+            alert("Prompt copied to clipboard! Open your AI and paste it in.");
         });
     }
 
     function saveData() {
-        localStorage.setItem('savedActivity', document.getElementById('activityType').value);
+        // Save text inputs and selects
+        const saveStates = document.querySelectorAll('.save-state');
+        saveStates.forEach(el => {
+            localStorage.setItem(el.id, el.value);
+        });
         
+        // Save checkboxes
         const checkboxes = document.querySelectorAll('.feature-checkbox');
         checkboxes.forEach((cb, index) => {
             localStorage.setItem('cb_' + index, cb.checked);
         });
 
+        // Save output
         localStorage.setItem('savedPrompt', document.getElementById('promptOutput').value);
-        alert("Choices saved locally! You can close this tab and return later.");
+        alert("System State Saved Locally. You can safely close this tab.");
     }
 
     function resetForm() {
-        if(confirm("Are you sure you want to clear your choices?")) {
+        if(confirm("WARNING: Are you sure you want to wipe all your data and start over?")) {
             localStorage.clear();
-            document.getElementById('activityType').selectedIndex = 0;
+            
+            // Reset selects and text inputs
+            const saveStates = document.querySelectorAll('.save-state');
+            saveStates.forEach(el => el.value = "");
+            document.getElementById('activityType').selectedIndex = 0; // Reset dropdown
+            
+            // Reset checkboxes
             const checkboxes = document.querySelectorAll('.feature-checkbox');
             checkboxes.forEach(cb => cb.checked = false);
+            
+            // Reset output
             document.getElementById('promptOutput').value = "";
         }
     }
