@@ -3,153 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Articles of the Week</title>
+    <title>Article of the Week | Global Connections</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
+        :root {
+            --paper-bg: #f4f1ea; /* Vintage newspaper off-white */
+            --ink-black: #1a1a1a;
+            --sub-text: #4a4a4a;
+            --accent-line: #2c3e50; /* Deep world-blue for subtle accents */
+        }
 
         body {
-            /* Romantic Midnight Palette: Velvet Purple to Deep Navy */
-            background: radial-gradient(circle at top, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
-            background-attachment: fixed;
-            color: #f8fafc;
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            padding: 50px 20px;
+            font-family: 'Lora', Georgia, serif;
+            background-color: var(--paper-bg);
+            color: var(--ink-black);
             margin: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
+            padding: 0;
+            line-height: 1.6;
+            background-image: radial-gradient(#d5d0c4 1px, transparent 1px); /* Very subtle paper texture */
+            background-size: 20px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--paper-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        /* --- Masthead (Newspaper Title) --- */
+        header {
+            text-align: center;
+            padding: 40px 0 20px 0;
+            border-bottom: 4px solid var(--ink-black);
+            margin-bottom: 20px;
             position: relative;
         }
 
-        /* --- Floating Hearts Background --- */
-        .heart-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
+        header::after {
+            content: '';
+            display: block;
             width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
+            height: 1px;
+            background: var(--ink-black);
+            margin-top: 5px;
         }
 
-        .floating-heart {
-            position: absolute;
-            color: rgba(251, 113, 133, 0.2); /* Soft Rose Pink */
-            font-size: 1.5rem;
-            animation: floatUp linear infinite;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
-
-        /* --- 3D Romantic Header --- */
-        h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3.5rem;
-            margin-bottom: 40px;
+        .date-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
             text-transform: uppercase;
-            color: #fda4af; /* Rose Pink */
-            text-shadow: 
-                0 1px 0 #e11d48,
-                0 2px 0 #be123c,
-                0 3px 0 #881337,
-                0 10px 20px rgba(0,0,0,0.6);
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--ink-black);
+            padding-bottom: 5px;
+            margin-bottom: 20px;
         }
 
-        .unit-list {
-            list-style: none;
-            padding: 0;
+        h1.masthead {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5em;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -1px;
+            color: var(--ink-black);
+        }
+
+        .tagline {
+            font-style: italic;
+            color: var(--sub-text);
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        /* --- Main Layout --- */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        /* --- Featured Article Section --- */
+        .featured-story {
+            border-right: 1px solid #ccc;
+            padding-right: 40px;
+        }
+
+        .featured-story h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .world-badge {
+            display: inline-block;
+            background-color: var(--ink-black);
+            color: var(--paper-bg);
+            padding: 3px 8px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .story-content {
+            columns: 2; /* Newspaper column layout */
+            column-gap: 20px;
+            text-align: justify;
+        }
+
+        /* --- Sidebar / Actions --- */
+        .sidebar-actions {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            align-items: center;
         }
 
-        .unit-item {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        /* --- Romantic Link Styling --- */
-        .unit-link {
-            display: block;
-            text-decoration: none;
+        .action-box {
+            background: #fff;
+            border: 2px solid var(--ink-black);
             padding: 20px;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 1.3rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid #fda4af;
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
         }
 
-        /* --- Hover State: Rose Glow --- */
-        .unit-link:hover {
-            transform: translateY(-5px) scale(1.05);
-            background: #fda4af;
-            color: #4c1d95;
-            box-shadow: 0 0 25px rgba(253, 164, 175, 0.6);
-            animation: pulse-heart 1.5s infinite;
+        .action-box h3 {
+            font-family: 'Playfair Display', serif;
+            margin-top: 0;
+            font-size: 1.5em;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
         }
 
-        @keyframes pulse-heart {
-            0% { box-shadow: 0 0 0 0 rgba(253, 164, 175, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(253, 164, 175, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(253, 164, 175, 0); }
-        }
-
-        /* --- Back Button --- */
-        .back-btn {
+        .btn-launch {
             display: inline-block;
-            margin-top: 50px;
-            color: #cbd5e1;
+            background-color: var(--accent-line);
+            color: #fff;
             text-decoration: none;
-            font-weight: 400;
-            font-size: 1rem;
-            border-bottom: 1px solid transparent;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            border: 2px solid var(--accent-line);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .back-btn:hover {
-            color: #fda4af;
-            border-bottom: 1px solid #fda4af;
+        .btn-launch:hover {
+            background-color: var(--paper-bg);
+            color: var(--accent-line);
         }
 
+        .category-list {
+            text-align: left; 
+            padding-left: 20px; 
+            color: var(--sub-text);
+            font-size: 1.1em;
+        }
+
+        .category-list li {
+            margin-bottom: 10px;
+        }
+
+        .category-list a {
+            color: var(--accent-line);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .category-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 40px;
+            border-top: 2px solid var(--ink-black);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--sub-text);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+            .featured-story {
+                border-right: none;
+                padding-right: 0;
+            }
+            .story-content {
+                columns: 1;
+            }
+            h1.masthead {
+                font-size: 3em;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="heart-layer">
-        <div class="floating-heart" style="left: 10%; bottom: -10%; animation-duration: 15s;">❤</div>
-        <div class="floating-heart" style="left: 25%; bottom: -20%; animation-duration: 20s; animation-delay: -5s;">❣</div>
-        <div class="floating-heart" style="left: 45%; bottom: -15%; animation-duration: 18s; animation-delay: -2s;">❤</div>
-        <div class="floating-heart" style="left: 70%; bottom: -25%; animation-duration: 22s; animation-delay: -10s;">❣</div>
-        <div class="floating-heart" style="left: 85%; bottom: -10%; animation-duration: 17s; animation-delay: -7s;">❤</div>
+    <div class="container">
+        <header>
+            <div class="date-line">
+                <span id="todays-date">Loading date...</span>
+                <span>Connecting Classrooms to the World</span>
+                <span>Vol. I, Issue 42</span>
+            </div>
+            <h1 class="masthead">The Global Chronicle</h1>
+            <div class="tagline">"Understanding our world, one article at a time."</div>
+        </header>
+
+        <div class="layout-grid">
+            
+            <main class="featured-story">
+                <div class="world-badge">🌍 World News</div>
+                <h2>This Week's Focus: Uncovering Global Perspectives</h2>
+                
+                <div class="story-content">
+                    <p><strong>By The Educator Desk</strong></p>
+                    <p>Every week, we select a highly relevant, thought-provoking article that connects our classroom to the broader world. Reading the news is not just about gathering facts; it is about understanding the human experience across different cultures and continents.</p>
+                    <p>As you read this week's selection, consider how the events described impact not only the local citizens involved, but the global community at large. Use the digital annotation tool to highlight key arguments, define unknown vocabulary, and write your reactions in the margins.</p>
+                    <p>Your annotations will serve as the foundation for our Socratic seminar this Friday. Engage deeply with the text, question the author's biases, and prepare to share your unique perspective with your peers.</p>
+                </div>
+            </main>
+
+            <aside class="sidebar-actions">
+                
+                <div class="action-box">
+                    <h3>Annotation Studio</h3>
+                    <p>Ready to begin your assignment? Launch the digital annotation tool to read, highlight, and take margin notes on this week's article.</p>
+                    
+                    <a href="annotator.html" class="btn-launch">Launch Tool ➔</a>
+                </div>
+
+                <div class="action-box">
+                    <h3>AoW Categories</h3>
+                    <ul class="category-list">
+                        
+                        <li><a href="annotation.html">Annotation Tool</a></li>
+                        <li><a href="aowcat.html">AOW: AHS Cat</a></li>
+                        <li><a href="#">Category 3: Environment & Science</a></li>
+                        <li><a href="#">Category 4: Arts & Culture</a></li>
+                        
+                    </ul>
+                </div>
+
+            </aside>
+        </div>
+
+        <footer>
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Student Annotation Platform. All rights reserved.</p>
+            <p><em>Read critically. Think globally.</em></p>
+        </footer>
     </div>
 
-    <div class="hub-container">
-        <h2>Articles of the Week</h2>
-
-        <ul class="unit-list">
-            <li class="unit-item">
-                <a href="annotation/index.html" class="unit-link">Annotation Tool</a>
-            </li>
-            <li class="unit-item">
-                <a href="cataow/index.html" class="unit-link">Article of the Week: Cat</a>
-            </li>
-            <li class="unit-item">
-                <a href="R&JBlackout.html" class="unit-link">Romeo & Juliet Blackout Poetry</a>
-            </li>
-        </ul>
-
-        <p><a href="../index.html" class="back-btn">← Back to Main Classroom Menu</a></p>
-    </div>
+    <script>
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('todays-date').innerText = new Date().toLocaleDateString('en-US', dateOptions);
+    </script>
 
 </body>
 </html>
