@@ -4,122 +4,203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Night by Elie Wiesel Unit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        /* Historical Aesthetic: Sepia and Charcoal */
+        /* Museum Exhibit Aesthetic: Slate, Parchment, and Muted Gold */
+        :root {
+            --bg-dark: #1e2124; /* Deep, solemn slate */
+            --container-bg: #282b30;
+            --text-main: #e2dfd2; /* Aged parchment */
+            --text-muted: #9ba1a6;
+            --accent-gold: #c1a673; /* Museum plaque gold */
+            --accent-blue: #8ea4b8; /* Somber, calm blue */
+            --border-color: #42464d;
+        }
+
         body {
-            background-color: #1a1a1a; /* Dark gray for respect */
-            color: #d1c7b7; /* Aged paper/sepia text */
-            font-family: 'Georgia', serif; /* Classic, book-like font */
-            line-height: 1.6;
-            margin: 0 auto;
-            padding: 40px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Lora', Georgia, serif; 
+            line-height: 1.7;
+            margin: 0;
+            padding: 40px 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
         }
 
         .container {
-            max-width: 850px;
-            border: 2px solid #4a4a4a; /* Iron-colored border */
-            padding: 40px;
-            background-color: #222222;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        /* The "Barbed Wire" styled border accent */
-        .container::before {
-            content: "";
-            position: absolute;
-            top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border: 1px dashed #555; /* Subtle industrial feel */
-            pointer-events: none;
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--container-bg);
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            /* Elegant, architectural double border */
+            border: 1px solid var(--border-color);
+            outline: 1px solid var(--border-color);
+            outline-offset: -8px;
         }
 
         h1 {
-            font-size: 2.8rem;
-            color: #f4f1ea;
+            font-family: 'Cinzel', serif; /* Classic, monumental font */
+            font-size: 3.5rem;
+            color: var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 2px solid #555;
-            padding-bottom: 10px;
-            margin-top: 0;
+            letter-spacing: 4px;
+            border-bottom: 1px solid var(--accent-gold);
+            padding-bottom: 15px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
-        /* The Boxed CCSS and EQ section */
+        /* --- Essential Question Box --- */
         .curriculum-box {
             text-align: center;
-            background: #2a2a2a;
-            padding: 20px;
-            border-left: 5px solid #8e8e8e; /* Heavy iron bar */
-            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            border-left: 4px solid var(--accent-gold);
+            margin: 40px 0;
         }
 
         .eq-text {
-            color: #b3e5fc; /* Calm blue for the question */
-            font-size: 1.4rem;
+            color: var(--accent-blue);
+            font-size: 1.3rem;
+            font-weight: 600;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .impact-statement {
             font-style: italic;
-            color: #a0aec0;
-            margin-bottom: 15px;
-            display: block;
+            color: var(--text-muted);
+            font-size: 1.1rem;
         }
 
-        .ccss-list {
+        /* --- Purpose Table --- */
+        .purpose-section {
+            margin: 50px 0;
+        }
+
+        .purpose-section h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-gold);
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--accent-gold);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            text-transform: uppercase;
             font-size: 0.9rem;
-            color: #888;
-            margin: 0;
-            padding-left: 20px;
         }
 
-        /* The Assignment List */
+        td {
+            padding: 20px 15px;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        /* --- Assignment Grid --- */
+        .instruction {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
         .assignment-list {
             list-style: none;
             padding: 0;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two columns for better organization */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .assignment-item a {
             display: block;
             text-decoration: none;
-            color: #d1c7b7;
-            background: #2d2d2d;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.03);
             padding: 15px;
-            border: 1px solid #444;
-            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .assignment-item a:hover {
-            background: #3d3d3d;
-            border-color: #8e8e8e;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-gold);
             color: #fff;
         }
 
-        /* Back link */
+        /* --- Quote Footer --- */
+        .quote-box {
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 40px 20px;
+            margin-top: 60px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-box h3 {
+            color: var(--accent-gold);
+            font-family: 'Cinzel', serif;
+            margin-top: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .quote-box p {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .quote-author {
+            font-style: italic;
+            color: var(--accent-blue);
+        }
+
+        /* --- Back Link --- */
         .back-link {
             display: inline-block;
-            margin-top: 40px;
-            color: #888;
+            margin-bottom: 20px;
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 0.9rem;
-            border-bottom: 1px solid transparent;
-        }
-        .back-link:hover {
-            color: #fff;
-            border-bottom: 1px solid #fff;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        @media (max-width: 600px) {
-            .assignment-list { grid-template-columns: 1fr; }
+        .back-link:hover { color: var(--accent-gold); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .container { padding: 30px 20px; }
+            th, td { display: block; width: 100%; box-sizing: border-box; }
+            th { text-align: left; }
         }
     </style>
 </head>
@@ -128,35 +209,36 @@
 <div class="container">
     <a href="../index.html" class="back-link">← Back to Main Menu</a>
 
-    <h1>Night by Elie Wiesel</h1>
+    <h1>Night</h1>
     
     <div class="curriculum-box">
         <span class="eq-text">Essential Question: How do our experiences and the stories of people like Elie Wiesel help shape our identity and humanity?</span>
         <span class="impact-statement">"A memoir of survival that challenges us to bear witness to the past to protect our future."</span>
-       <section style="margin: 40px 0;">
-    <h2 style="color: #b3e5fc; border-bottom: 2px solid #444;">Night Unit: Learning Purpose</h2>
-    <table style="width: 100%; border-collapse: collapse; background-color: #222; color: #f4f1ea; text-align: left;">
-        <thead>
-            <tr style="background-color: #333; color: #ffd1dc;">
-                <th style="padding: 15px; border: 1px solid #444;">Reading</th>
-                <th style="padding: 15px; border: 1px solid #444;">Writing</th>
-                <th style="padding: 15px; border: 1px solid #444;">Speaking</th>
-                <th style="padding: 15px; border: 1px solid #444;">Listening</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 15px; border: 1px solid #444; vertical-align: top;">Critical-Thinking: I can analyze evidence to understand the changes in Elie's character.</td>
-                <td style="padding: 15px; border: 1px solid #444; vertical-align: top;">Character & Creativity: I can create a visual representation to show how Wiesel’s story impacts my own identity.</td>
-                <td style="padding: 15px; border: 1px solid #444; vertical-align: top;">Communication: I can contribute to shared reading by using my voice with clarity and showing the courage to learn and pronounce new words.</td>
-                <td style="padding: 15px; border: 1px solid #444; vertical-align: top;">Collaboration: I can actively listen to others' ideas and build our collective understanding of Elie's experience.</td>
-            </tr>
-            </tbody>
-    </table>
-</section>
     </div>
 
-    <p style="text-align: center; color: #888;">Complete Assignment, Save as PDF, Turn into Ekadence</p>
+    <section class="purpose-section">
+        <h2>Unit Learning Purpose</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Reading</th>
+                    <th>Writing</th>
+                    <th>Speaking</th>
+                    <th>Listening</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Critical-Thinking:</strong> I can analyze evidence to understand the changes in Elie's character.</td>
+                    <td><strong>Character & Creativity:</strong> I can create a visual representation to show how Wiesel’s story impacts my own identity.</td>
+                    <td><strong>Communication:</strong> I can contribute to shared reading by using my voice with clarity and showing the courage to learn and pronounce new words.</td>
+                    <td><strong>Collaboration:</strong> I can actively listen to others' ideas and build our collective understanding of Elie's experience.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <p class="instruction">Complete Assignment • Save as PDF • Turn into Ekadence</p>
 
     <ul class="assignment-list">
         <li class="assignment-item"><a href="night1.html">Chapter 1</a></li>
@@ -168,23 +250,16 @@
         <li class="assignment-item"><a href="night7.html">Chapter 7</a></li>
         <li class="assignment-item"><a href="nightch8.html">Chapter 8</a></li>
         <li class="assignment-item"><a href="nightch9.html">Chapter 9</a></li>
-          <li class="assignment-item"><a href="blackoutpoetrynight.html">Night Final Project</a></li>
-         <li class="assignment-item"><a href="night3theme.html">Chapter 3 Theme</a></li>
-         <li class="assignment-item"><a href="night4escape.html">Chapter 4 Escape</a></li>
+        <li class="assignment-item"><a href="night3theme.html">Chapter 3 Theme</a></li>
+        <li class="assignment-item"><a href="night4escape.html">Chapter 4 Escape</a></li>
+        <li class="assignment-item"><a href="blackoutpoetrynight.html">Final Project</a></li>
     </ul>
-</div>
 
-    <div style="border: 5px double #4a4a4a; padding: 30px; background-color: #1e1e1e; color: #d1c7b7; text-align: left; margin-top: 50px;">
-    <h3 style="color: #f4f1ea; text-align: center; border-bottom: 1px solid #555; padding-bottom: 10px;">
-        Shaping Our Humanity
-    </h3>
-    <p style="font-size: 1.1rem; line-height: 1.6;">
-        <strong>Essential Lesson:</strong> We are not just readers; we are <em>witnesses</em>. 
-        When we learn about Elie Wiesel's journey, we take a piece of his story and add it to our own identity. 
-    </p>
-    <p style="font-style: italic; color: #888; text-align: center;">
-        "To listen to a witness is to become a witness." — Elie Wiesel
-    </p>
+    <div class="quote-box">
+        <h3>Shaping Our Humanity</h3>
+        <p><strong>Essential Lesson:</strong> We are not just readers; we are <em>witnesses</em>. When we learn about Elie Wiesel's journey, we take a piece of his story and add it to our own identity.</p>
+        <p class="quote-author">"To listen to a witness is to become a witness." — Elie Wiesel</p>
+    </div>
 </div>
 
 </body>
