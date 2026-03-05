@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Builder: Open House Edition</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+        }
+        .checkbox-label input {
+            margin-right: 10px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #2ecc71; color: white; }
+        .btn-success:hover { background: #27ae60; }
+        .btn-warning { background: #f1c40f; color: #333; }
+        .btn-warning:hover { background: #f39c12; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        
+        #output-area {
+            margin-top: 30px;
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px dashed #7f8c8d;
+        }
+        textarea#promptOutput {
+            height: 150px;
+            resize: vertical;
+            font-family: monospace;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 Open House AI Prompt Builder</h1>
+    <p>Select the features you want for your web app, then generate the prompt to paste into your AI!</p>
+
+    <div class="form-group">
+        <h2>1. Core Activity (English Connection)</h2>
+        <label for="activityType">What interactive experience will your parents have?</label>
+        <select id="activityType">
+            <option value="A '10-Year Time Capsule' quiz predicting my future (character analysis/reflection).">10-Year Time Capsule (Predictive Narrative)</option>
+            <option value="A 'Choose Your Own Adventure' story featuring my family (plot structure and pacing).">Choose Your Own Adventure Family Story</option>
+            <option value="An interactive Mad Libs game using 9th-grade vocabulary words.">9th Grade Vocab Mad Libs</option>
+            <option value="A digital interview where parents guess my favorite literary quotes and books.">Parent Pop-Quiz: Literary Edition</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <h2>2. Visuals & Aesthetics</h2>
+        <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dark mode toggle"> Dark Mode Toggle</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Neon glowing borders on buttons"> Neon Glowing Borders</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="School colors theme (Blue and Gold)"> School Colors Theme</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Vintage typewriter font style"> Vintage Typewriter Font</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Confetti animation on completion"> Confetti Animation</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <h2>3. Accessibility & Language</h2>
+        <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dyslexia-friendly font toggle"> Dyslexia-Friendly Font</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="High contrast color mode"> High Contrast Mode</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Bilingual toggle (English/Spanish)"> Spanish Translation Toggle</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Text-to-speech button for reading text aloud"> Text-to-Speech Button</label>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-primary" onclick="generatePrompt()">1. Generate Prompt</button>
+        <button class="btn-success" onclick="copyPrompt()">2. Copy to Clipboard</button>
+        <button class="btn-warning" onclick="saveData()">Save My Choices</button>
+        <button class="btn-danger" onclick="resetForm()">Reset All</button>
+    </div>
+
+    <div id="output-area">
+        <h2>Your AI Prompt:</h2>
+        <textarea id="promptOutput" readonly placeholder="Your generated prompt will appear here..."></textarea>
+    </div>
+</div>
+
+<script>
+    // Load saved data on page load
+    window.onload = function() {
+        if(localStorage.getItem('savedActivity')) {
+            document.getElementById('activityType').value = localStorage.getItem('savedActivity');
+        }
+        
+        const checkboxes = document.querySelectorAll('.feature-checkbox');
+        checkboxes.forEach((cb, index) => {
+            if(localStorage.getItem('cb_' + index) === 'true') {
+                cb.checked = true;
+            }
+        });
+        
+        if(localStorage.getItem('savedPrompt')) {
+            document.getElementById('promptOutput').value = localStorage.getItem('savedPrompt');
+        }
+    };
+
+    function generatePrompt() {
+        const activity = document.getElementById('activityType').value;
+        const checkboxes = document.querySelectorAll('.feature-checkbox');
+        let selectedFeatures = [];
+        
+        checkboxes.forEach(cb => {
+            if(cb.checked) {
+                selectedFeatures.push("- " + cb.value);
+            }
+        });
+
+        let prompt = `Act as an expert frontend web developer. I am a 9th-grade student building an interactive web app for my parents for Open House. \n\n`;
+        prompt += `Please write a single-file web app (HTML, CSS, and JS all in one file) with the following core activity:\n${activity}\n\n`;
+        
+        if(selectedFeatures.length > 0) {
+            prompt += `Please include the following design and accessibility features:\n${selectedFeatures.join('\n')}\n\n`;
+        }
+
+        prompt += `MANDATORY TECHNICAL REQUIREMENTS:\n`;
+        prompt += `- Include local storage (localStorage) so the user's progress or answers are saved if they refresh the page.\n`;
+        prompt += `- Include a 'Copy to Clipboard' button that allows parents to copy their final results or story.\n`;
+        prompt += `- Include a 'Save to PDF' or 'Print' button so parents can keep a physical copy of their experience.\n\n`;
+        prompt += `Ensure the code is heavily commented so I can understand how it works. Use clean, modern UI design.`;
+
+        document.getElementById('promptOutput').value = prompt;
+    }
+
+    function copyPrompt() {
+        const output = document.getElementById('promptOutput');
+        if(output.value === "") {
+            alert("Please generate a prompt first!");
+            return;
+        }
+        output.select();
+        navigator.clipboard.writeText(output.value).then(() => {
+            alert("Prompt copied to clipboard! Paste this into your AI.");
+        });
+    }
+
+    function saveData() {
+        localStorage.setItem('savedActivity', document.getElementById('activityType').value);
+        
+        const checkboxes = document.querySelectorAll('.feature-checkbox');
+        checkboxes.forEach((cb, index) => {
+            localStorage.setItem('cb_' + index, cb.checked);
+        });
+
+        localStorage.setItem('savedPrompt', document.getElementById('promptOutput').value);
+        alert("Choices saved locally! You can close this tab and return later.");
+    }
+
+    function resetForm() {
+        if(confirm("Are you sure you want to clear your choices?")) {
+            localStorage.clear();
+            document.getElementById('activityType').selectedIndex = 0;
+            const checkboxes = document.querySelectorAll('.feature-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            document.getElementById('promptOutput').value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
