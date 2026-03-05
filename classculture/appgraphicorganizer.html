@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Forge: Open House Edition v3</title>
+    <title>AI Prompt Forge: Open House Edition v4</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -11,8 +11,8 @@
             --panel-highlight: #334155;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --accent: #a855f7; /* Changed to a cool purple to distinguish versions */
-            --accent-hover: #9333ea;
+            --accent: #f43f5e; /* Vibrant Rose for V4 */
+            --accent-hover: #e11d48;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
@@ -26,87 +26,48 @@
             margin: 0;
             padding: 20px;
         }
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 40px; }
         h1 {
-            color: var(--accent);
-            font-size: 2.5rem;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            color: var(--accent); font-size: 2.8rem; margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
         }
         h2 {
-            font-size: 1.2rem;
-            color: var(--accent);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            margin-top: 0;
+            font-size: 1.3rem; color: var(--accent); border-bottom: 2px solid var(--border);
+            padding-bottom: 10px; margin-top: 0;
         }
         .section-card {
-            background: var(--panel-bg);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            background: var(--panel-bg); padding: 25px; border-radius: 12px;
+            border: 1px solid var(--border); margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;
         }
         #dynamic-section {
-            background: var(--panel-highlight);
-            border-left: 4px solid var(--accent);
+            background: var(--panel-highlight); border-left: 4px solid var(--accent);
         }
+        .grid-2col {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+        @media (max-width: 768px) { .grid-2col { grid-template-columns: 1fr; } }
         .form-group { margin-bottom: 20px; }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-main);
-        }
-        .hint {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            display: block;
-        }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        .hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; display: block; }
         select, textarea, input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text-main);
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
+            width: 100%; padding: 12px; background: var(--bg-color);
+            border: 1px solid var(--border); border-radius: 6px; color: var(--text-main);
+            font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s;
         }
-        select:focus, textarea:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
+        select:focus, textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); }
         textarea { height: 80px; resize: vertical; }
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
-        }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         .checkbox-label {
-            display: flex;
-            align-items: flex-start;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
-            transition: background 0.2s;
+            display: flex; align-items: flex-start; cursor: pointer; padding: 10px;
+            border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid transparent;
+            transition: all 0.2s;
         }
-        .checkbox-label:hover { background: rgba(255,255,255,0.05); }
-        .checkbox-label input {
-            margin-top: 4px;
-            margin-right: 12px;
-            accent-color: var(--accent);
-            transform: scale(1.2);
-        }
-        .button-group {
-            display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; justify-content: center;
-        }
+        .checkbox-label:hover { background: rgba(255,255,255,0.08); border-color: var(--border); }
+        .checkbox-label input { margin-top: 4px; margin-right: 12px; accent-color: var(--accent); transform: scale(1.2); }
+        .button-group { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
         button {
             padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer;
             font-size: 1rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
@@ -114,16 +75,14 @@
         }
         button:active { transform: scale(0.98); }
         button:hover { opacity: 0.9; }
-        .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
         .btn-success { background: var(--success); color: #fff; }
         .btn-warning { background: var(--warning); color: #1e293b; }
         .btn-danger { background: var(--danger); color: #fff; }
         
-        #output-area {
-            margin-top: 40px; background: #000; padding: 25px; border-radius: 12px; border: 1px solid var(--accent);
-        }
+        #output-area { margin-top: 40px; background: #000; padding: 25px; border-radius: 12px; border: 1px solid var(--accent); }
         textarea#promptOutput {
-            height: 300px; font-family: 'Courier New', Courier, monospace;
+            height: 350px; font-family: 'Courier New', Courier, monospace;
             background: #000; color: #10b981; border: none; font-size: 0.95rem;
         }
     </style>
@@ -132,12 +91,12 @@
 
 <div class="container">
     <header>
-        <h1>⚡ Prompt Forge v3</h1>
-        <p style="color: var(--text-muted);">Engineer your AI prompt. Master your narrative.</p>
+        <h1>🎨 Prompt Forge v4</h1>
+        <p style="color: var(--text-muted);">Code your narrative. Design your aesthetic.</p>
     </header>
 
     <div class="section-card">
-        <h2>1. The Core Experience (English 9 Connections)</h2>
+        <h2>1. The Core Experience (English 9)</h2>
         <div class="form-group">
             <label for="activityType">Choose your app's central mechanic:</label>
             <select id="activityType" class="save-state" onchange="updateDynamicPrompts()">
@@ -145,67 +104,109 @@
                 <option value="cyoa">Choose Your Own Adventure: Family Edition (Plot Structure)</option>
                 <option value="escape_room">Freshman Year Escape Room (Logic & Syllabus)</option>
                 <option value="hero_journey">The Hero's Journey Family Map (Monomyth Structure)</option>
-                <option value="character_foil">Character Foil Generator: Student vs. Parent (Character Analysis)</option>
-                <option value="poetry_slam">Interactive Poetry Slam (Haikus & Sonnets)</option>
                 <option value="unreliable_narrator">The "Unreliable Narrator" Two-Sided Diary (Point of View)</option>
                 <option value="dystopian_faction">Dystopian Faction Sorting Quiz (World-Building & Theme)</option>
                 <option value="tragic_hero">The "Tragic Hero" Parenting Simulator (Shakespearean Fatal Flaws)</option>
                 <option value="whodunit">Family Mystery "Whodunit" Game (Inference & Foreshadowing)</option>
                 <option value="mixtape">The "Coming of Age" Playlist Generator (Symbolism & Motif)</option>
-                <option value="debate">Parent vs. Teen Debate Simulator (Rhetoric: Ethos, Pathos, Logos)</option>
             </select>
         </div>
     </div>
 
     <div id="dynamic-section" class="section-card">
         <h2>Custom Activity Details</h2>
-        <p class="hint" id="dynamicDescription">Fill in these specific details to customize your chosen activity.</p>
+        <div class="grid-2col">
+            <div class="form-group">
+                <label id="dynLabel1" for="dynamicInput1">Detail 1</label>
+                <textarea id="dynamicInput1" class="save-state custom-input" placeholder="..."></textarea>
+            </div>
+            <div class="form-group">
+                <label id="dynLabel2" for="dynamicInput2">Detail 2</label>
+                <textarea id="dynamicInput2" class="save-state custom-input" placeholder="..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>2. Vibe & Aesthetics Design Studio</h2>
+        <span class="hint">Force the AI to use specific CSS styles for your app.</span>
         
-        <div class="form-group">
-            <label id="dynLabel1" for="dynamicInput1">Detail 1</label>
-            <textarea id="dynamicInput1" class="save-state custom-input" placeholder="..."></textarea>
-        </div>
+        <div class="grid-2col">
+            <div class="form-group">
+                <label for="colorTheme">Color Palette / Vibe</label>
+                <select id="colorTheme" class="save-state">
+                    <option value="Vaporwave (Neon Pink, Cyan, Deep Purple)">Vaporwave (Pink/Cyan/Purple)</option>
+                    <option value="Dark Academia (Deep Browns, Gold, Parchment)">Dark Academia (Browns/Gold)</option>
+                    <option value="Y2K Cyber (Chrome, Hot Pink, Lime Green)">Y2K Cyber (Chrome/Hot Pink)</option>
+                    <option value="Pastel Goth (Soft Lavenders, Blacks, Pastels)">Pastel Goth (Lavender/Black)</option>
+                    <option value="Forest Core (Moss Greens, Earth Tones, Wood)">Forest Core (Moss/Earth Tones)</option>
+                    <option value="High Contrast Hacker (Pitch Black, Terminal Green)">High Contrast Hacker (Black/Neon Green)</option>
+                    <option value="Minimalist Zen (Whites, Light Grays, Soft Blue)">Minimalist Zen (White/Gray/Blue)</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label id="dynLabel2" for="dynamicInput2">Detail 2</label>
-            <textarea id="dynamicInput2" class="save-state custom-input" placeholder="..."></textarea>
+            <div class="form-group">
+                <label for="fontStyle">Typography (Google Fonts)</label>
+                <select id="fontStyle" class="save-state">
+                    <option value="Monospace / Terminal (e.g., VT323, Courier)">Retro Terminal / Monospace</option>
+                    <option value="Elegant Serif (e.g., Playfair Display, Merriweather)">Elegant Storybook Serif</option>
+                    <option value="Chunky & Bubbly (e.g., Fredoka One, Comic Neue)">Chunky & Bubbly / Fun</option>
+                    <option value="Creepy / Gothic (e.g., Creepster, UnifrakturMaguntia)">Gothic / Horror</option>
+                    <option value="Handwritten / Cursive (e.g., Caveat, Pacifico)">Handwritten Diary Style</option>
+                    <option value="Ransom Note (Mix of heavily contrasting chaotic fonts)">Ransom Note (Chaotic Mixed Fonts)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="borderStyle">Container & Button Borders</label>
+                <select id="borderStyle" class="save-state">
+                    <option value="Glowing Neon Borders with drop-shadows">Glowing Neon Borders</option>
+                    <option value="Brutalist (Ultra-thick solid black borders with hard corners)">Brutalist (Thick Black, Hard Corners)</option>
+                    <option value="Scrapbook (Thick dashed or dotted lines)">Scrapbook (Dashed/Dotted Lines)</option>
+                    <option value="Ornate Picture Frame (Double gold borders)">Ornate Picture Frame</option>
+                    <option value="Neumorphism (Soft, pillowy, extruded plastic look without hard lines)">Neumorphism (Soft Extruded Plastic)</option>
+                    <option value="Glitch (Borders that look slightly jagged or misaligned)">Glitch (Jagged/Misaligned)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="animationStyle">CSS Animation Effects</label>
+                <select id="animationStyle" class="save-state">
+                    <option value="Smooth floating/hovering states for all elements">Smooth Floating / Hovering</option>
+                    <option value="Elements shake violently when clicked or hovered">Violent Shake on Click/Hover</option>
+                    <option value="Glitch text effects for titles">Glitch Text Effects</option>
+                    <option value="Slow breathing/pulsing glows on buttons">Breathing / Pulsing Glows</option>
+                    <option value="Marquee scrolling text for headers">Retro Marquee Scrolling Headers</option>
+                </select>
+            </div>
         </div>
     </div>
 
     <div class="section-card">
-        <h2>2. Universal Flair (Applies to all apps)</h2>
-        <div class="form-group">
-            <label for="inputTone">App Tone & Personality</label>
-            <span class="hint">How should the app "talk" to your parents?</span>
-            <input type="text" id="inputTone" class="save-state custom-input" placeholder="e.g., Sarcastic but loving, like a late-night talk show host...">
-        </div>
-        <div class="form-group">
-            <label for="inputVocab">Mandatory Vocabulary Words</label>
-            <span class="hint">List 3-5 English vocabulary words the AI MUST force into the app's text.</span>
-            <input type="text" id="inputVocab" class="save-state custom-input" placeholder="e.g., Juxtaposition, Melancholy, Catharsis, Omniscient...">
-        </div>
-    </div>
-
-    <div class="section-card">
-        <h2>3. Advanced UI & Aesthetics</h2>
+        <h2>3. Creative Flourishes & Backgrounds</h2>
         <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Glassmorphism UI (frosted glass panels)"> Glassmorphism (Frosted Glass)</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Cyberpunk aesthetic with neon glowing text"> Cyberpunk / Neon Grid</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="8-bit Retro Video Game pixel art style"> 8-Bit Retro Video Game</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Interactive Particle.js background"> Particle Node Background</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Dark Mode / Light Mode toggle switch"> Dark/Light Mode Toggle</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Typewriter effect for text loading"> Typewriter Text Reveal</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Animated Gradient Mesh background"> Gradient Mesh Background</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="CSS Starry Night Sky with twinkling stars"> Twinkling Stars Background</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Graph Paper / Grid background pattern"> Graph Paper / Grid Background</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Custom CSS Cursor matching the theme"> Custom Themed Mouse Cursor</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Typewriter effect for text loading onto the screen"> Typewriter Text Reveal</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Embedded Lofi study beats audio player (auto-looping)"> Lofi Background Music</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Full-Screen Confetti cannon finale on completion"> Confetti Finale on Win</label>
+            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Konami Code Easter Egg (up up down down left right left right b a)"> Secret Konami Code Easter Egg</label>
         </div>
     </div>
 
     <div class="section-card">
-        <h2>4. Gamification & Interactivity</h2>
-        <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Embedded Lofi study beats audio player"> Lofi Background Music</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="'Achievement Unlocked' toast notifications"> Achievement Popups</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Sound effects triggered on button clicks"> UI Sound Effects</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Drag-and-drop elements to arrange items"> Drag-and-Drop Elements</label>
-            <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Confetti cannon animation bursting on win"> Confetti Finale</label>
+        <h2>4. The App's Voice</h2>
+        <div class="grid-2col">
+            <div class="form-group">
+                <label for="inputTone">App Tone & Personality</label>
+                <input type="text" id="inputTone" class="save-state custom-input" placeholder="e.g., Sarcastic, formal, dramatic...">
+            </div>
+            <div class="form-group">
+                <label for="inputVocab">Mandatory Vocabulary Words</label>
+                <input type="text" id="inputVocab" class="save-state custom-input" placeholder="e.g., Juxtaposition, Melancholy...">
+            </div>
         </div>
     </div>
 
@@ -223,119 +224,89 @@
 </div>
 
 <script>
-    // Configuration for dynamic prompts based on activity choice
     const activityConfig = {
         "time_capsule": {
-            description: "A '10-Year Time Capsule' quiz predicting my future based on current traits.",
-            l1: "What are 3 specific hobbies or obsessions you have right now?",
-            p1: "e.g., Collecting vinyl records, playing Valorant, obsessing over a specific band...",
-            l2: "What is a 'wildcard' prediction you want the AI to make about your future?",
-            p2: "e.g., I will accidentally invent a new type of coffee, I will live on Mars..."
+            description: "A '10-Year Time Capsule' quiz predicting my future.",
+            l1: "3 specific hobbies or obsessions you have right now:",
+            p1: "e.g., Vinyl records, Valorant, a specific band...",
+            l2: "A 'wildcard' prediction you want the AI to make:",
+            p2: "e.g., I will invent a new coffee, live on Mars..."
         },
         "cyoa": {
-            description: "A 'Choose Your Own Adventure' interactive fiction featuring my family.",
-            l1: "What is the 'Inciting Incident' (the event that starts the story)?",
-            p1: "e.g., The wifi goes down during a snowstorm, or the dog steals the car keys...",
-            l2: "List your family members and 1 defining 'character trait' for each.",
-            p2: "e.g., Mom (prepared for everything), Dad (thinks he's a master chef)..."
+            description: "A 'Choose Your Own Adventure' story featuring my family.",
+            l1: "The 'Inciting Incident' (what starts the story):",
+            p1: "e.g., The wifi goes down, the dog steals the car...",
+            l2: "Family members and 1 defining 'character trait' each:",
+            p2: "e.g., Mom (always prepared), Dad (thinks he's a chef)..."
         },
         "escape_room": {
-            description: "An interactive Escape Room based on surviving Freshman year.",
-            l1: "What are 2 'puzzles' based on actual classes or teachers you have?",
-            p1: "e.g., A math puzzle based on Mr. Smith's algebra test, or a locker combo puzzle...",
-            l2: "What is the final 'boss' or ultimate challenge to escape?",
-            p2: "e.g., Navigating the crowded cafeteria without spilling a tray..."
+            description: "An interactive Escape Room based on Freshman year.",
+            l1: "2 'puzzles' based on actual classes or teachers:",
+            p1: "e.g., Mr. Smith's algebra test, locker combo puzzle...",
+            l2: "The final 'boss' or ultimate challenge to escape:",
+            p2: "e.g., Navigating the cafeteria without spilling a tray..."
         },
         "hero_journey": {
-            description: "The 'Hero's Journey' Family Map using Joseph Campbell's structure.",
-            l1: "What is your family's 'Call to Adventure' (a major move, event, or funny challenge)?",
-            p1: "e.g., Moving to a new state, or attempting to build IKEA furniture together...",
-            l2: "Who or what is the 'Abyss' or biggest challenge your family faced?",
-            p2: "e.g., Surviving a cross-country road trip with no air conditioning..."
-        },
-        "character_foil": {
-            description: "An interactive Character Foil Generator comparing my traits to my parents.",
-            l1: "Name one way you and your parent are exact opposites (Foils).",
-            p1: "e.g., I am chronically late; my dad arrives 30 minutes early to everything...",
-            l2: "What is one shared trait you both have, despite your differences?",
-            p2: "e.g., We both get incredibly competitive during board games..."
-        },
-        "poetry_slam": {
-            description: "A high-stakes Interactive Poetry Slam generator for parents.",
-            l1: "Provide 3 funny 'teen life' topics for the parents to write poems about.",
-            p1: "e.g., The tragedy of an uncharged phone, the horror of waking up at 6 AM...",
-            l2: "What specific poetic devices MUST the AI enforce in the game?",
-            p2: "e.g., It must use iambic pentameter, or it must include an AABB rhyme scheme..."
+            description: "The 'Hero's Journey' Family Map.",
+            l1: "Your family's 'Call to Adventure':",
+            p1: "e.g., Moving to a new state, building IKEA furniture...",
+            l2: "Who or what is the 'Abyss' or biggest challenge?",
+            p2: "e.g., Surviving a road trip with no AC..."
         },
         "unreliable_narrator": {
-            description: "An 'Unreliable Narrator' Two-Sided Diary. The parent reads your skewed version of a memory, then unlocks the truth.",
-            l1: "What is a funny, specific memory where you and your parents remember the details differently?",
-            p1: "e.g., The time I 'accidentally' broke the vase vs. their version of the vase breaking...",
-            l2: "What is the 'clue' the parent has to find to unlock their 'true' version of the story?",
+            description: "An 'Unreliable Narrator' Two-Sided Diary.",
+            l1: "A specific memory you and your parents remember differently:",
+            p1: "e.g., The time I 'accidentally' broke the vase...",
+            l2: "The 'clue' to unlock the true version:",
             p2: "e.g., A hidden button that says 'Access Parent Protocol'..."
         },
         "dystopian_faction": {
-            description: "A Dystopian Faction Sorting Quiz based on parenting styles.",
-            l1: "What are the names of the 3-4 Dystopian 'Factions' in your household?",
-            p1: "e.g., The Order of the Clean Room, The Midnight Snackers, The Wifi Wardens...",
-            l2: "What is one specific, humorous 'dystopian rule' in your house?",
-            p2: "e.g., All chores must be completed before the router is turned back on..."
+            description: "A Dystopian Faction Sorting Quiz.",
+            l1: "Names of the 3-4 Dystopian 'Factions' in your house:",
+            p1: "e.g., The Clean Room Order, The Midnight Snackers...",
+            l2: "One humorous 'dystopian rule' in your house:",
+            p2: "e.g., Chores must be done before the router is turned on..."
         },
         "tragic_hero": {
-            description: "A 'Tragic Hero' Parenting Simulator. Parents must survive a week without falling to their fatal flaw.",
-            l1: "What is your parent's 'Fatal Flaw' (Hamartia) that the game will test?",
-            p1: "e.g., Making terrible Dad Jokes in public, or worrying too much about a light jacket...",
-            l2: "What is the 'Catastrophe' (the funny bad ending) if they fail the game?",
-            p2: "e.g., They embarrass you so badly at the mall that you melt into a puddle..."
+            description: "A 'Tragic Hero' Parenting Simulator.",
+            l1: "Your parent's 'Fatal Flaw' (Hamartia):",
+            p1: "e.g., Terrible Dad Jokes, worrying about a light jacket...",
+            l2: "The 'Catastrophe' (bad ending) if they fail:",
+            p2: "e.g., Embarrassing you at the mall..."
         },
         "whodunit": {
             description: "A Family Mystery 'Whodunit' Investigation Game.",
-            l1: "What is the 'Crime' that occurred in your house?",
-            p1: "e.g., Someone ate the leftover pizza I was saving, or someone changed the Netflix password...",
-            l2: "What are 2 clues (foreshadowing) the parents have to find in the app?",
-            p2: "e.g., A crumb trail leading to a specific sibling's room..."
+            l1: "The 'Crime' that occurred in your house:",
+            p1: "e.g., Someone ate my leftover pizza...",
+            l2: "2 clues (foreshadowing) the parents have to find:",
+            p2: "e.g., A crumb trail leading to a sibling's room..."
         },
         "mixtape": {
-            description: "A 'Coming of Age' Playlist Generator based on themes and symbolism.",
-            l1: "What is a central 'Theme' of your 9th-grade year so far?",
-            p1: "e.g., Chaos vs. Order, The Loss of Free Time, The Discovery of Coffee...",
-            l2: "What is a specific object that 'symbolizes' you right now?",
-            p2: "e.g., My heavily stickered water bottle, or my tangled headphones..."
-        },
-        "debate": {
-            description: "Parent vs. Teen Debate Simulator using Ethos, Pathos, and Logos.",
-            l1: "What is the central topic of the debate in the game?",
-            p1: "e.g., Why my curfew should be extended to midnight, or why I need a new phone...",
-            l2: "Give an example of a 'Pathos' (emotion) argument you use, and a 'Logos' (logic) argument your parent uses.",
-            p2: "e.g., Me: 'All my friends will forget me' (Pathos). Parent: 'You need 8 hours of sleep' (Logos)..."
+            description: "A 'Coming of Age' Playlist Generator.",
+            l1: "A central 'Theme' of your 9th-grade year so far:",
+            p1: "e.g., Chaos vs. Order, The Discovery of Coffee...",
+            l2: "A specific object that 'symbolizes' you right now:",
+            p2: "e.g., My stickered water bottle, tangled headphones..."
         }
     };
 
-    // Initialize and handle dynamic prompts
     window.onload = function() {
-        updateDynamicPrompts(); // Set initial labels
+        updateDynamicPrompts();
         
-        // Load text inputs and selects
         const saveStates = document.querySelectorAll('.save-state');
         saveStates.forEach(el => {
-            if(localStorage.getItem(el.id)) {
-                el.value = localStorage.getItem(el.id);
-            }
+            if(localStorage.getItem(el.id)) el.value = localStorage.getItem(el.id);
         });
         
-        // Update dynamic prompts again in case the select value was loaded from storage
         updateDynamicPrompts(); 
-        // Need to reload dynamic input values after updating the labels
         if(localStorage.getItem('dynamicInput1')) document.getElementById('dynamicInput1').value = localStorage.getItem('dynamicInput1');
         if(localStorage.getItem('dynamicInput2')) document.getElementById('dynamicInput2').value = localStorage.getItem('dynamicInput2');
 
-        // Load checkboxes
         const checkboxes = document.querySelectorAll('.feature-checkbox');
         checkboxes.forEach((cb, index) => {
             if(localStorage.getItem('cb_' + index) === 'true') cb.checked = true;
         });
         
-        // Load output
         if(localStorage.getItem('savedPrompt')) {
             document.getElementById('promptOutput').value = localStorage.getItem('savedPrompt');
         }
@@ -344,10 +315,8 @@
     function updateDynamicPrompts() {
         const key = document.getElementById('activityType').value;
         const config = activityConfig[key];
-        
         document.getElementById('dynLabel1').innerText = config.l1;
         document.getElementById('dynamicInput1').placeholder = config.p1;
-        
         document.getElementById('dynLabel2').innerText = config.l2;
         document.getElementById('dynamicInput2').placeholder = config.p2;
     }
@@ -355,24 +324,28 @@
     function generatePrompt() {
         const key = document.getElementById('activityType').value;
         const coreActivity = activityConfig[key].description;
-        
         const dyn1Label = document.getElementById('dynLabel1').innerText;
         const dyn1Val = document.getElementById('dynamicInput1').value;
         const dyn2Label = document.getElementById('dynLabel2').innerText;
         const dyn2Val = document.getElementById('dynamicInput2').value;
-
         const tone = document.getElementById('inputTone').value;
         const vocab = document.getElementById('inputVocab').value;
         
+        // Styling grabs
+        const theme = document.getElementById('colorTheme').value;
+        const font = document.getElementById('fontStyle').value;
+        const border = document.getElementById('borderStyle').value;
+        const animation = document.getElementById('animationStyle').value;
+
         const checkboxes = document.querySelectorAll('.feature-checkbox');
         let selectedFeatures = [];
         checkboxes.forEach(cb => {
             if(cb.checked) selectedFeatures.push("- " + cb.value);
         });
 
-        let prompt = `Act as an expert Full-Stack Web Developer. I am a 9th-grade student building a highly interactive web app for my parents at Open House.\n\n`;
+        let prompt = `Act as an expert Full-Stack Web Developer and UI/UX Designer. I am a 9th-grade student building a highly interactive, beautifully styled web app for my parents at Open House.\n\n`;
         prompt += `### CORE TASK\n`;
-        prompt += `Write a single-file web app (HTML, CSS, and JS combined in one file). Do not give me partial code.\n\n`;
+        prompt += `Write a single-file web app (HTML, CSS, and JS strictly combined in one file). Do not give me partial code.\n\n`;
         
         prompt += `### APP CONCEPT & ELA INTEGRATION\n`;
         prompt += `**Main Activity:** ${coreActivity}\n`;
@@ -381,18 +354,25 @@
         if (tone) prompt += `**Tone/Personality:** "${tone}"\n`;
         if (vocab) prompt += `**Mandatory Vocabulary:** Integrate these literary words: ${vocab}\n\n`;
 
+        prompt += `### AESTHETICS & CSS STYLING (CRITICAL)\n`;
+        prompt += `You must heavily style this app using the following parameters:\n`;
+        prompt += `- **Color Palette:** Use a ${theme} color scheme.\n`;
+        prompt += `- **Typography:** Import and use ${font} from Google Fonts.\n`;
+        prompt += `- **Borders/Shapes:** Apply ${border} to containers, cards, and buttons.\n`;
+        prompt += `- **Animations:** Include ${animation} using CSS keyframes or transitions.\n\n`;
+
         if(selectedFeatures.length > 0) {
-            prompt += `### UI, GAMIFICATION, & AESTHETICS\n`;
-            prompt += `Implement the following features using raw CSS/JS:\n${selectedFeatures.join('\n')}\n\n`;
+            prompt += `### EXTRA FLOURISHES\n`;
+            prompt += `Implement the following features:\n${selectedFeatures.join('\n')}\n\n`;
         }
 
         prompt += `### MANDATORY TECHNICAL REQUIREMENTS\n`;
         prompt += `1. **Local Storage:** Use localStorage so progress is saved on refresh.\n`;
         prompt += `2. **Copy to Clipboard:** Include a button to copy the final result.\n`;
         prompt += `3. **Print/Save:** Include a button that triggers window.print().\n`;
-        prompt += `4. **Responsive:** Must work on mobile and desktop.\n\n`;
+        prompt += `4. **Responsive:** Must work perfectly on mobile devices and Chromebooks.\n\n`;
         
-        prompt += `Write clean code so I can read it and explain it to my English teacher.`;
+        prompt += `Write clean, heavily commented code so I can read it and explain it to my English teacher.`;
 
         document.getElementById('promptOutput').value = prompt;
     }
@@ -409,12 +389,10 @@
     function saveData() {
         const saveStates = document.querySelectorAll('.save-state');
         saveStates.forEach(el => localStorage.setItem(el.id, el.value));
-        
         const checkboxes = document.querySelectorAll('.feature-checkbox');
         checkboxes.forEach((cb, index) => localStorage.setItem('cb_' + index, cb.checked));
-
         localStorage.setItem('savedPrompt', document.getElementById('promptOutput').value);
-        alert("System State Saved Locally.");
+        alert("Design Studio State Saved Locally.");
     }
 
     function resetForm() {
@@ -423,6 +401,10 @@
             const saveStates = document.querySelectorAll('.save-state');
             saveStates.forEach(el => el.value = "");
             document.getElementById('activityType').selectedIndex = 0;
+            document.getElementById('colorTheme').selectedIndex = 0;
+            document.getElementById('fontStyle').selectedIndex = 0;
+            document.getElementById('borderStyle').selectedIndex = 0;
+            document.getElementById('animationStyle').selectedIndex = 0;
             updateDynamicPrompts();
             
             const checkboxes = document.querySelectorAll('.feature-checkbox');
