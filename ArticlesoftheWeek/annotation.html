@@ -7,70 +7,52 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary: #1e293b;
-            --secondary: #3b82f6;
-            --bg: #f1f5f9;
+            --primary: #2c3e50;
+            --bg: #f8f9fa;
             --paper: #ffffff;
-            --margin-note-bg: #fefce8;
-            --highlight-yellow: rgba(253, 224, 71, 0.6);
-            --highlight-green: rgba(134, 239, 172, 0.5);
-            --highlight-blue: rgba(147, 197, 253, 0.5);
-            --highlight-pink: rgba(249, 168, 212, 0.5);
-            --text-color: #334155;
+            --margin-note-bg: #fff9c4;
+            --highlight-yellow: rgba(255, 235, 59, 0.6);
+            --highlight-green: rgba(76, 175, 80, 0.4);
+            --highlight-blue: rgba(3, 169, 244, 0.4);
+            --highlight-pink: rgba(233, 30, 99, 0.3);
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             margin: 0;
             padding: 0;
             display: flex;
             height: 100vh;
-            color: var(--text-color);
         }
 
-        /* Sidebar */
+        /* Sidebar for Saved Articles */
         #sidebar {
-            width: 280px;
+            width: 250px;
             background: var(--primary);
             color: white;
             padding: 20px;
             overflow-y: auto;
             box-sizing: border-box;
-            transition: transform 0.3s ease, width 0.3s ease;
-            position: relative;
         }
-        #sidebar.collapsed { width: 0; padding: 0; overflow: hidden; transform: translateX(-100%); }
 
-        #sidebar h2 { margin-top: 0; font-size: 1.2em; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        
+        #sidebar h2 { margin-top: 0; font-size: 1.2em; }
         .saved-item {
-            background: rgba(255,255,255,0.05);
-            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
             margin-bottom: 10px;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 5px;
             transition: background 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9em;
         }
-        .saved-item:hover { background: rgba(255,255,255,0.15); }
-        .delete-btn {
-            color: #ef4444; background: none; border: none;
-            font-size: 1.2em; cursor: pointer; padding: 0 5px;
-            font-weight: bold; border-radius: 3px;
-        }
-        .delete-btn:hover { background: rgba(239, 68, 68, 0.2); }
-
+        .saved-item:hover { background: rgba(255,255,255,0.2); }
+        
         button.action-btn {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            background: var(--secondary); color: white; border: none;
-            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1em;
-            transition: filter 0.2s;
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            background: #3498db; color: white; border: none;
+            border-radius: 5px; cursor: pointer; font-weight: bold;
         }
-        button.action-btn:hover { filter: brightness(1.1); }
+        button.action-btn:hover { background: #2980b9; }
 
         /* Main Workspace */
         #workspace {
@@ -80,138 +62,128 @@
             overflow-y: auto;
             padding: 20px;
             box-sizing: border-box;
-            position: relative;
         }
 
-        /* Top Accessibility / Header Bar */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .toggle-sidebar-btn {
-            background: var(--primary); color: white; border: none;
-            padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;
-        }
-        .timer-widget {
-            background: #e2e8f0; padding: 8px 15px; border-radius: 20px;
-            font-family: monospace; font-size: 1.2em; font-weight: bold;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .timer-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; }
-
+        /* Header / Metadata */
         .header-info {
-            display: flex; gap: 15px; margin-bottom: 20px; background: var(--paper);
-            padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            flex-wrap: wrap;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: var(--paper);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .header-info input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 150px; }
-        .header-info .date-stamp { padding: 10px; background: #f8fafc; border-radius: 6px; color: #64748b; font-weight: 500; }
+        .header-info input {
+            padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        .header-info .date-stamp {
+            padding: 8px; background: #eee; border-radius: 4px; color: #555;
+        }
 
         /* Toolbar */
         .toolbar {
-            display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
-            background: white; padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            flex-wrap: wrap;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
         }
-        .tool-divider { width: 1px; height: 30px; background: #e2e8f0; }
-        .color-picker { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s;}
-        .color-picker.active { border: 2px solid #0f172a; transform: scale(1.1); }
-        
-        .font-btn { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .font-btn:hover { background: #e2e8f0; }
-        .btn-pdf { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-left: auto; font-weight: bold; }
+        .color-picker {
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .color-picker.active { border: 2px solid #333; }
+        .btn-pdf { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: auto; font-weight: bold;}
 
         /* Input Area */
-        #input-area { display: flex; flex-direction: column; gap: 10px; background: white; padding: 20px; border-radius: 8px; }
-        #input-area textarea { width: 100%; height: 200px; padding: 15px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; resize: vertical; box-sizing: border-box; }
+        #input-area { display: flex; flex-direction: column; gap: 10px; }
+        #input-area textarea {
+            width: 100%; height: 150px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;
+            font-family: inherit; resize: vertical; box-sizing: border-box;
+        }
 
         /* Article Reading Area */
-        #article-container { background: var(--paper); padding: 50px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; margin-bottom: 40px; }
-        #display-title { margin-top: 0; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        #article-container {
+            background: var(--paper);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
 
-        /* Grid layout */
+        /* Grid layout for Paragraphs + Margin Notes */
         .paragraph-block {
-            display: grid; grid-template-columns: 2fr 1fr; gap: 30px;
-            margin-bottom: 30px; align-items: start;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+            align-items: start;
         }
-        .text-content { font-size: 1.15em; line-height: 1.8; color: #1e293b; transition: font-size 0.2s; }
-        
-        /* Highlighting */
-        .highlighted-text { cursor: pointer; transition: opacity 0.2s; border-radius: 3px; padding: 2px 0; }
-        .highlighted-text:hover { opacity: 0.7; outline: 1px dashed #64748b; }
 
-        /* Annotations & Accommodations */
-        .note-wrapper { position: relative; display: flex; flex-direction: column; gap: 5px; }
-        .mic-btn {
-            align-self: flex-end; background: #e2e8f0; border: none; border-radius: 50%; width: 32px; height: 32px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1em; transition: 0.2s;
+        .text-content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #333;
         }
-        .mic-btn:hover { background: #cbd5e1; }
-        .mic-btn.recording { background: #ef4444; color: white; animation: pulse 1.5s infinite; }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-
-        /* Requested: Dashed white box before highlighting/typing */
-        .margin-note, .reflection-box {
-            width: 100%; min-height: 90px;
-            background-color: #ffffff;
-            border: 2px dashed #cbd5e1;
-            padding: 12px; border-radius: 6px;
-            font-family: inherit; font-size: 0.95em;
-            resize: vertical; box-sizing: border-box;
-            transition: all 0.3s ease;
+        /* Highlighter Styles */
+        .highlighted-text {
+            cursor: pointer;
+            transition: opacity 0.2s;
+            border-radius: 3px;
         }
-        .margin-note:focus, .margin-note:not(:placeholder-shown),
-        .reflection-box:focus, .reflection-box:not(:placeholder-shown) {
+        .highlighted-text:hover {
+            opacity: 0.7; /* Visual feedback on hover to show it can be removed */
+            outline: 1px dashed #666;
+        }
+
+        /* Margin Notes */
+        .margin-note {
+            width: 100%;
+            min-height: 80px;
             background-color: var(--margin-note-bg);
-            border: 2px solid #fbbf24;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; /* Student feel */
+            font-size: 0.9em;
+            resize: vertical;
+            box-sizing: border-box;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
         }
 
-        .margin-note-print { display: none; white-space: pre-wrap; word-wrap: break-word; background-color: var(--margin-note-bg); border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
-
-        /* Reflection Section */
-        .reflection-section {
-            margin-top: 50px; padding-top: 30px; border-top: 3px solid #e2e8f0;
-            display: flex; flex-direction: column; gap: 20px;
+        /* Div used for PDF printing to allow expanding text */
+        .margin-note-print {
+            display: none;
+            width: 100%;
+            background-color: var(--margin-note-bg);
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 0.9em;
+            box-sizing: border-box;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
-        .reflection-section h3 { margin: 0 0 10px 0; color: #0f172a; }
 
-        /* Dictation Alert */
-        #dictation-alert { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 10px 20px; border-radius: 20px; z-index: 1000;}
-
-        /* PDF Overrides */
-        .pdf-mode .margin-note, .pdf-mode .reflection-box, .pdf-mode .mic-btn { display: none !important; }
+        /* PDF Output Specific Overrides */
+        .pdf-mode .margin-note { display: none !important; }
         .pdf-mode .margin-note-print { display: block !important; }
         .pdf-mode .highlighted-text { outline: none !important; }
-        .pdf-mode .paragraph-block { page-break-inside: avoid; }
 
     </style>
 </head>
 <body>
 
     <div id="sidebar">
-        <h2>📚 My Annotations</h2>
         <button class="action-btn" onclick="startNewArticle()">+ New Article</button>
-        <button class="action-btn" style="background:#10b981;" onclick="saveCurrentArticle()">💾 Save Progress</button>
+        <button class="action-btn" style="background:#2ecc71;" onclick="saveCurrentArticle()">Save Progress</button>
+        <h2>Saved Articles</h2>
         <div id="saved-list"></div>
     </div>
 
     <div id="workspace">
-        <div class="top-bar">
-            <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Toggle Sidebar</button>
-            
-            <div id="dictation-alert">🎙️ Listening... Speak your notes clearly.</div>
-
-            <div class="timer-widget">
-                <span id="timer-display">00:00</span>
-                <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle">▶️</button>
-                <button class="timer-btn" onclick="resetTimer()">🔄</button>
-            </div>
-        </div>
-
         <div class="header-info" id="student-info">
             <input type="text" id="student-name" placeholder="Student Name">
             <input type="text" id="student-period" placeholder="Period / Class">
@@ -219,116 +191,35 @@
         </div>
 
         <div class="toolbar" id="toolbar" style="display:none;">
-            <span><strong>Highlighter:</strong></span>
+            <span><strong>Highlighter:</strong> (Select text to apply, click highlight to remove)</span>
             <div class="color-picker active" style="background: var(--highlight-yellow);" data-color="var(--highlight-yellow)"></div>
             <div class="color-picker" style="background: var(--highlight-green);" data-color="var(--highlight-green)"></div>
             <div class="color-picker" style="background: var(--highlight-blue);" data-color="var(--highlight-blue)"></div>
             <div class="color-picker" style="background: var(--highlight-pink);" data-color="var(--highlight-pink)"></div>
-            
-            <div class="tool-divider"></div>
-            
-            <span style="font-size: 0.9em;"><em>Double-click any word for Dictionary</em></span>
-
-            <div class="tool-divider"></div>
-
-            <span><strong>Text Size:</strong></span>
-            <button class="font-btn" onclick="changeFontSize(-1)">A-</button>
-            <button class="font-btn" onclick="changeFontSize(1)">A+</button>
-
             <button class="btn-pdf" onclick="generatePDF()">🖨️ Export to PDF</button>
         </div>
 
         <div id="input-area">
-            <h2 style="margin-top:0;">Prepare Your Workspace</h2>
-            <input type="text" id="article-title" placeholder="Article Title" style="padding:12px; font-size: 1.2em; border: 1px solid #cbd5e1; border-radius: 6px;">
+            <h2>Paste Article Text</h2>
+            <input type="text" id="article-title" placeholder="Article Title" style="padding:10px; font-size: 1.1em;">
             <textarea id="raw-text" placeholder="Paste the text of your article here..."></textarea>
-            <button class="action-btn" style="width: 250px;" onclick="generateWorkspace()">Start Annotating</button>
+            <button class="action-btn" style="width: 200px;" onclick="generateWorkspace()">Start Annotating</button>
         </div>
 
         <div id="article-container">
             <h1 id="display-title"></h1>
             <div id="article-content"></div>
-            
-            <div class="reflection-section" id="reflection-area">
-                <h2>📝 Post-Reading Reflection</h2>
-                
-                <div>
-                    <h3>Main Idea</h3>
-                    <textarea class="reflection-box" id="ref-main" placeholder="Summarize the central idea of this article..."></textarea>
-                    <div class="margin-note-print" id="print-ref-main"></div>
-                </div>
-
-                <div>
-                    <h3>5C Connections</h3>
-                    <textarea class="reflection-box" id="ref-5c" placeholder="Connect to Communication, Collaboration, Critical Thinking, Creativity, or Citizenship..."></textarea>
-                    <div class="margin-note-print" id="print-ref-5c"></div>
-                </div>
-
-                <div>
-                    <h3>Critical Thinking</h3>
-                    <textarea class="reflection-box" id="ref-critical" placeholder="What questions do you still have? How does this challenge or support your worldview?"></textarea>
-                    <div class="margin-note-print" id="print-ref-critical"></div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
-        // Setup Date
+        // Set Date
         document.getElementById('current-date').innerText = new Date().toLocaleDateString();
 
-        // Variables
         let currentColor = 'var(--highlight-yellow)';
         let currentArticleId = null;
-        let baseFontSize = 1.15;
-        
-        // Timer Logic
-        let timerInterval;
-        let seconds = 0;
-        let isRunning = false;
 
-        function updateTimerDisplay() {
-            const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-            const secs = String(seconds % 60).padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${mins}:${secs}`;
-        }
-
-        function toggleTimer() {
-            if (isRunning) {
-                clearInterval(timerInterval);
-                document.getElementById('timer-toggle').innerText = '▶️';
-            } else {
-                timerInterval = setInterval(() => { seconds++; updateTimerDisplay(); }, 1000);
-                document.getElementById('timer-toggle').innerText = '⏸️';
-            }
-            isRunning = !isRunning;
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            seconds = 0;
-            isRunning = false;
-            updateTimerDisplay();
-            document.getElementById('timer-toggle').innerText = '▶️';
-        }
-
-        // Accessibility: Toggle Sidebar
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        }
-
-        // Accessibility: Font Sizing
-        function changeFontSize(direction) {
-            baseFontSize += (direction * 0.1);
-            if (baseFontSize < 0.8) baseFontSize = 0.8;
-            if (baseFontSize > 2.0) baseFontSize = 2.0;
-            
-            document.querySelectorAll('.text-content').forEach(el => {
-                el.style.fontSize = `${baseFontSize}em`;
-            });
-        }
-
-        // Highlighter Selection
+        // Highlighter Color Selection
         document.querySelectorAll('.color-picker').forEach(picker => {
             picker.addEventListener('click', (e) => {
                 document.querySelectorAll('.color-picker').forEach(p => p.classList.remove('active'));
@@ -338,58 +229,11 @@
         });
 
         // Initialize App
-        function init() { renderSavedList(); }
-
-        // Speech-to-Text Setup
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        function startDictation(textarea, micBtn) {
-            if (!SpeechRecognition) {
-                alert("Voice dictation is not supported in your browser. Please use Google Chrome or Microsoft Edge.");
-                return;
-            }
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            recognition.onstart = function() {
-                micBtn.classList.add('recording');
-                document.getElementById('dictation-alert').style.display = 'block';
-            };
-
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                // Add space if there is already text
-                textarea.value += (textarea.value.length > 0 ? " " : "") + transcript;
-                // Trigger visual update for placeholder trick
-                textarea.dispatchEvent(new Event('input')); 
-            };
-
-            recognition.onend = function() {
-                micBtn.classList.remove('recording');
-                document.getElementById('dictation-alert').style.display = 'none';
-            };
-
-            recognition.start();
+        function init() {
+            renderSavedList();
         }
 
-        // Dictionary API (Double-Click Word)
-        document.getElementById('article-content').addEventListener('dblclick', async () => {
-            const selection = window.getSelection().toString().trim().replace(/[^a-zA-Z]/g, '');
-            if(selection) {
-                try {
-                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selection}`);
-                    const data = await res.json();
-                    if(data && data[0] && data[0].meanings) {
-                        const def = data[0].meanings[0].definitions[0].definition;
-                        alert(`📖 Definition for "${selection}":\n\n${def}`);
-                    } else {
-                        alert(`📖 No definition found for "${selection}".`);
-                    }
-                } catch(e) { console.error("Dictionary error", e); }
-            }
-        });
-
-        // Generate Workspace
+        // Generate Workspace from pasted text
         function generateWorkspace() {
             const rawText = document.getElementById('raw-text').value.trim();
             const title = document.getElementById('article-title').value.trim() || "Untitled Article";
@@ -400,6 +244,7 @@
             const contentDiv = document.getElementById('article-content');
             contentDiv.innerHTML = '';
 
+            // Split text into paragraphs
             const paragraphs = rawText.split(/\n+/);
             
             paragraphs.forEach((para, index) => {
@@ -408,60 +253,56 @@
                 const block = document.createElement('div');
                 block.className = 'paragraph-block';
                 
+                // Text Area
                 const textDiv = document.createElement('div');
                 textDiv.className = 'text-content';
-                textDiv.style.fontSize = `${baseFontSize}em`;
                 textDiv.innerText = para;
                 
-                const noteWrapper = document.createElement('div');
-                noteWrapper.className = 'note-wrapper';
-
+                // Annotation Area (Textarea for typing, Div for printing)
+                const noteArea = document.createElement('div');
+                
                 const textarea = document.createElement('textarea');
                 textarea.className = 'margin-note';
-                textarea.placeholder = " "; // Needs space to trigger :placeholder-shown CSS logic properly
+                textarea.placeholder = "Add your annotations here...";
                 
-                // Mic Button
-                const micBtn = document.createElement('button');
-                micBtn.className = 'mic-btn';
-                micBtn.title = "Dictate note";
-                micBtn.innerText = '🎙️';
-                micBtn.onclick = () => startDictation(textarea, micBtn);
-
                 const printDiv = document.createElement('div');
                 printDiv.className = 'margin-note-print';
 
-                noteWrapper.appendChild(micBtn);
-                noteWrapper.appendChild(textarea);
-                noteWrapper.appendChild(printDiv);
+                noteArea.appendChild(textarea);
+                noteArea.appendChild(printDiv);
                 
                 block.appendChild(textDiv);
-                block.appendChild(noteWrapper);
+                block.appendChild(noteArea);
                 
                 contentDiv.appendChild(block);
             });
-
-            // Clear reflections
-            document.querySelectorAll('.reflection-box').forEach(box => box.value = '');
 
             document.getElementById('input-area').style.display = 'none';
             document.getElementById('toolbar').style.display = 'flex';
             document.getElementById('article-container').style.display = 'block';
 
-            currentArticleId = Date.now().toString();
+            currentArticleId = Date.now().toString(); // New ID
             setupHighlighting();
         }
 
-        // Highlighting Logic
+        // Highlighting Logic (Select to highlight, click to remove)
         function setupHighlighting() {
             const articleContent = document.getElementById('article-content');
             
+            // Apply highlight on text selection
             articleContent.addEventListener('mouseup', () => {
                 const selection = window.getSelection();
                 if (!selection.isCollapsed && selection.rangeCount > 0) {
                     const range = selection.getRangeAt(0);
                     
+                    // Prevent highlighting across different paragraphs to keep HTML clean
                     if(range.commonAncestorContainer.nodeType !== 3 && !range.commonAncestorContainer.classList?.contains('text-content')) {
-                        if(!range.commonAncestorContainer.closest('.text-content')) return;
+                        // Allow it if it's inside text-content, otherwise skip to prevent breaking layout
+                        if(range.commonAncestorContainer.closest('.text-content')) {
+                             // safe
+                        } else {
+                            return;
+                        }
                     }
 
                     const span = document.createElement('span');
@@ -470,13 +311,14 @@
                     
                     try {
                         range.surroundContents(span);
-                        selection.removeAllRanges();
+                        selection.removeAllRanges(); // Clear selection
                     } catch (e) {
-                        console.log("Cross-node highlight prevented to maintain clean HTML.");
+                        console.log("Could not highlight across HTML nodes cleanly. Try selecting text within a single sentence.");
                     }
                 }
             });
 
+            // Remove highlight on click
             articleContent.addEventListener('click', (e) => {
                 if (e.target.classList.contains('highlighted-text')) {
                     const text = document.createTextNode(e.target.innerText);
@@ -485,11 +327,140 @@
             });
         }
 
-        // Save & Load
+        // Save Article Locally
         function saveCurrentArticle() {
             if (!currentArticleId) return alert("No active article to save.");
 
+            // Before saving HTML, we must capture textarea values (they don't save in innerHTML automatically)
             const blocks = document.querySelectorAll('.paragraph-block');
             const notesData = [];
+            blocks.forEach((block, index) => {
+                const textarea = block.querySelector('.margin-note');
+                notesData.push(textarea.value);
+            });
+
+            const articleData = {
+                id: currentArticleId,
+                title: document.getElementById('display-title').innerText,
+                html: document.getElementById('article-content').innerHTML,
+                notes: notesData,
+                studentName: document.getElementById('student-name').value,
+                studentPeriod: document.getElementById('student-period').value,
+                date: document.getElementById('current-date').innerText
+            };
+
+            let saved = JSON.parse(localStorage.getItem('student_annotations')) || {};
+            saved[currentArticleId] = articleData;
+            localStorage.setItem('student_annotations', JSON.stringify(saved));
+            
+            alert("Progress Saved!");
+            renderSavedList();
+        }
+
+        // Load Article
+        function loadArticle(id) {
+            let saved = JSON.parse(localStorage.getItem('student_annotations')) || {};
+            const data = saved[id];
+            if (!data) return;
+
+            currentArticleId = id;
+            document.getElementById('student-name').value = data.studentName || '';
+            document.getElementById('student-period').value = data.studentPeriod || '';
+            document.getElementById('display-title').innerText = data.title;
+            
+            const contentDiv = document.getElementById('article-content');
+            contentDiv.innerHTML = data.html;
+
+            // Restore textarea values
+            const blocks = document.querySelectorAll('.paragraph-block');
+            blocks.forEach((block, index) => {
+                const textarea = block.querySelector('.margin-note');
+                if(data.notes && data.notes[index]) {
+                    textarea.value = data.notes[index];
+                }
+            });
+
+            document.getElementById('input-area').style.display = 'none';
+            document.getElementById('toolbar').style.display = 'flex';
+            document.getElementById('article-container').style.display = 'block';
+            
+            setupHighlighting();
+        }
+
+        function startNewArticle() {
+            currentArticleId = null;
+            document.getElementById('article-title').value = '';
+            document.getElementById('raw-text').value = '';
+            document.getElementById('input-area').style.display = 'flex';
+            document.getElementById('toolbar').style.display = 'none';
+            document.getElementById('article-container').style.display = 'none';
+        }
+
+        function renderSavedList() {
+            const list = document.getElementById('saved-list');
+            list.innerHTML = '';
+            let saved = JSON.parse(localStorage.getItem('student_annotations')) || {};
+            
+            Object.values(saved).reverse().forEach(article => {
+                const div = document.createElement('div');
+                div.className = 'saved-item';
+                div.innerText = article.title + " (" + article.date + ")";
+                div.onclick = () => loadArticle(article.id);
+                list.appendChild(div);
+            });
+        }
+
+        // Export to PDF
+        function generatePDF() {
+            const container = document.getElementById('article-container');
+            
+            // 1. Prepare textareas for printing (sync values to hidden divs)
+            const blocks = document.querySelectorAll('.paragraph-block');
             blocks.forEach(block => {
-                notesData.push(block.querySelector('.margin-note
+                const textarea = block.querySelector('.margin-note');
+                const printDiv = block.querySelector('.margin-note-print');
+                // Put textarea content into the div so it expands naturally in PDF
+                printDiv.innerText = textarea.value;
+            });
+
+            // 2. Add PDF mode class
+            container.classList.add('pdf-mode');
+
+            // 3. Build the header for the PDF
+            const name = document.getElementById('student-name').value || 'Student Name';
+            const period = document.getElementById('student-period').value || 'Period';
+            const date = document.getElementById('current-date').innerText;
+            
+            const pdfHeader = document.createElement('div');
+            pdfHeader.id = 'temp-pdf-header';
+            pdfHeader.innerHTML = `
+                <div style="display:flex; justify-content:space-between; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 20px;">
+                    <strong>Name:</strong> ${name} &nbsp;&nbsp;&nbsp; <strong>Period:</strong> ${period}
+                    <strong>Date:</strong> ${date}
+                </div>
+            `;
+            container.insertBefore(pdfHeader, container.firstChild);
+
+            // 4. Generate PDF
+            const opt = {
+                margin:       0.5,
+                filename:     `${name}_${document.getElementById('display-title').innerText}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(container).save().then(() => {
+                // 5. Cleanup after PDF generation
+                container.classList.remove('pdf-mode');
+                const headerToRemove = document.getElementById('temp-pdf-header');
+                if (headerToRemove) headerToRemove.remove();
+            });
+        }
+
+        // Run Init
+        init();
+
+    </script>
+</body>
+</html>
