@@ -5,131 +5,281 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sonnet 130: Full Poem Master Class</title>
     <style>
+        /* Importing Dramatic & Classic Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
+            /* Tragic Midnight to Crimson Gradient */
+            background: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #4c0519 100%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            font-family: 'Lora', serif;
             text-align: center;
             padding: 20px;
             font-size: 1.2rem;
             margin: 0;
+            min-height: 100vh;
         }
+
+        /* --- Falling Rose Petals Background --- */
+        .petal-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #9f1239;
+            border-radius: 15px 0 15px 0;
+            opacity: 0.5;
+            box-shadow: 0 0 10px rgba(159, 18, 57, 0.4);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
+        }
+
+        /* --- Glassmorphism Container --- */
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
-        h1 { color: #2c3e50; font-size: 2.2rem; }
-        h2 { color: #34495e; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-top: 30px; }
-        p { line-height: 1.6; }
+
+        h1 { 
+            font-family: 'Cinzel Decorative', serif; 
+            color: #fef3c7; 
+            font-size: 2.5rem; 
+            text-shadow: 0 0 15px rgba(225, 29, 72, 0.6);
+            margin-bottom: 30px;
+        }
+        
+        h2 { 
+            font-family: 'Cinzel Decorative', serif; 
+            color: #fca5a5; 
+            border-bottom: 1px solid rgba(225, 29, 72, 0.3); 
+            padding-bottom: 10px; 
+            margin-top: 30px; 
+        }
+        
+        p { line-height: 1.6; color: #cbd5e1; }
         
         /* Navigation */
-        .page { display: none; animation: fadeIn 0.4s; }
+        .page { display: none; animation: fadeIn 0.5s ease-in-out; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .nav-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 40px;
             padding-top: 20px;
-            border-top: 2px solid #ecf0f1;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .nav-btn {
-            background-color: #9b59b6; color: white; border: none; padding: 12px 25px; font-size: 1.2rem;
-            border-radius: 8px; cursor: pointer; font-weight: bold;
+            background-color: #be123c; 
+            color: #fef3c7; 
+            border: 1px solid #9f1239; 
+            padding: 12px 25px; 
+            font-size: 1.2rem;
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-family: 'Lora', serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .nav-btn.back-btn { background-color: #7f8c8d; }
-        .nav-btn:hover { filter: brightness(1.1); }
-        button { transition: transform 0.1s, filter 0.2s; }
+        .nav-btn.back-btn { background-color: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); color: #cbd5e1; }
+        .nav-btn:hover { background-color: #e11d48; transform: translateY(-2px); }
+        .nav-btn.back-btn:hover { background-color: rgba(255, 255, 255, 0.2); }
+        
         button:active { transform: scale(0.95); }
 
         /* Page 1: Rhythm Buttons & Scansion Lines */
-        .lesson-box { background-color: #e8f4f8; border-left: 5px solid #3498db; padding: 15px; text-align: left; margin-bottom: 25px; border-radius: 0 8px 8px 0; }
-        .poem-grid { display: grid; gap: 12px; justify-content: center; margin-top: 20px; }
+        .lesson-box { 
+            background-color: rgba(0, 0, 0, 0.3); 
+            border-left: 4px solid #be123c; 
+            padding: 20px; 
+            text-align: left; 
+            margin-bottom: 25px; 
+            border-radius: 0 8px 8px 0; 
+            color: #e2e8f0;
+        }
+        
+        .poem-grid { display: grid; gap: 15px; justify-content: center; margin-top: 30px; }
         .poem-line { display: flex; gap: 0px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
         
-        /* The Scansion Line (Vertical Divider) */
         .metric-foot {
             display: inline-flex;
             gap: 5px;
             padding-right: 12px;
             margin-right: 12px;
-            border-right: 2px solid #bdc3c7;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
         }
         .metric-foot:last-child { border-right: none; padding-right: 0; margin-right: 0; }
 
         .syllable-btn {
-            background-color: #ecf0f1; color: #333; border: 2px solid #bdc3c7;
-            padding: 8px 14px; font-size: 1.2rem; border-radius: 6px; cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.05); 
+            color: #cbd5e1; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 14px; 
+            font-size: 1.2rem; 
+            border-radius: 6px; 
+            cursor: pointer;
+            font-family: 'Lora', serif;
+            transition: all 0.2s;
         }
-        .syllable-btn.correct { background-color: #2ecc71 !important; color: white !important; border-color: #27ae60 !important; font-weight: bold; }
-        .syllable-btn.incorrect { background-color: #e74c3c; color: white; border-color: #c0392b; }
+        .syllable-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .syllable-btn.correct { background-color: #881337 !important; color: #fef3c7 !important; border-color: #be123c !important; font-weight: bold; box-shadow: 0 0 10px rgba(225, 29, 72, 0.4); }
+        .syllable-btn.incorrect { background-color: #020617; color: #475569; border-color: #0f172a; opacity: 0.5; }
 
         /* Page 2: Drag and Drop */
-        .stanza-group { background: #fafbfc; border: 2px solid #ecf0f1; border-radius: 10px; padding: 20px; margin-bottom: 30px; }
+        .stanza-group { 
+            background: rgba(0, 0, 0, 0.2); 
+            border: 1px solid rgba(225, 29, 72, 0.2); 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-bottom: 30px; 
+        }
         .dnd-container { display: flex; gap: 20px; text-align: left; }
         .draggable-items, .drop-targets { width: 50%; }
         
         .draggable {
-            background-color: #3498db; color: white; padding: 12px; margin-bottom: 10px;
-            border-radius: 8px; cursor: grab; font-weight: bold; font-size: 1.1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background-color: rgba(159, 18, 57, 0.8); 
+            color: #fef3c7; 
+            padding: 12px; 
+            margin-bottom: 10px;
+            border-radius: 8px; 
+            cursor: grab; 
+            font-weight: bold; 
+            font-size: 1.1rem;
+            border: 1px solid #be123c;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            transition: opacity 0.2s;
         }
-        .draggable.matched { background-color: #2ecc71 !important; cursor: default; box-shadow: none; }
+        .draggable.matched { background-color: #064e3b !important; border-color: #047857; color: #d1fae5; cursor: default; box-shadow: none; opacity: 0.8; }
         
         .dropzone-wrapper {
-            background-color: #fff; border: 2px solid #bdc3c7; border-radius: 8px;
-            margin-bottom: 10px; padding: 10px; display: flex; flex-direction: column;
+            background-color: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 8px;
+            margin-bottom: 15px; 
+            padding: 12px; 
+            display: flex; 
+            flex-direction: column;
         }
-        .modern-text { font-style: italic; color: #7f8c8d; margin-bottom: 8px; font-weight: bold; }
+        .modern-text { font-style: italic; color: #94a3b8; margin-bottom: 10px; font-weight: bold; }
         .dropzone {
-            flex-grow: 1; border: 2px dashed #95a5a6; border-radius: 6px;
-            background-color: #ecf0f1; min-height: 45px;
+            flex-grow: 1; 
+            border: 1px dashed #64748b; 
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.02); 
+            min-height: 50px;
+            transition: all 0.2s;
         }
-        .dropzone.dragover { background-color: #d1f2eb; border-color: #1abc9c; }
+        .dropzone.dragover { background-color: rgba(159, 18, 57, 0.2); border-color: #be123c; }
         .dropzone .draggable { margin-bottom: 0; }
 
         /* Page 3: Quiz & Reflection */
-        .quiz-section { text-align: left; background: #fafbfc; padding: 20px; border-radius: 10px; border: 2px solid #ecf0f1; margin-bottom: 20px; }
-        .mc-btn, .ev-btn {
-            display: block; width: 100%; text-align: left; background: #fff; border: 2px solid #bdc3c7;
-            padding: 15px; margin-bottom: 10px; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+        .quiz-section { 
+            text-align: left; 
+            background: rgba(0, 0, 0, 0.2); 
+            padding: 25px; 
+            border-radius: 10px; 
+            border: 1px solid rgba(225, 29, 72, 0.2); 
+            margin-bottom: 25px; 
         }
-        .mc-btn.selected, .ev-btn.selected { background: #3498db; color: white; border-color: #2980b9; font-weight: bold; }
+        .mc-btn, .ev-btn {
+            display: block; width: 100%; text-align: left; 
+            background: rgba(15, 23, 42, 0.6); 
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px; margin-bottom: 10px; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+            font-family: 'Lora', serif;
+            transition: all 0.2s;
+        }
+        .mc-btn:hover, .ev-btn:hover { background: rgba(159, 18, 57, 0.2); border-color: #be123c; }
+        .mc-btn.selected, .ev-btn.selected { background: #881337; color: #fef3c7; border-color: #fca5a5; font-weight: bold; box-shadow: 0 0 10px rgba(225, 29, 72, 0.3); }
         
-        .cer-claim { background: #e8f4f8; padding: 15px; border-left: 5px solid #3498db; font-style: italic; font-weight: bold; margin-bottom: 15px; }
+        .cer-claim { 
+            background: rgba(0, 0, 0, 0.4); 
+            padding: 15px; 
+            border-left: 4px solid #fca5a5; 
+            font-style: italic; 
+            color: #fef3c7;
+            margin-bottom: 20px; 
+        }
         
         textarea {
             width: 100%; height: 120px; padding: 15px; font-size: 1.1rem;
-            border-radius: 8px; border: 2px solid #bdc3c7; box-sizing: border-box; resize: vertical; margin-top: 10px;
-            font-family: inherit;
+            border-radius: 8px; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            background: rgba(0, 0, 0, 0.4);
+            color: #fef3c7;
+            box-sizing: border-box; resize: vertical; margin-top: 10px;
+            font-family: 'Lora', serif;
         }
+        textarea:focus { outline: none; border-color: #be123c; box-shadow: 0 0 8px rgba(225, 29, 72, 0.5); }
         
-        .save-btn { background-color: #27ae60; color: white; font-size: 1.3rem; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; }
-        .save-btn:hover { background-color: #2ecc71; }
+        .save-btn { 
+            background-color: #064e3b; 
+            color: #d1fae5; 
+            font-size: 1.2rem; 
+            padding: 15px 30px; 
+            border: 1px solid #047857; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-family: 'Lora', serif;
+            width: 100%; 
+            margin-top: 20px; 
+            transition: all 0.3s;
+        }
+        .save-btn:hover { background-color: #047857; box-shadow: 0 4px 15px rgba(4, 120, 87, 0.4); }
 
     </style>
 </head>
 <body>
 
+    <div class="petal-layer">
+        <div class="petal" style="left: 10%; animation-duration: 12s; animation-delay: 0s;"></div>
+        <div class="petal" style="left: 25%; animation-duration: 18s; animation-delay: -5s; width: 12px; height: 12px;"></div>
+        <div class="petal" style="left: 45%; animation-duration: 15s; animation-delay: -2s; width: 18px; height: 18px;"></div>
+        <div class="petal" style="left: 65%; animation-duration: 20s; animation-delay: -10s;"></div>
+        <div class="petal" style="left: 85%; animation-duration: 14s; animation-delay: -7s; width: 10px; height: 10px;"></div>
+        <div class="petal" style="left: 95%; animation-duration: 17s; animation-delay: -3s;"></div>
+    </div>
+
 <div class="container">
     
     <div id="page1" class="page active">
-        <h1>Part 1: The Heartbeat of Poetry 🫀</h1>
+        <h1>Part I: The Heartbeat of Poetry 🫀</h1>
         
         <div class="lesson-box">
-            <strong>👽 The "Alien Test"</strong><br>
+            <strong style="color: #fca5a5; font-size: 1.3rem;">The "Alien Test"</strong><br><br>
             To find the stressed (LOUD) syllable in a word, say it out loud the <em>wrong</em> way. <br>
             Do we say <strong>gui-TAR</strong> or <strong>GUI-tar</strong>? If you say <strong>GUI-tar</strong>, you sound like an alien! Therefore, the stress is on the second syllable.<br><br>
-            <strong>Your Mission:</strong> We have divided the lines below into "feet" (pairs of syllables) using a vertical line. Read the pairs out loud and <strong>click the ONE loud syllable in each pair</strong> to reveal the heartbeat.
+            <strong style="color: #fca5a5;">Your Mission:</strong> We have divided the lines below into "feet" (pairs of syllables) using a vertical line. Read the pairs out loud and <strong>click the ONE loud syllable in each pair</strong> to reveal the heartbeat.
         </div>
 
-        <button style="background: #e74c3c; color: white; padding: 10px 20px; border:none; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="playHeartbeatSequence()">🔊 Play Heartbeat (da-DUM)</button>
+        <button style="background: rgba(225, 29, 72, 0.2); color: #fca5a5; padding: 12px 25px; border: 1px solid #be123c; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Lora', serif; font-size: 1.1rem; transition: background 0.3s;" onclick="playHeartbeatSequence()" onmouseover="this.style.background='rgba(225, 29, 72, 0.4)'" onmouseout="this.style.background='rgba(225, 29, 72, 0.2)'">🔊 Play Heartbeat (da-DUM)</button>
         
         <div id="poem-container" class="poem-grid"></div>
         
@@ -139,19 +289,19 @@
     </div>
 
     <div id="page2" class="page">
-        <h1>Part 2: Translate the Teen Drama 📱</h1>
+        <h1>Part II: Translate the Teen Drama 📱</h1>
         <p>Drag the original Shakespeare lines on the left to match their modern translation on the right.</p>
         
         <div id="dnd-master-container"></div> 
         
         <div class="nav-container">
             <button class="nav-btn back-btn" onclick="goToPage('page1')">⬅️ Back: Heartbeat</button>
-            <button class="nav-btn" onclick="goToPage('page3')">Next: Quiz & Reflection ➡️</button>
+            <button class="nav-btn" onclick="goToPage('page3')">Next: Assessment ➡️</button>
         </div>
     </div>
 
     <div id="page3" class="page">
-        <h1>Part 3: Final Assessment ✍️</h1>
+        <h1>Part III: Final Reflections ✍️</h1>
         
         <div class="quiz-section">
             <h2>1. Rhyme Scheme</h2>
@@ -169,7 +319,7 @@
             <button class="ev-btn" onclick="selectMC('ev', this)">"I have seen roses damasked, red and white,"</button>
             <button class="ev-btn" onclick="selectMC('ev', this)">"And yet, by heaven, I think my love as rare / As any she belied with false compare."</button>
             
-            <p style="margin-top: 15px;"><strong>Reasoning:</strong> In your own words, explain how the line you chose proves the claim.</p>
+            <p style="margin-top: 20px;"><strong>Reasoning:</strong> In your own words, explain how the line you chose proves the claim.</p>
             <textarea id="cer-reasoning" placeholder="Type your reasoning here..."></textarea>
         </div>
 
@@ -179,7 +329,7 @@
             <textarea id="reflection-text" placeholder="Type your personal reflection here..."></textarea>
         </div>
 
-        <p style="font-weight: bold; color: #27ae60; margin-top: 20px;">Click below to download your answers as a text file to turn in!</p>
+        <p style="font-weight: bold; color: #10b981; margin-top: 30px; letter-spacing: 1px;">Click below to download your answers as a text file to turn in!</p>
         <button class="save-btn" onclick="saveLocally()">💾 Download Answers to Computer</button>
 
         <div class="nav-container" style="justify-content: flex-start; margin-top: 40px;">
