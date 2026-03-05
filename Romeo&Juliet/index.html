@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Romeo & Juliet Unit</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;700&display=swap');
+        /* Importing Dramatic & Classic Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
 
         body {
-            /* Romantic Midnight Palette: Velvet Purple to Deep Navy */
-            background: radial-gradient(circle at top, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
+            /* Tragic Midnight to Crimson Gradient */
+            background: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #4c0519 100%);
             background-attachment: fixed;
             color: #f8fafc;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Lora', serif;
             text-align: center;
             padding: 50px 20px;
             margin: 0;
@@ -21,8 +22,8 @@
             position: relative;
         }
 
-        /* --- Floating Hearts Background --- */
-        .heart-layer {
+        /* --- Falling Rose Petals Background --- */
+        .petal-layer {
             position: fixed;
             top: 0;
             left: 0;
@@ -32,32 +33,47 @@
             pointer-events: none;
         }
 
-        .floating-heart {
+        /* Pure CSS Rose Petal Shape */
+        .petal {
             position: absolute;
-            color: rgba(251, 113, 133, 0.2); /* Soft Rose Pink */
-            font-size: 1.5rem;
-            animation: floatUp linear infinite;
+            width: 15px;
+            height: 15px;
+            background: #9f1239; /* Deep Crimson */
+            border-radius: 15px 0 15px 0; /* Creates a petal/teardrop shape */
+            opacity: 0.6;
+            box-shadow: 0 0 10px rgba(159, 18, 57, 0.5);
+            animation: fall linear infinite;
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
         }
 
-        /* --- 3D Romantic Header --- */
+        /* --- Glassmorphism Container --- */
+        .hub-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- Dramatic Shakespearean Header --- */
         h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3.5rem;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3rem;
             margin-bottom: 40px;
-            text-transform: uppercase;
-            color: #fda4af; /* Rose Pink */
+            color: #fef3c7; /* Pale parchment/gold */
+            letter-spacing: 2px;
             text-shadow: 
-                0 1px 0 #e11d48,
-                0 2px 0 #be123c,
-                0 3px 0 #881337,
-                0 10px 20px rgba(0,0,0,0.6);
+                0 0 15px rgba(225, 29, 72, 0.6),
+                0 4px 4px rgba(0,0,0,0.8);
         }
 
         .unit-list {
@@ -65,90 +81,87 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
             align-items: center;
         }
 
         .unit-item {
             width: 100%;
-            max-width: 500px;
         }
 
-        /* --- Romantic Link Styling --- */
+        /* --- Elegant Thematic Links --- */
         .unit-link {
             display: block;
             text-decoration: none;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 8px;
             font-weight: 700;
-            font-size: 1.3rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid #fda4af;
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(225, 29, 72, 0.2);
+            border-left: 4px solid #be123c; /* Blood red accent line */
+            color: #e2e8f0;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* --- Hover State: Rose Glow --- */
+        /* --- Hover State: Crimson Glow --- */
         .unit-link:hover {
-            transform: translateY(-5px) scale(1.05);
-            background: #fda4af;
-            color: #4c1d95;
-            box-shadow: 0 0 25px rgba(253, 164, 175, 0.6);
-            animation: pulse-heart 1.5s infinite;
-        }
-
-        @keyframes pulse-heart {
-            0% { box-shadow: 0 0 0 0 rgba(253, 164, 175, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(253, 164, 175, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(253, 164, 175, 0); }
+            transform: translateY(-3px);
+            background: rgba(190, 18, 60, 0.15); /* Subtle red tint */
+            border-color: #be123c;
+            color: #fef3c7;
+            box-shadow: 0 10px 20px rgba(159, 18, 57, 0.3);
         }
 
         /* --- Back Button --- */
         .back-btn {
             display: inline-block;
             margin-top: 50px;
-            color: #cbd5e1;
+            color: #94a3b8;
             text-decoration: none;
-            font-weight: 400;
+            font-style: italic;
             font-size: 1rem;
             border-bottom: 1px solid transparent;
             transition: all 0.3s ease;
         }
 
         .back-btn:hover {
-            color: #fda4af;
-            border-bottom: 1px solid #fda4af;
+            color: #fef3c7;
+            border-bottom: 1px solid #fef3c7;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="heart-layer">
-        <div class="floating-heart" style="left: 10%; bottom: -10%; animation-duration: 15s;">❤</div>
-        <div class="floating-heart" style="left: 25%; bottom: -20%; animation-duration: 20s; animation-delay: -5s;">❣</div>
-        <div class="floating-heart" style="left: 45%; bottom: -15%; animation-duration: 18s; animation-delay: -2s;">❤</div>
-        <div class="floating-heart" style="left: 70%; bottom: -25%; animation-duration: 22s; animation-delay: -10s;">❣</div>
-        <div class="floating-heart" style="left: 85%; bottom: -10%; animation-duration: 17s; animation-delay: -7s;">❤</div>
+    <div class="petal-layer">
+        <div class="petal" style="left: 10%; animation-duration: 12s; animation-delay: 0s;"></div>
+        <div class="petal" style="left: 25%; animation-duration: 18s; animation-delay: -5s; width: 12px; height: 12px;"></div>
+        <div class="petal" style="left: 45%; animation-duration: 15s; animation-delay: -2s; width: 18px; height: 18px;"></div>
+        <div class="petal" style="left: 65%; animation-duration: 20s; animation-delay: -10s;"></div>
+        <div class="petal" style="left: 85%; animation-duration: 14s; animation-delay: -7s; width: 10px; height: 10px;"></div>
+        <div class="petal" style="left: 95%; animation-duration: 17s; animation-delay: -3s;"></div>
     </div>
 
     <div class="hub-container">
-        <h2>Romeo & Juliet Unit</h2>
+        <h2>Romeo & Juliet</h2>
 
         <ul class="unit-list">
             <li class="unit-item">
                 <a href="sonnet130.html" class="unit-link">Sonnet 130</a>
             </li>
             <li class="unit-item">
-                <a href="sonnet130v2.html" class="unit-link">Sonnet 130 Version 2</a>
+                <a href="sonnet130v2.html" class="unit-link">Sonnet 130 Modern Translation</a>
             </li>
             <li class="unit-item">
-                <a href="R&JBlackout.html" class="unit-link">Romeo & Juliet Blackout Poetry</a>
+                <a href="R&JBlackout.html" class="unit-link">Blackout Poetry</a>
             </li>
         </ul>
 
-        <p><a href="../index.html" class="back-btn">← Back to Main Classroom Menu</a></p>
+        <p><a href="../index.html" class="back-btn">← Return to the Main Classroom</a></p>
     </div>
 
 </body>
