@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Chapter 3 - Theme Detector</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&amp;family=Permanent+Marker&amp;display=swap" rel="stylesheet">
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
+    .correct-glow { animation: pulse-glow 1s ease-in-out 3; }
+    .shake { animation: shake 0.3s ease-in-out; }
+    
+    .newsprint-border {
+      border: 8px solid #2d2d2d;
+      border-image: repeating-linear-gradient(
+        45deg,
+        #1a1a1a,
+        #1a1a1a 2px,
+        #3d3d3d 2px,
+        #3d3d3d 4px
+      ) 8;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
+    }
+    
+    .grungy-texture {
+      background-image: 
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    }
+    
+    .typewriter-font {
+      font-family: 'Special Elite', 'Courier New', monospace;
+    }
+    
+    .marker-font {
+      font-family: 'Permanent Marker', cursive;
+    }
+    
+    .theme-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .theme-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    .theme-card.selected {
+      border-color: #d4af37 !important;
+      background-color: #3a3a3a !important;
+    }
+    .theme-card.correct {
+      border-color: #4caf50 !important;
+      background-color: #2d4a2d !important;
+    }
+    .theme-card.incorrect {
+      border-color: #c0392b !important;
+      background-color: #4a2d2d !important;
+    }
+    
+    .building-block {
+      transition: all 0.3s ease;
+    }
+    .building-block:hover {
+      background-color: #4a4a4a;
+    }
+    .building-block.placed {
+      background-color: #3d5a3d;
+      border-color: #4caf50;
+    }
+    .building-block.placed.incorrect {
+      background-color: #5a3d3d;
+      border-color: #c0392b;
+      box-shadow: 0 0 10px rgba(192, 57, 43, 0.5);
+    }
+    .building-block.placed.correct {
+      background-color: #3d5a3d;
+      border-color: #4caf50;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    
+    .drop-zone {
+      min-height: 60px;
+      border: 2px dashed #555;
+      transition: all 0.3s ease;
+    }
+    .drop-zone.drag-over {
+      border-color: #d4af37;
+      background-color: rgba(212, 175, 55, 0.1);
+    }
+    
+    .high-contrast-mode {
+      background-color: #000000 !important;
+    }
+    .high-contrast-mode body {
+      background-color: #000000 !important;
+    }
+    
+    @media print {
+      .no-print { display: none !important; }
+      .print-break { page-break-before: always; }
+    }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-neutral-900 grungy-texture">
+  <div id="app-wrapper" class="h-full w-full overflow-auto">
+   <div class="min-h-full w-full p-4 md:p-8">
+    <!-- Student Info Bar & Accessibility Toolbar -->
+    <div class="max-w-4xl mx-auto mb-4 flex flex-col gap-2">
+     <div class="flex flex-col md:flex-row items-center justify-between gap-3 bg-neutral-900 border-2 border-neutral-700 rounded p-3">
+      <div class="flex items-center gap-3 flex-1 w-full"><input type="text" id="student-name" placeholder="Name" maxlength="50" class="px-3 py-1 bg-neutral-800 border border-neutral-600 rounded text-neutral-200 typewriter-font text-xs placeholder-neutral-600 flex-1"> <input type="text" id="student-period" placeholder="Period" maxlength="10" class="px-3 py-1 bg-neutral-800 border border-neutral-600 rounded text-neutral-200 typewriter-font text-xs placeholder-neutral-600 w-24"> <span id="assignment-date" class="typewriter-font text-xs text-neutral-400 whitespace-nowrap"></span>
+      </div><button id="accessibility-toggle" class="px-3 py-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 typewriter-font text-xs rounded border border-neutral-500 transition-all whitespace-nowrap">♿ Accessibility</button>
+     </div><!-- Progress Bar -->
+     <div class="bg-neutral-900 border-2 border-neutral-700 rounded p-3">
+      <div class="flex items-center justify-between mb-2"><span class="typewriter-font text-xs text-neutral-400">Assignment Progress</span> <span id="progress-text" class="typewriter-font text-xs text-amber-400 font-bold">0%</span>
+      </div>
+      <div class="w-full h-4 bg-neutral-800 rounded border border-neutral-600 overflow-hidden">
+       <div id="progress-bar" class="h-full bg-gradient-to-r from-amber-700 to-amber-600 w-0 transition-all duration-300"></div>
+      </div>
+     </div><!-- Accessibility Panel (Hidden by default) -->
+     <div id="accessibility-panel" class="hidden bg-neutral-900 border-2 border-blue-700 rounded p-4">
+      <div class="flex justify-between items-center mb-3">
+       <h3 class="typewriter-font text-sm text-blue-300 font-bold">Accessibility Tools</h3><button onclick="toggleAccessibility()" class="text-blue-300 hover:text-blue-200 text-lg cursor-pointer">✕</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2"><button id="text-size-btn" class="px-3 py-2 bg-blue-800 hover:bg-blue-700 text-blue-100 typewriter-font text-xs rounded border border-blue-600 transition-all">🔤 Increase Text Size</button> <button id="contrast-btn" class="px-3 py-2 bg-blue-800 hover:bg-blue-700 text-blue-100 typewriter-font text-xs rounded border border-blue-600 transition-all">◐ High Contrast</button> <button id="dyslexia-btn" class="px-3 py-2 bg-blue-800 hover:bg-blue-700 text-blue-100 typewriter-font text-xs rounded border border-blue-600 transition-all">🔤 Dyslexia Font</button> <button id="spacing-btn" class="px-3 py-2 bg-blue-800 hover:bg-blue-700 text-blue-100 typewriter-font text-xs rounded border border-blue-600 transition-all">⟷ Increase Spacing</button>
+      </div>
+      <p class="typewriter-font text-xs text-neutral-500 mt-2">Tip: Use 🔊 icons next to text for audio reading</p>
+     </div>
+    </div><!-- Main Container -->
+    <div id="main-content" class="max-w-4xl mx-auto newsprint-border bg-neutral-800 p-6 md:p-10 rounded-sm">
+     <!-- Header -->
+     <header class="text-center mb-8 border-b-2 border-neutral-600 pb-6">
+      <h1 id="main-title" class="marker-font text-3xl md:text-4xl text-amber-100 mb-2 tracking-wide">THEME DETECTOR</h1>
+      <h2 id="chapter-subtitle" class="typewriter-font text-lg md:text-xl text-neutral-400">Night by Elie Wiesel — Chapter 3</h2>
+      <div class="flex justify-center gap-2 mt-4">
+       <span class="typewriter-font text-xs text-neutral-500">📰 LITERARY ANALYSIS EDITION</span>
+      </div>
+     </header><!-- Affirmation Banner (Hidden by default) -->
+     <div id="affirmation-banner" class="hidden mb-6 p-4 bg-gradient-to-r from-green-900 to-green-800 border-2 border-green-600 rounded text-center">
+      <p id="affirmation-text" class="marker-font text-xl text-green-200">⭐ Excellent Work! You're becoming a literary detective! ⭐</p>
+     </div><!-- Instructions -->
+     <section class="mb-8 p-4 bg-neutral-700 border-l-4 border-amber-600">
+      <h3 class="typewriter-font text-amber-200 text-lg mb-2">📋 INSTRUCTIONS</h3>
+      <p class="typewriter-font text-neutral-300 text-sm leading-relaxed">In Chapter 3, Eliezer arrives at Auschwitz-Birkenau. Identify the major themes present in this pivotal chapter by selecting the correct options and building evidence from the text.</p>
+     </section><!-- Part 1: Theme Detection -->
+     <section class="mb-10">
+      <div class="flex items-center justify-between mb-6">
+       <h3 class="marker-font text-2xl text-amber-100 flex items-center gap-2"><span class="text-amber-500">①</span> DETECT THE THEMES</h3><button onclick="speakText('Select all themes that appear in Chapter 3')" class="px-2 py-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-300 typewriter-font text-xs rounded border border-neutral-500 transition-all">🔊 Read</button>
+      </div>
+      <p class="typewriter-font text-neutral-400 text-sm mb-4">Select ALL themes that appear in Chapter 3:</p>
+      <div id="theme-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <!-- Theme cards will be generated by JS -->
+      </div><button id="check-themes-btn" class="no-print mt-6 w-full py-3 bg-amber-700 hover:bg-amber-600 text-amber-100 typewriter-font text-lg rounded border-2 border-amber-600 transition-all">🔍 CHECK MY ANSWERS</button>
+      <div id="theme-feedback" class="hidden mt-4 p-4 rounded typewriter-font text-center"></div>
+     </section><!-- Part 2: Building Activity -->
+     <section class="mb-10 print-break">
+      <h3 class="marker-font text-2xl text-amber-100 mb-6 flex items-center gap-2"><span class="text-amber-500">②</span> BUILD YOUR EVIDENCE</h3>
+      <p class="typewriter-font text-neutral-400 text-sm mb-4">Drag quotes from the text to match them with the correct theme:</p><!-- Quote Bank -->
+      <div class="mb-6 p-4 bg-neutral-700 rounded border border-neutral-600">
+       <h4 class="typewriter-font text-amber-300 text-sm mb-3">📚 QUOTE BANK</h4>
+       <div id="quote-bank" class="flex flex-wrap gap-2">
+        <!-- Quotes will be generated by JS -->
+       </div>
+      </div><!-- Drop Zones -->
+      <div id="drop-zones" class="space-y-4">
+       <!-- Drop zones will be generated by JS -->
+      </div><button id="check-evidence-btn" class="no-print mt-6 w-full py-3 bg-amber-700 hover:bg-amber-600 text-amber-100 typewriter-font text-lg rounded border-2 border-amber-600 transition-all">📝 CHECK EVIDENCE</button>
+      <div id="evidence-feedback" class="hidden mt-4 p-4 rounded typewriter-font text-center"></div>
+     </section><!-- Part 3: Reflection -->
+     <section class="mb-10">
+      <div class="flex items-center justify-between mb-6">
+       <h3 class="marker-font text-2xl text-amber-100 flex items-center gap-2"><span class="text-amber-500">③</span> REFLECTION</h3>
+       <div class="flex gap-2"><button onclick="speakText(document.getElementById('reflection-text').value || 'No text written yet')" class="px-2 py-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-300 typewriter-font text-xs rounded border border-neutral-500 transition-all">🔊 Read</button> <button id="dictation-btn" class="px-2 py-1 bg-blue-800 hover:bg-blue-700 text-blue-100 typewriter-font text-xs rounded border border-blue-600 transition-all">🎙️ Dictate</button>
+       </div>
+      </div>
+      <p class="typewriter-font text-neutral-400 text-sm mb-4">Write a brief reflection on how these themes connect:</p><textarea id="reflection-text" class="w-full h-32 p-4 bg-neutral-700 border-2 border-neutral-600 rounded text-neutral-200 typewriter-font text-sm resize-none focus:border-amber-600 focus:outline-none" placeholder="How do the themes of dehumanization, loss of faith, and survival connect in Chapter 3? Consider the selection process and Eliezer's first night at camp..."></textarea>
+     </section><!-- Score Display -->
+     <section id="score-section" class="hidden mb-8 p-6 bg-gradient-to-r from-neutral-700 to-neutral-800 rounded border-2 border-amber-600 text-center">
+      <h3 class="marker-font text-2xl text-amber-100 mb-2">YOUR SCORE</h3>
+      <p id="score-display" class="typewriter-font text-4xl text-amber-400"></p>
+      <p id="score-message" class="typewriter-font text-neutral-300 mt-2"></p>
+     </section><!-- Action Buttons -->
+     <section class="no-print flex flex-wrap gap-3 justify-center border-t-2 border-neutral-600 pt-6">
+      <button onclick="saveLocal()" class="px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 typewriter-font text-sm rounded border border-neutral-500 transition-all flex items-center gap-2">💾 Save Local</button> <button onclick="copyToClipboard()" class="px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 typewriter-font text-sm rounded border border-neutral-500 transition-all flex items-center gap-2">📋 Copy to Clipboard</button> <button onclick="saveToPDF()" class="px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 typewriter-font text-sm rounded border border-neutral-500 transition-all flex items-center gap-2">📄 Save to PDF</button> <button onclick="openGoogleDocsHelp()" class="px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 typewriter-font text-sm rounded border border-neutral-500 transition-all flex items-center gap-2">📝 Google Docs Guide</button>
+     </section><!-- Toast Notification -->
+     <div id="toast" class="fixed bottom-4 right-4 hidden p-4 bg-green-800 border-2 border-green-600 rounded shadow-lg z-50">
+      <p id="toast-message" class="typewriter-font text-green-200 text-sm"></p>
+     </div><!-- Google Docs Modal -->
+     <div id="gdocs-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div class="bg-neutral-800 newsprint-border p-6 max-w-md rounded">
+       <h3 class="marker-font text-xl text-amber-100 mb-4">📝 Save to Google Docs</h3>
+       <ol class="typewriter-font text-neutral-300 text-sm space-y-2 list-decimal list-inside">
+        <li>Click "Copy to Clipboard" first</li>
+        <li>Open <a href="https://docs.google.com" target="_blank" rel="noopener noreferrer" class="text-amber-400 underline">Google Docs</a></li>
+        <li>Create a new document</li>
+        <li>Paste (Ctrl/Cmd + V)</li>
+        <li>Format as needed</li>
+       </ol><button onclick="closeGDocsModal()" class="mt-4 w-full py-2 bg-amber-700 hover:bg-amber-600 text-amber-100 typewriter-font rounded">Got it!</button>
+      </div>
+     </div><!-- Footer -->
+     <footer class="mt-8 pt-4 border-t border-neutral-700 text-center">
+      <p class="typewriter-font text-xs text-neutral-500">Night Theme Detector — Chapter 3 Analysis</p>
+     </footer>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: "THEME DETECTOR",
+      chapter_subtitle: "Night by Elie Wiesel — Chapter 3",
+      affirmation_text: "⭐ Excellent Work! You're becoming a literary detective! ⭐",
+      primary_color: "#1f1f1f",
+      secondary_color: "#2d2d2d",
+      text_color: "#fef3c7",
+      accent_color: "#d97706",
+      highlight_color: "#92400e"
+    };
+
+    // Accessibility state
+    let accessibilitySettings = {
+      largeText: false,
+      highContrast: false,
+      dyslexiaFont: false,
+      spacing: false
+    };
+
+    let isListening = false;
+    let activitiesCompleted = {
+      themes: false,
+      evidence: false,
+      reflection: false
+    };
+
+    // Theme data
+    const themes = [
+      { id: 1, name: "Dehumanization", correct: true, desc: "Stripping away human dignity and identity" },
+      { id: 2, name: "Loss of Faith", correct: true, desc: "Questioning God and religious belief" },
+      { id: 3, name: "Father-Son Bond", correct: true, desc: "The relationship between Eliezer and his father" },
+      { id: 4, name: "Romantic Love", correct: false, desc: "Love between partners" },
+      { id: 5, name: "Survival", correct: true, desc: "The instinct to stay alive at all costs" },
+      { id: 6, name: "Comedy", correct: false, desc: "Humorous situations and events" },
+      { id: 7, name: "Night/Darkness", correct: true, desc: "Symbolic darkness and moral night" },
+      { id: 8, name: "Wealth & Success", correct: false, desc: "Achieving material prosperity" }
+    ];
+
+    // Quote data for building activity
+    const quotes = [
+      { id: 1, text: '"Men to the left! Women to the right!"', theme: "Dehumanization" },
+      { id: 2, text: '"Never shall I forget that night... which murdered my God"', theme: "Loss of Faith" },
+      { id: 3, text: '"My hand tightened its grip on my father"', theme: "Father-Son Bond" },
+      { id: 4, text: '"The flames... consuming my faith forever"', theme: "Night/Darkness" },
+      { id: 5, text: '"I became A-7713. I had no other name"', theme: "Dehumanization" },
+      { id: 6, text: '"Keep walking. Don\'t stop"', theme: "Survival" }
+    ];
+
+    const correctThemes = ["Dehumanization", "Loss of Faith", "Father-Son Bond", "Survival", "Night/Darkness"];
+
+    let selectedThemes = new Set();
+    let placedQuotes = {};
+    let draggedQuote = null;
+
+    // Initialize date
+    function initDate() {
+      const today = new Date();
+      const options = { month: 'short', day: 'numeric', year: 'numeric' };
+      const dateString = today.toLocaleDateString('en-US', options);
+      document.getElementById('assignment-date').textContent = dateString;
+    }
+
+    // Text-to-Speech Function
+    function speakText(text) {
+      if (!text) return;
+      
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Dictation Function
+    function startDictation() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        showToast('Speech recognition not supported in this browser');
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      const btn = document.getElementById('dictation-btn');
+      const textarea = document.getElementById('reflection-text');
+
+      recognition.onstart = () => {
+        isListening = true;
+        btn.style.backgroundColor = '#dc2626';
+        btn.style.borderColor = '#b91c1c';
+        btn.textContent = '🛑 Stop Listening...';
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (event.isFinal) {
+          textarea.value += (textarea.value ? ' ' : '') + transcript;
+          updateProgress();
+        }
+      };
+
+      recognition.onerror = (event) => {
+        showToast('Dictation error: ' + event.error);
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        btn.style.backgroundColor = '';
+        btn.style.borderColor = '';
+        btn.textContent = '🎙️ Dictate';
+      };
+
+      if (isListening) {
+        recognition.abort();
+      } else {
+        recognition.start();
+      }
+    }
+
+    // Toggle accessibility panel
+    function toggleAccessibility() {
+      const panel = document.getElementById('accessibility-panel');
+      panel.classList.toggle('hidden');
+    }
+
+    // Accessibility features
+    function applyTextSize() {
+      const app = document.getElementById('main-content');
+      if (accessibilitySettings.largeText) {
+        app.style.fontSize = '120%';
+      } else {
+        app.style.fontSize = '100%';
+      }
+    }
+
+    function applyHighContrast() {
+      if (accessibilitySettings.highContrast) {
+        document.body.style.backgroundColor = '#000000';
+        document.getElementById('main-content').style.backgroundColor = '#1a1a1a';
+        document.getElementById('main-content').style.borderColor = '#ffff00';
+        document.querySelectorAll('.marker-font').forEach(el => el.style.color = '#ffff00');
+        document.querySelectorAll('.typewriter-font').forEach(el => el.style.color = '#ffffff');
+        document.querySelectorAll('.bg-neutral-700').forEach(el => el.style.backgroundColor = '#1a1a1a');
+      } else {
+        document.body.style.backgroundColor = '';
+        document.getElementById('main-content').style.backgroundColor = '';
+        document.getElementById('main-content').style.borderColor = '';
+      }
+    }
+
+    function applyDyslexiaFont() {
+      if (accessibilitySettings.dyslexiaFont) {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=OpenDyslexic&display=swap';
+        link.rel = 'stylesheet';
+        if (!document.querySelector('link[href*="OpenDyslexic"]')) {
+          document.head.appendChild(link);
+        }
+        document.body.style.fontFamily = "'OpenDyslexic', 'Arial', sans-serif";
+      } else {
+        document.body.style.fontFamily = '';
+      }
+    }
+
+    function applySpacing() {
+      const app = document.getElementById('main-content');
+      if (accessibilitySettings.spacing) {
+        app.style.letterSpacing = '0.15em';
+        app.style.lineHeight = '2';
+      } else {
+        app.style.letterSpacing = '';
+        app.style.lineHeight = '';
+      }
+    }
+
+    // Setup accessibility buttons
+    function setupAccessibility() {
+      document.getElementById('text-size-btn').addEventListener('click', function() {
+        accessibilitySettings.largeText = !accessibilitySettings.largeText;
+        applyTextSize();
+        this.style.backgroundColor = accessibilitySettings.largeText ? '#1e3a8a' : '';
+      });
+
+      document.getElementById('contrast-btn').addEventListener('click', function() {
+        accessibilitySettings.highContrast = !accessibilitySettings.highContrast;
+        applyHighContrast();
+        this.style.backgroundColor = accessibilitySettings.highContrast ? '#1e3a8a' : '';
+      });
+
+      document.getElementById('dyslexia-btn').addEventListener('click', function() {
+        accessibilitySettings.dyslexiaFont = !accessibilitySettings.dyslexiaFont;
+        applyDyslexiaFont();
+        this.style.backgroundColor = accessibilitySettings.dyslexiaFont ? '#1e3a8a' : '';
+      });
+
+      document.getElementById('spacing-btn').addEventListener('click', function() {
+        accessibilitySettings.spacing = !accessibilitySettings.spacing;
+        applySpacing();
+        this.style.backgroundColor = accessibilitySettings.spacing ? '#1e3a8a' : '';
+      });
+
+      document.getElementById('accessibility-toggle').addEventListener('click', toggleAccessibility);
+      document.getElementById('dictation-btn').addEventListener('click', startDictation);
+    }
+
+    // Update progress bar
+    function updateProgress() {
+      let completedActivities = 0;
+      
+      if (activitiesCompleted.themes) completedActivities++;
+      if (activitiesCompleted.evidence) completedActivities++;
+      
+      const reflectionText = document.getElementById('reflection-text').value.trim();
+      if (reflectionText.length > 0) {
+        completedActivities++;
+      }
+      
+      const percentage = Math.round((completedActivities / 3) * 100);
+      document.getElementById('progress-bar').style.width = percentage + '%';
+      document.getElementById('progress-text').textContent = percentage + '%';
+    }
+
+    // Initialize theme grid
+    function initThemeGrid() {
+      const grid = document.getElementById('theme-grid');
+      grid.innerHTML = themes.map(theme => `
+        <div class="theme-card p-4 bg-neutral-700 border-2 border-neutral-500 rounded" 
+             data-id="${theme.id}" onclick="toggleTheme(${theme.id})">
+          <h4 class="marker-font text-lg text-amber-200">${theme.name}</h4>
+          <p class="typewriter-font text-xs text-neutral-400 mt-1">${theme.desc}</p>
+          <div class="mt-2 flex items-center gap-2">
+            <span class="theme-checkbox w-5 h-5 border-2 border-neutral-500 rounded flex items-center justify-center text-green-400">
+              ${selectedThemes.has(theme.id) ? '✓' : ''}
+            </span>
+            <span class="typewriter-font text-xs text-neutral-500">Select</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Toggle theme selection
+    function toggleTheme(id) {
+      if (selectedThemes.has(id)) {
+        selectedThemes.delete(id);
+      } else {
+        selectedThemes.add(id);
+      }
+      initThemeGrid();
+      updateCardStates();
+    }
+
+    function updateCardStates() {
+      document.querySelectorAll('.theme-card').forEach(card => {
+        const id = parseInt(card.dataset.id);
+        card.classList.toggle('selected', selectedThemes.has(id));
+      });
+    }
+
+    // Check theme answers
+    function checkThemes() {
+      let correct = 0;
+      let total = themes.filter(t => t.correct).length;
+      
+      document.querySelectorAll('.theme-card').forEach(card => {
+        const id = parseInt(card.dataset.id);
+        const theme = themes.find(t => t.id === id);
+        const isSelected = selectedThemes.has(id);
+        
+        card.classList.remove('selected', 'correct', 'incorrect');
+        
+        if (theme.correct && isSelected) {
+          card.classList.add('correct');
+          correct++;
+        } else if (!theme.correct && isSelected) {
+          card.classList.add('incorrect');
+          card.classList.add('shake');
+          setTimeout(() => card.classList.remove('shake'), 300);
+        } else if (theme.correct && !isSelected) {
+          card.classList.add('correct');
+        }
+      });
+
+      activitiesCompleted.themes = true;
+      updateProgress();
+
+      const feedback = document.getElementById('theme-feedback');
+      feedback.classList.remove('hidden');
+      
+      if (correct === total && !Array.from(selectedThemes).some(id => !themes.find(t => t.id === id).correct)) {
+        feedback.className = 'mt-4 p-4 rounded typewriter-font text-center bg-green-900 border border-green-600 text-green-200';
+        feedback.textContent = `Perfect! You identified all ${total} themes correctly!`;
+        showAffirmation();
+        playCorrectSound();
+      } else {
+        feedback.className = 'mt-4 p-4 rounded typewriter-font text-center bg-amber-900 border border-amber-600 text-amber-200';
+        feedback.textContent = `You got ${correct} out of ${total} themes. Review the highlighted cards!`;
+      }
+
+      updateScore();
+    }
+
+    // Initialize quote bank and drop zones
+    function initBuildingActivity() {
+      const quoteBank = document.getElementById('quote-bank');
+      quoteBank.innerHTML = quotes.map(q => `
+        <div class="building-block p-2 bg-neutral-600 border border-neutral-500 rounded cursor-move typewriter-font text-xs text-neutral-200"
+             draggable="true" data-quote-id="${q.id}" data-theme="${q.theme}">
+          ${q.text}
+        </div>
+      `).join('');
+
+      const dropZones = document.getElementById('drop-zones');
+      dropZones.innerHTML = correctThemes.map(theme => `
+        <div class="drop-zone p-4 bg-neutral-700 rounded" data-theme="${theme}">
+          <h4 class="marker-font text-amber-300 mb-2">${theme}</h4>
+          <div class="dropped-quotes space-y-2"></div>
+        </div>
+      `).join('');
+
+      // Add drag event listeners
+      document.querySelectorAll('.building-block').forEach(block => {
+        block.addEventListener('dragstart', handleDragStart);
+        block.addEventListener('dragend', handleDragEnd);
+      });
+
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', handleDragOver);
+        zone.addEventListener('dragleave', handleDragLeave);
+        zone.addEventListener('drop', handleDrop);
+      });
+    }
+
+    function handleDragStart(e) {
+      draggedQuote = e.target;
+      e.target.style.opacity = '0.5';
+    }
+
+    function handleDragEnd(e) {
+      e.target.style.opacity = '1';
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      
+      if (draggedQuote) {
+        const quoteId = draggedQuote.dataset.quoteId;
+        const dropTheme = e.currentTarget.dataset.theme;
+        const droppedArea = e.currentTarget.querySelector('.dropped-quotes');
+        
+        // Clone and place the quote
+        const clone = draggedQuote.cloneNode(true);
+        clone.classList.add('placed');
+        clone.draggable = false;
+        clone.style.opacity = '1';
+        clone.style.cursor = 'pointer';
+        clone.title = 'Click to remove and revise';
+        clone.onclick = (event) => {
+          event.stopPropagation();
+          clone.remove();
+          draggedQuote.style.display = 'block';
+          delete placedQuotes[quoteId];
+          updateProgress();
+        };
+        
+        droppedArea.appendChild(clone);
+        draggedQuote.style.display = 'none';
+        placedQuotes[quoteId] = dropTheme;
+        updateProgress();
+      }
+    }
+
+    // Check evidence
+    function checkEvidence() {
+      let correct = 0;
+      let total = quotes.length;
+
+      // Mark placed quotes as correct or incorrect
+      document.querySelectorAll('.building-block.placed').forEach(block => {
+        const quoteId = parseInt(block.dataset.quoteId);
+        const quote = quotes.find(q => q.id === quoteId);
+        const placedTheme = placedQuotes[quoteId];
+
+        block.classList.remove('correct', 'incorrect');
+        
+        if (placedTheme === quote.theme) {
+          block.classList.add('correct');
+          correct++;
+        } else {
+          block.classList.add('incorrect');
+          block.style.cursor = 'pointer';
+          block.title = 'Click to remove and revise';
+        }
+      });
+
+      activitiesCompleted.evidence = true;
+      updateProgress();
+
+      const feedback = document.getElementById('evidence-feedback');
+      feedback.classList.remove('hidden');
+
+      if (correct === total) {
+        feedback.className = 'mt-4 p-4 rounded typewriter-font text-center bg-green-900 border border-green-600 text-green-200';
+        feedback.textContent = `Outstanding! All ${total} quotes matched correctly!`;
+        showAffirmation();
+        playCorrectSound();
+      } else {
+        feedback.className = 'mt-4 p-4 rounded typewriter-font text-center bg-amber-900 border border-amber-600 text-amber-200';
+        feedback.textContent = `You matched ${correct} out of ${total} quotes correctly. Red-outlined quotes need revision!`;
+      }
+
+      updateScore();
+    }
+
+    // Score calculation
+    function updateScore() {
+      const themeScore = themes.filter(t => t.correct && selectedThemes.has(t.id)).length;
+      const themeTotal = themes.filter(t => t.correct).length;
+      const incorrectSelections = Array.from(selectedThemes).filter(id => !themes.find(t => t.id === id).correct).length;
+      
+      const evidenceScore = quotes.filter(q => placedQuotes[q.id] === q.theme).length;
+      const evidenceTotal = quotes.length;
+
+      const totalScore = Math.max(0, themeScore - incorrectSelections) + evidenceScore;
+      const maxScore = themeTotal + evidenceTotal;
+      const percentage = Math.round((totalScore / maxScore) * 100);
+
+      const scoreSection = document.getElementById('score-section');
+      scoreSection.classList.remove('hidden');
+      
+      document.getElementById('score-display').textContent = `${percentage}%`;
+      
+      let message = '';
+      if (percentage >= 90) message = 'Outstanding literary analysis!';
+      else if (percentage >= 70) message = 'Great work! Keep refining your analysis.';
+      else if (percentage >= 50) message = 'Good effort! Review the themes again.';
+      else message = 'Keep studying Chapter 3 and try again!';
+      
+      document.getElementById('score-message').textContent = message;
+    }
+
+    // Affirmation and sound
+    function showAffirmation() {
+      const banner = document.getElementById('affirmation-banner');
+      banner.classList.remove('hidden');
+      banner.classList.add('animate-fade-in', 'correct-glow');
+    }
+
+    function playCorrectSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+      } catch (e) {
+        console.log('Audio not supported');
+      }
+    }
+
+    // Toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    // Save functions
+    function saveLocal() {
+      const data = {
+        name: document.getElementById('student-name').value,
+        period: document.getElementById('student-period').value,
+        date: document.getElementById('assignment-date').textContent,
+        selectedThemes: Array.from(selectedThemes),
+        placedQuotes: placedQuotes,
+        reflection: document.getElementById('reflection-text').value
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `night-chapter3-assignment-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Assignment saved locally!');
+    }
+
+    function copyToClipboard() {
+      const textContent = `
+NIGHT CHAPTER 3 - THEME DETECTOR ASSIGNMENT
+==========================================
+
+Student: ${document.getElementById('student-name').value || 'Name not entered'}
+Period: ${document.getElementById('student-period').value || 'Period not entered'}
+Date: ${document.getElementById('assignment-date').textContent}
+
+SELECTED THEMES:
+${Array.from(selectedThemes).map(id => themes.find(t => t.id === id)?.name).filter(Boolean).join(', ') || 'None selected'}
+
+EVIDENCE MATCHING:
+${Object.entries(placedQuotes).map(([qId, theme]) => {
+  const quote = quotes.find(q => q.id === parseInt(qId));
+  return quote ? `• "${quote.text}" → ${theme}` : '';
+}).filter(Boolean).join('\n') || 'No quotes placed'}
+
+REFLECTION:
+${document.getElementById('reflection-text').value || 'No reflection written'}
+      `;
+      
+      navigator.clipboard.writeText(textContent).then(() => {
+        showToast('Copied to clipboard!');
+      }).catch(() => {
+        showToast('Failed to copy. Please try again.');
+      });
+    }
+
+    function saveToPDF() {
+      const element = document.getElementById('main-content');
+      const opt = {
+        margin: 10,
+        filename: `night-chapter3-assignment-${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).save();
+      showToast('PDF is being generated...');
+    }
+
+    function openGoogleDocsHelp() {
+      document.getElementById('gdocs-modal').classList.remove('hidden');
+    }
+
+    function closeGDocsModal() {
+      document.getElementById('gdocs-modal').classList.add('hidden');
+    }
+
+    // Element SDK integration
+    async function onConfigChange(config) {
+      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+      document.getElementById('chapter-subtitle').textContent = config.chapter_subtitle || defaultConfig.chapter_subtitle;
+      document.getElementById('affirmation-text').textContent = config.affirmation_text || defaultConfig.affirmation_text;
+      
+      document.body.style.backgroundColor = config.primary_color || defaultConfig.primary_color;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+          },
+          {
+            get: () => config.secondary_color || defaultConfig.secondary_color,
+            set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); }
+          },
+          {
+            get: () => config.highlight_color || defaultConfig.highlight_color,
+            set: (value) => { config.highlight_color = value; window.elementSdk.setConfig({ highlight_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["main_title", config.main_title || defaultConfig.main_title],
+        ["chapter_subtitle", config.chapter_subtitle || defaultConfig.chapter_subtitle],
+        ["affirmation_text", config.affirmation_text || defaultConfig.affirmation_text]
+      ]);
+    }
+
+    // Initialize
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Event listeners
+    document.getElementById('check-themes-btn').addEventListener('click', checkThemes);
+    document.getElementById('check-evidence-btn').addEventListener('click', checkEvidence);
+    document.getElementById('reflection-text').addEventListener('input', updateProgress);
+
+    // Initialize UI
+    initDate();
+    setupAccessibility();
+    initThemeGrid();
+    initBuildingActivity();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d76691597ac531e',t:'MTc3MjY4NTI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
