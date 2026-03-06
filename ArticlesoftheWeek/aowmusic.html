@@ -24,7 +24,8 @@
 
     body {
       margin: 0;
-      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      /* Modernized Font Stack */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--text);
       background:
         radial-gradient(circle at 10% 10%, #1c2440 0%, transparent 30%),
@@ -158,24 +159,36 @@
       padding: 6px 9px;
       cursor: pointer;
       font-weight: 600;
+      /* Smooth button transitions */
+      transition: all 0.2s ease;
     }
 
-    button:hover { filter: brightness(1.08); }
+    button:hover { 
+      filter: brightness(1.2); 
+      transform: translateY(-1px);
+    }
 
     .active-toggle {
       border-color: var(--accent);
       box-shadow: 0 0 0 2px rgba(135, 255, 101, 0.2) inset;
     }
 
+    /* Softened Textareas */
     input[type="text"], textarea {
       width: 100%;
-      border: 2px solid var(--neon-pink);
+      border: 2px solid var(--neon-cyan);
       border-radius: 8px;
-      background: #fff;
-      color: var(--ink);
+      background: #1a2436;
+      color: var(--text);
       padding: 8px;
       font: inherit;
       outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(135, 255, 101, 0.3);
     }
 
     textarea {
@@ -318,7 +331,8 @@
       top: var(--ruler-y);
       pointer-events: none;
       display: none;
-      z-index: 1200;
+      /* Fixed Reading Ruler z-index */
+      z-index: 900;
     }
 
     .footer-actions {
@@ -566,7 +580,8 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = "aow_music_assignment_v1";
+      // Changed to v2 so students get a fresh cache with the new DOM fixes
+      const STORAGE_KEY = "aow_music_assignment_v2";
       const articleContent = document.getElementById("articleContent");
       const progressBar = document.getElementById("progressBar");
       const toolbar = document.getElementById("highlightToolbar");
@@ -770,6 +785,8 @@
         });
       }
 
+      // Tie ghost building natively to browser print dialogs
+      window.addEventListener("beforeprint", buildPrintGhosts);
       window.addEventListener("afterprint", () => {
         document.querySelectorAll(".print-box").forEach((n) => n.remove());
       });
@@ -813,6 +830,16 @@
 
       document.getElementById("doHighlight").addEventListener("click", () => {
         if (!selectedRange || selectedRange.collapsed) return;
+        
+        // Prevent cross-paragraph highlighting to protect HTML structure
+        if (selectedRange.commonAncestorContainer.nodeType !== 3 && 
+            selectedRange.startContainer.parentNode !== selectedRange.endContainer.parentNode) {
+          alert("Please highlight text within one paragraph at a time.");
+          window.getSelection().removeAllRanges();
+          hideToolOverlays();
+          return;
+        }
+
         safeSurround(selectedRange, "highlighted");
         window.getSelection().removeAllRanges();
         selectedRange = null;
@@ -841,7 +868,18 @@
         if (ttsBtn) {
           const targetId = ttsBtn.getAttribute("data-target");
           const target = document.getElementById(targetId);
-          playTTS(ttsBtn, target ? target.textContent.replace("🔊", "") : "");
+          if (target) {
+            // Clone the node so we can remove the button safely before reading
+            const clone = target.cloneNode(true);
+            const btnInClone = clone.querySelector('.tts-btn');
+            if (btnInClone) btnInClone.remove();
+            
+            // Remove the paragraph number so it doesn't say "1." every time
+            const pnumInClone = clone.querySelector('.pnum');
+            if (pnumInClone) pnumInClone.remove();
+            
+            playTTS(ttsBtn, clone.textContent.trim());
+          }
           return;
         }
       });
@@ -931,7 +969,7 @@
       });
 
       document.getElementById("finalSubmit").addEventListener("click", () => {
-        buildPrintGhosts();
+        // Simply call print; the beforeprint event will build the ghosts natively
         window.print();
       });
 
@@ -945,7 +983,8 @@
         }
         document.getElementById("lockOverlay").style.display = "none";
         body.classList.remove("locked");
-        body.style.overflow = "auto";
+        // Clear the inline style to fix the lock screen scroll bug
+        body.style.overflow = "";
       }
 
       document.getElementById("unlockBtn").addEventListener("click", tryUnlock);
