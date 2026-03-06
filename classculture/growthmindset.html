@@ -300,9 +300,9 @@
   </div>
 
   <div class="nav-bar no-print">
-    <button id="btn-prev" class="nav-btn nav-btn-prev" onclick="navigate(-1)">← Previous</button>
+    <button id="btn-prev" class="nav-btn nav-btn-prev" onclick="changePage(-1)">← Previous</button>
     <div id="nav-dots" class="flex gap-2"></div>
-    <button id="btn-next" class="nav-btn nav-btn-next" onclick="navigate(1)">Next →</button>
+    <button id="btn-next" class="nav-btn nav-btn-next" onclick="changePage(1)">Next →</button>
   </div>
 
   <script>
@@ -346,16 +346,16 @@
         if (saved[el.id]) el.value = saved[el.id];
       });
 
-      // Restore Section
+      // Restore Section safely parsed to number
       if (saved.currentSectionIdx !== undefined) {
-        currentSectionIdx = saved.currentSectionIdx;
+        currentSectionIdx = parseInt(saved.currentSectionIdx, 10) || 0;
       }
       
       updateNavigation();
     };
 
     /* --- NAVIGATION LOGIC --- */
-    function navigate(direction) {
+    function changePage(direction) {
       currentSectionIdx += direction;
       if(currentSectionIdx < 0) currentSectionIdx = 0;
       if(currentSectionIdx >= totalSections) currentSectionIdx = totalSections - 1;
@@ -406,6 +406,16 @@
     }
 
     /* --- ACCESSIBILITY --- */
+
+    function toggleAccessibility() {
+      const panel = document.getElementById('access-buttons');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'flex';
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+    
     function adjustFontSize(delta) {
       fontSizeMod = Math.max(0.8, Math.min(1.5, fontSizeMod + delta));
       document.body.style.fontSize = `${fontSizeMod}rem`;
@@ -515,7 +525,6 @@
     function exportToPDF() {
       const d = getExportData();
       
-      // Create a temporary un-styled div for clean white PDF printing
       const pdfDiv = document.createElement('div');
       pdfDiv.style.padding = "40px";
       pdfDiv.style.background = "white";
@@ -556,7 +565,7 @@
       });
     }
 
-    /* --- TETRIS (Unchanged logic, wrapped for safety) --- */
+    /* --- TETRIS --- */
     const TETRIS_PIECES = [
       { shape: [[1,1,1,1]] }, { shape: [[1,1],[1,1]] }, { shape: [[0,1,0],[1,1,1]] },
       { shape: [[1,0,0],[1,1,1]] }, { shape: [[0,0,1],[1,1,1]] }, { shape: [[1,1,0],[0,1,1]] }, { shape: [[0,1,1],[1,1,0]] }
@@ -571,7 +580,7 @@
     }
 
     function startTetris(gameNum) {
-      if(tetrisGames[gameNum] && tetrisGames[gameNum].active) return; // Prevent double clicks
+      if(tetrisGames[gameNum] && tetrisGames[gameNum].active) return;
       
       const game = {
         board: Array(20).fill(null).map(() => Array(10).fill(0)),
