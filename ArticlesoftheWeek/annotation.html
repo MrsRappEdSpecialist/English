@@ -15,6 +15,7 @@
             --highlight-green: rgba(76, 175, 80, 0.4);
             --highlight-blue: rgba(3, 169, 244, 0.4);
             --highlight-pink: rgba(233, 30, 99, 0.3);
+            --article-size: 1.1em;
         }
 
         body {
@@ -51,6 +52,7 @@
             width: 100%; padding: 10px; margin-bottom: 15px;
             background: #3498db; color: white; border: none;
             border-radius: 5px; cursor: pointer; font-weight: bold;
+            transition: background 0.2s;
         }
         button.action-btn:hover { background: #2980b9; }
 
@@ -73,33 +75,60 @@
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
         }
         .header-info input {
-            padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+            padding: 8px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 150px;
         }
         .header-info .date-stamp {
-            padding: 8px; background: #eee; border-radius: 4px; color: #555;
+            padding: 8px; background: #eee; border-radius: 4px; color: #555; display: flex; align-items: center;
         }
 
         /* Toolbar */
         .toolbar {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
             align-items: center;
+            flex-wrap: wrap;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        
+        .toolbar-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-right: 2px solid #eee;
+            padding-right: 15px;
+        }
+
+        .toolbar-group:last-child { border-right: none; }
+
         .color-picker {
-            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
-            border: 2px solid transparent;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent; transition: transform 0.1s;
         }
-        .color-picker.active { border: 2px solid #333; }
+        .color-picker:hover { transform: scale(1.1); }
+        .color-picker.active { border: 2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
+        
+        .access-btn {
+            background: #f0f2f5; border: 1px solid #ccc; padding: 5px 10px;
+            border-radius: 4px; cursor: pointer; font-weight: bold; color: #333;
+        }
+        .access-btn:hover { background: #e4e6e9; }
+        .access-btn.active { background: #3498db; color: white; border-color: #2980b9; }
+
         .btn-pdf { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: auto; font-weight: bold;}
+        .btn-pdf:hover { background: #c0392b; }
 
         /* Input Area */
-        #input-area { display: flex; flex-direction: column; gap: 10px; }
+        #input-area { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto; width: 100%; }
         #input-area textarea {
-            width: 100%; height: 150px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;
-            font-family: inherit; resize: vertical; box-sizing: border-box;
+            width: 100%; height: 200px; padding: 15px; border-radius: 5px; border: 1px solid #ccc;
+            font-family: inherit; resize: vertical; box-sizing: border-box; font-size: 1.05em;
         }
 
         /* Article Reading Area */
@@ -109,21 +138,34 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             display: none;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         /* Grid layout for Paragraphs + Margin Notes */
         .paragraph-block {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 2fr 1.2fr; /* slightly wider notes area */
             gap: 30px;
             margin-bottom: 25px;
             align-items: start;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
         }
 
+        .paragraph-block:last-child { border-bottom: none; }
+
         .text-content {
-            font-size: 1.1em;
+            font-size: var(--article-size);
             line-height: 1.8;
-            color: #333;
+            color: #2c3e50;
+            transition: font-size 0.2s, font-family 0.2s;
+        }
+
+        .text-content.dyslexia {
+            font-family: "Comic Sans MS", Arial, sans-serif !important;
+            line-height: 2;
+            letter-spacing: 0.5px;
         }
 
         /* Highlighter Styles */
@@ -131,26 +173,51 @@
             cursor: pointer;
             transition: opacity 0.2s;
             border-radius: 3px;
+            padding: 2px 0;
         }
-        .highlighted-text:hover {
-            opacity: 0.7; /* Visual feedback on hover to show it can be removed */
-            outline: 1px dashed #666;
-        }
+        .highlighted-text:hover { opacity: 0.6; }
 
-        /* Margin Notes */
+        /* Margin Notes & Scaffolding */
+        .note-container { display: flex; flex-direction: column; gap: 5px; }
+
+        .scaffold-chips {
+            display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 2px;
+        }
+        
+        .scaffold-chip {
+            background: #e3f2fd; color: #1565c0; font-size: 0.75em; padding: 3px 8px;
+            border-radius: 12px; cursor: pointer; border: 1px solid #bbdefb;
+            transition: background 0.2s; font-weight: 600;
+        }
+        .scaffold-chip:hover { background: #bbdefb; }
+
         .margin-note {
             width: 100%;
             min-height: 80px;
             background-color: var(--margin-note-bg);
             border: 1px solid #e0e0e0;
-            padding: 10px;
+            padding: 12px;
             border-radius: 5px;
-            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; /* Student feel */
-            font-size: 0.9em;
-            resize: vertical;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 0.95em;
+            resize: none; /* Controlled by auto-expand JS */
             box-sizing: border-box;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+            line-height: 1.4;
         }
+        .margin-note:focus { outline: 2px solid #3498db; }
+
+        /* Final Reflection Block */
+        .final-reflection-block {
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+        }
+        .final-reflection-block h3 { margin-top: 0; color: #2c3e50; }
+        .final-reflection-block p { color: #555; margin-bottom: 15px; font-size: 0.95em; }
 
         /* Div used for PDF printing to allow expanding text */
         .margin-note-print {
@@ -168,15 +235,17 @@
         }
 
         /* PDF Output Specific Overrides */
-        .pdf-mode .margin-note { display: none !important; }
+        .pdf-mode .margin-note, .pdf-mode .scaffold-chips { display: none !important; }
         .pdf-mode .margin-note-print { display: block !important; }
         .pdf-mode .highlighted-text { outline: none !important; }
+        .pdf-mode .paragraph-block { border-bottom: none; page-break-inside: avoid; }
+        .pdf-mode .final-reflection-block { page-break-inside: avoid; }
 
     </style>
 </head>
 <body>
 
-    <div id="sidebar">
+    <div id="sidebar" class="no-print">
         <button class="action-btn" onclick="startNewArticle()">+ New Article</button>
         <button class="action-btn" style="background:#2ecc71;" onclick="saveCurrentArticle()">Save Progress</button>
         <h2>Saved Articles</h2>
@@ -190,20 +259,31 @@
             <div class="date-stamp" id="current-date"></div>
         </div>
 
-        <div class="toolbar" id="toolbar" style="display:none;">
-            <span><strong>Highlighter:</strong> (Select text to apply, click highlight to remove)</span>
-            <div class="color-picker active" style="background: var(--highlight-yellow);" data-color="var(--highlight-yellow)"></div>
-            <div class="color-picker" style="background: var(--highlight-green);" data-color="var(--highlight-green)"></div>
-            <div class="color-picker" style="background: var(--highlight-blue);" data-color="var(--highlight-blue)"></div>
-            <div class="color-picker" style="background: var(--highlight-pink);" data-color="var(--highlight-pink)"></div>
+        <div class="toolbar no-print" id="toolbar" style="display:none;">
+            <div class="toolbar-group">
+                <span style="font-size: 0.9em; color: #555;"><strong>Highlighter:</strong></span>
+                <div class="color-picker active" style="background: var(--highlight-yellow);" data-color="var(--highlight-yellow)"></div>
+                <div class="color-picker" style="background: var(--highlight-green);" data-color="var(--highlight-green)"></div>
+                <div class="color-picker" style="background: var(--highlight-blue);" data-color="var(--highlight-blue)"></div>
+                <div class="color-picker" style="background: var(--highlight-pink);" data-color="var(--highlight-pink)"></div>
+            </div>
+
+            <div class="toolbar-group">
+                <span style="font-size: 0.9em; color: #555;"><strong>Reading Tools:</strong></span>
+                <button class="access-btn" onclick="adjustFontSize(-0.1)">A-</button>
+                <button class="access-btn" onclick="adjustFontSize(0.1)">A+</button>
+                <button class="access-btn" id="btn-dyslexia" onclick="toggleDyslexia()">Dyslexia Font</button>
+            </div>
+
             <button class="btn-pdf" onclick="generatePDF()">🖨️ Export to PDF</button>
         </div>
 
         <div id="input-area">
             <h2>Paste Article Text</h2>
+            <p style="color: #666; margin-top: 0;">The tool will automatically break your text into paragraphs and generate an annotation workspace.</p>
             <input type="text" id="article-title" placeholder="Article Title" style="padding:10px; font-size: 1.1em;">
             <textarea id="raw-text" placeholder="Paste the text of your article here..."></textarea>
-            <button class="action-btn" style="width: 200px;" onclick="generateWorkspace()">Start Annotating</button>
+            <button class="action-btn" style="width: 200px; align-self: center;" onclick="generateWorkspace()">Start Annotating</button>
         </div>
 
         <div id="article-container">
@@ -218,6 +298,7 @@
 
         let currentColor = 'var(--highlight-yellow)';
         let currentArticleId = null;
+        let isDyslexia = false;
 
         // Highlighter Color Selection
         document.querySelectorAll('.color-picker').forEach(picker => {
@@ -231,6 +312,58 @@
         // Initialize App
         function init() {
             renderSavedList();
+            setupAutoExpand();
+        }
+
+        // Accessibility Functions
+        function adjustFontSize(delta) {
+            const root = document.documentElement;
+            const currentSize = parseFloat(getComputedStyle(root).getPropertyValue('--article-size')) || 1.1;
+            const newSize = Math.max(0.8, Math.min(1.8, currentSize + delta));
+            root.style.setProperty('--article-size', `${newSize}em`);
+        }
+
+        function toggleDyslexia() {
+            isDyslexia = !isDyslexia;
+            const btn = document.getElementById('btn-dyslexia');
+            if(isDyslexia) btn.classList.add('active');
+            else btn.classList.remove('active');
+
+            document.querySelectorAll('.text-content').forEach(el => {
+                if(isDyslexia) el.classList.add('dyslexia');
+                else el.classList.remove('dyslexia');
+            });
+        }
+
+        // Scaffolding Quick Insert
+        function insertStarter(textarea, text) {
+            const currentVal = textarea.value;
+            if(currentVal.trim() === '') {
+                textarea.value = text + " ";
+            } else {
+                textarea.value = currentVal + "\n" + text + " ";
+            }
+            textarea.focus();
+            autoExpand(textarea);
+        }
+
+        // Auto-expanding textareas
+        function autoExpand(field) {
+            field.style.height = 'inherit';
+            const computed = window.getComputedStyle(field);
+            const height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+                         + parseInt(computed.getPropertyValue('padding-top'), 10)
+                         + field.scrollHeight
+                         + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+                         + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
+            field.style.height = height + 'px';
+        }
+
+        function setupAutoExpand() {
+            document.addEventListener('input', function (event) {
+                if (event.target.tagName.toLowerCase() !== 'textarea') return;
+                autoExpand(event.target);
+            }, false);
         }
 
         // Generate Workspace from pasted text
@@ -256,11 +389,22 @@
                 // Text Area
                 const textDiv = document.createElement('div');
                 textDiv.className = 'text-content';
+                if(isDyslexia) textDiv.classList.add('dyslexia');
                 textDiv.innerText = para;
                 
-                // Annotation Area (Textarea for typing, Div for printing)
-                const noteArea = document.createElement('div');
-                
+                // Annotation Area 
+                const noteContainer = document.createElement('div');
+                noteContainer.className = 'note-container';
+
+                // Scaffolding Chips
+                const chips = document.createElement('div');
+                chips.className = 'scaffold-chips';
+                chips.innerHTML = `
+                    <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'I notice that...')">👀 Notice</span>
+                    <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'This reminds me of...')">🔗 Connect</span>
+                    <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'I wonder why...')">❓ Wonder</span>
+                `;
+
                 const textarea = document.createElement('textarea');
                 textarea.className = 'margin-note';
                 textarea.placeholder = "Add your annotations here...";
@@ -268,14 +412,33 @@
                 const printDiv = document.createElement('div');
                 printDiv.className = 'margin-note-print';
 
-                noteArea.appendChild(textarea);
-                noteArea.appendChild(printDiv);
+                noteContainer.appendChild(chips);
+                noteContainer.appendChild(textarea);
+                noteContainer.appendChild(printDiv);
                 
                 block.appendChild(textDiv);
-                block.appendChild(noteArea);
+                block.appendChild(noteContainer);
                 
                 contentDiv.appendChild(block);
             });
+
+            // Append Final Reflective Prompt Block
+            const finalBlock = document.createElement('div');
+            finalBlock.className = 'final-reflection-block';
+            finalBlock.innerHTML = `
+                <h3>Final Reflection & Summary</h3>
+                <p><strong>Synthesize:</strong> What is the central idea of this text? How does this information connect to what we are learning or your own experiences?</p>
+                <div class="note-container">
+                    <div class="scaffold-chips">
+                        <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'The main idea of this article is...')">🎯 Main Idea</span>
+                        <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'One major takeaway is...')">💡 Takeaway</span>
+                        <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'This connects to my life because...')">🌍 Real World</span>
+                    </div>
+                    <textarea id="final-reflection-text" class="margin-note" style="min-height: 120px;" placeholder="Write your final thoughts here..."></textarea>
+                    <div class="margin-note-print" id="final-reflection-print"></div>
+                </div>
+            `;
+            contentDiv.appendChild(finalBlock);
 
             document.getElementById('input-area').style.display = 'none';
             document.getElementById('toolbar').style.display = 'flex';
@@ -297,10 +460,7 @@
                     
                     // Prevent highlighting across different paragraphs to keep HTML clean
                     if(range.commonAncestorContainer.nodeType !== 3 && !range.commonAncestorContainer.classList?.contains('text-content')) {
-                        // Allow it if it's inside text-content, otherwise skip to prevent breaking layout
-                        if(range.commonAncestorContainer.closest('.text-content')) {
-                             // safe
-                        } else {
+                        if(!range.commonAncestorContainer.closest('.text-content')) {
                             return;
                         }
                     }
@@ -331,13 +491,9 @@
         function saveCurrentArticle() {
             if (!currentArticleId) return alert("No active article to save.");
 
-            // Before saving HTML, we must capture textarea values (they don't save in innerHTML automatically)
-            const blocks = document.querySelectorAll('.paragraph-block');
-            const notesData = [];
-            blocks.forEach((block, index) => {
-                const textarea = block.querySelector('.margin-note');
-                notesData.push(textarea.value);
-            });
+            // Capture all textareas, including the final reflection
+            const textareas = document.querySelectorAll('.margin-note');
+            const notesData = Array.from(textareas).map(ta => ta.value);
 
             const articleData = {
                 id: currentArticleId,
@@ -371,12 +527,12 @@
             const contentDiv = document.getElementById('article-content');
             contentDiv.innerHTML = data.html;
 
-            // Restore textarea values
-            const blocks = document.querySelectorAll('.paragraph-block');
-            blocks.forEach((block, index) => {
-                const textarea = block.querySelector('.margin-note');
+            // Restore textarea values, including final reflection
+            const textareas = document.querySelectorAll('.margin-note');
+            textareas.forEach((textarea, index) => {
                 if(data.notes && data.notes[index]) {
                     textarea.value = data.notes[index];
+                    autoExpand(textarea);
                 }
             });
 
@@ -414,19 +570,20 @@
         function generatePDF() {
             const container = document.getElementById('article-container');
             
-            // 1. Prepare textareas for printing (sync values to hidden divs)
-            const blocks = document.querySelectorAll('.paragraph-block');
-            blocks.forEach(block => {
-                const textarea = block.querySelector('.margin-note');
-                const printDiv = block.querySelector('.margin-note-print');
-                // Put textarea content into the div so it expands naturally in PDF
-                printDiv.innerText = textarea.value;
+            // Sync values from textareas to print divs
+            const noteContainers = document.querySelectorAll('.note-container');
+            noteContainers.forEach(nc => {
+                const textarea = nc.querySelector('.margin-note');
+                const printDiv = nc.querySelector('.margin-note-print');
+                if(textarea && printDiv) {
+                    printDiv.innerText = textarea.value || " "; // Add space to preserve empty blocks
+                }
             });
 
-            // 2. Add PDF mode class
+            // Add PDF mode class
             container.classList.add('pdf-mode');
 
-            // 3. Build the header for the PDF
+            // Build the header for the PDF
             const name = document.getElementById('student-name').value || 'Student Name';
             const period = document.getElementById('student-period').value || 'Period';
             const date = document.getElementById('current-date').innerText;
@@ -441,7 +598,7 @@
             `;
             container.insertBefore(pdfHeader, container.firstChild);
 
-            // 4. Generate PDF
+            // Generate PDF
             const opt = {
                 margin:       0.5,
                 filename:     `${name}_${document.getElementById('display-title').innerText}.pdf`,
@@ -451,7 +608,7 @@
             };
 
             html2pdf().set(opt).from(container).save().then(() => {
-                // 5. Cleanup after PDF generation
+                // Cleanup after PDF generation
                 container.classList.remove('pdf-mode');
                 const headerToRemove = document.getElementById('temp-pdf-header');
                 if (headerToRemove) headerToRemove.remove();
