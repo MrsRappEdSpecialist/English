@@ -5,179 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Romeo & Juliet: The Anatomy of Tragic Love</title>
     <style>
+        /* Theatrical Dark Theme */
         :root {
-            --bg-color: #fcf9f2;
-            --text-color: #333;
-            --montague-color: #2b5c8f;
-            --capulet-color: #8f2b2b;
-            --neutral-color: #555;
-            --accent-color: #d4af37;
+            --bg-color: #0f111a;
+            --text-color: #e0e2eb;
+            --montague-color: #4a7cce;
+            --capulet-color: #c94040;
+            --neutral-color: #8892b0;
+            --accent-color: #d4af37; /* Gold */
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-glow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
         
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1f2233 0%, #0f111a 70%);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.7;
             margin: 0;
             padding: 20px;
             transition: all 0.3s ease;
+            min-height: 100vh;
         }
 
         /* Accessibility Classes */
-        body.large-text { font-size: 1.25rem; }
+        body.large-text { font-size: 1.3rem; }
         body.high-contrast {
             --bg-color: #000;
             --text-color: #fff;
-            --montague-color: #5ea4ea;
-            --capulet-color: #ff6b6b;
-            --neutral-color: #aaa;
+            --montague-color: #66b3ff;
+            --capulet-color: #ff6666;
+            --neutral-color: #ccc;
+            --accent-color: #fff000;
+            --card-bg: #111;
+            background-image: none;
         }
 
-        header {
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        h1, h2, h3 { color: var(--accent-color); font-weight: normal; letter-spacing: 1px; }
+        h1 { text-transform: uppercase; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; margin-top: 0; }
+        
+        header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+        .student-info { background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .student-info input { background: transparent; border: none; border-bottom: 1px solid var(--accent-color); color: var(--text-color); font-family: inherit; font-size: 1rem; padding: 5px; outline: none; }
 
-        .header-controls button {
-            background: #eee;
-            border: 1px solid #ccc;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-left: 5px;
-        }
+        .header-controls button { background: var(--accent-color); color: #000; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; transition: transform 0.2s; }
+        .header-controls button:hover { transform: scale(1.05); }
 
-        .page { display: none; }
+        .page { display: none; animation: fadeIn 0.5s ease-in-out; }
         .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Scratch-off Effect (Click to Reveal) */
-        .scratch-card {
-            background-color: #ccc;
-            border: 2px dashed #888;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
-            margin: 10px 0;
-            border-radius: 8px;
-            user-select: none;
-        }
-        .scratch-card .hidden-content { opacity: 0; transition: opacity 0.5s; }
-        .scratch-card.revealed { background-color: #fff; border-color: var(--accent-color); cursor: default;}
-        .scratch-card.revealed .hidden-content { opacity: 1; }
-        .scratch-card.revealed .overlay-text { display: none; }
+        /* Actual Canvas Scratch-off */
+        .scratch-container { position: relative; width: 100%; max-width: 500px; height: 180px; margin: 20px auto; border-radius: 8px; overflow: hidden; box-shadow: var(--border-glow); border: 1px solid var(--accent-color); }
+        .scratch-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #1a1c29; padding: 20px; box-sizing: border-box; text-align: center; }
+        .scratch-canvas { position: absolute; top: 0; left: 0; z-index: 2; cursor: crosshair; touch-action: none; }
+
+        /* 3D Flip Cards for Dynamic Character Lesson */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0; }
+        .flip-card { background-color: transparent; height: 250px; perspective: 1000px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; padding: 20px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.2); }
+        .flip-card-front { background: var(--card-bg); }
+        .flip-card-front h3 { margin: 0; font-size: 1.5rem; }
+        .flip-card-front p { font-style: italic; color: #aaa; }
+        .flip-card-back { background: #1a1c29; transform: rotateY(180deg); color: #fff; border-color: var(--accent-color); }
 
         /* Drag and Drop Sorting */
-        .character-bank {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            min-height: 50px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background: #fff;
-        }
-        
-        .char-token {
-            padding: 8px 15px;
-            background: #e0e0e0;
-            border-radius: 20px;
-            cursor: grab;
-            border: 1px solid #999;
-            color: #000;
-        }
+        .character-bank { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; min-height: 60px; padding: 15px; border: 1px dashed rgba(255,255,255,0.3); background: var(--card-bg); border-radius: 8px; }
+        .char-token { padding: 8px 15px; background: #2a2d3e; border-radius: 20px; cursor: grab; border: 1px solid var(--accent-color); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .char-token:active { cursor: grabbing; }
+        .houses-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .house { flex: 1; min-width: 200px; padding: 15px; border: 2px solid; border-radius: 8px; min-height: 200px; background: rgba(0,0,0,0.4); transition: background 0.3s; }
+        .house.montague { border-color: var(--montague-color); box-shadow: inset 0 0 20px rgba(74, 124, 206, 0.1); }
+        .house.capulet { border-color: var(--capulet-color); box-shadow: inset 0 0 20px rgba(201, 64, 64, 0.1); }
+        .house.neutral { border-color: var(--neutral-color); box-shadow: inset 0 0 20px rgba(136, 146, 176, 0.1); }
+        .house.drag-over { background: rgba(255,255,255,0.1); }
 
-        .houses-container {
-            display: flex;
-            gap: 20px;
-        }
-
-        .house {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid;
-            border-radius: 8px;
-            min-height: 150px;
-            background: rgba(255,255,255,0.8);
-        }
-
-        .house.montague { border-color: var(--montague-color); }
-        .house.capulet { border-color: var(--capulet-color); }
-        .house.neutral { border-color: var(--neutral-color); }
+        /* Supports & Scaffolds */
+        .scaffold-box { background: rgba(74, 124, 206, 0.1); border-left: 4px solid var(--montague-color); padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .scaffold-btn { background: transparent; border: 1px solid var(--neutral-color); color: var(--text-color); padding: 5px 10px; cursor: pointer; border-radius: 4px; font-size: 0.9rem; margin-top: 10px; }
+        .scaffold-btn:hover { background: rgba(255,255,255,0.1); }
+        .hint-text { display: none; color: var(--accent-color); font-style: italic; margin-top: 10px; font-size: 0.9rem; }
 
         /* Speaking & Listening */
-        .partner-activity {
-            background: #f0f8ff;
-            padding: 20px;
-            border-left: 5px solid var(--montague-color);
-            margin: 20px 0;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-family: inherit;
-        }
+        .discussion-frame { background: rgba(201, 64, 64, 0.1); border-left: 4px solid var(--capulet-color); padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        textarea { width: 100%; height: 120px; padding: 15px; margin-top: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: var(--text-color); font-family: inherit; font-size: 1rem; box-sizing: border-box; resize: vertical; outline: none; transition: border-color 0.3s; }
+        textarea:focus { border-color: var(--accent-color); }
 
         /* Navigation */
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ccc;
-        }
-        .nav-btn {
-            background: var(--accent-color);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .nav-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-btn { background: var(--accent-color); color: #000; border: none; padding: 10px 25px; font-size: 1rem; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .nav-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
 
         /* Accessibility Minimizer Menu */
-        #a11y-menu {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            display: none;
-        }
-        #a11y-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--text-color);
-            color: var(--bg-color);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            z-index: 1000;
-        }
+        #a11y-menu { position: fixed; bottom: 80px; right: 20px; background: #1a1c29; border: 1px solid var(--accent-color); padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border-radius: 8px; display: none; z-index: 1000; }
+        #a11y-toggle { position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: #000; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; z-index: 1001; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
         @media print {
-            .nav-btn, #a11y-toggle, #a11y-menu, .header-controls button { display: none !important; }
-            .page { display: block !important; page-break-after: always; }
-            body { background: #fff; color: #000; }
-            .house { break-inside: avoid; }
+            .nav-btn, #a11y-toggle, #a11y-menu, .header-controls button, .scaffold-btn { display: none !important; }
+            .page { display: block !important; page-break-after: always; opacity: 1 !important; transform: none !important; }
+            body { background: #fff !important; color: #000 !important; background-image: none !important; }
+            .house, .flip-card-front, .scaffold-box, .discussion-frame { border-color: #000 !important; background: #f9f9f9 !important; color: #000 !important; box-shadow: none !important; }
+            .flip-card { height: auto; } .flip-card-inner { transform: none !important; transition: none; } .flip-card-back { display: none; }
+            .scratch-canvas { display: none; } /* Show content under scratcher for print */
         }
     </style>
 </head>
@@ -185,50 +117,107 @@
 
     <button id="a11y-toggle" onclick="toggleA11y()" aria-label="Accessibility Options">♿</button>
     <div id="a11y-menu">
-        <strong>Accessibility</strong><br><br>
-        <button onclick="document.body.classList.toggle('large-text')">Toggle Large Text</button><br><br>
-        <button onclick="document.body.classList.toggle('high-contrast')">Toggle High Contrast</button>
+        <h3 style="margin-top:0;">Accessibility</h3>
+        <button class="scaffold-btn" onclick="document.body.classList.toggle('large-text')">Toggle Large Text</button><br>
+        <button class="scaffold-btn" onclick="document.body.classList.toggle('high-contrast')">Toggle High Contrast</button>
     </div>
 
     <header>
-        <div>
-            <h1>Romeo & Juliet: Characters of Tragic Love</h1>
-            <p><strong>Date:</strong> <span id="current-date"></span> | <strong>Student:</strong> <input type="text" id="student-name" placeholder="Type your name..." oninput="autoSave()"></p>
+        <div style="flex-grow: 1;">
+            <h1>Romeo & Juliet: Anatomy of Tragic Love</h1>
+            <div class="student-info">
+                <strong>Date:</strong> <span id="current-date"></span> &nbsp;|&nbsp; 
+                <strong>Student:</strong> <input type="text" id="student-name" placeholder="Enter your name..." oninput="autoSave()">
+            </div>
         </div>
-        <div class="header-controls">
+        <div class="header-controls" style="margin-left: 20px;">
             <button onclick="window.print()">💾 Save to PDF</button>
-            <span id="save-status" style="font-size: 0.8rem; color: green; margin-left:10px;"></span>
+            <div id="save-status" style="font-size: 0.8rem; color: #4caf50; margin-top:5px; text-align:right;"></div>
         </div>
     </header>
 
     <main>
         <section id="page-1" class="page active">
-            <h2>Part 1: The Anatomy of a Tragedy</h2>
-            <p>Welcome to Verona. In this play, love is not just a feeling; it is a violent, unstoppable force. A tragedy occurs when a character's greatest strength is also their fatal flaw. Let's uncover the fatal flaws of our star-crossed lovers.</p>
+            <h2>Part 1: Uncovering the Fatal Flaw</h2>
+            <p>In Shakespearean tragedy, heroes are destroyed by their own <em>hamartia</em> (a fatal character flaw). The very traits that make them beautiful also lead to their doom.</p>
             
-            <p><em>Interactive: Click the "scratch cards" below to reveal the hidden tragic flaws.</em></p>
-
-            <div class="scratch-card" onclick="this.classList.add('revealed'); autoSaveState('scratch-romeo', true)">
-                <span class="overlay-text">🪙 Scratch to reveal Romeo's Flaw</span>
-                <div class="hidden-content">
-                    <h3 style="color: var(--montague-color)">Romeo's Flaw: Impulsive Passion</h3>
-                    <p>Romeo feels everything at 100%. He falls in love instantly and acts without thinking of the consequences. His heart moves faster than his head.</p>
-                </div>
+            <div class="scaffold-box">
+                <strong>🎭 Interactive Instructions:</strong> Use your mouse or finger to literally scratch away the gold foil below and uncover the hidden truths about our lovers.
             </div>
 
-            <div class="scratch-card" onclick="this.classList.add('revealed'); autoSaveState('scratch-juliet', true)">
-                <span class="overlay-text">🪙 Scratch to reveal Juliet's Flaw</span>
-                <div class="hidden-content">
-                    <h3 style="color: var(--capulet-color)">Juliet's Flaw: Blind Loyalty</h3>
-                    <p>Juliet is incredibly smart, but once she commits to Romeo, she isolates herself from her family and support system, risking everything for a boy she just met.</p>
+            <div class="scratch-container">
+                <div class="scratch-content">
+                    <h3 style="color: var(--montague-color); margin:0;">Romeo's Flaw: Blind Impulsivity</h3>
+                    <p style="font-size: 0.95rem;">Romeo feels everything at maximum volume. He falls in and out of love in seconds. His heart moves faster than his head, leading to reckless, deadly decisions.</p>
                 </div>
+                <canvas id="canvas-romeo" class="scratch-canvas"></canvas>
+            </div>
+
+            <div class="scratch-container">
+                <div class="scratch-content">
+                    <h3 style="color: var(--capulet-color); margin:0;">Juliet's Flaw: Desperate Devotion</h3>
+                    <p style="font-size: 0.95rem;">Juliet is brilliant and practical, but once she commits, she entirely isolates herself from her family and support network, risking her life for a boy she just met.</p>
+                </div>
+                <canvas id="canvas-juliet" class="scratch-canvas"></canvas>
             </div>
         </section>
 
         <section id="page-2" class="page">
-            <h2>Part 2: The Ancient Grudge (Family Sorting)</h2>
-            <p>Verona is divided by an ancient blood feud. Your task is to organize the characters into their correct allegiances. <br><em>Click and drag the character names into the correct family houses.</em></p>
+            <h2>Part 2: The Public Mask vs. The Tragic Reality</h2>
+            <p>Characters in Verona rarely show their true selves to society. Hover over (or tap) the character cards below to reveal their tragic reality beneath the surface.</p>
+
+            <div class="card-grid">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Mercutio</h3>
+                            <p>The Comedian</p>
+                            <span style="font-size: 2rem;">🎭</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4 style="color: var(--accent-color); margin-top:0;">The Cynic</h4>
+                            <p style="font-size: 0.9rem;">Beneath the jokes, Mercutio mocks love because he doesn't believe in it. His need to be the center of attention and his quick temper drag Romeo into a deadly fight.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Tybalt</h3>
+                            <p>The Loyal Cousin</p>
+                            <span style="font-size: 2rem;">⚔️</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4 style="color: var(--capulet-color); margin-top:0;">The Prince of Cats</h4>
+                            <p style="font-size: 0.9rem;">His "loyalty" is actually an obsession with violence and honor. He seeks out conflict to prove his masculinity, ensuring the family feud never dies.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Friar Laurence</h3>
+                            <p>The Holy Man</p>
+                            <span style="font-size: 2rem;">🌿</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4 style="color: var(--neutral-color); margin-top:0;">The Meddler</h4>
+                            <p style="font-size: 0.9rem;">He believes he can play God to stop the feud. By marrying the teens in secret and concocting a fake death potion, his good intentions pave the road to hell.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-3" class="page">
+            <h2>Part 3: The Ancient Grudge</h2>
+            <p>Two households, both alike in dignity. Drag and drop the characters into their correct allegiances to understand the battlefield of Verona.</p>
             
+            <button class="scaffold-btn" onclick="document.getElementById('sort-hint').style.display='block'">Need a hint?</button>
+            <p id="sort-hint" class="hint-text">Hint: Benvolio is Romeo's cousin (Montague). Tybalt is Juliet's cousin (Capulet). Mercutio is related to the Prince, making him neutral!</p>
+
             <div class="character-bank" id="bank" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div class="char-token" draggable="true" ondragstart="drag(event)" id="char-romeo">Romeo</div>
                 <div class="char-token" draggable="true" ondragstart="drag(event)" id="char-juliet">Juliet</div>
@@ -241,42 +230,42 @@
             </div>
 
             <div class="houses-container">
-                <div class="house montague" id="house-montague" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="house montague" id="house-montague" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
                     <h3 style="color: var(--montague-color)">House Montague</h3>
                 </div>
-                
-                <div class="house neutral" id="house-neutral" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <h3 style="color: var(--neutral-color)">Neutrals / Royalty</h3>
+                <div class="house neutral" id="house-neutral" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+                    <h3 style="color: var(--neutral-color)">Neutrals & Royalty</h3>
                 </div>
-
-                <div class="house capulet" id="house-capulet" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="house capulet" id="house-capulet" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
                     <h3 style="color: var(--capulet-color)">House Capulet</h3>
                 </div>
             </div>
         </section>
 
-        <section id="page-3" class="page">
-            <h2>Part 3: Speaking & Listening (Think-Pair-Share)</h2>
-            <p>The theme of tragic love forces us to ask: Is love at first sight real, or is it just infatuation?</p>
+        <section id="page-4" class="page">
+            <h2>Part 4: The Tragic Debate</h2>
             
-            <div class="partner-activity">
-                <h3>🗣️ Partner Discussion Protocol</h3>
-                <ol>
-                    <li><strong>Speaker 1 (1 minute):</strong> Argue that Romeo and Juliet's love is real and genuine.</li>
-                    <li><strong>Speaker 2 (1 minute):</strong> Argue that it is just a teenage crush mixed with the thrill of rebellion.</li>
-                    <li><strong>Together:</strong> Come to a consensus. What do you both think Shakespeare is trying to say about young love?</li>
-                </ol>
+            <div class="discussion-frame">
+                <h3 style="margin-top:0;">🗣️ Partner Discussion Protocol</h3>
+                <p><strong>Question:</strong> Is "love at first sight" real, or were Romeo and Juliet just infatuated teenagers rebelling against their parents?</p>
+                <ul style="margin-bottom:0;">
+                    <li><strong>Partner A (1 min):</strong> Defend their love as real and powerful. <em>"I believe their love was genuine because..."</em></li>
+                    <li><strong>Partner B (1 min):</strong> Argue it was just dangerous infatuation. <em>"I disagree; I think it was just a teenage crush because..."</em></li>
+                    <li><strong>Together (2 mins):</strong> Find common ground. What is Shakespeare trying to warn us about?</li>
+                </ul>
             </div>
 
-            <label for="reflection"><strong>Write your final shared reflection here (Autosaves automatically):</strong></label>
-            <textarea id="reflection" placeholder="Based on our discussion, my partner and I concluded..." oninput="autoSave()"></textarea>
+            <label for="reflection"><strong>Draft your final collaborative reflection below:</strong></label>
+            <br>
+            <button class="scaffold-btn" onclick="insertSentenceFrames()">📝 Insert Sentence Starters</button>
+            <textarea id="reflection" placeholder="Type your reflection here. Your work autosaves automatically as you type..." oninput="autoSave()"></textarea>
         </section>
     </main>
 
     <div class="navigation">
         <button id="btn-prev" class="nav-btn" onclick="changePage(-1)" disabled>⬅️ Back</button>
-        <span id="page-indicator">Page 1 of 3</span>
-        <button id="btn-next" class="nav-btn" onclick="changePage(1)">Next ➡️</button>
+        <span id="page-indicator" style="font-weight: bold; letter-spacing: 2px;">ACT I</span>
+        <button id="btn-next" class="nav-btn" onclick="changePage(1)">Next Act ➡️</button>
     </div>
 
     <script>
@@ -285,7 +274,8 @@
 
         // Pagination Logic
         let currentPage = 1;
-        const totalPages = 3;
+        const totalPages = 4;
+        const actNames = ["ACT I", "ACT II", "ACT III", "ACT IV"];
 
         function changePage(direction) {
             document.getElementById(`page-${currentPage}`).classList.remove('active');
@@ -294,60 +284,172 @@
             
             document.getElementById('btn-prev').disabled = currentPage === 1;
             document.getElementById('btn-next').disabled = currentPage === totalPages;
-            document.getElementById('page-indicator').innerText = `Page ${currentPage} of ${totalPages}`;
-            window.scrollTo(0,0);
+            document.getElementById('page-indicator').innerText = actNames[currentPage-1];
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Accessibility Toggle
+        // Accessibility Menu
         function toggleA11y() {
             const menu = document.getElementById('a11y-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Drag and Drop Logic
-        function allowDrop(ev) { ev.preventDefault(); }
-        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            // Only drop into houses or bank, not inside other tokens
-            if(ev.target.classList.contains('house') || ev.target.classList.contains('character-bank')) {
-                ev.target.appendChild(document.getElementById(data));
-                autoSave(); // Save sorting state
+        // Scaffold: Insert Sentence Frames
+        function insertSentenceFrames() {
+            const box = document.getElementById('reflection');
+            if(box.value.trim() === '') {
+                box.value = "Initially, I argued that Romeo and Juliet's love was _____, while my partner believed _____. However, after discussing, we agreed that _____. For example, when the characters _____, it shows that _____. Ultimately, Shakespeare's message about young love is _____.";
+                autoSave();
             }
         }
 
-        // Autosave Logic (Local Storage)
+        // Drag and Drop Logic
+        function allowDrop(ev) { ev.preventDefault(); }
+        function dragEnter(ev) { ev.target.closest('.house')?.classList.add('drag-over'); }
+        function dragLeave(ev) { ev.target.closest('.house')?.classList.remove('drag-over'); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+        function drop(ev) {
+            ev.preventDefault();
+            const house = ev.target.closest('.house') || ev.target.closest('.character-bank');
+            if (house) {
+                house.classList.remove('drag-over');
+                var data = ev.dataTransfer.getData("text");
+                house.appendChild(document.getElementById(data));
+                autoSave();
+            }
+        }
+
+        // Autosave Logic
         function autoSave() {
             const studentName = document.getElementById('student-name').value;
             const reflection = document.getElementById('reflection').value;
             
-            // Save Drag and Drop locations
             const locations = {};
             document.querySelectorAll('.char-token').forEach(token => {
                 locations[token.id] = token.parentElement.id;
             });
 
             const saveData = { name: studentName, reflection: reflection, locations: locations };
-            localStorage.setItem('romeoJulietLesson', JSON.stringify(saveData));
+            localStorage.setItem('romeoJulietLessonV2', JSON.stringify(saveData));
 
             const status = document.getElementById('save-status');
-            status.innerText = "Saved locally just now ✓";
+            status.innerText = "Autosaved ✓";
             setTimeout(() => status.innerText = "", 2000);
         }
 
-        function autoSaveState(key, value) {
-            localStorage.setItem(key, value);
+        // --- ACTUAL CANVAS SCRATCH-OFF LOGIC ---
+        function initScratchCard(canvasId, storageKey) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            
+            // Set exact dimensions
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+
+            // Check if already scratched in this session/save
+            if(localStorage.getItem(storageKey) === 'true') {
+                canvas.style.display = 'none';
+                return;
+            }
+
+            // Draw "Foil"
+            ctx.fillStyle = '#bfa15f'; // Gold foil color
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw scratch text
+            ctx.font = '20px Palatino, serif';
+            ctx.fillStyle = '#000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('✨ Scratch to Reveal ✨', canvas.width / 2, canvas.height / 2);
+
+            let isDrawing = false;
+
+            function getMousePos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            function scratch(e) {
+                if (!isDrawing) return;
+                e.preventDefault(); // Prevent scrolling on touch
+                const pos = getMousePos(e);
+                
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2, false);
+                ctx.fill();
+
+                checkReveal();
+            }
+
+            // Check how much is scratched off to auto-reveal
+            const checkReveal = debounce(() => {
+                const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                let clearPixels = 0;
+                for (let i = 3; i < pixels.length; i += 4) {
+                    if (pixels[i] === 0) clearPixels++;
+                }
+                const percent = (clearPixels / (pixels.length / 4)) * 100;
+                if (percent > 40) { // If 40% cleared, snap to fully revealed
+                    canvas.style.transition = 'opacity 0.5s';
+                    canvas.style.opacity = '0';
+                    setTimeout(() => {
+                        canvas.style.display = 'none';
+                        localStorage.setItem(storageKey, 'true');
+                    }, 500);
+                }
+            }, 100);
+
+            canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+            canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+            canvas.addEventListener('touchmove', scratch);
+            canvas.addEventListener('touchend', () => isDrawing = false);
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if(canvas.style.display !== 'none') {
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+                    tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
+                    canvas.width = container.offsetWidth; canvas.height = container.offsetHeight;
+                    ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+                }
+            });
         }
 
-        // Load Saved Data on Startup
+        // Performance helper for scratcher check
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(func, wait);
+            };
+        }
+
+        // Initialize on load
         window.onload = function() {
-            const savedData = JSON.parse(localStorage.getItem('romeoJulietLesson'));
+            // Init scratchers
+            setTimeout(() => {
+                initScratchCard('canvas-romeo', 'scratchStateRomeo');
+                initScratchCard('canvas-juliet', 'scratchStateJuliet');
+            }, 100);
+
+            // Load Saved Data
+            const savedData = JSON.parse(localStorage.getItem('romeoJulietLessonV2'));
             if (savedData) {
                 if(savedData.name) document.getElementById('student-name').value = savedData.name;
                 if(savedData.reflection) document.getElementById('reflection').value = savedData.reflection;
-                
-                // Restore Drag and Drop locations
                 if(savedData.locations) {
                     for (const [charId, parentId] of Object.entries(savedData.locations)) {
                         const charElement = document.getElementById(charId);
@@ -358,10 +460,6 @@
                     }
                 }
             }
-
-            // Restore Scratch Cards
-            if(localStorage.getItem('scratch-romeo')) document.querySelectorAll('.scratch-card')[0].classList.add('revealed');
-            if(localStorage.getItem('scratch-juliet')) document.querySelectorAll('.scratch-card')[1].classList.add('revealed');
         };
     </script>
 </body>
