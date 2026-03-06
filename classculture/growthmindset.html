@@ -437,4 +437,251 @@
     });
 
     function dropCard(e, zone) {
-      e.preventDefault();
+      e.preventDefault(); e.stopPropagation();
+      const dropZone = e.currentTarget;
+      dropZone.classList.remove('ring-2', 'ring-white/30');
+      
+      const cardId = e.dataTransfer.getData('text/plain');
+      const card = document.getElementById(cardId);
+      
+      if (card && !card.classList.contains('sorted')) {
+        card.classList.add('sorted', zone === 'fixed' ? 'border-red-500' : 'border-emerald-500');
+        card.draggable = false; card.style.cursor = 'default';
+        dropZone.appendChild(card);
+        sortedCards[zone].push(cardId);
+      }
+    }
+
+    function checkActivity1() {
+      let correct = 0;
+      ['fixed', 'growth'].forEach(zone => {
+        sortedCards[zone].forEach(cardId => {
+          const card = document.getElementById(cardId);
+          if (card.dataset.type === zone) {
+            correct++; card.classList.add('ring-2', 'ring-emerald-400');
+          } else {
+            card.classList.add('ring-2', 'ring-red-400');
+          }
+        });
+      });
+      const resultDiv = document.getElementById('activity1-result');
+      resultDiv.innerHTML = `<p class="font-bold">You got ${correct}/${thoughtCards.length} correct!</p>`;
+      resultDiv.className = `mt-6 p-4 rounded-xl ${correct === thoughtCards.length ? 'bg-emerald-500/20' : 'bg-amber-500/20'}`;
+      resultDiv.classList.remove('hidden');
+    }
+
+    /* --- ACTIVITY 2: REFRAMES --- */
+    function initReframeChallenges() {
+      const container = document.getElementById('reframe-challenges');
+      container.innerHTML = reframeChallenges.map((challenge) => `
+        <div class="bg-slate-700/50 rounded-xl p-4">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-xl">🔒</span>
+            <div><p class="text-red-300 font-medium">"${challenge.fixed}"</p><p class="text-xs text-slate-400 mt-1">💡 ${challenge.hint}</p></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🌱</span>
+            <input type="text" id="${challenge.id}" placeholder="Reframe this thought..." class="flex-1 p-3 bg-slate-600 border border-slate-500 rounded-lg text-white outline-none focus:border-emerald-500">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* --- EXPORT FEATURES --- */
+    function getExportData() {
+      return {
+        name: document.getElementById('student-name').value || 'Student',
+        period: document.getElementById('student-period').value || 'N/A',
+        goal: document.getElementById('goal-input').value || 'Not provided',
+        steps: [
+          document.getElementById('step-1').value,
+          document.getElementById('step-2').value,
+          document.getElementById('step-3').value
+        ].filter(s => s.trim()).join(', ') || 'None listed',
+        mantra: document.getElementById('mantra-input').value || 'Not provided',
+        reflection: document.getElementById('final-reflection').value || 'Not provided',
+        ref1: document.getElementById('ref1').value || 'N/A',
+        ref2: document.getElementById('ref2').value || 'N/A',
+        ref3: document.getElementById('ref3').value || 'N/A',
+      };
+    }
+
+    function copyToClipboard() {
+      const d = getExportData();
+      const text = `GROWTH MINDSET JOURNEY\nStudent: ${d.name} (Period: ${d.period})\n\n-- REFRAMES --\n1. ${d.ref1}\n2. ${d.ref2}\n3. ${d.ref3}\n\n-- GOALS --\nGoal: ${d.goal}\nSteps: ${d.steps}\nMantra: ${d.mantra}\n\n-- REFLECTION --\n${d.reflection}`;
+      navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard! Paste into your LMS."));
+    }
+
+    function exportToPDF() {
+      const d = getExportData();
+      
+      // Create a temporary un-styled div for clean white PDF printing
+      const pdfDiv = document.createElement('div');
+      pdfDiv.style.padding = "40px";
+      pdfDiv.style.background = "white";
+      pdfDiv.style.color = "black";
+      pdfDiv.style.fontFamily = "sans-serif";
+      pdfDiv.innerHTML = `
+        <h1 style="color: #4f46e5; border-bottom: 2px solid #ccc; padding-bottom: 10px;">Growth Mindset Reflection</h1>
+        <p><strong>Name:</strong> ${d.name} &nbsp;&nbsp;&nbsp; <strong>Period:</strong> ${d.period} &nbsp;&nbsp;&nbsp; <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+        
+        <h3 style="color: #059669; margin-top: 30px;">Part 1: Reframing Challenge</h3>
+        <ul>
+          <li><strong>Reframe 1:</strong> ${d.ref1}</li>
+          <li><strong>Reframe 2:</strong> ${d.ref2}</li>
+          <li><strong>Reframe 3:</strong> ${d.ref3}</li>
+        </ul>
+
+        <h3 style="color: #059669; margin-top: 30px;">Part 2: My Growth Plan</h3>
+        <p><strong>Goal:</strong> ${d.goal}</p>
+        <p><strong>Action Steps:</strong> ${d.steps}</p>
+        <p><strong>My Mantra:</strong> ${d.mantra}</p>
+
+        <h3 style="color: #059669; margin-top: 30px;">Part 3: Final Reflection</h3>
+        <p style="background: #f3f4f6; padding: 15px; border-radius: 5px; white-space: pre-wrap;">${d.reflection}</p>
+      `;
+
+      document.body.appendChild(pdfDiv);
+
+      const opt = {
+        margin: 0.5,
+        filename: `${d.name.replace(/ /g, '_')}_GrowthMindset.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(pdfDiv).save().then(() => {
+        document.body.removeChild(pdfDiv);
+      });
+    }
+
+    /* --- TETRIS (Unchanged logic, wrapped for safety) --- */
+    const TETRIS_PIECES = [
+      { shape: [[1,1,1,1]] }, { shape: [[1,1],[1,1]] }, { shape: [[0,1,0],[1,1,1]] },
+      { shape: [[1,0,0],[1,1,1]] }, { shape: [[0,0,1],[1,1,1]] }, { shape: [[1,1,0],[0,1,1]] }, { shape: [[0,1,1],[1,1,0]] }
+    ];
+
+    function initTetrisBoards() {
+      [1, 2].forEach(num => {
+        const board = document.getElementById(`tetris-board-${num}`);
+        let cells = ''; for (let i = 0; i < 200; i++) cells += `<div class="tetris-cell" data-index="${i}"></div>`;
+        board.innerHTML = cells;
+      });
+    }
+
+    function startTetris(gameNum) {
+      if(tetrisGames[gameNum] && tetrisGames[gameNum].active) return; // Prevent double clicks
+      
+      const game = {
+        board: Array(20).fill(null).map(() => Array(10).fill(0)),
+        score: 0, piece: null, pieceX: 0, pieceY: 0, gameLoop: null, timerLoop: null, timeLeft: 60, active: true
+      };
+      tetrisGames[gameNum] = game;
+      document.getElementById(`start-tetris-${gameNum}`).classList.add('hidden');
+      spawnPiece(gameNum);
+      
+      game.gameLoop = setInterval(() => { if (game.active) { movePieceDown(gameNum); renderTetrisBoard(gameNum); } }, 500);
+      game.timerLoop = setInterval(() => {
+        game.timeLeft--; updateTetrisTimer(gameNum);
+        if (game.timeLeft <= 0) endTetris(gameNum);
+      }, 1000);
+      
+      document.addEventListener('keydown', (e) => handleTetrisKey(e, gameNum));
+    }
+
+    function spawnPiece(gameNum) {
+      const game = tetrisGames[gameNum];
+      game.piece = TETRIS_PIECES[Math.floor(Math.random() * TETRIS_PIECES.length)].shape.map(r => [...r]);
+      game.pieceX = Math.floor((10 - game.piece[0].length) / 2); game.pieceY = 0;
+      if (!canMove(gameNum, 0, 0)) endTetris(gameNum);
+    }
+
+    function canMove(gameNum, dx, dy, testPiece = null) {
+      const game = tetrisGames[gameNum]; const piece = testPiece || game.piece;
+      for (let y = 0; y < piece.length; y++) {
+        for (let x = 0; x < piece[y].length; x++) {
+          if (piece[y][x]) {
+            const bx = game.pieceX + dx + x, by = game.pieceY + dy + y;
+            if (bx < 0 || bx >= 10 || by >= 20 || (by >= 0 && game.board[by][bx])) return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function movePieceDown(gameNum) {
+      if (canMove(gameNum, 0, 1)) tetrisGames[gameNum].pieceY++;
+      else { lockPiece(gameNum); clearLines(gameNum); spawnPiece(gameNum); }
+    }
+
+    function lockPiece(gameNum) {
+      const game = tetrisGames[gameNum];
+      for (let y = 0; y < game.piece.length; y++)
+        for (let x = 0; x < game.piece[y].length; x++)
+          if (game.piece[y][x] && game.pieceY + y >= 0) game.board[game.pieceY + y][game.pieceX + x] = 1;
+    }
+
+    function clearLines(gameNum) {
+      const game = tetrisGames[gameNum]; let lines = 0;
+      for (let y = 19; y >= 0; y--) {
+        if (game.board[y].every(c => c)) {
+          game.board.splice(y, 1); game.board.unshift(Array(10).fill(0)); lines++; y++;
+        }
+      }
+      if (lines > 0) {
+        game.score += lines * 100 * lines;
+        document.getElementById(`tetris-score-${gameNum}`).textContent = game.score;
+      }
+    }
+
+    function rotatePiece(gameNum) {
+      const game = tetrisGames[gameNum];
+      const rotated = game.piece[0].map((_, i) => game.piece.map(row => row[i]).reverse());
+      if (canMove(gameNum, 0, 0, rotated)) game.piece = rotated;
+    }
+
+    function handleTetrisKey(e, gameNum) {
+      const game = tetrisGames[gameNum];
+      if (!game || !game.active || currentSectionIdx !== (gameNum === 1 ? 2 : 4)) return;
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) e.preventDefault();
+      
+      if (e.key === 'ArrowLeft' && canMove(gameNum, -1, 0)) game.pieceX--;
+      if (e.key === 'ArrowRight' && canMove(gameNum, 1, 0)) game.pieceX++;
+      if (e.key === 'ArrowDown') movePieceDown(gameNum);
+      if (e.key === 'ArrowUp') rotatePiece(gameNum);
+      renderTetrisBoard(gameNum);
+    }
+
+    function renderTetrisBoard(gameNum) {
+      const game = tetrisGames[gameNum];
+      const cells = document.getElementById(`tetris-board-${gameNum}`).querySelectorAll('.tetris-cell');
+      cells.forEach((cell, i) => {
+        cell.className = 'tetris-cell';
+        if (game.board[Math.floor(i / 10)][i % 10]) cell.classList.add('filled');
+      });
+      if (game.piece) {
+        for (let py = 0; py < game.piece.length; py++) {
+          for (let px = 0; px < game.piece[py].length; px++) {
+            if (game.piece[py][px]) {
+              const by = game.pieceY + py, bx = game.pieceX + px;
+              if (by >= 0 && by < 20 && bx >= 0 && bx < 10) cells[by * 10 + bx].classList.add('active');
+            }
+          }
+        }
+      }
+    }
+
+    function updateTetrisTimer(gameNum) {
+      const t = tetrisGames[gameNum].timeLeft;
+      document.getElementById(`tetris-timer-${gameNum}`).textContent = `${Math.floor(t/60)}:${(t%60).toString().padStart(2, '0')}`;
+    }
+
+    function endTetris(gameNum) {
+      tetrisGames[gameNum].active = false;
+      clearInterval(tetrisGames[gameNum].gameLoop);
+      clearInterval(tetrisGames[gameNum].timerLoop);
+    }
+  </script>
+</body>
+</html>
