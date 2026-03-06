@@ -1,303 +1,523 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Back to School Night: Gratitude & Goals App Designer</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f1ea;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 850px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-        h1 {
-            text-align: center;
-            color: #d35400;
-            border-bottom: 3px solid #e67e22;
-            padding-bottom: 10px;
-        }
-        p.subtitle {
-            text-align: center;
-            font-size: 1.1em;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-        }
-        .section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #fdfbf7;
-            border-left: 6px solid #e67e22;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-        h3 {
-            margin-top: 0;
-            color: #d35400;
-        }
-        select, input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
-            box-sizing: border-box; 
-            font-family: inherit;
-            background-color: #fff;
-        }
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-        label {
-            display: flex;
-            align-items: center;
-            font-size: 0.95em;
-            cursor: pointer;
-            background: #fff;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #eee;
-            transition: background 0.2s;
-        }
-        label:hover {
-            background: #fef9f4;
-        }
-        input[type="checkbox"] {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-            accent-color: #e67e22;
-        }
-        .btn-save {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.3em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-            margin-top: 30px;
-            box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
-        }
-        .btn-save:hover {
-            background-color: #2ecc71;
-            transform: translateY(-2px);
-        }
-        #blueprintResult {
-            margin-top: 40px;
-            padding: 25px;
-            background: #f2fcf5;
-            border: 3px dashed #2ecc71;
-            border-radius: 12px;
-            display: none;
-        }
-        .blueprint-data {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .blueprint-data h3 {
-            color: #2c3e50;
-            margin-top: 0;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 8px;
-        }
-        .highlight-text {
-            color: #e67e22;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>💛 My Goals & Gratitude App Designer</h1>
-    <p class="subtitle">Plan an interactive app to show your family your goals for the year and how much you appreciate them!</p>
-
-    <div class="section">
-        <h3>1. The Heart of Your App</h3>
-        <p>Who is this app for, and what do you want to tell them?</p>
-        <input type="text" id="familyName" placeholder="Who is attending? (e.g., Mom and Dad, Grandma, My Family)">
-        
-        <p style="margin-top: 15px; margin-bottom: 0;"><strong>My Top 3 Goals for This School Year:</strong></p>
-        <input type="text" id="goal1" placeholder="Goal 1 (e.g., Get a B or higher in Math)">
-        <input type="text" id="goal2" placeholder="Goal 2 (e.g., Join the Robotics Club)">
-        <input type="text" id="goal3" placeholder="Goal 3 (e.g., Keep my locker organized)">
-
-        <p style="margin-top: 15px; margin-bottom: 0;"><strong>My Message of Thanks:</strong></p>
-        <textarea id="thankYouMessage" rows="4" placeholder="Write a short message about why you are thankful for their support this year..."></textarea>
-    </div>
-
-    <div class="section">
-        <h3>2. Choose Your Interactive Features</h3>
-        <p>Pick up to 3 fun, interactive elements for your parents to play with during Open House!</p>
-        <div class="checkbox-grid">
-            <label><input type="checkbox" name="interactive" value="Drag & Drop Goal Prioritizer"> Drag & Drop Goal Sorter</label>
-            <label><input type="checkbox" name="interactive" value="Interactive Spinning Wheel"> Spinning Wheel (Rewards/Chores)</label>
-            <label><input type="checkbox" name="interactive" value="5-Star Family Rating Slider"> 5-Star Family Rating Slider</label>
-            <label><input type="checkbox" name="interactive" value="Memory Matching Game"> Memory Matching Game</label>
-            <label><input type="checkbox" name="interactive" value="Scratch-off Secret Message"> "Scratch-off" Secret Message</label>
-            <label><input type="checkbox" name="interactive" value="Virtual High Five/Hug Button"> Virtual High Five/Hug Button</label>
-            <label><input type="checkbox" name="interactive" value="Interactive Progress Bar"> Goal Progress Bar Simulator</label>
-            <label><input type="checkbox" name="interactive" value="Digital Promise Contract"> Digital Promise Signature Pad</label>
-            <label><input type="checkbox" name="interactive" value="Family Trivia Quiz"> Short Family Trivia Quiz</label>
-            <label><input type="checkbox" name="interactive" value="Mood/Energy Slider"> Daily Mood/Energy Slider</label>
-            <label><input type="checkbox" name="interactive" value="Soundboard of Funny Quotes"> Soundboard of Family Quotes</label>
-            <label><input type="checkbox" name="interactive" value="Emoji Reaction Board"> Emoji Reaction Board</label>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>3. Choose Your App's Main Color</h3>
-        <select id="appColor">
-            <option value="" disabled selected>Select a color...</option>
-            <option value="Crimson Red">Crimson Red</option>
-            <option value="Sunset Orange">Sunset Orange</option>
-            <option value="Sunflower Yellow">Sunflower Yellow</option>
-            <option value="Forest Green">Forest Green</option>
-            <option value="Ocean Blue">Ocean Blue</option>
-            <option value="Midnight Navy">Midnight Navy</option>
-            <option value="Royal Indigo">Royal Indigo</option>
-            <option value="Vibrant Violet">Vibrant Violet</option>
-            <option value="Hot Pink">Hot Pink</option>
-            <option value="Soft Peach">Soft Peach</option>
-            <option value="Tropical Turquoise">Tropical Turquoise</option>
-            <option value="Calming Teal">Calming Teal</option>
-            <option value="Rich Maroon">Rich Maroon</option>
-            <option value="Shiny Gold">Shiny Gold</option>
-            <option value="Sleek Silver">Sleek Silver</option>
-            <option value="Bright Magenta">Bright Magenta</option>
-            <option value="Soothing Lavender">Soothing Lavender</option>
-            <option value="Fresh Mint">Fresh Mint</option>
-            <option value="Coral Reef">Coral Reef</option>
-            <option value="Slate Grey">Slate Grey</option>
-        </select>
-    </div>
-
-    <div class="section">
-        <h3>4. Choose Your Background Style</h3>
-        <select id="appBackground">
-            <option value="" disabled selected>Select a background...</option>
-            <option value="Lined Notebook Paper">Lined Notebook Paper</option>
-            <option value="Classic Chalkboard">Classic Chalkboard</option>
-            <option value="Clean Whiteboard">Clean Whiteboard</option>
-            <option value="Math Graph Paper">Math Graph Paper</option>
-            <option value="School Bus Yellow Solid">School Bus Yellow Solid</option>
-            <option value="Library Bookshelves">Library Bookshelves</option>
-            <option value="Playground Grass">Playground Grass</option>
-            <option value="Cloudy Blue Sky">Cloudy Blue Sky</option>
-            <option value="Starry Night Space">Starry Night Space</option>
-            <option value="Fun Polka Dots">Fun Polka Dots</option>
-            <option value="Chevron Stripes">Chevron Stripes</option>
-            <option value="Watercolor Splash">Watercolor Splash</option>
-            <option value="Wooden Student Desk">Wooden Student Desk</option>
-            <option value="Corkboard & Pushpins">Corkboard & Pushpins</option>
-            <option value="Hexagon Grid">Hexagon Grid</option>
-            <option value="Gradient Sunrise">Gradient Sunrise</option>
-            <option value="Modern Geometric Shapes">Modern Geometric Shapes</option>
-            <option value="Galaxy Nebula">Galaxy Nebula</option>
-            <option value="Urban Brick Wall">Urban Brick Wall</option>
-            <option value="Abstract Color Waves">Abstract Color Waves</option>
-        </select>
-    </div>
-
-    <button class="btn-save" onclick="generateBlueprint()">Generate My App Blueprint!</button>
-
-    <div id="blueprintResult">
-        <h2 style="color: #27ae60; text-align: center;">🎉 Your App Blueprint is Ready! 🎉</h2>
-        
-        <div class="blueprint-data">
-            <h3>❤️ The Heart of the App</h3>
-            <p><strong>App Dedicated To:</strong> <span id="resFamily" class="highlight-text"></span></p>
-            <p><strong>My Goals:</strong></p>
-            <ol>
-                <li id="resGoal1"></li>
-                <li id="resGoal2"></li>
-                <li id="resGoal3"></li>
-            </ol>
-            <p><strong>Thank You Message:</strong></p>
-            <blockquote id="resMsg" style="font-style: italic; background: #f9f9f9; padding: 10px; border-left: 4px solid #e67e22;"></blockquote>
-        </div>
-
-        <div class="blueprint-data">
-            <h3>🎨 App Design & Interactivity</h3>
-            <p><strong>Main Color:</strong> <span id="resColor"></span></p>
-            <p><strong>Background:</strong> <span id="resBackground"></span></p>
-            <p><strong>Interactive Features to Build:</strong></p>
-            <ul id="resInteractive" style="margin-bottom: 0;"></ul>
-        </div>
-
-        <p style="text-align: center; margin-top: 25px; font-weight: bold; color: #c0392b;">📸 Take a screenshot of this blueprint so you don't lose your ideas! 📸</p>
-    </div>
-
-</div>
-
-<script>
-    function generateBlueprint() {
-        // Content
-        var fName = document.getElementById("familyName").value || "My Family";
-        var g1 = document.getElementById("goal1").value || "Goal 1 not entered";
-        var g2 = document.getElementById("goal2").value || "Goal 2 not entered";
-        var g3 = document.getElementById("goal3").value || "Goal 3 not entered";
-        var tMsg = document.getElementById("thankYouMessage").value || "No message entered.";
-
-        // Design
-        var color = document.getElementById("appColor").value || "None Selected";
-        var background = document.getElementById("appBackground").value || "None Selected";
-        
-        // Interactive Elements
-        var interactions = [];
-        var checkboxes = document.querySelectorAll('input[name="interactive"]:checked');
-        checkboxes.forEach(function(box) {
-            interactions.push(box.value);
-        });
-
-        // Populate results
-        document.getElementById("resFamily").innerText = fName;
-        document.getElementById("resGoal1").innerText = g1;
-        document.getElementById("resGoal2").innerText = g2;
-        document.getElementById("resGoal3").innerText = g3;
-        document.getElementById("resMsg").innerText = tMsg;
-        document.getElementById("resColor").innerText = color;
-        document.getElementById("resBackground").innerText = background;
-
-        var interactiveList = document.getElementById("resInteractive");
-        interactiveList.innerHTML = ""; 
-        if (interactions.length === 0) {
-            interactiveList.innerHTML = "<li>No interactive features selected.</li>";
-        } else {
-            interactions.forEach(function(item) {
-                var li = document.createElement("li");
-                li.innerText = item;
-                interactiveList.appendChild(li);
-            });
-        }
-
-        document.getElementById("blueprintResult").style.display = "block";
-        
-        // Scroll to result
-        document.getElementById("blueprintResult").scrollIntoView({ behavior: 'smooth' });
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open House App Builder: Pro Edition</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Outfit', sans-serif; }
+    .display-font { font-family: 'Space Grotesk', sans-serif; }
+    
+    .vibe-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      background-attachment: fixed;
     }
-</script>
+    
+    .card-glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
 
+    .vibe-input {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .vibe-input:focus {
+      border-color: #a855f7;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+      outline: none;
+    }
+
+    .section-header {
+      background: linear-gradient(to right, #c084fc, #ec4899, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .feature-checkbox, .feature-radio {
+      appearance: none;
+      background-color: rgba(15, 23, 42, 0.6);
+      border: 2px solid #8b5cf6;
+      transition: all 0.2s;
+    }
+    .feature-checkbox:checked, .feature-radio:checked {
+      background-color: #a855f7;
+      border-color: #d8b4fe;
+      position: relative;
+    }
+    .feature-checkbox:checked::after {
+      content: '✓';
+      position: absolute;
+      color: white;
+      font-size: 12px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .feature-radio { border-radius: 50%; }
+    .feature-radio:checked::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .btn-neon {
+      background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    }
+    .btn-neon:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(236, 72, 153, 0.6);
+    }
+
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    
+    .prompt-output {
+      background: #0f172a;
+      color: #34d399;
+      font-family: 'Monaco', 'Consolas', monospace;
+      border: 1px solid #34d399;
+      box-shadow: inset 0 0 10px rgba(52, 211, 153, 0.1);
+    }
+
+    .scaffold-box {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid #f59e0b;
+    }
+  </style>
+</head>
+<body class="h-full vibe-bg overflow-auto text-slate-200">
+  <div class="w-full min-h-full p-4 md:p-8">
+    
+    <header class="text-center mb-10 pt-4">
+      <h1 class="display-font text-5xl md:text-6xl font-extrabold text-white drop-shadow-2xl mb-3 tracking-tight">
+        App <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Architect</span>
+      </h1>
+      <p class="text-indigo-200 text-xl mt-2 font-medium">Design an epic Open House experience for your family 🚀</p>
+    </header>
+
+    <div class="max-w-6xl mx-auto space-y-8">
+      
+      <section class="card-glass rounded-3xl p-8">
+        <h2 class="text-3xl font-bold section-header mb-6 display-font">👤 The Basics</h2>
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block text-purple-300 font-semibold mb-2">Your Name</label>
+            <input type="text" id="studentName" placeholder="e.g. Alex" class="w-full p-4 rounded-xl vibe-input text-lg">
+          </div>
+          <div>
+            <label class="block text-purple-300 font-semibold mb-2">Class / Period</label>
+            <input type="text" id="classPeriod" placeholder="e.g. Period 3 English" class="w-full p-4 rounded-xl vibe-input text-lg">
+          </div>
+        </div>
+        <div>
+          <label class="block text-purple-300 font-semibold mb-2">💌 Thank You Message to Your Family</label>
+          <textarea id="thankYouMsg" rows="3" placeholder="Thanks for coming to open house and supporting me..." class="w-full p-4 rounded-xl vibe-input resize-none text-lg"></textarea>
+        </div>
+      </section>
+
+      <section class="card-glass rounded-3xl p-8 border border-amber-500/30">
+        <h2 class="text-3xl font-bold section-header mb-6 display-font">📚 English Academic Reflection</h2>
+        <p class="text-indigo-200 mb-6 text-lg">This is your chance to show off what you've learned! Write a paragraph reflecting on your growth using the Claim-Evidence-Reasoning (CER) strategy. This will be featured prominently in your app.</p>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="md:col-span-1 scaffold-box p-5 rounded-xl text-sm space-y-4">
+            <h3 class="font-bold text-amber-400 text-lg">💡 Sentence Frames</h3>
+            <div>
+              <span class="text-amber-200 font-semibold block mb-1">Claim (Start here):</span>
+              <ul class="list-disc pl-4 text-slate-300 space-y-1">
+                <li>"This year in English, I grew as a critical thinker by..."</li>
+                <li>"My biggest academic takeaway this year was learning how to..."</li>
+              </ul>
+            </div>
+            <div>
+              <span class="text-amber-200 font-semibold block mb-1">Evidence (Pick your topic):</span>
+              <ul class="list-disc pl-4 text-slate-300 space-y-1">
+                <li>"For example, when reading our Articles of the Week, I..."</li>
+                <li>"While analyzing the Kit Fox versus High Speed Train debate, I found that..."</li>
+                <li>"During our study of the novel Night, I explored..."</li>
+              </ul>
+            </div>
+            <div>
+              <span class="text-amber-200 font-semibold block mb-1">Reasoning (Connect to CER):</span>
+              <ul class="list-disc pl-4 text-slate-300 space-y-1">
+                <li>"Using the Claim-Evidence-Reasoning strategy helped me effectively argue that..."</li>
+                <li>"This strategy allowed me to connect my evidence to my claim by..."</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-amber-300 font-semibold mb-2">Your Reflection Paragraph</label>
+            <textarea id="englishReflection" rows="12" placeholder="Write your full paragraph here using the sentence frames on the left to help you..." class="w-full p-4 rounded-xl vibe-input resize-none text-lg"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-glass rounded-3xl p-8">
+        <h2 class="text-3xl font-bold section-header mb-6 display-font">🎯 My Goals (Highlighted Section)</h2>
+        <p class="text-indigo-200 mb-6 text-lg">Write your goals here. The AI will make sure these pop off the screen so your parents can't miss them!</p>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-cyan-300 font-semibold mb-2">High School Goals (List 2-3)</label>
+            <textarea id="hsGoals" rows="3" placeholder="1. Make varsity track&#10;2. Get a 3.8 GPA" class="w-full p-4 rounded-xl vibe-input resize-none text-lg"></textarea>
+          </div>
+          <div>
+            <label class="block text-pink-300 font-semibold mb-2">After High School / 10-Year Goals</label>
+            <textarea id="futureGoals" rows="3" placeholder="1. Graduate college&#10;2. Travel to Japan" class="w-full p-4 rounded-xl vibe-input resize-none text-lg"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-glass rounded-3xl p-8">
+        <h2 class="text-3xl font-bold section-header mb-6 display-font">🎮 App Activities (Pick your favorites)</h2>
+        
+        <div class="mb-8 p-6 rounded-2xl bg-slate-800/50 border border-purple-500/30">
+          <h3 class="text-xl font-bold text-purple-400 mb-4">🧩 Drag & Drop Mini-Games</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="dragdrop" value="Rank my top Spotify artists"> <span>Rank my top Spotify artists</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="dragdrop" value="Sort my classes by vibes"> <span>Sort my classes by vibes</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="dragdrop" value="Timeline of my best school moments"> <span>Timeline of best school moments</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="dragdrop" value="Match my skills to my future career"> <span>Match skills to careers</span></label>
+          </div>
+        </div>
+
+        <div class="mb-8 p-6 rounded-2xl bg-slate-800/50 border border-pink-500/30">
+          <h3 class="text-xl font-bold text-pink-400 mb-4">🎡 The Hype Spinner Prompts</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="spinwheel" value="Random trivia about me"> <span>Random trivia about me</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="spinwheel" value="A question parents have to answer"> <span>Question parents must answer</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="spinwheel" value="Places I want to travel"> <span>Places I want to travel</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="spinwheel" value="My hidden talent"> <span>My hidden talent</span></label>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-800/50 border border-cyan-500/30">
+          <h3 class="text-xl font-bold text-cyan-400 mb-4">🤔 Guessing Games (Scratchers/Trivia)</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="guessing" value="Guess my favorite class"> <span>Guess my favorite class</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="guessing" value="Guess my dream college/path"> <span>Guess my dream path</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="guessing" value="Guess my most used emoji"> <span>Guess my most used emoji</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox game-checkbox" data-category="guessing" value="Guess my biggest pet peeve"> <span>Guess my biggest pet peeve</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section id="dynamicAnswersSection" class="card-glass rounded-3xl p-8 hidden border-2 border-emerald-500/50">
+        <h2 class="text-3xl font-bold section-header mb-2 display-font">☕ Spill the Tea (The Answers)</h2>
+        <p class="text-emerald-300 mb-6 text-lg">The AI will ONLY use the information you type below for your interactive games.</p>
+        <div id="dynamicAnswersContainer" class="space-y-4 mt-6"></div>
+      </section>
+
+      <section class="card-glass rounded-3xl p-8">
+        <h2 class="text-3xl font-bold section-header mb-6 display-font">🎨 The Design Studio</h2>
+        
+        <div class="mb-8">
+          <h3 class="text-xl font-bold text-fuchsia-400 mb-4">Step 1: Core Aesthetic (Choose 1 of 20)</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Cyberpunk / Neon Future" checked> <span>🌃 Cyberpunk</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Clean Glassmorphism"> <span>✨ Glassmorphism</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Retro 8-bit Arcade"> <span>👾 Retro Arcade</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Lofi Chillwave"> <span>🎧 Lofi Chillwave</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Y2K / Frutiger Aero"> <span>💿 Y2K / Aero</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Anime / Manga Studio"> <span>🌸 Anime / Manga</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Cottagecore"> <span>🍄 Cottagecore</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Dark Mode Minimalist"> <span>🖤 Dark Minimalist</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Comic Book / Pop Art"> <span>💥 Comic Book / Pop Art</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Vaporwave / 90s Web"> <span>🌴 Vaporwave</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Streetwear / Grunge"> <span>🛹 Streetwear / Grunge</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Scrapbook / Hand-Drawn Doodle"> <span>✂️ Scrapbook / Doodle</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Steampunk / Industrial"> <span>⚙️ Steampunk</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Neobrutalism (High contrast, bold borders)"> <span>🧱 Neobrutalism</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Minimalist Zen"> <span>🕊️ Minimalist Zen</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Space / Galaxy Explorer"> <span>🚀 Space / Galaxy</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Fantasy RPG / Magical"> <span>🧙‍♂️ Fantasy RPG</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Synthwave / 80s Outrun"> <span>🏎️ Synthwave</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Corporate High-Tech"> <span>💼 Corporate Tech</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 cursor-pointer hover:bg-slate-700 transition"><input type="radio" name="appTheme" class="w-5 h-5 feature-radio" value="Polaroid / Vintage Film"> <span>📷 Vintage Film</span></label>
+          </div>
+        </div>
+
+        <div class="mb-8 p-6 rounded-2xl bg-slate-800/50 border border-blue-500/30">
+          <h3 class="text-xl font-bold text-blue-400 mb-4">Step 2: Color Palette (Choose 1 of 20)</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Midnight Bioluminescence" checked> <span>🌌 Midnight Glow</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Sunset Overdrive"> <span>🌅 Sunset Overdrive</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Matcha Latte"> <span>🍵 Matcha Latte</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Highlighter Vibe"> <span>🖍️ Highlighter Vibe</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Pastel Dreamscape"> <span>☁️ Pastel Dream</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Monochrome Stealth"> <span>🥷 Stealth Monochrome</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Ocean Depths"> <span>🌊 Ocean Depths</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Cherry Blossom"> <span>🌸 Cherry Blossom</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Autumn Harvest"> <span>🍂 Autumn Harvest</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Cyber Gold"> <span>🪙 Cyber Gold</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Bubblegum Pop"> <span>🍬 Bubblegum Pop</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Forest Canopy"> <span>🌲 Forest Canopy</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Vampiric Noir"> <span>🦇 Vampiric Noir</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Desert Sand"> <span>🏜️ Desert Sand</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Arctic Frost"> <span>🧊 Arctic Frost</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Retro 70s"> <span>🪩 Retro 70s</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Royal Jewel"> <span>💎 Royal Jewel</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Electric Berry"> <span>🫐 Electric Berry</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Coffee House"> <span>☕ Coffee House</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appColor" class="w-5 h-5 feature-radio" value="Toxic Hazard"> <span>☢️ Toxic Hazard</span></label>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-800/50 border border-amber-500/30">
+          <h3 class="text-xl font-bold text-amber-400 mb-4">Step 3: Animation Style (Choose 1 of 20)</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Bouncy & Playful" checked> <span>🪀 Bouncy & Playful</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Butter Smooth"> <span>🧈 Butter Smooth</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Glitch & Chaos"> <span>⚡ Glitch & Chaos</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Snappy & Instant"> <span>🏎️ Snappy & Fast</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Floating in Space"> <span>🪐 Floating in Space</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Typing Effects"> <span>⌨️ Typing Effects</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Elastic Pull"> <span>🧵 Elastic Pull</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Paper Fold"> <span>📄 Paper Fold</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Cinematic Zoom"> <span>🎥 Cinematic Zoom</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Neon Pulse"> <span>💡 Neon Pulse</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Page Flip"> <span>📖 Page Flip</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Jello Wiggle"> <span>🍮 Jello Wiggle</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Pixelate Reveal"> <span>🕹️ Pixelate Reveal</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Magnetic Pull"> <span>🧲 Magnetic Pull</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Morphing Shapes"> <span>💠 Morphing Shapes</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Parallax Scroll"> <span>🏔️ Parallax Scroll</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Heartbeat Drop"> <span>💓 Heartbeat Pulse</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Confetti Bursts"> <span>🎉 Confetti Bursts</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="Slide & Glide"> <span>🛹 Slide & Glide</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="appAnimation" class="w-5 h-5 feature-radio" value="CRT Monitor Flicker"> <span>📺 CRT Flicker</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-glass rounded-3xl p-8">
+        <h2 class="text-3xl font-bold section-header mb-6 display-font">♿ Accessibility & Tech</h2>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-bold text-emerald-400 mb-4">Accessibility Features (Pick up to 20)</h3>
+          <div class="checkbox-grid">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Text-to-Speech (Read Aloud button)"> <span>🔊 Text-to-Speech</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Speech-to-Text (Dictation)"> <span>🎙️ Speech-to-Text</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Spanish Translation Toggle"> <span>🇪🇸 Spanish Translation</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Extra Large Text Option"> <span>🔠 Large Text Mode</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="High Contrast/Colorblind Mode"> <span>👁️ High Contrast Mode</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Dyslexia-Friendly Font Toggle"> <span>📖 Dyslexia-Friendly Font</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Screen Reader Optimized (ARIA labels)"> <span>🗣️ Screen Reader Ready</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Focus Ring Highlighting (For keyboard)"> <span>🎯 Keyboard Focus Rings</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Motion Reduction Toggle (Disable animations)"> <span>🛑 Motion Reduction</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Dark/Light Mode Toggle"> <span>🌗 Dark/Light Mode</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Custom Cursor Size Options"> <span>🖱️ Custom Cursor Size</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Focus Timer"> <span>⏱️ Focus Timer</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Reading Ruler / Guide"> <span>📏 Reading Ruler</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Page Progress Bar"> <span>📊 Progress Bar</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Text Highlighter Tool"> <span>🖍️ Highlighter Tool</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Click-to-Define Dictionary"> <span>📚 Click-to-Define</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Focus Mode (Dim distractions)"> <span>🧘 Focus Mode</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Bionic Reading Mode"> <span>🧠 Bionic Reading</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Adjustable Line Spacing"> <span>↕️ Line Spacing</span></label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 cursor-pointer transition"><input type="checkbox" class="w-5 h-5 feature-checkbox" data-category="access" value="Mute All Sounds Toggle"> <span>🔇 Mute Audio/Sounds</span></label>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-blue-400 mb-4">Required Tech Specs</h3>
+          <div class="flex flex-col gap-3">
+            <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-800 border border-blue-500/30 cursor-pointer">
+              <input type="checkbox" id="reqLocal" class="w-6 h-6 feature-checkbox" checked disabled> 
+              <span class="text-slate-200 font-bold block">💾 Save State (Local Storage)</span>
+            </label>
+            <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-800 border border-blue-500/30 cursor-pointer">
+              <input type="checkbox" id="reqPdf" class="w-6 h-6 feature-checkbox" checked disabled> 
+              <span class="text-slate-200 font-bold block">📄 Save to PDF</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-glass rounded-3xl p-8 text-center">
+        <button id="generateBtn" class="btn-neon text-white text-2xl font-bold py-5 px-12 rounded-2xl w-full md:w-auto display-font">
+          🚀 Generate My AI Prompt
+        </button>
+
+        <div id="outputSection" class="hidden mt-10 text-left">
+          <div class="bg-indigo-900/40 border border-indigo-400/30 rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-2xl font-bold text-emerald-400">✅ Your Prompt is Ready!</h3>
+              <button id="copyBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-2 px-6 rounded-lg transition-colors shadow-lg">
+                📋 Copy Text
+              </button>
+            </div>
+            <p class="text-indigo-200 mb-4">Paste this into ChatGPT, Claude, or Gemini. It contains every detail they need to build your app!</p>
+            <div id="promptOutput" class="prompt-output p-6 rounded-xl text-sm md:text-base overflow-auto max-h-[500px] whitespace-pre-wrap leading-relaxed"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // --- Dynamic Answer Fields ---
+    const gameCheckboxes = document.querySelectorAll('.game-checkbox');
+    const dynamicAnswersSection = document.getElementById('dynamicAnswersSection');
+    const dynamicAnswersContainer = document.getElementById('dynamicAnswersContainer');
+
+    gameCheckboxes.forEach(cb => {
+      cb.addEventListener('change', updateAnswerFields);
+    });
+
+    function updateAnswerFields() {
+      dynamicAnswersContainer.innerHTML = ''; 
+      const checkedGames = Array.from(gameCheckboxes).filter(cb => cb.checked);
+      
+      if (checkedGames.length > 0) {
+        dynamicAnswersSection.classList.remove('hidden');
+        checkedGames.forEach(cb => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <label class="block text-purple-300 font-semibold mb-2">Details for: "${cb.value}"</label>
+            <textarea class="w-full p-4 rounded-xl vibe-input resize-none text-lg game-answer-input" data-game="${cb.value}" rows="2" placeholder="Tell the AI the exact answer or options for this..."></textarea>
+          `;
+          dynamicAnswersContainer.appendChild(div);
+        });
+      } else {
+        dynamicAnswersSection.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', function() {
+      // Gather standard inputs
+      const name = document.getElementById('studentName').value || '[Student Name]';
+      const period = document.getElementById('classPeriod').value || '[Class Period]';
+      const thanks = document.getElementById('thankYouMsg').value || '[Insert Thank You Message]';
+      
+      const englishReflection = document.getElementById('englishReflection').value || '[Student did not write an academic reflection]';
+      
+      const hsGoals = document.getElementById('hsGoals').value || '[High School Goals]';
+      const futureGoals = document.getElementById('futureGoals').value || '[10-Year Goals]';
+      
+      const theme = document.querySelector('input[name="appTheme"]:checked').value;
+      const palette = document.querySelector('input[name="appColor"]:checked').value;
+      const animation = document.querySelector('input[name="appAnimation"]:checked').value;
+
+      const getChecked = (category) => {
+        const boxes = document.querySelectorAll(`input[data-category="${category}"]:checked`);
+        return Array.from(boxes).map(box => box.value);
+      };
+
+      const dragdrop = getChecked('dragdrop');
+      const spinwheel = getChecked('spinwheel');
+      const guessing = getChecked('guessing');
+      const access = getChecked('access');
+
+      // Gather Dynamic Answers
+      const answerInputs = document.querySelectorAll('.game-answer-input');
+      let gameAnswersText = "";
+      answerInputs.forEach(input => {
+        gameAnswersText += `- For "${input.getAttribute('data-game')}": ${input.value || '[Student left this blank, make something up]'}\n`;
+      });
+
+      // Construct the Prompt
+      let promptText = `Act as an expert frontend developer, UX designer, and accessibility specialist. I need you to build a single-page HTML/CSS/JS web app for my parents to play with at my school's Open House. 
+
+CRITICAL RULE: ALL code must be provided in a SINGLE index.html file containing all HTML, CSS (Tailwind via CDN), and JS. No external assets unless via CDN.
+
+--- 1. CORE INFORMATION & GOALS SHOWCASE ---
+- Student Name: ${name}
+- Class/Period: ${period}
+- Thank You Message to display prominently: "${thanks}"
+
+Create a dedicated, visually highlighted section to showcase my goals below for my parents. Make these pop off the screen and do NOT use them as answers in the guessing games:
+- My High School Goals: ${hsGoals.replace(/\n/g, ', ')}
+- My After High School/10-Year Goals: ${futureGoals.replace(/\n/g, ', ')}
+
+--- 2. ACADEMIC REFLECTION (CRITICAL SECTION) ---
+You MUST include a highly visible, styled card or section in the app titled "📚 My Year in English: Academic Reflection". 
+Inside this section, display the following paragraph exactly as I wrote it. Make it look professional and academic:
+"${englishReflection}"
+
+--- 3. DESIGN, VIBE & AESTHETIC ---
+The design must be modern and mobile-responsive. Use the following exact style guidelines to build the UI:
+- Core Aesthetic/Vibe: ${theme}
+- Color Palette: ${palette}
+- UI/UX Animation Style: ${animation}
+
+--- 4. REQUIRED INTERACTIVE ACTIVITIES ---
+Please build the following functional mini-games using HTML5 Canvas, JS, or Drag-and-Drop APIs:
+
+`;
+
+      if (dragdrop.length > 0) {
+        promptText += `A. DRAG AND DROP GAMES:\nCreate functional drag-and-drop zones for: ${dragdrop.join(', ')}.\n\n`;
+      }
+
+      if (spinwheel.length > 0) {
+        promptText += `B. SPIN THE WHEEL:\nCreate a physics-based, animated spinning wheel with wedges for: ${spinwheel.join(', ')}. Include a popup modal when it lands on a wedge.\n\n`;
+      }
+
+      if (guessing.length > 0) {
+        promptText += `C. GUESSING GAMES / SCRATCH-OFFS:\nIntegrate guessing games for: ${guessing.join(', ')}. Use a mix of digital scratch-offs (HTML5 Canvas where the user "scratches" to reveal the answer) and multiple-choice trivia styles.\n\n`;
+      }
+
+      if (gameAnswersText !== "") {
+        promptText += `--- 5. THE ACTUAL ANSWERS / DATA FOR THE GAMES ---
+CRITICAL: ONLY use the info provided below for the mini-games. Do not use my goals or basic info for the games unless explicitly stated here:
+${gameAnswersText}
+`;
+      }
+
+      promptText += `--- 6. ACCESSIBILITY FEATURES ---
+You MUST include the following accessibility features:
+${access.length > 0 ? access.map(a => `- ${a}`).join('\n') : '- Standard web accessibility best practices (semantic HTML, contrast).'}
+
+--- 7. TECHNICAL REQUIREMENTS ---
+1. LOCAL STORAGE: Implement localStorage so that if my parents refresh the page, their game progress, selections, and theme toggles are saved.
+2. SAVE TO PDF: Integrate a library like 'html2pdf.js' via CDN. Create a highly visible "Save as PDF Keepsake" button that captures the completed app state and downloads it as a PDF for my parents to keep.
+
+Output the complete, working code in one code block.`;
+
+      // Show output
+      document.getElementById('promptOutput').textContent = promptText;
+      document.getElementById('outputSection').classList.remove('hidden');
+      
+      // Scroll to output
+      document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Copy Button Logic
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      const textToCopy = document.getElementById('promptOutput').textContent;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copied to Clipboard!';
+        btn.classList.replace('bg-emerald-500', 'bg-slate-700');
+        btn.classList.replace('hover:bg-emerald-400', 'text-white');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.replace('bg-slate-700', 'bg-emerald-500');
+          btn.classList.replace('text-white', 'hover:bg-emerald-400');
+        }, 3000);
+      });
+    });
+  </script>
 </body>
 </html>
