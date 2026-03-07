@@ -1,0 +1,277 @@
+:root {
+  --bg: #f4efe6;
+  --bg-card: #fffdf8;
+  --text: #1e1e1e;
+  --accent: #0e5a8a;
+  --accent-2: #d17b0f;
+  --ok: #156f3b;
+  --warn: #8f2f2f;
+  --border: #c9bba3;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --font-main: "Atkinson Hyperlegible", "Trebuchet MS", Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  color: var(--text);
+  background: linear-gradient(180deg, #efe3ce 0%, var(--bg) 100%);
+  line-height: 1.45;
+}
+
+.skip-link {
+  position: absolute;
+  top: -50px;
+  left: 10px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+}
+
+.skip-link:focus {
+  top: 10px;
+}
+
+.hero {
+  padding: 1rem;
+  background: #2f3a40;
+  color: #fff;
+}
+
+.sub {
+  max-width: 70ch;
+}
+
+main,
+section,
+footer {
+  width: min(960px, 95%);
+  margin: 1rem auto;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+.grid-2,
+.grid-3 {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin: 0.45rem 0;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.45rem;
+  border: 1px solid #928a7b;
+  border-radius: 8px;
+  margin-top: 0.35rem;
+  background: #fff;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  background: #08466c;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.hint {
+  border-left: 5px solid var(--accent-2);
+  padding: 0.55rem;
+  background: #fff5e2;
+  display: none;
+}
+
+.hint.visible {
+  display: block;
+}
+
+.draggable-list {
+  list-style: decimal;
+  padding-left: 1.2rem;
+}
+
+.draggable-item {
+  margin: 0.45rem 0;
+  padding: 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fcfaf6;
+  cursor: move;
+}
+
+.draggable-item:focus {
+  outline: 3px solid var(--accent);
+}
+
+.research-box {
+  border: 1px dashed var(--accent);
+  padding: 0.65rem;
+  border-radius: 8px;
+  background: #eef6fc;
+}
+
+.scratch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.scratch-card {
+  min-height: 120px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.7rem;
+  position: relative;
+  background: #fff;
+}
+
+.scratch-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: repeating-linear-gradient(
+    45deg,
+    #8d8d8d,
+    #8d8d8d 8px,
+    #a1a1a1 8px,
+    #a1a1a1 16px
+  );
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.scratch-card.revealed .scratch-overlay {
+  display: none;
+}
+
+.match-row,
+.sort-row {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: center;
+  padding: 0.45rem;
+  border-bottom: 1px dashed #d4c7af;
+}
+
+.feedback-ok {
+  color: var(--ok);
+  font-weight: 700;
+}
+
+.feedback-warn {
+  color: var(--warn);
+  font-weight: 700;
+}
+
+.sentence-starter {
+  margin-top: 0.75rem;
+  padding: 0.65rem;
+  background: #edf7ea;
+  border: 1px solid #9fc59a;
+  border-radius: 8px;
+}
+
+.high-contrast {
+  --bg: #000;
+  --bg-card: #121212;
+  --text: #fff;
+  --accent: #00d2ff;
+  --accent-2: #ffd600;
+  --ok: #7fffaa;
+  --warn: #ff8d8d;
+  --border: #fff;
+  background: #000;
+}
+
+.large-text {
+  font-size: 1.15rem;
+}
+
+.dyslexia-font {
+  --font-main: "OpenDyslexic", "Comic Sans MS", "Trebuchet MS", sans-serif;
+}
+
+@media (max-width: 680px) {
+  .match-row,
+  .sort-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .hero,
+  .controls,
+  .actions button,
+  .scratch-overlay,
+  .skip-link {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .card {
+    box-shadow: none;
+    break-inside: avoid;
+    border: 1px solid #000;
+  }
+
+  .hint {
+    display: block;
+  }
+}
