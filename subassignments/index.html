@@ -1,136 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Break Arcade</title>
-    <style>
-        /* Retro Game Background Pattern */
-        body {
-            background-color: #0d0e15;
-            /* Creates a subtle grid/dot pattern like an old screen */
-            background-image: radial-gradient(#1a1c29 2px, transparent 2px);
-            background-size: 30px 30px; 
-            color: #e2e8f0;
-            font-family: 'Courier New', Courier, monospace; /* More "game" feel */
-            text-align: center;
-            padding: 50px;
-            margin: 0;
-        }
-
-        .hub-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Quirky Arcade Header */
-        h1 { 
-            font-size: 3.5rem;
-            color: #f0f; /* Hot Pink */
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            /* Double glow effect */
-            text-shadow: 3px 3px 0px #0ff, 0 0 20px #f0f;
-            margin-bottom: 5px;
-        }
-
-        h2 { 
-            color: #0ff; /* Cyber Cyan */
-            font-size: 1.2rem; 
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .assignment-list {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .assignment-item {
-            width: 100%;
-            max-width: 600px;
-        }
-
-        /* Arcade Button Styling */
-        .arcade-btn {
-            display: block;
-            text-decoration: none;
-            padding: 25px;
-            border-radius: 0px; /* Square/Blocky for Arcade feel */
-            font-weight: bold;
-            font-size: 1.5rem;
-            transition: all 0.2s ease;
-            background: #111;
-            /* The requested Dotted Border */
-            border: 4px dotted; 
-        }
-
-        /* Cartoon Quirky Glows */
-        .arcade-pink {
-            color: #ff00ff;
-            border-color: #ff00ff;
-            box-shadow: 0 0 15px #ff00ff;
-        }
-
-        .arcade-cyan {
-            color: #00ffff;
-            border-color: #00ffff;
-            box-shadow: 0 0 15px #00ffff;
-        }
-
-        .arcade-lime {
-            color: #39ff14;
-            border-color: #39ff14;
-            box-shadow: 0 0 15px #39ff14;
-        }
-
-        /* Hover: Make it "Pop" like a game button */
-        .arcade-btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            filter: brightness(1.5);
-            background: #222;
-            border-style: solid; /* Change dotted to solid on hover for "activation" */
-        }
-
-        .arcade-btn:active {
-            transform: translateY(2px); /* Click effect */
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teen DMV Permit Lesson - No Texting While Driving</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>DMV Permit Power Lesson</h1>
+      <p>English + Driver Safety: Why texting and driving is never worth the risk.</p>
+      <div class="speed-strip" aria-hidden="true"></div>
+    </div>
+  </header>
 
-<div class="hub-container">
-    <h1>📂 [SUB] Digital Stream</h1>
-    <h2>Live Now! Choose Your Learning Experience!</h2>
+  <main class="container">
+    <section class="card reading-card">
+      <h2>Reading Passage: "One Text, One Turn, One Life Changed"</h2>
+      <p>
+        Mia had just earned her learner's permit and loved the freedom of driving to school with her mom in the passenger seat.
+        One bright Tuesday morning, traffic moved steadily, and Mia felt confident. Then her phone buzzed. It was a group message:
+        "Where are we meeting after practice?" She glanced down for what felt like one second. But in that second, the world ahead
+        kept moving. The car in front of her braked hard for a crossing cyclist. Mia looked up, slammed the brakes, and stopped
+        inches away from the bumper. Her hands shook. Her mom went silent.
+      </p>
+      <p>
+        That near crash was enough to change Mia forever. She later learned that looking at a phone for 5 seconds at 55 mph means
+        driving the length of a football field with your eyes off the road. For teens, that risk is even higher because new drivers
+        are still building reaction speed, mirror checks, and hazard awareness. Texting while driving combines all the hardest parts
+        of driving with distraction: your eyes leave the road, your hands leave the wheel, and your mind leaves the moment.
+      </p>
+      <p>
+        In English class, Mia wrote, "A text can wait, but a life cannot." She realized that safe driving is not only a personal
+        choice; it protects passengers, classmates, pedestrians, cyclists, and families in every neighborhood. Each time teens silence
+        their phone, use "Do Not Disturb," or pull over before replying, they choose responsibility over impulse. Real strength is not
+        answering every message. Real strength is arriving alive.
+      </p>
+    </section>
 
-    <ul class="assignment-list">
-        <li class="assignment-item">
-            <a href="timedbreak.html" class="arcade-btn arcade-pink">
-                👾 SELF-MONITORED BREAK ZONE
-            </a>
-        </li>
+    <section class="card">
+      <h2>1) Drag & Drop: Sort Safe vs. Risky Choices</h2>
+      <p>Drag each action card into the correct lane.</p>
+      <div class="drag-layout">
+        <div class="bank" id="cardBank" aria-label="Action cards">
+          <div class="drag-item" draggable="true">Reply to a text at a red light</div>
+          <div class="drag-item" draggable="true">Turn on Do Not Disturb before driving</div>
+          <div class="drag-item" draggable="true">Ask a passenger to read messages</div>
+          <div class="drag-item" draggable="true">Check social media while steering with one hand</div>
+          <div class="drag-item" draggable="true">Pull over safely before using phone</div>
+          <div class="drag-item" draggable="true">Keep both hands on the wheel</div>
+        </div>
+        <div class="drop-zones">
+          <div class="drop-zone safe" data-group="safe">
+            <h3>Safe Choices</h3>
+          </div>
+          <div class="drop-zone risky" data-group="risky">
+            <h3>Risky Choices</h3>
+          </div>
+        </div>
+      </div>
+      <button id="checkSortBtn" class="btn">Check My Sort</button>
+      <p id="sortFeedback" class="feedback"></p>
+    </section>
 
-        <li class="assignment-item">
-            <a href="arcadebreak.html" class="arcade-btn arcade-cyan">
-                🕹️ SELF-MONITORING ENGAGEMENT LAB
-            </a>
-        </li>
+    <section class="card">
+      <h2>2) Scratch-Off Safety Facts</h2>
+      <p>Scratch the gray panel to reveal each hidden safety fact.</p>
+      <div class="scratch-grid">
+        <div class="scratch-card">
+          <p class="hidden-fact">Eyes off road + mind off driving = delayed reaction time.</p>
+          <canvas class="scratch-layer" width="400" height="120" aria-label="Scratch area"></canvas>
+        </div>
+        <div class="scratch-card">
+          <p class="hidden-fact">Even a near miss can cause trauma and lifelong guilt.</p>
+          <canvas class="scratch-layer" width="400" height="120" aria-label="Scratch area"></canvas>
+        </div>
+      </div>
+    </section>
 
-        <li class="assignment-item">
-            <a href="aowtrash.html" class="arcade-btn arcade-lime">
-                ⚡ Article of the Week: Trash 
-            </a>
-        </li>
-    </ul>
-</div>
+    <section class="card">
+      <h2>3) Matching Challenge: Term to Meaning</h2>
+      <p>Choose a term and then choose its matching meaning.</p>
+      <div class="matching">
+        <div>
+          <h3>Terms</h3>
+          <div id="termList" class="match-list"></div>
+        </div>
+        <div>
+          <h3>Meanings</h3>
+          <div id="definitionList" class="match-list"></div>
+        </div>
+      </div>
+      <p id="matchingFeedback" class="feedback"></p>
+    </section>
 
+    <section class="card">
+      <h2>4) Quick Reaction Quiz</h2>
+      <p>If you read a text while driving 55 mph for 5 seconds, about how far can your car travel?</p>
+      <div class="quiz-options" id="quizOptions">
+        <button class="quiz-btn" data-correct="false">About one classroom length</button>
+        <button class="quiz-btn" data-correct="true">About one football field length</button>
+        <button class="quiz-btn" data-correct="false">About one parking space</button>
+      </div>
+      <p id="quizFeedback" class="feedback"></p>
+    </section>
+
+    <section class="card cer-card" id="cerSection">
+      <h2>CER Writing Prompt (Claim-Evidence-Reasoning)</h2>
+      <p><strong>Prompt:</strong> Why is it important for teens to never text and drive?</p>
+      <ol>
+        <li><strong>Claim:</strong> State your main argument in one sentence.</li>
+        <li><strong>Evidence:</strong> Use at least two details from the passage or activities.</li>
+        <li><strong>Reasoning:</strong> Explain how your evidence proves your claim.</li>
+      </ol>
+      <label for="cerText">Write your CER paragraph:</label>
+      <textarea id="cerText" rows="10" placeholder="Example starter: Teens should never text and drive because..."></textarea>
+      <div class="btn-row">
+        <button id="saveDraftBtn" class="btn">Save Draft Locally</button>
+        <button id="savePdfBtn" class="btn btn-accent">Save CER as PDF</button>
+      </div>
+      <p id="cerFeedback" class="feedback"></p>
+    </section>
+  </main>
+
+  <footer class="footer">Drive focused. Arrive alive.</footer>
+  <script src="script.js"></script>
 </body>
 </html>
-
-<p><a href="../index.html">← Back to Main Classroom Menu</a></p>
