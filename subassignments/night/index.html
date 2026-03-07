@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holocaust Learning Experience - Chapter 3 Connection</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="hero">
+    <h1>Holocaust Learning Experience</h1>
+    <p>For 9th Grade ELA: <em>Night</em> by Elie Wiesel (Chapter 3 Connection)</p>
+    <p class="sub">Goal: Explore how the Holocaust started, its impact, and how it ended.</p>
+  </header>
+
+  <section class="student-info card" aria-labelledby="studentInfoHeading">
+    <h2 id="studentInfoHeading">Student Info (Required for Print)</h2>
+    <div class="grid-3">
+      <label>Name
+        <input id="studentName" type="text" placeholder="First and last name">
+      </label>
+      <label>Date
+        <input id="studentDate" type="date">
+      </label>
+      <label>Period
+        <input id="studentPeriod" type="text" placeholder="Ex: 3rd">
+      </label>
+    </div>
+    <div class="actions">
+      <button id="printBtn" type="button">Print / Save as PDF</button>
+      <span id="saveStatus" aria-live="polite">Autosave on</span>
+    </div>
+  </section>
+
+  <section class="controls card" aria-labelledby="accessHeading">
+    <h2 id="accessHeading">Accessibility and Support Tools</h2>
+    <div class="grid-2">
+      <label><input type="checkbox" id="highContrastToggle"> High contrast</label>
+      <label><input type="checkbox" id="largeTextToggle"> Large text</label>
+      <label><input type="checkbox" id="dyslexiaToggle"> Dyslexia-friendly font</label>
+      <label><input type="checkbox" id="supportModeToggle"> Support mode (extra hints + sentence starters)</label>
+    </div>
+    <div class="actions">
+      <button type="button" id="readPageBtn">Read page directions aloud</button>
+      <button type="button" id="showAllHintsBtn">Show all hints</button>
+      <button type="button" id="resetHintsBtn">Hide all hints</button>
+    </div>
+  </section>
+
+  <main id="main">
+    <section class="card activity" id="timelineActivity" aria-labelledby="timelineHeading">
+      <h2 id="timelineHeading">Activity 1: Timeline Builder (Research then order events)</h2>
+      <p>Step 1: Read a timeline source. Step 2: Drag events into the correct order from earliest to latest.</p>
+      <div class="research-box">
+        <p><strong>Research Links:</strong></p>
+        <ul>
+          <li><a href="https://encyclopedia.ushmm.org/content/en/article/introduction-to-the-holocaust" target="_blank" rel="noopener">USHMM Introduction to the Holocaust</a></li>
+          <li><a href="https://www.britannica.com/event/Holocaust" target="_blank" rel="noopener">Britannica Overview</a></li>
+          <li><a href="https://www.iwm.org.uk/history/the-holocaust" target="_blank" rel="noopener">Imperial War Museums: Holocaust History</a></li>
+        </ul>
+        <label><input id="researchCheck" type="checkbox"> I reviewed at least one source before ordering events.</label>
+      </div>
+      <p class="hint" data-hint="timeline">Hint: Think about these anchor years: 1933 (Hitler comes to power), 1939 (war starts), 1945 (liberation and war ends in Europe).</p>
+      <ol id="timelineList" class="draggable-list" aria-label="Timeline ordering list"></ol>
+      <div class="actions">
+        <button type="button" id="checkTimelineBtn">Check timeline</button>
+        <span id="timelineFeedback" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="card activity" id="scratchActivity" aria-labelledby="scratchHeading">
+      <h2 id="scratchHeading">Activity 2: Scratch-Off Facts (Click to reveal)</h2>
+      <p>Click each card to "scratch" and reveal key learning facts.</p>
+      <p class="hint" data-hint="scratch">Hint: After revealing, write one sentence about why that fact matters.</p>
+      <div class="scratch-grid" id="scratchGrid"></div>
+      <label>Reflection
+        <textarea id="scratchReflection" rows="3" placeholder="One important fact I learned is..."></textarea>
+      </label>
+    </section>
+
+    <section class="card activity" id="matchActivity" aria-labelledby="matchHeading">
+      <h2 id="matchHeading">Activity 3: Matching Vocabulary and Meaning</h2>
+      <p>Match each term to the best definition.</p>
+      <p class="hint" data-hint="match">Hint: Use process of elimination. Start with words you already know.</p>
+      <div id="matchingContainer"></div>
+      <div class="actions">
+        <button type="button" id="checkMatchBtn">Check matching</button>
+        <span id="matchFeedback" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="card activity" id="causeImpactActivity" aria-labelledby="causeHeading">
+      <h2 id="causeHeading">Activity 4: Cause or Impact Sort</h2>
+      <p>Classify each statement as a cause, policy/action, or impact/outcome.</p>
+      <p class="hint" data-hint="causeImpact">Hint: Ask yourself: Did this help lead to the Holocaust, or happen because of it?</p>
+      <div id="causeImpactContainer"></div>
+      <div class="actions">
+        <button type="button" id="checkCauseImpactBtn">Check sort</button>
+        <span id="causeImpactFeedback" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="card activity" id="endingActivity" aria-labelledby="endingHeading">
+      <h2 id="endingHeading">Activity 5: How Did It End? Sequence and Explain</h2>
+      <p>Put end-of-Holocaust events in order, then explain the significance.</p>
+      <p class="hint" data-hint="ending">Hint: Camps were liberated as Allied forces advanced in 1944-1945.</p>
+      <ol id="endingList" class="draggable-list" aria-label="End of Holocaust event ordering"></ol>
+      <div class="actions">
+        <button type="button" id="checkEndingBtn">Check ending sequence</button>
+        <span id="endingFeedback" aria-live="polite"></span>
+      </div>
+      <label>Why is remembering the end of the Holocaust important today?
+        <textarea id="endingReflection" rows="4" placeholder="It is important because..."></textarea>
+      </label>
+      <div class="sentence-starter" id="sentenceStarter" hidden>
+        <strong>Sentence starters:</strong>
+        <p>"One reason this matters today is..."</p>
+        <p>"A lesson society can learn is..."</p>
+      </div>
+    </section>
+
+    <section class="card activity" id="exitTicket" aria-labelledby="exitHeading">
+      <h2 id="exitHeading">Exit Ticket</h2>
+      <p>Complete this before turning in.</p>
+      <label>1) One cause of the Holocaust:
+        <input id="exitCause" type="text">
+      </label>
+      <label>2) One impact on people or communities:
+        <input id="exitImpact" type="text">
+      </label>
+      <label>3) One key detail about how the Holocaust ended:
+        <input id="exitEnd" type="text">
+      </label>
+    </section>
+  </main>
+
+  <footer>
+    <p>This lesson includes content about genocide and human rights violations. Contact your teacher if you need a break.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
