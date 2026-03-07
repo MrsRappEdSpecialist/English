@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article of the Week: [Paste New Title Here]</title>
+  
+  <style>
+    /* ALL YOUR BEAUTIFUL CSS STAYS EXACTLY THE SAME */
+    :root {
+      --bg: #0b0f17; --panel: #121a2a; --panel-2: #0f1422; --text: #e9f2ff;
+      --muted: #b8c9e8; --neon-cyan: #2ee6ff; --neon-pink: #ff4fb8;
+      --accent: #87ff65; --ink: #0f1117; --white: #ffffff;
+      --article-size: 1rem; --ruler-y: -100px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 10% 10%, #1c2440 0%, transparent 30%),
+                  radial-gradient(circle at 90% 20%, #271730 0%, transparent 28%),
+                  linear-gradient(160deg, var(--bg), #08111f 55%, #0d1b2c 100%);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body.locked { overflow: hidden; }
+    body.high-contrast {
+      --bg: #000; --panel: #111; --panel-2: #000; --text: #fff; --muted: #fff;
+      --neon-cyan: #fff; --neon-pink: #fff; --accent: #fff; background: #000;
+    }
+    .progress-wrap { position: sticky; top: 0; z-index: 1000; width: 100%; height: 8px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(4px); }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); transition: width 0.12s linear; }
+    .lock-overlay { position: fixed; inset: 0; z-index: 2000; background: #05070d; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .lock-card { width: min(460px, 100%); background: var(--panel); border: 2px solid var(--neon-cyan); border-radius: 12px; padding: 1rem; box-shadow: 0 0 24px rgba(46, 230, 255, 0.22); }
+    .lock-card h2 { margin: 0 0 0.6rem; }
+    .lock-card p { margin: 0.2rem 0 0.8rem; color: var(--muted); }
+    .lock-row { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; }
+    .page { width: min(1160px, 96vw); margin: 10px auto 20px; display: grid; gap: 10px; }
+    .panel { background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid rgba(46, 230, 255, 0.35); border-radius: 10px; padding: 0.7rem; }
+    h1, h2, h3, h4 { margin: 0.2rem 0; }
+    .top-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: end; }
+    .field label { display: block; font-size: 0.84rem; color: var(--muted); margin-bottom: 4px; }
+    .date-stamp { font-weight: 700; color: var(--accent); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(135, 255, 101, 0.6); background: rgba(135, 255, 101, 0.08); min-height: 40px; display: flex; align-items: center; justify-content: center; }
+    .standards { font-size: 0.88rem; color: var(--muted); line-height: 1.3; }
+    .controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    button, .btn { border: 1px solid var(--neon-cyan); background: rgba(46, 230, 255, 0.08); color: var(--text); border-radius: 7px; padding: 6px 9px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
+    button:hover { filter: brightness(1.2); transform: translateY(-1px); }
+    .active-toggle { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(135, 255, 101, 0.2) inset; }
+    input[type="text"], textarea { width: 100%; border: 2px solid var(--neon-cyan); border-radius: 8px; background: #1a2436; color: var(--text); padding: 8px; font: inherit; outline: none; transition: all 0.2s ease; }
+    input[type="text"]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 8px rgba(135, 255, 101, 0.3); }
+    textarea { resize: none; overflow: hidden; min-height: 2.2rem; line-height: 1.35; }
+    .compact { font-size: 0.88rem; color: var(--muted); }
+    .article-layout { display: grid; grid-template-columns: 1fr; gap: 10px; align-items: start; }
+    .article-col { display: grid; gap: 8px; }
+    .article-row { display: grid; grid-template-columns: 2.15fr 1fr; gap: 8px; align-items: start; background: rgba(0, 0, 0, 0.12); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 9px; padding: 0.55rem; }
+    .article-text { font-size: var(--article-size); line-height: 1.45; }
+    .article-text.dyslexia { font-family: "Comic Sans MS", Arial, sans-serif; }
+    .pnum { color: var(--accent); font-weight: 700; margin-right: 4px; }
+    .tts-btn { margin-left: 6px; padding: 2px 6px; font-size: 0.88rem; line-height: 1; border-radius: 6px; vertical-align: middle; }
+    .margin-title { font-size: 0.83rem; color: var(--muted); margin-bottom: 4px; font-weight: 700; }
+    .margin-box textarea { min-height: 2rem; }
+    .highlighted { background: rgba(255, 236, 94, 0.42); border-radius: 2px; cursor: pointer; }
+    .highlight-toolbar, .define-popup { position: absolute; z-index: 1400; display: none; background: #0f1a2f; color: #fff; border: 1px solid var(--neon-cyan); border-radius: 8px; padding: 6px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4); max-width: 280px; }
+    .highlight-toolbar button { margin-right: 6px; padding: 4px 8px; }
+    .define-popup h4 { margin: 0 0 4px; font-size: 0.9rem; color: var(--neon-cyan); }
+    .inline-activity { margin-top: 8px; padding: 8px; border: 1px solid rgba(46, 230, 255, 0.4); border-radius: 8px; background: rgba(0, 0, 0, 0.2); }
+    .choice { display: block; margin: 4px 0; cursor: pointer; }
+    .feedback { font-weight: 700; margin-top: 4px; }
+    .hint-box { margin-top: 6px; color: var(--muted); font-size: 0.9rem; border-left: 3px solid var(--neon-cyan); padding-left: 8px; }
+    img.article-image { width: 100%; height: auto; border: 2px solid var(--neon-cyan); border-radius: 8px; margin: 20px 0; display: block; }
+    .ruler { position: fixed; left: 0; right: 0; height: 2.2rem; background: rgba(255, 255, 120, 0.14); border-top: 1px solid rgba(255, 255, 120, 0.45); border-bottom: 1px solid rgba(255, 255, 120, 0.45); top: var(--ruler-y); pointer-events: none; display: none; z-index: 900; }
+    .footer-actions { display: flex; justify-content: flex-end; gap: 8px; }
+    .print-box { display: none; }
+    @media (max-width: 980px) { .top-grid { grid-template-columns: 1fr; } .article-layout { grid-template-columns: 1fr; } .article-row { grid-template-columns: 1fr; } }
+    @media print {
+      body { background: #fff; color: #000; }
+      .no-print, .highlight-toolbar, .define-popup, .ruler, .progress-wrap { display: none !important; }
+      .panel, .article-row { border: 1px solid #333 !important; background: #fff !important; color: #000 !important; box-shadow: none !important; }
+      .article-row { display: grid !important; grid-template-columns: 2.15fr 1fr !important; gap: 8px !important; }
+      textarea { display: none !important; }
+      .print-box { display: block !important; border: 1px solid #000; padding: 6px; min-height: 1.2rem; white-space: pre-wrap; background: #fff; color: #000; border-radius: 3px; }
+      .highlighted { background: #ddd !important; }
+    }
+  </style>
+</head>
+<body class="locked">
+  <div class="progress-wrap no-print"><div id="progressBar" class="progress-bar"></div></div>
+
+  <div id="lockOverlay" class="lock-overlay no-print" aria-modal="true" role="dialog">
+    <div class="lock-card">
+      <h2>Assignment Locked</h2>
+      <p>Enter class passcode to begin.</p>
+      <div class="lock-row">
+        <input id="passcodeInput" type="text" aria-label="Passcode" placeholder="Enter passcode" />
+        <button id="unlockBtn" type="button">Unlock</button>
+      </div>
+      <p id="passcodeMsg" class="compact" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="highlight-toolbar no-print" id="highlightToolbar">
+    <button type="button" id="doHighlight">Highlight</button>
+    <button type="button" id="doDefine">Define</button>
+  </div>
+
+  <div class="define-popup no-print" id="definePopup" aria-live="polite"></div>
+  <div id="readingRuler" class="ruler no-print"></div>
+
+  <main class="page" id="mainPage">
+    <section class="panel">
+      <div class="top-grid">
+        <div class="field">
+          <label for="studentName">Name</label>
+          <input id="studentName" type="text" placeholder="Your name" />
+        </div>
+        <div class="field">
+          <label for="period">Period</label>
+          <input id="period" type="text" placeholder="Class period" />
+        </div>
+        <div>
+          <label>Automatic Date Stamp</label>
+          <div id="dateStamp" class="date-stamp"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h1>Littering Awareness by Sofia Estelles</h1>
+      <div class="standards">
+        <strong>Learning Focus:</strong>
+        [I can annotate an article and build my character around littering]
+      </div>
+    </section>
+
+    <section class="panel no-print">
+      <h3>Accessibility Control Panel</h3>
+      <div class="controls">
+        <button type="button" id="fontDown">A-</button>
+        <button type="button" id="fontUp">A+</button>
+        <button type="button" id="dyslexiaToggle">Dyslexia Font</button>
+        <button type="button" id="contrastToggle">High Contrast</button>
+        <button type="button" id="rulerToggle">Reading Ruler</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Pre-reading Engagement</h3>
+      <p class="compact">Quick poll: [Have you observed someone at school leaving their lunch on the tables or ground?]</p>
+      <label class="choice"><input type="radio" name="poll1" value="Yes" /> Yes</label>
+      <label class="choice"><input type="radio" name="poll1" value="No" /> No</label>
+      <textarea rows="1" placeholder="Journal warm-up: [Why is it important to throw away your trash?]"></textarea>
+    </section>
+
+    <section class="panel">
+      <h3>T4: Talk To The Text Annotations</h3>
+      <p class="compact">Select text to highlight or define words. Click highlighted text to remove highlight.</p>
+
+      <div class="article-layout">
+        <div class="article-col" id="articleContent">
+          
+          <div class="article-row">
+            <div class="article-text">
+              <p> Did you know that by the year 2050, plastic could outweigh all living creatures? It’s predicted that by then, there might be more plastic in the ocean than fish, based on weight. This shows how serious littering has become in the world we live in today, and it all starts with one simple action,  throwing away your trash.</p>
+              <p>It doesn’t take much to clean up after yourself, whether it’s at school, in the cafeteria, or even around campus. When people leave trash behind it can end up in storm drains, eventually ending up in the ocean. By taking a minute out of your day to throw away or recycle your waste, you’re helping your school stay clean, making it easier for your custodians, and overall helping the environment. </p>
+              
+              </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations</div>
+              <textarea rows="1" placeholder="Type your margin question for the students here..."></textarea>
+            </div>
+          </div>
+          <div class="article-row">
+            <div class="article-text">
+              <p> I asked our school custodian Juan for his opinion on this topic and he said, “Students leaving a messy area is upsetting and concerning…because they don’t take the effort to properly dispose of their trash when necessary.” He continued that his team has to pick up what students don’t dispose of. </p>
+              <p>Even though the plastic problem is huge, small everyday actions can make a major impact. Something as simple as throwing away your trash or choosing to recycle helps reduce the amount of waste that ends up in the ocean or on the side of the street. This same simple action can take place anywhere at any moment, even at school. Keeping school campuses and community areas clean encourages others to do the same, creating a chain and being a leader of positive and beneficial habits. If everyone does their part, even in the most simplest ways, we can protect our planet and make sure it stays healthy for the people who come after us. </p>
+
+              <div class="inline-activity">
+                <h4>Skill Focus: Character</h4>
+                <p class="compact">[How does the custodian Juan feel about trash not being thrown away?]</p>
+                <textarea rows="1" placeholder="Your response..."></textarea>
+              </div>
+
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Annotations</div>
+              <textarea rows="1" placeholder="Another margin prompt..."></textarea>
+            </div>
+          </div>
+          <div class="article-row">
+            <div class="article-text">
+              <div class="inline-activity">
+                <h4>Claim-Evidence-Reasoning (CER) Written Response</h4>
+                <p class="compact">Prompt: [Why is it important to take care of our environment?]</p>
+                <textarea rows="1" placeholder="Claim... Evidence... Reasoning..."></textarea>
+                <button class="no-print" type="button" id="cerHintBtn">CER Hints</button>
+                <div id="cerHintBox" class="hint-box" hidden></div>
+              </div>
+            </div>
+            <div class="margin-box">
+              <div class="margin-title">Final Annotations</div>
+              <textarea rows="1" placeholder="Building Character: What can you do this week to show care for our school? This week I can..."></textarea>
+            </div>
+          </div>
+          </div>
+      </div>
+    </section>
+
+    <section class="panel no-print footer-actions">
+      <button type="button" id="finalSubmit">Final Submit (Save as PDF)</button>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      // ==========================================
+      // ⚙️ TEACHER SETTINGS
+      // ==========================================
+      const PASSCODE = "rapp"; // Change the unlock passcode here
+      
+      // Customize your CER Hints here for the week
+      const CER_HINTS = [
+        "Level 1 Frame: Claim: [Insert framework]... Evidence: The article states... Reasoning: This matters because...",
+        "Level 2 Evidence Choices: Look at paragraph 2 or paragraph 4 for great evidence."
+      ];
+      // ==========================================
+
+      // Generates a unique save file name based on the HTML Title tag!
+      const STORAGE_KEY = "aow_" + document.title.replace(/[^a-zA-Z0-9]/g, "");
+      
+      const articleContent = document.getElementById("articleContent");
+      const progressBar = document.getElementById("progressBar");
+      const toolbar = document.getElementById("highlightToolbar");
+      const definePopup = document.getElementById("definePopup");
+      const readingRuler = document.getElementById("readingRuler");
+      const body = document.body;
+
+      let selectedRange = null;
+      let cerHintLevel = 0;
+      let currentUtterance = null;
+      let currentTtsButton = null;
+      let rulerEnabled = false;
+
+      // --- TEMPLATE MAGIC: AUTO-FORMATTER ---
+      // This automatically numbers paragraphs, adds TTS buttons, and IDs textareas!
+      function initializeTemplateMagic() {
+        let pCount = 1;
+        let taCount = 1;
+
+        // Auto-format paragraphs
+        document.querySelectorAll('.article-text').forEach(container => {
+          container.querySelectorAll('p').forEach(p => {
+            if (p.closest('.inline-activity') || p.closest('.margin-box')) return; // Skip non-article text
+            
+            if (!p.id) p.id = `auto_p_${pCount}`;
+            
+            // Auto add number
+            if (!p.querySelector('.pnum')) {
+              const numSpan = document.createElement('span');
+              numSpan.className = 'pnum';
+              numSpan.textContent = `${pCount}. `;
+              p.insertBefore(numSpan, p.firstChild);
+            }
+
+            // Auto add Audio Button
+            if (!p.querySelector('.tts-btn')) {
+              const ttsBtn = document.createElement('button');
+              ttsBtn.className = 'tts-btn no-print';
+              ttsBtn.type = 'button';
+              ttsBtn.setAttribute('data-target', p.id);
+              ttsBtn.textContent = '🔊';
+              p.appendChild(ttsBtn);
+            }
+            pCount++;
+          });
+        });
+
+        // Auto ID inputs and textareas so localStorage works automatically
+        document.querySelectorAll('textarea, input[type="radio"]').forEach(el => {
+          if (!el.id) {
+            el.id = `auto_input_${taCount}`;
+            taCount++;
+          }
+        });
+      }
+
+      // Run magic formatter before anything else
+      initializeTemplateMagic();
+      // ---------------------------------------
+
+      function nowDateStamp() {
+        const d = new Date();
+        return d.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      }
+
+      document.getElementById("dateStamp").textContent = nowDateStamp();
+
+      function autoExpand(el) {
+        if (!el) return;
+        el.style.height = "auto";
+        el.style.height = el.scrollHeight + "px";
+      }
+
+      function autoExpandAll() {
+        document.querySelectorAll("textarea").forEach(autoExpand);
+      }
+
+      function getState() {
+        const fields = {};
+        document.querySelectorAll("input[id], textarea[id]").forEach((el) => {
+          if (el.type === "radio") fields[el.id] = el.checked;
+          else fields[el.id] = el.value;
+        });
+        fields.__articleHTML = articleContent.innerHTML;
+        fields.__articleSize = getComputedStyle(document.documentElement).getPropertyValue("--article-size").trim();
+        fields.__dyslexia = document.querySelectorAll(".article-text.dyslexia").length > 0;
+        fields.__contrast = body.classList.contains("high-contrast");
+        fields.__ruler = rulerEnabled;
+        return fields;
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getState()));
+      }
+
+      function restoreState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        let data;
+        try { data = JSON.parse(raw); } catch (e) { return; }
+
+        if (data.__articleHTML) articleContent.innerHTML = data.__articleHTML;
+
+        document.querySelectorAll("input[id], textarea[id]").forEach((el) => {
+          if (!(el.id in data)) return;
+          if (el.type === "radio") el.checked = Boolean(data[el.id]);
+          else el.value = data[el.id];
+        });
+
+        if (data.__articleSize) document.documentElement.style.setProperty("--article-size", data.__articleSize);
+        if (data.__dyslexia) {
+          document.querySelectorAll(".article-text").forEach((x) => x.classList.add("dyslexia"));
+          document.getElementById("dyslexiaToggle").classList.add("active-toggle");
+        }
+        if (data.__contrast) {
+          body.classList.add("high-contrast");
+          document.getElementById("contrastToggle").classList.add("active-toggle");
+        }
+        if (data.__ruler) {
+          rulerEnabled = true;
+          readingRuler.style.display = "block";
+          document.getElementById("rulerToggle").classList.add("active-toggle");
+        }
+      }
+
+      function updateProgress() {
+        const doc = document.documentElement;
+        const scrolled = doc.scrollTop || document.body.scrollTop;
+        const height = doc.scrollHeight - doc.clientHeight;
+        const pct = height > 0 ? (scrolled / height) * 100 : 0;
+        progressBar.style.width = pct.toFixed(2) + "%";
+      }
+
+      function unwrapHighlight(span) {
+        const parent = span.parentNode;
+        while (span.firstChild) parent.insertBefore(span.firstChild, span);
+        parent.removeChild(span);
+        parent.normalize();
+      }
+
+      function safeSurround(range, className) {
+        const wrapper = document.createElement("span");
+        wrapper.className = className;
+        try {
+          range.surroundContents(wrapper);
+        } catch (e) {
+          const contents = range.extractContents();
+          wrapper.appendChild(contents);
+          range.insertNode(wrapper);
+        }
+      }
+
+      function showToolbarAtRange(range) {
+        const rect = range.getBoundingClientRect();
+        toolbar.style.left = `${Math.max(8, rect.left + window.scrollX)}px`;
+        toolbar.style.top = `${Math.max(8, rect.top + window.scrollY - 44)}px`;
+        toolbar.style.display = "block";
+      }
+
+      function hideToolOverlays() {
+        toolbar.style.display = "none";
+        definePopup.style.display = "none";
+      }
+
+      async function defineWord(word, x, y) {
+        definePopup.style.display = "block";
+        definePopup.style.left = `${x}px`;
+        definePopup.style.top = `${y}px`;
+        definePopup.innerHTML = `<h4>Definition: ${word}</h4><div class="compact">Loading...</div>`;
+        try {
+          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+          if (!res.ok) throw new Error("No definition found");
+          const data = await res.json();
+          const meaning = data[0]?.meanings?.[0]?.definitions?.[0]?.definition || "Definition unavailable.";
+          definePopup.innerHTML = `<h4>Definition: ${word}</h4><div>${meaning}</div>`;
+        } catch (err) {
+          definePopup.innerHTML = `<h4>Definition: ${word}</h4><div>No definition found.</div>`;
+        }
+      }
+
+      function stopTTS() {
+        speechSynthesis.cancel();
+        if (currentTtsButton) {
+          currentTtsButton.textContent = "🔊";
+          currentTtsButton.classList.remove("active-toggle");
+        }
+        currentUtterance = null;
+        currentTtsButton = null;
+      }
+
+      function playTTS(btn, text) {
+        if (!text) return;
+        if (currentTtsButton && currentTtsButton !== btn) stopTTS();
+        if (currentTtsButton === btn) { stopTTS(); return; }
+
+        const u = new SpeechSynthesisUtterance(text);
+        currentUtterance = u;
+        currentTtsButton = btn;
+        btn.textContent = "⏹️";
+        btn.classList.add("active-toggle");
+
+        u.onend = stopTTS;
+        u.onerror = stopTTS;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      }
+
+      function buildPrintGhosts() {
+        document.querySelectorAll(".print-box").forEach((n) => n.remove());
+        document.querySelectorAll("textarea").forEach((ta) => {
+          const ghost = document.createElement("div");
+          ghost.className = "print-box";
+          ghost.textContent = ta.value;
+          ta.insertAdjacentElement("afterend", ghost);
+        });
+      }
+
+      window.addEventListener("beforeprint", buildPrintGhosts);
+      window.addEventListener("afterprint", () => {
+        document.querySelectorAll(".print-box").forEach((n) => n.remove());
+      });
+
+      document.addEventListener("input", (e) => {
+        if (e.target.matches("textarea")) autoExpand(e.target);
+        if (e.target.matches("input, textarea")) saveState();
+      });
+      document.addEventListener("change", (e) => {
+        if (e.target.matches("input, textarea")) saveState();
+      });
+      document.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+
+      document.addEventListener("mouseup", (e) => {
+        if (!articleContent.contains(e.target)) return;
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+        const range = selection.getRangeAt(0);
+        if (range.collapsed) { toolbar.style.display = "none"; return; }
+        selectedRange = range.cloneRange();
+        showToolbarAtRange(range);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("highlighted")) {
+          unwrapHighlight(e.target);
+          saveState();
+          return;
+        }
+        if (!toolbar.contains(e.target) && !definePopup.contains(e.target)) {
+          if (!window.getSelection().toString()) hideToolOverlays();
+        }
+      });
+
+      document.getElementById("doHighlight").addEventListener("click", () => {
+        if (!selectedRange || selectedRange.collapsed) return;
+        if (selectedRange.commonAncestorContainer.nodeType !== 3 && 
+            selectedRange.startContainer.parentNode !== selectedRange.endContainer.parentNode) {
+          alert("Please highlight text within one paragraph at a time.");
+          window.getSelection().removeAllRanges(); hideToolOverlays(); return;
+        }
+        safeSurround(selectedRange, "highlighted");
+        window.getSelection().removeAllRanges();
+        selectedRange = null; hideToolOverlays(); saveState();
+      });
+
+      document.getElementById("doDefine").addEventListener("click", () => {
+        if (!selectedRange || selectedRange.collapsed) return;
+        const word = selectedRange.toString().trim().split(/\s+/)[0]?.replace(/[^a-zA-Z\-]/g, "");
+        if (!word) return;
+        const rect = selectedRange.getBoundingClientRect();
+        defineWord(word, Math.max(10, rect.left + window.scrollX), Math.max(10, rect.bottom + window.scrollY + 8));
+      });
+
+      articleContent.addEventListener("dblclick", (e) => {
+        const sel = window.getSelection();
+        const word = sel ? sel.toString().trim().replace(/[^a-zA-Z\-]/g, "") : "";
+        if (!word) return;
+        const rect = sel.getRangeAt(0).getBoundingClientRect();
+        defineWord(word, Math.max(10, rect.left + window.scrollX), Math.max(10, rect.bottom + window.scrollY + 8));
+      });
+
+      articleContent.addEventListener("click", (e) => {
+        const ttsBtn = e.target.closest(".tts-btn");
+        if (ttsBtn) {
+          const targetId = ttsBtn.getAttribute("data-target");
+          const target = document.getElementById(targetId);
+          if (target) {
+            const clone = target.cloneNode(true);
+            const btnInClone = clone.querySelector('.tts-btn');
+            if (btnInClone) btnInClone.remove();
+            const pnumInClone = clone.querySelector('.pnum');
+            if (pnumInClone) pnumInClone.remove();
+            playTTS(ttsBtn, clone.textContent.trim());
+          }
+        }
+      });
+
+      // Template Hints Controller
+      if (document.getElementById("cerHintBtn")) {
+        document.getElementById("cerHintBtn").addEventListener("click", () => {
+          const box = document.getElementById("cerHintBox");
+          if (cerHintLevel < CER_HINTS.length) {
+            box.hidden = false;
+            box.innerHTML += `<div>${CER_HINTS[cerHintLevel]}</div>`;
+            cerHintLevel++;
+            saveState();
+          }
+        });
+      }
+
+      function setArticleSize(delta) {
+        const root = document.documentElement;
+        const cur = parseFloat(getComputedStyle(root).getPropertyValue("--article-size")) || 1;
+        const next = Math.min(1.5, Math.max(0.85, cur + delta));
+        root.style.setProperty("--article-size", `${next}rem`);
+        saveState();
+      }
+
+      document.getElementById("fontDown").addEventListener("click", () => setArticleSize(-0.05));
+      document.getElementById("fontUp").addEventListener("click", () => setArticleSize(0.05));
+
+      document.getElementById("dyslexiaToggle").addEventListener("click", (e) => {
+        document.querySelectorAll(".article-text").forEach((x) => x.classList.toggle("dyslexia"));
+        e.currentTarget.classList.toggle("active-toggle"); saveState();
+      });
+
+      document.getElementById("contrastToggle").addEventListener("click", (e) => {
+        body.classList.toggle("high-contrast");
+        e.currentTarget.classList.toggle("active-toggle"); saveState();
+      });
+
+      document.getElementById("rulerToggle").addEventListener("click", (e) => {
+        rulerEnabled = !rulerEnabled;
+        readingRuler.style.display = rulerEnabled ? "block" : "none";
+        e.currentTarget.classList.toggle("active-toggle"); saveState();
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!rulerEnabled) return;
+        document.documentElement.style.setProperty("--ruler-y", `${e.clientY - 16}px`);
+      });
+
+      document.getElementById("finalSubmit").addEventListener("click", () => window.print());
+
+      const passInput = document.getElementById("passcodeInput");
+      const passMsg = document.getElementById("passcodeMsg");
+      function tryUnlock() {
+        if ((passInput.value || "").trim().toLowerCase() !== PASSCODE.toLowerCase()) {
+          passMsg.textContent = "Incorrect passcode. Try again."; return;
+        }
+        document.getElementById("lockOverlay").style.display = "none";
+        body.classList.remove("locked"); body.style.overflow = "";
+      }
+      document.getElementById("unlockBtn").addEventListener("click", tryUnlock);
+      passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryUnlock(); });
+
+      restoreState();
+      autoExpandAll();
+      updateProgress();
+      setInterval(() => saveState(), 30000);
+    })();
+  </script>
+</body>
+</html>
