@@ -5,157 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Night by Elie Wiesel - Chapter 3</title>
     <style>
-        /* Respectful Color Theme & Accessible Typography */
+        /* CSS Variables for Theming */
         :root {
-            --bg-color: #F7FAFC; /* Cream/Off-white */
-            --text-color: #2D3748; /* Dark Charcoal */
-            --primary-color: #1A365D; /* Dark Navy Blue */
-            --accent-color: #E2E8F0; /* Light Gray Blue for cards */
-            --highlight: #3182CE; /* Softer blue for buttons */
+            --bg-color: #F7FAFC; 
+            --text-color: #2D3748; 
+            --primary-color: #1A365D; 
+            --accent-color: #E2E8F0; 
+            --highlight: #3182CE; 
             --mark-color: #FEFCBF; /* Soft yellow for highlighting */
+            --hover-text-color: #000000;
         }
 
+        /* High Contrast Theme Variables */
+        body.high-contrast {
+            --bg-color: #121212;
+            --text-color: #FFFFFF;
+            --primary-color: #4DB8FF;
+            --accent-color: #2D3748;
+            --highlight: #FFB347;
+            --mark-color: #6B46C1;
+            --hover-text-color: #FFFFFF;
+        }
+
+        /* Base Typography */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             margin: 0;
-            padding: 40px 20px 20px 20px; /* Extra top padding for progress bar */
+            padding: 40px 20px 20px 20px; 
             font-size: 18px; 
+            transition: background-color 0.3s, color 0.3s, font-size 0.3s;
+        }
+
+        /* Dyslexia-Friendly Font Toggle */
+        body.dyslexic-font {
+            font-family: 'Comic Sans MS', 'Lexend', sans-serif;
+            letter-spacing: 0.05em;
+            line-height: 1.8;
         }
 
         /* Progress Bar */
-        #progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 8px;
-            background: var(--accent-color);
-            z-index: 1000;
-        }
-        #progress-bar {
-            height: 100%;
-            background: var(--primary-color);
-            width: 0%;
-        }
+        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 8px; background: var(--accent-color); z-index: 1000; }
+        #progress-bar { height: 100%; background: var(--primary-color); width: 0%; }
 
-        /* Accessibility Toolbar */
-        #a11y-toolbar {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            border: 2px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            transition: transform 0.3s;
-        }
-        #a11y-toolbar.minimized .tools {
-            display: none;
-        }
-        .a11y-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .a11y-btn.active {
-            background: #38A169; /* Green to show active state */
-        }
-        .a11y-toggle {
-            background: var(--highlight);
-        }
-
+        /* App Container */
         .app-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 800px; margin: 0 auto; background: var(--bg-color); 
+            padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--accent-color);
         }
 
         h1, h2, h3 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; }
         
         /* Auto-save Header */
-        .save-status {
-            font-size: 14px;
-            color: #38A169;
-            font-style: italic;
-            text-align: right;
-            margin-bottom: 10px;
-        }
-
+        .save-status { font-size: 14px; color: #38A169; font-style: italic; text-align: right; margin-bottom: 10px; font-weight: bold; }
         .header-info { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; font-weight: bold; }
-        .header-info input { font-size: 16px; padding: 5px; border: 1px solid var(--primary-color); border-radius: 4px; width: 200px; }
+        .header-info input { font-size: inherit; padding: 5px; border: 1px solid var(--primary-color); border-radius: 4px; width: 250px; background: var(--bg-color); color: var(--text-color); }
 
-        /* Dictation Button */
-        .dictation-btn {
-            background: var(--highlight); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 5px; font-size: 14px;
+        /* Accessibility Toolbar */
+        #a11y-toolbar {
+            position: fixed; bottom: 20px; right: 20px; background: var(--bg-color);
+            border: 2px solid var(--primary-color); border-radius: 12px; padding: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; display: flex; flex-direction: column; gap: 10px;
         }
+        #a11y-toolbar.minimized .tools { display: none; }
+        .a11y-btn { background: var(--primary-color); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; gap: 10px; align-items: center; justify-content: center; }
+        .a11y-toggle { background: var(--highlight); color: #000; }
+        body.high-contrast .a11y-toggle { color: #000; }
+        .font-controls { display: flex; gap: 5px; }
+        .font-controls button { flex: 1; }
 
-        /* Define Word Styles */
-        .define-word {
-            text-decoration: underline dotted var(--primary-color);
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--primary-color);
+        /* Hover Highlight & Inline TTS */
+        .readable-block {
+            padding: 5px; border-radius: 6px; transition: background-color 0.2s, color 0.2s; position: relative;
         }
+        .readable-block:hover {
+            background-color: var(--mark-color);
+            color: var(--hover-text-color);
+        }
+        .tts-btn {
+            background: var(--highlight); color: white; border: none; border-radius: 4px; 
+            padding: 4px 8px; font-size: 14px; cursor: pointer; margin-right: 8px; vertical-align: middle;
+        }
+        body.high-contrast .tts-btn { color: #000; font-weight: bold; }
+
+        /* Click to Define */
+        .define-word { text-decoration: underline dotted var(--primary-color); cursor: pointer; font-weight: bold; color: var(--primary-color); }
         #definition-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 20px; border: 2px solid var(--primary-color); border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 2000; max-width: 300px; text-align: center;
+            background: var(--bg-color); color: var(--text-color); padding: 20px; border: 2px solid var(--primary-color); 
+            border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 2000; max-width: 300px; text-align: center;
         }
-        #definition-modal button { background: var(--primary-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-top: 15px; cursor: pointer; }
+        #definition-modal button { background: var(--primary-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-top: 15px; cursor: pointer; font-size: 16px; }
 
-        /* General UI Styles from before */
+        /* Form Inputs & Questions */
+        textarea, select { 
+            width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--primary-color); 
+            font-size: inherit; font-family: inherit; box-sizing: border-box; margin-top: 10px;
+            background: var(--bg-color); color: var(--text-color);
+        }
+        .question-box { background: var(--accent-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .hint { color: var(--primary-color); font-style: italic; font-weight: bold; margin: 5px 0; }
+        
+        /* Buttons */
+        .dictation-btn { background: var(--highlight); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 5px; font-size: 14px; font-weight: bold;}
+        body.high-contrast .dictation-btn { color: #000; }
+        
+        .action-btn { background: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px;}
+        .print-btn { display: block; width: 100%; background-color: var(--primary-color); color: white; font-size: 20px; font-weight: bold; text-align: center; padding: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 30px; }
+        
+        /* Drag & Drop Styles */
         .vocab-container { display: flex; flex-direction: column; gap: 15px; }
         .word-bank { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; background: var(--accent-color); border-radius: 8px; }
         .draggable { background: var(--primary-color); color: white; padding: 10px 15px; border-radius: 6px; cursor: grab; user-select: none; font-weight: bold; }
-        .drop-zone-container { display: flex; align-items: center; gap: 10px; background: var(--bg-color); padding: 10px; border-radius: 6px; border: 1px solid #CBD5E0; }
-        .drop-zone { min-width: 150px; height: 40px; border: 2px dashed var(--primary-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background: white; }
+        .drop-zone-container { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px; border: 1px solid var(--primary-color); }
+        .drop-zone { min-width: 150px; height: 40px; border: 2px dashed var(--primary-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background: var(--bg-color); }
 
+        /* Flip Card Styles */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .flip-card { background-color: transparent; height: 200px; perspective: 1000px; cursor: pointer; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; padding: 15px; box-sizing: border-box; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; padding: 15px; box-sizing: border-box; }
         .flip-card-front { background-color: var(--primary-color); color: white; font-size: 22px; font-weight: bold; }
-        .flip-card-back { background-color: var(--accent-color); color: var(--text-color); transform: rotateY(180deg); font-size: 16px; }
-
-        .quote-box { background: var(--bg-color); border-left: 5px solid var(--primary-color); padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0; }
-        .reveal-btn { background-color: var(--highlight); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        .reveal-text { display: none; margin-top: 10px; font-style: italic; color: var(--primary-color); font-weight: bold; }
-
-        textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--primary-color); font-size: 16px; font-family: inherit; box-sizing: border-box; margin-top: 10px; }
-        .evidence-options { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
-        .print-btn { display: block; width: 100%; background-color: var(--primary-color); color: white; font-size: 20px; font-weight: bold; text-align: center; padding: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 30px; }
-        
-        .readable-text { cursor: pointer; transition: background 0.2s; }
-        .readable-text:hover { background: #E2E8F0; }
-
-        /* Highlight Class */
-        .custom-highlight { background-color: var(--mark-color); border-radius: 3px; }
+        .flip-card-back { background-color: var(--accent-color); color: var(--text-color); transform: rotateY(180deg); font-size: inherit; border: 2px solid var(--primary-color); }
 
         @media print {
-            body { padding: 0; }
-            #progress-container, #a11y-toolbar, .print-btn, .dictation-btn, .word-bank { display: none; }
+            body { padding: 0; background: white; color: black; }
+            #progress-container, #a11y-toolbar, .print-btn, .dictation-btn, .word-bank, .tts-btn, .action-btn { display: none; }
+            .app-container { border: none; box-shadow: none; }
             .flip-card-inner { transform: none !important; }
             .flip-card-front { display: none; }
             .flip-card-back { transform: none; display: flex; border: 1px solid #ccc; }
-            .reveal-text { display: block; }
-            .reveal-btn { display: none; }
+            textarea { border: 1px solid #000; }
         }
     </style>
 </head>
@@ -164,15 +148,19 @@
 <div id="progress-container"><div id="progress-bar"></div></div>
 
 <div id="a11y-toolbar">
-    <button class="a11y-btn a11y-toggle" onclick="toggleMenu()">⚙️ Accessibility Menu</button>
+    <button class="a11y-btn a11y-toggle" onclick="toggleMenu()">⚙️ Accessibility Settings</button>
     <div class="tools" id="tools-container">
-        <button class="a11y-btn" id="tts-btn" onclick="toggleTTS()">🔊 Read Aloud Mode: OFF</button>
-        <button class="a11y-btn" id="hl-btn" onclick="toggleHighlightMode()">🖍️ Highlight Mode: OFF</button>
+        <div class="font-controls">
+            <button class="a11y-btn" onclick="changeFontSize(-2)">A-</button>
+            <button class="a11y-btn" onclick="changeFontSize(2)">A+</button>
+        </div>
+        <button class="a11y-btn" onclick="toggleFont()">🔤 Toggle Font Type</button>
+        <button class="a11y-btn" onclick="toggleContrast()">🌗 Toggle Contrast</button>
     </div>
 </div>
 
 <div id="definition-modal">
-    <h3 id="def-title">Word</h3>
+    <h3 id="def-title" style="color:var(--primary-color);">Word</h3>
     <p id="def-text">Definition goes here.</p>
     <button onclick="closeDefinition()">Close</button>
 </div>
@@ -187,11 +175,20 @@
         <div>Date: March 8, 2026</div>
     </div>
     
-    <p class="readable-text">Today, we are learning about a very difficult but important part of history. We will look at how Eliezer's life changed the moment he arrived at the camp. Take your time, and let's explore this together.</p>
-    <p class="readable-text"><em>💡 Tip: Click on words with dotted underlines to see their definition!</em></p>
+    <div class="readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        Today, we are learning about a very difficult but important part of history. We will look at how Eliezer's life changed the moment he arrived at the camp.
+    </div>
+    <div class="readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <em>💡 Tip: Hover your mouse over paragraphs to highlight them. Click on words with dotted underlines to see their definition!</em>
+    </div>
 
     <h2>🧩 Module 1: Vocabulary Builder</h2>
-    <p class="readable-text"><em>Instructions: Drag the word from the blue box to the correct definition outline.</em></p>
+    <div class="readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <em>Instructions: Drag the word from the blue box to the correct definition outline.</em>
+    </div>
     
     <div class="vocab-container">
         <div class="word-bank" id="wordBank">
@@ -203,121 +200,155 @@
             <div class="draggable" draggable="true" id="word6">Humanity</div>
         </div>
 
-        <div class="drop-zone-container readable-text">
+        <div class="drop-zone-container readable-block">
             <div class="drop-zone" data-word="Selection"></div>
             <div>The process of choosing who lives to work and who is killed.</div>
         </div>
-        <div class="drop-zone-container readable-text">
+        <div class="drop-zone-container readable-block">
             <div class="drop-zone" data-word="Barracks"></div>
             <div>Plain, crowded wooden buildings where the prisoners slept.</div>
         </div>
-        <div class="drop-zone-container readable-text">
+        <div class="drop-zone-container readable-block">
             <div class="drop-zone" data-word="Crematorium"></div>
             <div>A building with a large furnace or oven.</div>
         </div>
-        <div class="drop-zone-container readable-text">
+        <div class="drop-zone-container readable-block">
             <div class="drop-zone" data-word="Kapo"></div>
             <div>A prisoner forced to be in charge of other prisoners.</div>
         </div>
-        <div class="drop-zone-container readable-text">
+        <div class="drop-zone-container readable-block">
             <div class="drop-zone" data-word="Concentration Camp"></div>
             <div>A harsh prison camp where people are held without basic rights.</div>
         </div>
-        <div class="drop-zone-container readable-text">
+        <div class="drop-zone-container readable-block">
             <div class="drop-zone" data-word="Humanity"></div>
             <div>Being a person; having a name, feelings, and family.</div>
         </div>
     </div>
 
-    <h2>🔍 Module 2: The Loss of Identity</h2>
-    <p class="readable-text"><em>Instructions: Tap each card to flip it over and see how Eliezer and his father survived their arrival.</em></p>
+    <h2>🧠 Module 2: Comprehension Questions</h2>
+    <div class="readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <em>Answer each question. Your responses are automatically saved. Use the microphone to dictate!</em>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <strong>1. How does Eliezer adapt to camp life in Chapter 3?</strong>
+        <p class="hint">💡 Hint: Consider staying invisible and avoiding authority.</p>
+        <textarea id="comp_q1" rows="3" placeholder="Type or dictate your answer..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('comp_q1')">🎤 Click to Talk</button>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <strong>2. Describe the camp's hierarchy. Who holds power?</strong>
+        <p class="hint">💡 Hint: Think about block leaders and Kapos.</p>
+        <textarea id="comp_q2" rows="3" placeholder="Type or dictate your answer..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('comp_q2')">🎤 Click to Talk</button>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <strong>3. What triggers Eliezer's crisis of faith in Chapter 3?</strong>
+        <p class="hint">💡 Hint: Consider his reaction to witnessing suffering.</p>
+        <textarea id="comp_q3" rows="3" placeholder="Type or dictate your answer..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('comp_q3')">🎤 Click to Talk</button>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <strong>4. How does hunger affect the prisoners?</strong>
+        <p class="hint">💡 Hint: Think about psychological and physical effects.</p>
+        <textarea id="comp_q4" rows="3" placeholder="Type or dictate your answer..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('comp_q4')">🎤 Click to Talk</button>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <strong>5. How do prisoners treat each other? Does suffering create compassion or cruelty?</strong>
+        <p class="hint">💡 Hint: Consider conflicts over food.</p>
+        <textarea id="comp_q5" rows="3" placeholder="Type or dictate your answer..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('comp_q5')">🎤 Click to Talk</button>
+    </div>
+
+    <h2>📖 Module 3: Textual Evidence Analysis</h2>
+    <div class="readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <em>Analyze key quotes from the chapter. Read the quote, look at the simpler meaning, and then explain how it helps you understand the chapter.</em>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <blockquote>"Here there are no fathers, no brothers, no friends. There is only you and your body."</blockquote>
+        <p class="hint">💡 In simpler words: The camp strips away all human connections.</p>
+        <strong>Analysis: How does this quote support your understanding of the chapter?</strong>
+        <textarea id="analysis_q1" rows="3" placeholder="Type or dictate your analysis..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('analysis_q1')">🎤 Click to Talk</button>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <blockquote>"I had already ceased to feel anything except the lashes of the whip."</blockquote>
+        <p class="hint">💡 In simpler words: Eliezer becomes emotionally numb, experiencing only physical pain.</p>
+        <strong>Analysis: How does this quote support your understanding of the chapter?</strong>
+        <textarea id="analysis_q2" rows="3" placeholder="Type or dictate your analysis..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('analysis_q2')">🎤 Click to Talk</button>
+    </div>
+
+    <div class="question-box readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <blockquote>"He tried to tell them about the selections, about the crematory. But the Jews of Sighet were deaf."</blockquote>
+        <p class="hint">💡 In simpler words: Even witnessing horrors doesn't change people's <span class="define-word" data-word="Disbelief">disbelief</span>.</p>
+        <strong>Analysis: How does this quote support your understanding of the chapter?</strong>
+        <textarea id="analysis_q3" rows="3" placeholder="Type or dictate your analysis..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('analysis_q3')">🎤 Click to Talk</button>
+    </div>
+
+
+    <h2>📝 Module 4: CER Response Builder</h2>
+    <div class="readable-block">
+        <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+        <em>Build your Claim, Evidence, Reasoning response. When you are done, click "Combine Response" to build your paragraph!</em>
+    </div>
     
-    <div class="cards-grid">
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">The Separation</div>
-                <div class="flip-card-back readable-text">Men to the left, women to the right. This is the last time Eliezer sees his mom and sister, Tzipora. Families were torn apart in seconds.</div>
-            </div>
+    <div class="question-box">
+        <div class="readable-block">
+            <button class="tts-btn" onclick="readBlock(this)">🔊 Read</button>
+            <strong style="color:var(--primary-color); font-size: 1.2em;">📋 Writing Prompt:</strong><br>
+            "How does Wiesel use Eliezer's early experiences to show the loss of faith and humanity?"
         </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">The Secret Lie</div>
-                <div class="flip-card-back readable-text">A prisoner tells Eliezer (15) and his dad (50) to lie and say they are 18 and 40. This lie saves them because it makes them look strong enough to work.</div>
-            </div>
-        </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">Losing Their Looks</div>
-                <div class="flip-card-back readable-text">All prisoners have their heads shaved and their clothes taken. This was done to make everyone look the same and take away what made them special.</div>
-            </div>
-        </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">A-7713</div>
-                <div class="flip-card-back readable-text">Eliezer's name is taken away. A number (A-7713) is tattooed on his arm. He is no longer called a boy; he is called a number.</div>
-            </div>
-        </div>
+
+        <h3 style="border:none; margin-bottom:0;">C - Claim</h3>
+        <p style="margin-top:0;">State your answer to the prompt:</p>
+        <button class="action-btn" onclick="insertStarter('cer_claim', 'In chapter 3 of Night, Eliezer loses his faith and humanity because ')">➕ Add sentence starter...</button>
+        <textarea id="cer_claim" rows="2" placeholder="Write your claim here..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('cer_claim')">🎤 Dictate</button>
+
+        <h3 style="border:none; margin-bottom:0; margin-top:20px;">E - Evidence</h3>
+        <p style="margin-top:0;">Select a quote from the text:</p>
+        <select id="cer_evidence" onchange="saveLocalData()">
+            <option value="">-- Choose your evidence --</option>
+            <option value="For example, the text states, 'Here there are no fathers, no brothers, no friends. There is only you and your body.'">Quote 1: "Here there are no fathers, no brothers..."</option>
+            <option value="For example, the text states, 'I had already ceased to feel anything except the lashes of the whip.'">Quote 2: "I had already ceased to feel anything..."</option>
+            <option value="For example, the text states, 'He tried to tell them about the selections, about the crematory. But the Jews of Sighet were deaf.'">Quote 3: "He tried to tell them about the selections..."</option>
+        </select>
+
+        <h3 style="border:none; margin-bottom:0; margin-top:20px;">R - Reasoning</h3>
+        <p style="margin-top:0;">Explain how your evidence supports your claim:</p>
+        <button class="action-btn" onclick="insertStarter('cer_reason', 'This quote shows that ')">➕ Add sentence starter...</button>
+        <textarea id="cer_reason" rows="3" placeholder="Write your reasoning here..."></textarea>
+        <button class="dictation-btn" onclick="startDictation('cer_reason')">🎤 Dictate</button>
+
+        <button class="action-btn" style="width:100%; margin-top:30px; background-color: #38A169;" onclick="generateCER()">🔄 Combine Response into Paragraph</button>
     </div>
 
-    <h2>🗣️ Module 3: Voices from the Dark</h2>
-    <p class="readable-text"><em>Instructions: Read the quote, then tap the button to reveal its meaning.</em></p>
-
-    <div class="quote-box">
-        <p class="readable-text"><strong>"Never shall I forget that night... which has turned my life into one long night."</strong></p>
-        <button class="reveal-btn" onclick="revealText(this)">Tap to Reveal Meaning</button>
-        <div class="reveal-text readable-text">Meaning: Eliezer feels like the darkness and sadness of this first night will never end.</div>
+    <div class="question-box">
+        <h3 style="border:none; margin-top:0;">📄 Your Complete Response</h3>
+        <textarea id="cer_combined" rows="6" readonly placeholder="Your combined paragraph will appear here..."></textarea>
+        <button class="action-btn" onclick="copyCER()">📋 Copy to Clipboard</button>
+        <span id="copy-msg" style="color: #38A169; font-weight: bold; margin-left: 10px; display:none;">Copied!</span>
     </div>
-
-    <div class="quote-box">
-        <p class="readable-text"><strong>"The student of <span class="define-word" data-word="Talmud">Talmud</span>, the child I was, had been consumed by the flames."</strong></p>
-        <button class="reveal-btn" onclick="revealText(this)">Tap to Reveal Meaning</button>
-        <div class="reveal-text readable-text">Meaning: The boy who loved God and studied religion "died" when he saw the horrors of the camp.</div>
-    </div>
-
-    <div class="quote-box">
-        <p class="readable-text"><strong>"Men to the left! Women to the right!... Eight short, simple words spoken <span class="define-word" data-word="Indifferently">indifferently</span>."</strong></p>
-        <button class="reveal-btn" onclick="revealText(this)">Tap to Reveal Meaning</button>
-        <div class="reveal-text readable-text">Meaning: The Nazis were so casual about tearing families apart forever. It felt like <span class="define-word" data-word="Clerical">clerical</span> work to them.</div>
-    </div>
-
-    <h2>🎭 Module 4: How People Change</h2>
-    <ul>
-        <li class="readable-text"><strong>Eliezer:</strong> He goes "numb." His feelings shut down so he can survive. When his father is hit, Eliezer is too scared to help. He feels guilty, but survival takes over.</li>
-        <li class="readable-text"><strong>Bela Katz:</strong> A strong prisoner forced to work in the crematorium. He is forced to put his own father's body in the furnace. This shows the unimaginable cruelty of the camp.</li>
-    </ul>
-    <div class="quote-box">
-        <strong class="readable-text">🕯️ Central Theme Check-In: The Death of Faith</strong><br>
-        <span class="readable-text"><span class="define-word" data-word="Disillusionment">Disillusionment</span> means losing your belief in something. Eliezer watches men pray to God, but he thinks it is <span class="define-word" data-word="Absurd">absurd</span> that God would let this happen. His faith is fading.</span>
-    </div>
-
-    <h2>📝 Module 5: CER Builder (Claim, Evidence, Reasoning)</h2>
-    <p class="readable-text"><em>Instructions: Let's build a paragraph together. Select your evidence and type your reasoning. Use the microphone button to dictate!</em></p>
-    
-    <p class="readable-text"><strong>Question:</strong> How do the Nazis take away Eliezer’s identity in Chapter 3?</p>
-    <p class="readable-text"><strong>[Claim]</strong> In Chapter 3 of <em>Night</em>, the Nazis take away Eliezer's identity by treating him like an object instead of a human.</p>
-    
-    <p class="readable-text"><strong>[Evidence]</strong> (Select one piece of evidence from the text to support your claim):</p>
-    <div class="evidence-options">
-        <label class="readable-text"><input type="radio" name="cer_evidence" id="ev1" value="separated"> They separated him from his mother and sister.</label>
-        <label class="readable-text"><input type="radio" name="cer_evidence" id="ev2" value="tattoo"> They tattooed the number A-7713 on his arm.</label>
-        <label class="readable-text"><input type="radio" name="cer_evidence" id="ev3" value="shaved"> They shaved his head.</label>
-    </div>
-
-    <p class="readable-text"><strong>[Reasoning]</strong> (Explain why your evidence proves your claim):</p>
-    <label class="readable-text">This shows a loss of identity because...
-        <textarea id="cer_reasoning" rows="4" placeholder="Type or dictate your reasoning here..."></textarea>
-        <button class="dictation-btn" onclick="startDictation('cer_reasoning')">🎤 Click to Talk (Dictate)</button>
-    </label>
-
-    <h2>🤔 Module 6: Your Turn - Critical Thinking</h2>
-    <p class="readable-text"><em>Instructions: Now it is your turn to be the teacher. Write one deep question about Chapter 3 that you would ask a classmate.</em></p>
-    <p class="readable-text"><strong>Question Starters to help you:</strong><br>
-       • How would you feel if...<br>
-       • Why did Eliezer decide to...<br>
-       • What is the difference between...
-    </p>
-    <textarea id="critical_question" rows="3" placeholder="Write or dictate your critical thinking question here..."></textarea>
-    <button class="dictation-btn" onclick="startDictation('critical_question')">🎤 Click to Talk (Dictate)</button>
 
     <button class="print-btn" onclick="window.print()">🖨️ Tap to Print / Save to PDF</button>
 
@@ -332,88 +363,72 @@
         document.getElementById("progress-bar").style.width = scrolled + "%";
     };
 
-    // --- 2. ACCESSIBILITY TOGGLES & MODES ---
-    let ttsActive = false;
-    let highlightMode = false;
+    // --- 2. ACCESSIBILITY SETTINGS ---
+    let currentFontSize = 18;
 
     function toggleMenu() {
         document.getElementById('a11y-toolbar').classList.toggle('minimized');
     }
 
-    function toggleTTS() {
-        ttsActive = !ttsActive;
-        const btn = document.getElementById('tts-btn');
-        if (ttsActive) {
-            btn.classList.add('active');
-            btn.innerText = "🔊 Read Aloud Mode: ON";
-            if (highlightMode) toggleHighlightMode(); // Turn off highlight to avoid conflict
-        } else {
-            btn.classList.remove('active');
-            btn.innerText = "🔊 Read Aloud Mode: OFF";
-            window.speechSynthesis.cancel(); // stop reading
-        }
+    function changeFontSize(step) {
+        currentFontSize += step;
+        if(currentFontSize < 14) currentFontSize = 14;
+        if(currentFontSize > 32) currentFontSize = 32;
+        document.body.style.fontSize = currentFontSize + 'px';
     }
 
-    function toggleHighlightMode() {
-        highlightMode = !highlightMode;
-        const btn = document.getElementById('hl-btn');
-        if (highlightMode) {
-            btn.classList.add('active');
-            btn.innerText = "🖍️ Highlight Mode: ON";
-            if (ttsActive) toggleTTS(); // Turn off TTS to avoid conflict
-        } else {
-            btn.classList.remove('active');
-            btn.innerText = "🖍️ Highlight Mode: OFF";
-        }
+    function toggleFont() {
+        document.body.classList.toggle('dyslexic-font');
     }
 
-    // Intercept clicks on readable text for TTS or Highlighting
-    document.querySelectorAll('.readable-text').forEach(el => {
-        el.addEventListener('click', function(e) {
-            // Prevent triggering if clicking a specific button/input inside
-            if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.classList.contains('define-word')) return;
+    function toggleContrast() {
+        document.body.classList.toggle('high-contrast');
+    }
 
-            if (ttsActive) {
-                window.speechSynthesis.cancel();
-                let utterance = new SpeechSynthesisUtterance(this.innerText);
-                window.speechSynthesis.speak(utterance);
-            } else if (highlightMode) {
-                this.classList.toggle('custom-highlight');
-            }
-        });
-    });
+    // --- 3. TEXT TO SPEECH (INLINE) ---
+    function readBlock(btnElement) {
+        window.speechSynthesis.cancel(); // Stop any current speech
+        
+        // Get the parent container
+        let parentBlock = btnElement.parentElement;
+        
+        // Clone it to manipulate text without ruining the HTML
+        let clone = parentBlock.cloneNode(true);
+        
+        // Remove the TTS button text from the clone so it doesn't read "🔊 Read"
+        let btnInClone = clone.querySelector('.tts-btn');
+        if(btnInClone) btnInClone.remove();
+        
+        // Remove hints from being read twice if desired, or just read everything. 
+        // clone.innerText will safely extract just the readable words.
+        let textToRead = clone.innerText;
 
-    // --- 3. DICTIONARY (Click to Define) ---
+        let utterance = new SpeechSynthesisUtterance(textToRead);
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // --- 4. DICTIONARY (Click to Define) ---
     const dictionary = {
-        "Talmud": "A central, holy text of the Jewish religion, used for studying law and theology.",
-        "Indifferently": "Without interest or concern; not caring about the result.",
-        "Clerical": "Relating to routine office work, like filing papers or stamping forms.",
-        "Absurd": "Wildly unreasonable, illogical, or inappropriate.",
-        "Disillusionment": "A feeling of deep disappointment when you realize something is not as good as you believed."
+        "Disbelief": "The inability or refusal to believe that something is true or real.",
+        "Clerical": "Relating to office work or administrative tasks.",
+        "Absurd": "Wildly unreasonable, illogical, or inappropriate."
     };
 
     document.querySelectorAll('.define-word').forEach(word => {
         word.addEventListener('click', function(e) {
-            e.stopPropagation(); // prevent TTS from reading the whole paragraph
+            e.stopPropagation(); 
             const term = this.getAttribute('data-word');
             document.getElementById('def-title').innerText = term;
             document.getElementById('def-text').innerText = dictionary[term] || "Definition not found.";
             document.getElementById('definition-modal').style.display = 'block';
-            
-            // Read definition automatically if TTS is active
-            if(ttsActive) {
-                window.speechSynthesis.cancel();
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance(term + ". " + dictionary[term]));
-            }
         });
     });
 
     function closeDefinition() {
         document.getElementById('definition-modal').style.display = 'none';
-        window.speechSynthesis.cancel();
     }
 
-    // --- 4. SPEECH TO TEXT (Dictation) ---
+    // --- 5. SPEECH TO TEXT (Dictation) ---
     function startDictation(targetId) {
         if (!('webkitSpeechRecognition' in window)) {
             alert("Speech to text is not supported in this browser. Please try using Google Chrome!");
@@ -425,6 +440,7 @@
         recognition.maxAlternatives = 1;
 
         const target = document.getElementById(targetId);
+        let originalPlaceholder = target.placeholder;
         target.placeholder = "Listening... Speak now.";
 
         recognition.start();
@@ -432,30 +448,58 @@
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript;
             target.value += (target.value ? " " : "") + transcript;
-            saveLocalData(); // Trigger autosave
-            document.getElementById('save-status').innerText = "Status: Saved! ✨";
+            saveLocalData(); 
         };
 
         recognition.onspeechend = function() {
             recognition.stop();
-            target.placeholder = "Write or dictate here...";
+            target.placeholder = originalPlaceholder;
         };
 
         recognition.onerror = function(event) {
-            alert("Microphone error. Make sure you gave permission to use the mic.");
+            alert("Microphone error. Make sure you gave permission.");
+            target.placeholder = originalPlaceholder;
         }
     }
 
-    // --- 5. LOCAL AUTO-SAVE ---
+    // --- 6. CER BUILDER FUNCTIONS ---
+    function insertStarter(targetId, text) {
+        let el = document.getElementById(targetId);
+        if(!el.value.includes(text)) {
+            el.value = text + el.value;
+            saveLocalData();
+        }
+        el.focus();
+    }
+
+    function generateCER() {
+        let c = document.getElementById('cer_claim').value.trim();
+        let e = document.getElementById('cer_evidence').value.trim();
+        let r = document.getElementById('cer_reason').value.trim();
+        
+        let combined = `${c} ${e} ${r}`;
+        document.getElementById('cer_combined').value = combined.trim();
+        saveLocalData();
+    }
+
+    function copyCER() {
+        let text = document.getElementById('cer_combined').value;
+        if(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                let msg = document.getElementById('copy-msg');
+                msg.style.display = 'inline';
+                setTimeout(() => { msg.style.display = 'none'; }, 2000);
+            });
+        } else {
+            alert("Please click 'Combine Response into Paragraph' first!");
+        }
+    }
+
+    // --- 7. LOCAL AUTO-SAVE ---
     function saveLocalData() {
-        const inputs = document.querySelectorAll('input[type="text"], textarea');
+        const inputs = document.querySelectorAll('input[type="text"], textarea, select');
         inputs.forEach(input => {
             localStorage.setItem(input.id, input.value);
-        });
-        
-        const radios = document.querySelectorAll('input[type="radio"]');
-        radios.forEach(radio => {
-            localStorage.setItem(radio.id, radio.checked);
         });
         
         const status = document.getElementById('save-status');
@@ -464,31 +508,22 @@
     }
 
     function loadLocalData() {
-        const inputs = document.querySelectorAll('input[type="text"], textarea');
+        const inputs = document.querySelectorAll('input[type="text"], textarea, select');
         inputs.forEach(input => {
             if(localStorage.getItem(input.id)) {
                 input.value = localStorage.getItem(input.id);
             }
         });
-
-        const radios = document.querySelectorAll('input[type="radio"]');
-        radios.forEach(radio => {
-            if(localStorage.getItem(radio.id) === "true") {
-                radio.checked = true;
-            }
-        });
     }
 
-    // Attach autosave to typing events
-    document.querySelectorAll('input, textarea').forEach(el => {
+    document.querySelectorAll('input, textarea, select').forEach(el => {
         el.addEventListener('input', saveLocalData);
         el.addEventListener('change', saveLocalData);
     });
 
-    // Load data when page opens
     window.addEventListener('DOMContentLoaded', loadLocalData);
 
-    // --- 6. ORIGINAL DRAG & DROP / REVEAL ---
+    // --- 8. ORIGINAL DRAG & DROP ---
     const draggables = document.querySelectorAll('.draggable');
     const dropZones = document.querySelectorAll('.drop-zone');
 
@@ -498,11 +533,11 @@
     });
 
     dropZones.forEach(zone => {
-        zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.backgroundColor = '#E2E8F0'; });
-        zone.addEventListener('dragleave', () => { zone.style.backgroundColor = 'white'; });
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.backgroundColor = 'var(--accent-color)'; });
+        zone.addEventListener('dragleave', () => { zone.style.backgroundColor = 'transparent'; });
         zone.addEventListener('drop', e => {
             e.preventDefault();
-            zone.style.backgroundColor = 'white';
+            zone.style.backgroundColor = 'transparent';
             const draggable = document.querySelector('.dragging');
             if(draggable && draggable.innerText === zone.dataset.word) {
                 zone.appendChild(draggable);
@@ -511,16 +546,10 @@
                 draggable.setAttribute('draggable', 'false');
             } else if (draggable) {
                 zone.style.borderColor = 'red';
-                setTimeout(() => zone.style.borderColor = '#1A365D', 800);
+                setTimeout(() => zone.style.borderColor = 'var(--primary-color)', 800);
             }
         });
     });
-
-    function revealText(btn) {
-        const textDiv = btn.nextElementSibling;
-        textDiv.style.display = 'block';
-        btn.style.display = 'none';
-    }
 </script>
 
 </body>
