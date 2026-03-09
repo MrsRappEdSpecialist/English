@@ -5,276 +5,466 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Night by Elie Wiesel - Interactive Reading</title>
     <style>
-        :root { --primary: #2c3e50; --secondary: #3498db; --highlight: #fef08a; --bg: #f9f9f9; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; background-color: var(--bg); }
-        h1, h2, h3 { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 5px; }
-        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        /* Base Theme: Charcoal and Red */
+        :root { 
+            --bg-color: #f4f4f6;
+            --container-bg: #ffffff;
+            --text-color: #2c2f33; 
+            --primary-color: #36454F; /* Charcoal */
+            --accent-color: #8B0000;  /* Dark Red */
+            --accent-hover: #b30000;
+            --highlight: #ffeb3b;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size: 16px;
+        }
+
+        /* Accessibility Themes */
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --primary-color: #a9a9a9;
+            --accent-color: #ff4d4d;
+        }
+        body.high-contrast {
+            --bg-color: #000000;
+            --container-bg: #000000;
+            --text-color: #ffff00;
+            --primary-color: #ffffff;
+            --accent-color: #00ff00;
+            --highlight: #ff00ff;
+        }
+        body.dyslexic {
+            --font-family: 'Comic Sans MS', 'OpenDyslexic', sans-serif;
+        }
+
+        body { 
+            font-family: var(--font-family); 
+            font-size: var(--font-size);
+            line-height: 1.8; 
+            color: var(--text-color); 
+            background-color: var(--bg-color);
+            margin: 0; 
+            padding: 0 0 50px 0;
+            transition: all 0.3s ease;
+        }
+
+        .wrapper { max-width: 1200px; margin: 0 auto; padding: 20px; margin-top: 40px;}
+        h1, h2, h3 { color: var(--accent-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; }
+        .container { background: var(--container-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 30px; transition: background 0.3s; border-top: 4px solid var(--primary-color);}
         
+        /* Progress Bar */
+        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 8px; background: #ccc; z-index: 1000; }
+        #progress-bar { height: 100%; background: var(--accent-color); width: 0%; transition: width 0.2s; }
+
+        /* Accessibility Menu */
+        #access-toggle { position: fixed; top: 20px; right: 20px; background: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 50px; cursor: pointer; z-index: 1001; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: background 0.3s;}
+        #access-toggle:hover { background: var(--accent-color); }
+        #access-panel { display: none; position: fixed; top: 70px; right: 20px; background: var(--container-bg); border: 2px solid var(--primary-color); padding: 15px; border-radius: 8px; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .access-btn { display: block; width: 100%; margin: 5px 0; padding: 8px; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .access-btn:hover { background: var(--accent-color); }
+
         /* Header Info */
-        .student-info { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-        .student-info div { display: flex; flex-direction: column; }
-        .student-info input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
-        
-        /* Action Buttons */
-        .actions { position: sticky; top: 10px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 100; margin-bottom: 20px; display: flex; gap: 10px; }
-        button { background-color: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        button:hover { background-color: #2980b9; }
+        .student-info { display: flex; gap: 20px; flex-wrap: wrap; }
+        .student-info div { display: flex; flex-direction: column; flex-grow: 1; }
+        .student-info input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: transparent; color: var(--text-color); }
 
-        /* Reading & Annotating Section */
+        /* Reading Section */
         .reading-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; position: relative; }
-        .text-passage { line-height: 1.8; font-size: 1.1em; }
-        .text-passage p { margin-bottom: 15px; }
-        .margin-notes { background: #f1f5f9; padding: 20px; border-radius: 8px; min-height: 500px; }
+        .text-passage { position: relative; }
+        .para-row { display: flex; align-items: flex-start; margin-bottom: 15px; padding: 10px; border-radius: 4px; transition: background 0.2s;}
+        .para-row:hover { background: rgba(0,0,0,0.05); }
+        body.dark-mode .para-row:hover { background: rgba(255,255,255,0.05); }
         
-        /* Dynamic Highlighting */
-        mark.student-highlight { background-color: var(--highlight); padding: 2px 0; border-radius: 2px; }
-        #tooltip { display: none; position: absolute; background: #333; color: #fff; padding: 5px 10px; border-radius: 4px; cursor: pointer; z-index: 10; font-size: 0.9em; pointer-events: auto; }
-        
-        .annotation-box { background: white; padding: 10px; border-left: 4px solid var(--secondary); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .annotation-box span.quote { display: block; font-size: 0.85em; color: #555; font-style: italic; margin-bottom: 5px; background: #eee; padding: 4px; border-radius: 3px; }
-        .annotation-box textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; font-family: inherit; }
-        
-        /* Activities Section */
-        .activity-section { margin-top: 20px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fafafa; }
-        select, input.activity-input { padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
-        .feedback { font-weight: bold; margin-left: 10px; }
-        .correct { color: #16a34a; }
-        .incorrect { color: #dc2626; }
+        .para-num { min-width: 30px; font-weight: bold; color: var(--accent-color); font-size: 0.9em; padding-top: 5px; }
+        .tts-btn { background: transparent; border: none; cursor: pointer; font-size: 1.2em; margin-right: 10px; opacity: 0.6; transition: opacity 0.2s; padding-top: 3px; color: var(--text-color);}
+        .tts-btn:hover { opacity: 1; color: var(--accent-color); }
+        .para-text { flex-grow: 1; cursor: text; margin: 0; }
 
-        /* CER & S&L Section */
-        textarea.full-width { width: 100%; box-sizing: border-box; height: 80px; margin-bottom: 10px; padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;}
-        #final-cer { height: 150px; background: #eef2ff; border: 1px solid #a5b4fc; }
-        .discussion-frames ul { list-style-type: none; padding: 0; }
-        .discussion-frames li { background: #e0f2fe; margin: 5px 0; padding: 10px; border-radius: 4px; font-style: italic; }
+        /* Definitions */
+        .def-word { border-bottom: 2px dashed var(--accent-color); cursor: pointer; font-weight: bold; position: relative; }
+        .def-word:hover { background-color: rgba(139, 0, 0, 0.1); }
+        #def-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--container-bg); border: 2px solid var(--accent-color); padding: 20px; border-radius: 8px; z-index: 2000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); max-width: 400px; text-align: center;}
+        #def-modal h3 { margin-top: 0; }
+        #close-modal { background: var(--primary-color); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; }
 
-        /* Print Media Styles for PDF Export */
+        /* Annotations */
+        .margin-notes { background: rgba(0,0,0,0.03); padding: 20px; border-radius: 8px; border-left: 3px solid var(--primary-color); min-height: 500px; }
+        mark.student-highlight { background-color: var(--highlight); color: #000; padding: 2px 0; border-radius: 2px; }
+        #annotate-btn { display: none; position: absolute; background: var(--accent-color); color: #fff; padding: 5px 10px; border-radius: 4px; cursor: pointer; z-index: 10; font-size: 0.9em; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .annotation-box { background: var(--container-bg); padding: 10px; border-left: 4px solid var(--accent-color); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .annotation-box textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; background: transparent; color: var(--text-color); font-family: inherit;}
+
+        /* Drag and Drop */
+        .dnd-container { display: flex; gap: 20px; margin-top: 15px; flex-wrap: wrap;}
+        .draggable-items, .drop-zones { flex: 1; min-width: 250px; }
+        .draggable { background: var(--primary-color); color: white; padding: 10px; margin-bottom: 10px; border-radius: 4px; cursor: grab; text-align: center; font-weight: bold;}
+        .draggable:active { cursor: grabbing; }
+        .drop-zone { background: rgba(0,0,0,0.05); border: 2px dashed #999; padding: 15px; margin-bottom: 10px; border-radius: 4px; min-height: 20px; transition: background 0.2s;}
+        .drop-zone.hover { background: rgba(139, 0, 0, 0.1); border-color: var(--accent-color); }
+        .drop-zone .draggable { margin-bottom: 0; background: var(--accent-color); }
+
+        /* Inputs & Buttons */
+        input.activity-input, select, textarea { padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; background: var(--container-bg); color: var(--text-color);}
+        .action-btn { background-color: var(--primary-color); color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1em; transition: background 0.3s; margin-right: 10px;}
+        .action-btn:hover { background-color: var(--accent-color); }
+        .bottom-actions { text-align: center; margin-top: 40px; padding: 20px; background: var(--container-bg); border-radius: 8px; border: 2px solid var(--primary-color);}
+
+        /* CER */
+        .mini-lesson { background: rgba(139, 0, 0, 0.1); border-left: 4px solid var(--accent-color); padding: 15px; margin-bottom: 20px; border-radius: 0 8px 8px 0; }
+        textarea.full-width { width: 100%; box-sizing: border-box; height: 80px; margin-bottom: 10px; }
+        #final-cer { height: 150px; border: 2px solid var(--accent-color); }
+
         @media print {
-            body { background: white; max-width: 100%; padding: 0; margin: 0; }
-            .actions, button, #tooltip { display: none !important; }
+            body { background: white; color: black; max-width: 100%; padding: 0; margin: 0; }
+            #access-toggle, #progress-container, .bottom-actions, .tts-btn, #annotate-btn { display: none !important; }
             .container { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 20px; }
             .reading-grid { grid-template-columns: 1fr; }
-            .margin-notes { background: white; border: 1px solid #eee; }
-            textarea { border: 1px solid #999; }
         }
     </style>
 </head>
 <body>
 
-    <div class="actions">
-        <button onclick="saveLocalHTML()">💾 Save Work (Download File)</button>
-        <button onclick="window.print()">🖨️ Save as PDF / Print</button>
-        <span style="align-self: center; font-size: 0.9em; color: #555;">Make sure to save your work before closing the tab!</span>
+    <div id="progress-container"><div id="progress-bar"></div></div>
+
+    <button id="access-toggle" onclick="toggleAccessMenu()">⚙️ Accessibility</button>
+    <div id="access-panel">
+        <button class="access-btn" onclick="changeFontSize(2)">Increase Text Size</button>
+        <button class="access-btn" onclick="changeFontSize(-2)">Decrease Text Size</button>
+        <button class="access-btn" onclick="toggleDyslexic()">Toggle Dyslexic Font</button>
+        <button class="access-btn" onclick="setTheme('default')">Light Theme</button>
+        <button class="access-btn" onclick="setTheme('dark-mode')">Dark Theme</button>
+        <button class="access-btn" onclick="setTheme('high-contrast')">High Contrast</button>
     </div>
 
-    <h1>Interactive Reading: <em>Night</em> by Elie Wiesel</h1>
-    
-    <div class="container student-info">
-        <div>
-            <label for="student-name"><strong>Name:</strong></label>
-            <input type="text" id="student-name" placeholder="First and Last Name">
-        </div>
-        <div>
-            <label for="student-period"><strong>Period:</strong></label>
-            <input type="text" id="student-period" placeholder="Class Period">
-        </div>
-        <div>
-            <label for="current-date"><strong>Date:</strong></label>
-            <input type="text" id="current-date" readonly>
-        </div>
+    <div id="def-modal">
+        <h3 id="def-title">Word</h3>
+        <p id="def-text">Definition goes here.</p>
+        <button id="close-modal" onclick="closeDefModal()">Close</button>
     </div>
-    
-    <div class="container">
-        <h2>Part 1: Active Reading & Annotation</h2>
-        <p><em>Instructions: Read the text below. Use your mouse to <strong>click and drag to highlight</strong> specific words, phrases, or sentences that stand out to you. A button will pop up to let you annotate your selection in the margins.</em></p>
+
+    <div class="wrapper">
+        <h1>Interactive Reading: <em>Night</em> by Elie Wiesel</h1>
         
-        <div class="reading-grid">
-            <div class="text-passage" id="reading-text">
-                <p>The beloved objects that we had carried with us from place to place were now left behind in the wagon and, with them, finally, our illusions. Every few yards, there stood an SS man, his machine gun trained on us. Hand in hand we followed the throng. An SS came toward us wielding a club. He commanded:</p>
-                <p>"Men to the left! Women to the right!"</p>
-                <p>Eight words spoken quietly, indifferently, without emotion. Eight simple, short words. Yet that was the moment when I left my mother. There was no time to think, and I already felt my father's hand press against mine: we were alone. In a fraction of a second I could see my mother, my sisters, move to the right. Tzipora was holding Mother's hand. I saw them walking farther and farther away; Mother was stroking my sister's blond hair, as if to protect her. And I walked on with my father, with the men. I didn't know that this was the moment in time and the place where I was leaving my mother and Tzipora forever. I kept walking, my father holding my hand.</p>
-                <p>Behind me, an old man fell to the ground. Nearby, an SS man replaced his revolver in its holster. My hand tightened its grip on my father. All I could think of was not to lose him. Not to remain alone.</p>
-                <p>The SS officers gave the order.</p>
-                <p>"Form ranks of fives!"</p>
-                <p>There was a tumult. It was imperative to stay together.</p>
-                <p>"Hey, kid, how old are you?"</p>
-                <p>The man interrogating me was an inmate. I could not see his face, but his voice was weary and warm.</p>
-                <p>"Fifteen."</p>
-                <p>"No. You're eighteen."</p>
-                <p>"But I'm not," I said. "I'm fifteen."</p>
-                <p>"Fool. Listen to what I say."</p>
-                <p>Then he asked my father, who answered:</p>
-                <p>"I'm fifty."</p>
-                <p>"No." The man now sounded angry. "Not fifty. You're forty. Do you hear? Eighteen and forty."</p>
-                <p>He disappeared into the darkness. Another inmate appeared, unleashing a stream of invectives:</p>
-                <p>"Sons of bitches, why have you come here? Tell me, why?"</p>
-                <p>Someone dared to reply:</p>
-                <p>"What do you think? That we came here of our own free will? That we asked to come here?"</p>
-                <p>The other seemed ready to kill him:</p>
-                <p>"Shut up, you moron, or I'll tear you to pieces! You should have hanged yourselves rather than come here. Didn't you know what was in store for you here in Auschwitz? You didn't know? In 1944?"</p>
-                <p>True. We didn't know. Nobody had told us. He couldn't believe his ears. His tone became even harsher:</p>
-                <p>"Over there. Do you see the chimney over there? Do you see it? And the flames, do you see them?" (Yes, we saw the flames.) "Over there, that's where they will take you. Over there will be your grave. You still don't understand? You sons of bitches. Don't you understand anything? You will be burned! Burned to a cinder! Turned into ashes!"</p>
-                <p>His anger changed into fury. We stood stunned, petrified. Could this be just a nightmare? An unimaginable nightmare?</p>
-                <p>I heard whispers around me:</p>
-                <p>"We must do something. We can't let them kill us like that, like cattle in the slaughterhouse. We must revolt."</p>
-                <p>There were, among us, a few tough young men. They actually had knives and were urging us to attack the armed guards. One of them was muttering:</p>
-                <p>"Let the world learn about the existence of Auschwitz. Let everybody find out about it while they still have a chance to escape"</p>
-                <p>But the older men begged their sons not to be foolish:</p>
-                <p>"We mustn't give up hope, even now as the sword hangs over our heads. So taught our sages..."</p>
-                <p>The wind of revolt died down. We continued to walk until we came to a crossroads. Standing in the middle of it was, though I didn't know it then, Dr. Mengele, the notorious Dr. Mengele. He looked like the typical SS officer: a cruel, though not unintelligent, face, complete with monocle. He was holding a conductor's baton and was surrounded by officers. The baton was moving constantly, sometimes to the right, sometimes to the left.</p>
-                <p>In no time, I stood before him.</p>
-                <p>"Your age?" he asked, perhaps trying to sound paternal.</p>
-                <p>"I'm eighteen." My voice was trembling.</p>
-                <p>"In good health?"</p>
-                <p>"Yes."</p>
-                <p>"Your profession?"</p>
-                <p>Tell him that I was a student?</p>
-                <p>"Farmer," I heard myself saying.</p>
-                <p>This conversation lasted no more than a few seconds. It seemed like an eternity.</p>
-                <p>The baton pointed to the left. I took half a step forward. I first wanted to see where they would send my father. Were he to have gone to the right, I would have ran after him.</p>
-                <p>The baton, once more, moved to the left. A weight lifted from my heart.</p>
-                <p>We did not know, as yet, which was the better side, right or left, which road led to prison and which to the crematoria. Still, I was happy, I was near my father. Our procession continued slowly to move forward.</p>
-                <p>Another inmate came over to us:</p>
-                <p>"Satisfied?"</p>
-                <p>"Yes," someone answered.</p>
-                <p>"Poor devils, you are heading for the crematorium."</p>
-                <p>He seemed to be telling the truth. Not far from us, flames, huge flames, were rising from a ditch. Something was being burned there. A track drew close and unloaded its hold: small children. Babies! Yes, I did see this, with my own eyes... children thrown into the flames. (Is it any wonder that ever since then, sleep tends to elude me?)</p>
-                <p>So that was where we were going. A little farther on, there was another, larger pit for adults.</p>
-                <p>I pinched myself: Was I still alive? Was I awake? How was it possible that men, women, and children were being burned and that the world kept silent? No. All this could not be real. A nightmare perhaps...Soon I would wake up with a start, my heart pounding, and find that I was back in the room of my childhood, with my books...</p>
-                <p>My father's voice tore me from my daydreams:</p>
-                <p>"What a shame, a shame that you did not go with your mother... I saw many children your age go with their mothers..."</p>
-                <p>His voice was terribly sad. I understood that he did not wish to see what they would do to me. He did not wish to see his only son go up in flames.</p>
-                <p>My forehead was covered with cold sweat. Still, I told him that I could not believe that human beings were being burned in our times; the world would never tolerate such crimes...</p>
-                <p>"The world? The world is not interested in us. Today, everything is possible, even the crematoria..." His voice broke.</p>
-                <p>"Father," I said. "If that is true, then I don't want to wait. I'll run into the electrified barbed wire. That would be easier than a slow death in the flames."</p>
-                <p>He didn't answer. He was weeping. His body was shaking. Everybody around us was weeping. Someone began to recite Kaddish, the prayer for the dead. I don't know whether, during the history of the Jewish people, men have ever before recited Kaddish for themselves.</p>
-                <p>"Yisgadal, veyiskadash, shmey raba ... May His name be celebrated and sanctified..." whispered my father.</p>
-                <p>For the first time, I felt anger rising within me. Why should I sanctify His name? The Almighty, the eternal and terrible Master of the Universe, chose to be silent. What was there to thank Him for?</p>
-                <p>We continued our march. We were coming closer and closer to the pit, from which an infernal heat was rising. Twenty more steps. If I was going to kill myself, this was the time. Our column had only some fifteen steps to go. I bit my lips so that my father would not hear my teeth chattering. Ten more steps. Eight. Seven. We were walking slowly, as one follows a hearse, our own funeral procession. Only four more steps. Three. There it was now, very close to us, the pit and its flames. I gathered all that remained of my strength in order to break rank and throw myself onto the barbed wire. Deep down, I was saying good-bye to my father, to the whole universe, and, against my will, I found myself whispering the words: "Yisgadal, veyiskadash, shmey raba ...May His name be exalted and sanctified..." My heart was about to burst. There. I was face-to-face with the Angel of Death...</p>
-                <p>No. Two steps from the pit, we were ordered to turn left and herded into barracks. I squeezed my father's hand. He said:</p>
-                <p>"Do you remember Mrs. Schachter, in the train?"</p>
-                <p>NEVER shall I FORGET that night, the first night in camp, that turned my life into one long night seven times sealed.</p>
-                <p>Never shall I forget that smoke.</p>
-                <p>Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky.</p>
-                <p>Never shall I forget those flames that consumed my faith forever.</p>
-                <p>Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live.</p>
-                <p>Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes.</p>
-                <p>Never shall I forget those things, even were I condemned to live as long as God Himself.</p>
-                <p>Never.</p>
+        <div class="container student-info">
+            <div>
+                <label><strong>Name:</strong></label>
+                <input type="text" id="student-name" placeholder="First and Last Name">
             </div>
+            <div>
+                <label><strong>Period:</strong></label>
+                <input type="text" id="student-period" placeholder="Class Period">
+            </div>
+            <div>
+                <label><strong>Date:</strong></label>
+                <input type="text" id="current-date" readonly>
+            </div>
+        </div>
+        
+        <div class="container">
+            <h2>Part 1: Active Reading & Annotation</h2>
+            <p><em>Instructions: Read the text. Click the 🔊 icon to hear the text read aloud. Click words with a dashed line for definitions. Highlight text with your mouse to add margin annotations.</em></p>
             
-            <div class="margin-notes" id="annotations-container">
-                <h3>My Annotations</h3>
-                <p style="font-size: 0.9em; color: #666;" id="annotation-hint"><em>Highlight text on the left to add a note here.</em></p>
+            <div class="reading-grid">
+                <div class="text-passage" id="reading-text">
+                    </div>
+                
+                <div class="margin-notes" id="annotations-container">
+                    <h3>My Annotations</h3>
+                    <p style="font-size: 0.9em; opacity: 0.7;" id="annotation-hint"><em>Highlight text on the left to add a note here.</em></p>
                 </div>
-        </div>
-        <div id="tooltip">📝 Highlight & Annotate</div>
-    </div>
-
-    <div class="container">
-        <h2>Part 2: Comprehension Check</h2>
-        
-        <div class="activity-section">
-            <h3>Vocabulary in Context</h3>
-            <p>1. The inmate unleashed a stream of <strong>invectives</strong> at the new arrivals. In this context, what does <em>invectives</em> mean?</p>
-            <select id="vocab1">
-                <option value="">--Select an answer--</option>
-                <option value="wrong">Compliments</option>
-                <option value="correct">Insulting or abusive language</option>
-                <option value="wrong">Helpful instructions</option>
-            </select>
-            <button onclick="checkAnswer('vocab1')">Check</button> <span id="vocab1-feedback" class="feedback"></span>
+            </div>
+            <div id="annotate-btn">📝 Annotate</div>
         </div>
 
-        <div class="activity-section">
-            <h3>Character Matching</h3>
-            <p>Match the character to their action or description in the text.</p>
-            <ul>
-                <li><strong>Elie:</strong> <select id="char1"><option value="">--Select--</option><option value="correct">Tells Dr. Mengele he is a farmer</option><option value="wrong">Cries and shakes</option></select> <button onclick="checkAnswer('char1')">Check</button> <span id="char1-feedback" class="feedback"></span></li>
-                <li><strong>Elie's Father:</strong> <select id="char2"><option value="">--Select--</option><option value="wrong">Holds a conductor's baton</option><option value="correct">Whispers the Kaddish</option></select> <button onclick="checkAnswer('char2')">Check</button> <span id="char2-feedback" class="feedback"></span></li>
-            </ul>
-        </div>
-    </div>
+        <div class="container">
+            <h2>Part 2: Comprehension & Vocabulary</h2>
+            
+            <h3>Interactive Vocabulary</h3>
+            <p>Define the following key terms based on historical context and their usage in literature regarding the Holocaust.</p>
+            <div style="margin-bottom: 10px;">
+                <strong>1. Kapo:</strong><br>
+                <select id="vocab1">
+                    <option value="">--Select Definition--</option>
+                    <option value="wrong">A high-ranking SS officer</option>
+                    <option value="correct">A prisoner assigned by the SS guards to supervise forced labor</option>
+                    <option value="wrong">A type of transport train</option>
+                </select> <span id="v1-feed"></span>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <strong>2. Humanity:</strong><br>
+                <select id="vocab2">
+                    <option value="">--Select Definition--</option>
+                    <option value="correct">The quality of being compassionate, sympathetic, and humane</option>
+                    <option value="wrong">The process of burning something</option>
+                    <option value="wrong">A loud, confused noise</option>
+                </select> <span id="v2-feed"></span>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <strong>3. Crematory (Crematoria):</strong><br>
+                <select id="vocab3">
+                    <option value="">--Select Definition--</option>
+                    <option value="wrong">The barracks where inmates slept</option>
+                    <option value="wrong">A prayer recited for the dead</option>
+                    <option value="correct">A furnace or facility where bodies are incinerated</option>
+                </select> <span id="v3-feed"></span>
+            </div>
+            <button class="action-btn" onclick="checkVocab()" style="padding: 8px 15px; font-size: 0.9em;">Check Vocab</button>
 
-    <div class="container">
-        <h2>Part 3: Claim, Evidence, Reasoning (CER) Paragraph Builder</h2>
-        <p><strong>Prompt:</strong> How does Elie Wiesel use imagery to convey the horror of his arrival at the camp?</p>
-        
-        <div class="cer-builder">
-            <label><strong>Claim</strong> (State your main argument. <em>Scaffold: Elie Wiesel uses vivid imagery to...</em>)</label>
+            <hr style="margin: 30px 0; border-top: 1px solid #ccc;">
+
+            <h3>Character Matching (Drag and Drop)</h3>
+            <p>Drag the character name to the box containing their correct description from the text.</p>
+            <div class="dnd-container">
+                <div class="draggable-items" id="drag-source">
+                    <div class="draggable" draggable="true" id="char1">Dr. Mengele</div>
+                    <div class="draggable" draggable="true" id="char2">Elie's Father</div>
+                    <div class="draggable" draggable="true" id="char3">Elie Wiesel</div>
+                    <div class="draggable" draggable="true" id="char4">The Inmate</div>
+                </div>
+                <div class="drop-zones">
+                    <div class="drop-zone" data-answer="char4"><strong>Description:</strong> Unleashes a stream of insults and tells them they will be burned.</div>
+                    <div class="drop-zone" data-answer="char1"><strong>Description:</strong> Holds a conductor's baton and asks for age, health, and profession.</div>
+                    <div class="drop-zone" data-answer="char3"><strong>Description:</strong> Considers throwing himself onto the electrified barbed wire.</div>
+                    <div class="drop-zone" data-answer="char2"><strong>Description:</strong> Whispers the Kaddish (prayer for the dead) for himself.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Part 3: Written Response (CER)</h2>
+            
+            <div class="mini-lesson">
+                <strong>Mini-Lesson: What is Imagery?</strong><br>
+                Imagery is descriptive language that appeals to our five senses (sight, sound, smell, taste, touch). Authors use imagery to paint a vivid picture in the reader's mind, creating a deeply immersive experience and evoking strong emotions.
+            </div>
+
+            <p><strong>Prompt:</strong> How does Elie Wiesel use imagery to convey the horrific reality of arriving at the camp?</p>
+            
+            <label><strong>Claim</strong> (State your main argument)</label>
             <textarea id="cer-claim" class="full-width" placeholder="Elie Wiesel uses vivid imagery to convey the horror of the camp by highlighting..."></textarea>
             
-            <label><strong>Evidence</strong> (Quote from the text. <em>Scaffold: For example, the text states, "[cite]"</em>)</label>
-            <textarea id="cer-evidence" class="full-width" placeholder="For example, the text states, 'Never shall I forget the small faces of the children whose bodies I saw transformed into smoke...'"></textarea>
+            <label><strong>Evidence</strong> (Choose a quote from the text)</label>
+            <select id="cer-evidence-select" class="full-width" onchange="document.getElementById('cer-evidence').value = this.value;">
+                <option value="">-- Choose a piece of evidence --</option>
+                <option value="For example, the text states, 'Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky.'">Option 1: Children transformed into smoke.</option>
+                <option value="For example, the text describes, 'Not far from us, flames, huge flames, were rising from a ditch.'">Option 2: Huge flames rising from a ditch.</option>
+            </select>
+            <textarea id="cer-evidence" class="full-width" placeholder="Your chosen evidence will appear here..."></textarea>
             
-            <label><strong>Reasoning</strong> (Explain how the evidence proves your claim. <em>Scaffold: This imagery proves the horror because...</em>)</label>
-            <textarea id="cer-reasoning" class="full-width" placeholder="This imagery proves the horror because it contrasts the innocence of youth with the brutal reality of the flames..."></textarea>
+            <label><strong>Reasoning</strong> (Explain how the imagery in the quote proves your claim)</label>
+            <textarea id="cer-reasoning" class="full-width" placeholder="This imagery proves the horror because it forces the reader to visualize..."></textarea>
             
-            <button onclick="generateCER()">Generate Complete Paragraph</button>
+            <button class="action-btn" onclick="generateCER()">Combine Paragraph</button>
             <br><br>
             <label><strong>Final Paragraph:</strong></label>
             <textarea id="final-cer" class="full-width" readonly></textarea>
-            <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
         </div>
-    </div>
 
-    <div class="container">
-        <h2>Part 4: Speaking & Listening</h2>
-        <div class="activity-section">
-            <h3>Partner Discussion</h3>
-            <p>Discuss the following prompt with a partner: <em>Elie states that the flames "consumed my faith forever". Why do you think he felt this way in that exact moment?</em></p>
-            
-            <div class="discussion-frames">
-                <p><strong>Use these Discussion Frames:</strong></p>
-                <ul>
-                    <li>"I agree with your point about ____ because..."</li>
-                    <li>"Another perspective we could consider is..."</li>
-                    <li>"Could you clarify what you meant when you said ____?"</li>
-                </ul>
-            </div>
+        <div class="container">
+            <h2>Part 4: Speaking & Listening</h2>
+            <p>Discuss with a partner: <em>Elie states that the flames "consumed my faith forever". Why do you think he felt this way in that exact moment?</em></p>
+            <label><strong>Partner's Name:</strong></label>
+            <input type="text" id="partner-name" class="activity-input" style="width: 250px;"><br><br>
+            <label><strong>Summary of Discussion:</strong></label>
+            <textarea id="discussion-notes" class="full-width" placeholder="My partner pointed out that..."></textarea>
+        </div>
 
-            <label><strong>Who did you speak with?</strong></label><br>
-            <input type="text" id="partner-name" class="activity-input" placeholder="Partner's Name" style="width: 50%;"><br><br>
-            
-            <label><strong>Document your discussion:</strong></label><br>
-            <textarea id="discussion-notes" class="full-width" placeholder="My partner pointed out that... We agreed/disagreed that..."></textarea>
+        <div class="bottom-actions">
+            <h3>Ready to Submit?</h3>
+            <p>Make sure you have completed all sections before saving your work.</p>
+            <button class="action-btn" onclick="saveLocalHTML()">💾 Save Work Locally (HTML file)</button>
+            <button class="action-btn" onclick="window.print()">🖨️ Save as PDF / Print</button>
         </div>
     </div>
 
     <script>
-        // Set Today's Date automatically
+        // --- Setup Data ---
         document.getElementById('current-date').value = new Date().toLocaleDateString();
 
-        // Highlight and Annotate Logic
-        const textPassage = document.getElementById('reading-text');
-        const tooltip = document.getElementById('tooltip');
+        const rawText = [
+            "The beloved objects that we had carried with us from place to place were now left behind in the wagon and, with them, finally, our illusions. Every few yards, there stood an SS man, his machine gun trained on us. Hand in hand we followed the throng. An SS came toward us wielding a club. He commanded:",
+            "\"Men to the left! Women to the right!\"",
+            "Eight words spoken quietly, indifferently, without emotion. Eight simple, short words. Yet that was the moment when I left my mother. There was no time to think, and I already felt my father's hand press against mine: we were alone. In a fraction of a second I could see my mother, my sisters, move to the right. Tzipora was holding Mother's hand. I saw them walking farther and farther away; Mother was stroking my sister's blond hair, as if to protect her. And I walked on with my father, with the men. I didn't know that this was the moment in time and the place where I was leaving my mother and Tzipora forever. I kept walking, my father holding my hand.",
+            "Behind me, an old man fell to the ground. Nearby, an SS man replaced his revolver in its holster. My hand tightened its grip on my father. All I could think of was not to lose him. Not to remain alone.",
+            "The SS officers gave the order.",
+            "\"Form ranks of fives!\"",
+            "There was a <span class='def-word' data-word='tumult'>tumult</span>. It was imperative to stay together.",
+            "\"Hey, kid, how old are you?\"",
+            "The man interrogating me was an inmate. I could not see his face, but his voice was weary and warm.",
+            "\"Fifteen.\"",
+            "\"No. You're eighteen.\"",
+            "\"But I'm not,\" I said. \"I'm fifteen.\"",
+            "\"Fool. Listen to what I say.\"",
+            "Then he asked my father, who answered:",
+            "\"I'm fifty.\"",
+            "\"No.\" The man now sounded angry. \"Not fifty. You're forty. Do you hear? Eighteen and forty.\"",
+            "He disappeared into the darkness. Another inmate appeared, unleashing a stream of <span class='def-word' data-word='invectives'>invectives</span>:",
+            "\"Sons of bitches, why have you come here? Tell me, why?\"",
+            "Someone dared to reply:",
+            "\"What do you think? That we came here of our own free will? That we asked to come here?\"",
+            "The other seemed ready to kill him: \"Shut up, you moron, or I'll tear you to pieces! You should have hanged yourselves rather than come here. Didn't you know what was in store for you here in Auschwitz? You didn't know? In 1944?\"",
+            "True. We didn't know. Nobody had told us. He couldn't believe his ears. His tone became even harsher:",
+            "\"Over there. Do you see the chimney over there? Do you see it? And the flames, do you see them?\" (Yes, we saw the flames.) \"Over there, that's where they will take you. Over there will be your grave. You still don't understand? You sons of bitches. Don't you understand anything? You will be burned! Burned to a cinder! Turned into ashes!\"",
+            "His anger changed into fury. We stood stunned, petrified. Could this be just a nightmare? An unimaginable nightmare?",
+            "I heard whispers around me:",
+            "\"We must do something. We can't let them kill us like that, like cattle in the slaughterhouse. We must revolt.\"",
+            "There were, among us, a few tough young men. They actually had knives and were urging us to attack the armed guards. One of them was muttering:",
+            "\"Let the world learn about the existence of Auschwitz. Let everybody find out about it while they still have a chance to escape\"",
+            "But the older men begged their sons not to be foolish:",
+            "\"We mustn't give up hope, even now as the sword hangs over our heads. So taught our sages...\"",
+            "The wind of revolt died down. We continued to walk until we came to a crossroads. Standing in the middle of it was, though I didn't know it then, Dr. Mengele, the notorious Dr. Mengele. He looked like the typical SS officer: a cruel, though not unintelligent, face, complete with <span class='def-word' data-word='monocle'>monocle</span>. He was holding a conductor's baton and was surrounded by officers. The baton was moving constantly, sometimes to the right, sometimes to the left.",
+            "In no time, I stood before him.",
+            "\"Your age?\" he asked, perhaps trying to sound paternal.",
+            "\"I'm eighteen.\" My voice was trembling.",
+            "\"In good health?\"",
+            "\"Yes.\"",
+            "\"Your profession?\"",
+            "Tell him that I was a student?",
+            "\"Farmer,\" I heard myself saying.",
+            "This conversation lasted no more than a few seconds. It seemed like an eternity.",
+            "The baton pointed to the left. I took half a step forward. I first wanted to see where they would send my father. Were he to have gone to the right, I would have ran after him.",
+            "The baton, once more, moved to the left. A weight lifted from my heart.",
+            "We did not know, as yet, which was the better side, right or left, which road led to prison and which to the <span class='def-word' data-word='crematoria'>crematoria</span>. Still, I was happy, I was near my father. Our procession continued slowly to move forward.",
+            "Another inmate came over to us:",
+            "\"Satisfied?\"",
+            "\"Yes,\" someone answered.",
+            "\"Poor devils, you are heading for the crematorium.\"",
+            "He seemed to be telling the truth. Not far from us, flames, huge flames, were rising from a ditch. Something was being burned there. A track drew close and unloaded its hold: small children. Babies! Yes, I did see this, with my own eyes... children thrown into the flames. (Is it any wonder that ever since then, sleep tends to elude me?)",
+            "So that was where we were going. A little farther on, there was another, larger pit for adults.",
+            "I pinched myself: Was I still alive? Was I awake? How was it possible that men, women, and children were being burned and that the world kept silent? No. All this could not be real. A nightmare perhaps...Soon I would wake up with a start, my heart pounding, and find that I was back in the room of my childhood, with my books...",
+            "My father's voice tore me from my daydreams:",
+            "\"What a shame, a shame that you did not go with your mother... I saw many children your age go with their mothers...\"",
+            "His voice was terribly sad. I understood that he did not wish to see what they would do to me. He did not wish to see his only son go up in flames.",
+            "My forehead was covered with cold sweat. Still, I told him that I could not believe that human beings were being burned in our times; the world would never tolerate such crimes...",
+            "\"The world? The world is not interested in us. Today, everything is possible, even the crematoria...\" His voice broke.",
+            "\"Father,\" I said. \"If that is true, then I don't want to wait. I'll run into the electrified barbed wire. That would be easier than a slow death in the flames.\"",
+            "He didn't answer. He was weeping. His body was shaking. Everybody around us was weeping. Someone began to recite <span class='def-word' data-word='Kaddish'>Kaddish</span>, the prayer for the dead. I don't know whether, during the history of the Jewish people, men have ever before recited Kaddish for themselves.",
+            "\"Yisgadal, veyiskadash, shmey raba ... May His name be celebrated and sanctified...\" whispered my father.",
+            "For the first time, I felt anger rising within me. Why should I sanctify His name? The Almighty, the eternal and terrible Master of the Universe, chose to be silent. What was there to thank Him for?",
+            "We continued our march. We were coming closer and closer to the pit, from which an infernal heat was rising. Twenty more steps. If I was going to kill myself, this was the time. Our column had only some fifteen steps to go. I bit my lips so that my father would not hear my teeth chattering. Ten more steps. Eight. Seven. We were walking slowly, as one follows a hearse, our own funeral procession. Only four more steps. Three. There it was now, very close to us, the pit and its flames. I gathered all that remained of my strength in order to break rank and throw myself onto the barbed wire. Deep down, I was saying good-bye to my father, to the whole universe, and, against my will, I found myself whispering the words: \"Yisgadal, veyiskadash, shmey raba ...May His name be exalted and sanctified...\" My heart was about to burst. There. I was face-to-face with the Angel of Death...",
+            "No. Two steps from the pit, we were ordered to turn left and herded into <span class='def-word' data-word='barracks'>barracks</span>. I squeezed my father's hand. He said:",
+            "\"Do you remember Mrs. Schachter, in the train?\"",
+            "NEVER shall I FORGET that night, the first night in camp, that turned my life into one long night seven times sealed.",
+            "Never shall I forget that smoke.",
+            "Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky.",
+            "Never shall I forget those flames that consumed my faith forever.",
+            "Never shall I forget the nocturnal silence that deprived me for all eternity of the desire to live.",
+            "Never shall I forget those moments that murdered my God and my soul and turned my dreams to ashes.",
+            "Never shall I forget those things, even were I condemned to live as long as God Himself.",
+            "Never."
+        ];
+
+        const definitions = {
+            'tumult': 'A loud, confused noise, especially one caused by a large mass of people.',
+            'invectives': 'Insulting, abusive, or highly critical language.',
+            'monocle': 'A single eyeglass, kept in position by the muscles around the eye.',
+            'crematoria': 'Furnaces or establishments for the incineration of corpses.',
+            'Kaddish': 'An ancient Jewish prayer recited for the dead.',
+            'barracks': 'Buildings used to accommodate large groups of people, especially prisoners or soldiers.'
+        };
+
+        // --- Build Reading Section ---
+        const readingContainer = document.getElementById('reading-text');
+        rawText.forEach((pText, index) => {
+            const row = document.createElement('div');
+            row.className = 'para-row';
+            
+            const num = document.createElement('div');
+            num.className = 'para-num';
+            num.textContent = (index + 1) + '.';
+
+            const ttsBtn = document.createElement('button');
+            ttsBtn.className = 'tts-btn';
+            ttsBtn.innerHTML = '🔊';
+            ttsBtn.title = "Read aloud";
+            ttsBtn.onclick = () => readAloud(pText.replace(/<[^>]*>?/gm, '')); // Strip HTML for TTS
+
+            const p = document.createElement('p');
+            p.className = 'para-text';
+            p.innerHTML = pText;
+
+            row.appendChild(num);
+            row.appendChild(ttsBtn);
+            row.appendChild(p);
+            readingContainer.appendChild(row);
+        });
+
+        // --- Progress Bar ---
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // --- Text to Speech ---
+        function readAloud(text) {
+            window.speechSynthesis.cancel(); // stop current
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // --- Accessibility Menu ---
+        function toggleAccessMenu() {
+            const panel = document.getElementById('access-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+        function changeFontSize(change) {
+            let root = document.documentElement;
+            let currentSize = parseFloat(getComputedStyle(root).getPropertyValue('--font-size'));
+            root.style.setProperty('--font-size', (currentSize + change) + 'px');
+        }
+        function toggleDyslexic() {
+            document.body.classList.toggle('dyslexic');
+        }
+        function setTheme(theme) {
+            document.body.className = '';
+            if (theme !== 'default') {
+                document.body.classList.add(theme);
+            }
+        }
+
+        // --- Definitions Modal ---
+        document.querySelectorAll('.def-word').forEach(word => {
+            word.addEventListener('click', (e) => {
+                const term = e.target.getAttribute('data-word');
+                document.getElementById('def-title').innerText = term.toUpperCase();
+                document.getElementById('def-text').innerText = definitions[term];
+                document.getElementById('def-modal').style.display = 'block';
+            });
+        });
+        function closeDefModal() {
+            document.getElementById('def-modal').style.display = 'none';
+        }
+
+        // --- Highlighting & Annotating ---
+        const annotateBtn = document.getElementById('annotate-btn');
         const annotationsContainer = document.getElementById('annotations-container');
         let currentSelectionRange = null;
 
-        textPassage.addEventListener('mouseup', function(e) {
+        readingContainer.addEventListener('mouseup', function(e) {
             const selection = window.getSelection();
-            if (selection.toString().trim().length > 0) {
+            if (selection.toString().trim().length > 0 && !e.target.classList.contains('def-word')) {
                 currentSelectionRange = selection.getRangeAt(0);
-                // Position tooltip near the mouse
-                tooltip.style.left = e.pageX + 'px';
-                tooltip.style.top = (e.pageY - 40) + 'px';
-                tooltip.style.display = 'block';
+                annotateBtn.style.left = e.pageX + 'px';
+                annotateBtn.style.top = (e.pageY - 40) + 'px';
+                annotateBtn.style.display = 'block';
             } else {
-                tooltip.style.display = 'none';
+                annotateBtn.style.display = 'none';
             }
         });
 
-        // Hide tooltip if clicking elsewhere
         document.addEventListener('mousedown', function(e) {
-            if (e.target !== tooltip && !textPassage.contains(e.target)) {
-                tooltip.style.display = 'none';
+            if (e.target !== annotateBtn && !readingContainer.contains(e.target)) {
+                annotateBtn.style.display = 'none';
             }
         });
 
-        tooltip.addEventListener('click', function() {
+        annotateBtn.addEventListener('click', function() {
             if (currentSelectionRange) {
                 const selectedText = currentSelectionRange.toString();
                 
-                // Create highlight span
                 const highlightSpan = document.createElement('mark');
                 highlightSpan.className = 'student-highlight';
                 highlightSpan.textContent = selectedText;
@@ -283,98 +473,105 @@
                 currentSelectionRange.insertNode(highlightSpan);
                 
                 window.getSelection().removeAllRanges();
-                tooltip.style.display = 'none';
+                annotateBtn.style.display = 'none';
                 
-                // Remove the hint
                 const hint = document.getElementById('annotation-hint');
                 if(hint) hint.style.display = 'none';
 
-                // Add Annotation Box
                 const box = document.createElement('div');
                 box.className = 'annotation-box';
-                
-                // Truncate quote for the label if it's too long
                 let shortQuote = selectedText.length > 50 ? selectedText.substring(0, 50) + '...' : selectedText;
                 
                 box.innerHTML = `
-                    <span class="quote">"${shortQuote}"</span>
-                    <label style="font-weight: bold; font-size: 0.9em;">My Thoughts:</label>
-                    <textarea placeholder="This stands out to me because..."></textarea>
+                    <span style="display: block; font-size: 0.85em; opacity: 0.8; font-style: italic; margin-bottom: 5px;">"${shortQuote}"</span>
+                    <label style="font-weight: bold; font-size: 0.9em;">My Annotation:</label>
+                    <textarea placeholder="Write your thoughts here..."></textarea>
                 `;
                 annotationsContainer.appendChild(box);
             }
         });
 
-        // Comprehension Check logic
-        function checkAnswer(id) {
-            const select = document.getElementById(id);
-            const feedback = document.getElementById(id + '-feedback');
-            if (select.value === 'correct') {
-                feedback.textContent = '✓ Correct!';
-                feedback.className = 'feedback correct';
-            } else if (select.value === 'wrong') {
-                feedback.textContent = '✗ Try again.';
-                feedback.className = 'feedback incorrect';
-            } else {
-                feedback.textContent = '';
-            }
-            // Save state for HTML export
-            select.setAttribute('data-selected', select.value);
-            for (let option of select.options) {
-                if (option.value === select.value) {
-                    option.setAttribute('selected', 'selected');
-                } else {
-                    option.removeAttribute('selected');
-                }
-            }
+        // --- Vocab Checking ---
+        function checkVocab() {
+            const ids = ['vocab1', 'vocab2', 'vocab3'];
+            ids.forEach((id, i) => {
+                const val = document.getElementById(id).value;
+                const feed = document.getElementById('v' + (i+1) + '-feed');
+                if(val === 'correct') { feed.innerHTML = '✅'; feed.style.color = 'green'; }
+                else if (val === 'wrong') { feed.innerHTML = '❌'; feed.style.color = 'red'; }
+                else { feed.innerHTML = ''; }
+                document.getElementById(id).setAttribute('data-selected', val);
+            });
         }
 
-        // CER Generation
+        // --- Drag and Drop Logic ---
+        const draggables = document.querySelectorAll('.draggable');
+        const dropZones = document.querySelectorAll('.drop-zone');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+                draggable.style.opacity = '0.5';
+            });
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+                draggable.style.opacity = '1';
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('hover');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hover');
+            });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('hover');
+                const draggable = document.querySelector('.dragging');
+                if(draggable) {
+                    // Check if correct
+                    if(zone.getAttribute('data-answer') === draggable.id) {
+                        zone.appendChild(draggable);
+                        draggable.setAttribute('draggable', 'false'); // Lock it in
+                        draggable.style.cursor = 'default';
+                        zone.style.borderColor = 'green';
+                    } else {
+                        // Flash red
+                        let origColor = zone.style.borderColor;
+                        zone.style.borderColor = 'red';
+                        setTimeout(() => zone.style.borderColor = origColor, 500);
+                    }
+                }
+            });
+        });
+
+        // --- CER Generation ---
         function generateCER() {
             const claim = document.getElementById('cer-claim').value;
             const evidence = document.getElementById('cer-evidence').value;
             const reasoning = document.getElementById('cer-reasoning').value;
-            const finalParagraph = `${claim} ${evidence} ${reasoning}`;
-            document.getElementById('final-cer').value = finalParagraph;
+            document.getElementById('final-cer').value = `${claim} ${evidence} ${reasoning}`;
         }
 
-        function copyToClipboard() {
-            const finalCER = document.getElementById('final-cer');
-            finalCER.select();
-            finalCER.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(finalCER.value).then(() => {
-                alert("Paragraph copied to clipboard!");
-            }).catch(err => {
-                alert("Failed to copy text: " + err);
-            });
-        }
-
-        // --- Prepare state for Saving ---
-        // This ensures what the student typed is saved into the actual HTML code when downloaded.
+        // --- State Persistence for Save ---
         document.addEventListener('input', function(e) {
-            if (e.target.tagName.toLowerCase() === 'input') {
-                e.target.setAttribute('value', e.target.value);
-            }
-            if (e.target.tagName.toLowerCase() === 'textarea') {
-                e.target.textContent = e.target.value;
-            }
+            if (e.target.tagName.toLowerCase() === 'input') { e.target.setAttribute('value', e.target.value); }
+            if (e.target.tagName.toLowerCase() === 'textarea') { e.target.textContent = e.target.value; }
         });
 
         function saveLocalHTML() {
-            // Get current HTML
             const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
             const blob = new Blob([htmlContent], {type: 'text/html'});
             const url = URL.createObjectURL(blob);
-            
-            // Generate Filename
             let studentName = document.getElementById('student-name').value.trim().replace(/\s+/g, '_');
             if(!studentName) studentName = 'Student';
-            const fileName = `Night_Ch3_${studentName}.html`;
-
-            // Trigger download
+            
             const a = document.createElement('a');
             a.href = url;
-            a.download = fileName;
+            a.download = `Night_Ch3_${studentName}.html`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
