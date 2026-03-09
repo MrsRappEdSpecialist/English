@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night by Elie Wiesel - Chapter 3 Interactive Lesson</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        
+        /* Reading Section */
+        .reading-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .text-passage p { padding: 10px; transition: background-color 0.3s; border-radius: 4px; }
+        .text-passage p:hover { background-color: #fef08a; cursor: pointer; }
+        .margin-notes { background: #f1f5f9; padding: 20px; border-radius: 8px; }
+        .annotation-box { margin-bottom: 20px; }
+        .annotation-box label { font-weight: bold; font-size: 0.9em; display: block; margin-bottom: 5px; }
+        .annotation-box textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; }
+        
+        /* Activities Section */
+        .activity-section { margin-top: 20px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fafafa; }
+        select, input, button { padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; transition: background 0.3s; }
+        button:hover { background-color: #2980b9; }
+        .feedback { font-weight: bold; margin-left: 10px; }
+        .correct { color: #16a34a; }
+        .incorrect { color: #dc2626; }
+
+        /* CER Section */
+        .cer-builder textarea { width: 100%; height: 80px; margin-bottom: 10px; }
+        #final-cer { width: 100%; height: 150px; background: #eef2ff; border: 1px solid #a5b4fc; }
+
+        /* S&L Section */
+        .discussion-frames ul { list-style-type: none; padding: 0; }
+        .discussion-frames li { background: #e0f2fe; margin: 5px 0; padding: 10px; border-radius: 4px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <h1>Interactive Reading: <em>Night</em> by Elie Wiesel</h1>
+    
+    <div class="container">
+        <h2>Part 1: Active Reading & Annotation</h2>
+        <p><em>Instructions: Hover over the paragraphs to highlight them as you read. Use the text boxes on the right to annotate your thoughts using the provided sentence frames.</em></p>
+        
+        <div class="reading-grid">
+            <div class="text-passage">
+                <p>An SS came toward us wielding a club. He commanded: "Men to the left! Women to the right!" [cite: 4, 5] Eight words spoken quietly, indifferently, without emotion. Eight simple, short words. [cite: 6] Yet that was the moment when I left my mother. [cite: 7]</p>
+                
+                <p>The man interrogating me was an inmate. I could not see his face, but his voice was weary and warm. "Fifteen." "No. You're eighteen." "But I'm not," I said. "I'm fifteen." "Fool. Listen to what I say." [cite: 23, 24, 25, 26, 27, 28]</p>
+                
+                <p>Standing in the middle of it was, though I didn't know it then, Dr. Mengele, the notorious Dr. Mengele. He looked like the typical SS officer: a cruel, though not unintelligent, face, complete with monocle. [cite: 59, 60] He was holding a conductor's baton and was surrounded by officers. [cite: 61]</p>
+                
+                <p>NEVER shall I FORGET that night, the first night in camp, that turned my life into one long night seven times sealed. [cite: 123] Never shall I forget that smoke. Never shall I forget the small faces of the children whose bodies I saw transformed into smoke under a silent sky.  Never shall I forget those flames that consumed my faith forever. [cite: 125]</p>
+            </div>
+            
+            <div class="margin-notes">
+                <div class="annotation-box">
+                    <label>Annotation 1: The Separation</label>
+                    <textarea placeholder="The impact of these eight words makes me realize..."></textarea>
+                </div>
+                <div class="annotation-box">
+                    <label>Annotation 2: The Inmate's Warning</label>
+                    <textarea placeholder="The inmate tells Elie to lie about his age because..."></textarea>
+                </div>
+                <div class="annotation-box">
+                    <label>Annotation 3: Dr. Mengele</label>
+                    <textarea placeholder="The author describes Dr. Mengele as a conductor to show..."></textarea>
+                </div>
+                <div class="annotation-box">
+                    <label>Annotation 4: Never Shall I Forget</label>
+                    <textarea placeholder="The repetition of 'Never shall I forget' reveals Elie's..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Part 2: Comprehension Check</h2>
+        
+        <div class="activity-section">
+            <h3>Vocabulary in Context</h3>
+            <p>1. The inmate unleashed a stream of <strong>invectives</strong> at the new arrivals. [cite: 33] In this context, what does <em>invectives</em> mean?</p>
+            <select id="vocab1">
+                <option value="">--Select an answer--</option>
+                <option value="wrong">Compliments</option>
+                <option value="correct">Insulting or abusive language</option>
+                <option value="wrong">Helpful instructions</option>
+            </select>
+            <button onclick="checkAnswer('vocab1')">Check</button> <span id="vocab1-feedback" class="feedback"></span>
+        </div>
+
+        <div class="activity-section">
+            <h3>Character Matching</h3>
+            <p>Match the character to their action or description in the text.</p>
+            <ul>
+                <li><strong>Elie:</strong> <select id="char1"><option value="">--Select--</option><option value="correct">Tells Dr. Mengele he is a farmer </option><option value="wrong">Cries and shakes [cite: 103]</option></select> <button onclick="checkAnswer('char1')">Check</button> <span id="char1-feedback" class="feedback"></span></li>
+                <li><strong>Elie's Father:</strong> <select id="char2"><option value="">--Select--</option><option value="wrong">Holds a conductor's baton [cite: 61]</option><option value="correct">Whispers the Kaddish </option></select> <button onclick="checkAnswer('char2')">Check</button> <span id="char2-feedback" class="feedback"></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Part 3: Claim, Evidence, Reasoning (CER) Paragraph Builder</h2>
+        <p><strong>Prompt:</strong> How does Elie Wiesel use imagery to convey the horror of his arrival at the camp?</p>
+        
+        <div class="cer-builder">
+            <label><strong>Claim</strong> (State your main argument. <em>Scaffold: Elie Wiesel uses vivid imagery to...</em>)</label>
+            <textarea id="cer-claim" placeholder="Elie Wiesel uses vivid imagery to convey the horror of the camp by highlighting..."></textarea>
+            
+            <label><strong>Evidence</strong> (Quote from the text. <em>Scaffold: For example, the text states, ""</em>)</label>
+            <textarea id="cer-evidence" placeholder="For example, the text states, 'Never shall I forget the small faces of the children whose bodies I saw transformed into smoke...' "></textarea>
+            
+            <label><strong>Reasoning</strong> (Explain how the evidence proves your claim. <em>Scaffold: This imagery proves the horror because...</em>)</label>
+            <textarea id="cer-reasoning" placeholder="This imagery proves the horror because it contrasts the innocence of youth with the brutal reality of the flames..."></textarea>
+            
+            <button onclick="generateCER()">Generate Complete Paragraph</button>
+            <br><br>
+            <label><strong>Final Paragraph:</strong></label>
+            <textarea id="final-cer" readonly></textarea>
+            <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Part 4: Speaking & Listening</h2>
+        <div class="activity-section">
+            <h3>Partner Discussion</h3>
+            <p>Discuss the following prompt with a partner: <em>Elie states that the flames "consumed my faith forever"[cite: 125]. Why do you think he felt this way in that exact moment?</em></p>
+            
+            <div class="discussion-frames">
+                <p><strong>Use these Discussion Frames:</strong></p>
+                <ul>
+                    <li>"I agree with your point about ____ because..."</li>
+                    <li>"Another perspective we could consider is..."</li>
+                    <li>"Could you clarify what you meant when you said ____?"</li>
+                </ul>
+            </div>
+
+            <label><strong>Who did you speak with?</strong></label><br>
+            <input type="text" placeholder="Partner's Name" style="width: 50%;"><br><br>
+            
+            <label><strong>Document your discussion:</strong></label><br>
+            <textarea placeholder="My partner pointed out that... We agreed/disagreed that..." style="width: 100%; height: 60px;"></textarea>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswer(id) {
+            const select = document.getElementById(id);
+            const feedback = document.getElementById(id + '-feedback');
+            if (select.value === 'correct') {
+                feedback.textContent = '✓ Correct!';
+                feedback.className = 'feedback correct';
+            } else if (select.value === 'wrong') {
+                feedback.textContent = '✗ Try again.';
+                feedback.className = 'feedback incorrect';
+            } else {
+                feedback.textContent = '';
+            }
+        }
+
+        function generateCER() {
+            const claim = document.getElementById('cer-claim').value;
+            const evidence = document.getElementById('cer-evidence').value;
+            const reasoning = document.getElementById('cer-reasoning').value;
+            
+            const finalParagraph = `${claim} ${evidence} ${reasoning}`;
+            document.getElementById('final-cer').value = finalParagraph;
+        }
+
+        function copyToClipboard() {
+            const finalCER = document.getElementById('final-cer');
+            finalCER.select();
+            finalCER.setSelectionRange(0, 99999); /* For mobile devices */
+            navigator.clipboard.writeText(finalCER.value).then(() => {
+                alert("Paragraph copied to clipboard!");
+            }).catch(err => {
+                alert("Failed to copy text: " + err);
+            });
+        }
+    </script>
+</body>
+</html>
