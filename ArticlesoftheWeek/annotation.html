@@ -23,56 +23,30 @@
             background-color: var(--bg);
             margin: 0;
             padding: 0;
-            min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            height: 100vh;
         }
 
-        /* Top Bar */
-        #topbar {
+        /* Sidebar for Saved Articles */
+        #sidebar {
+            width: 250px;
             background: var(--primary);
             color: white;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
+            padding: 20px;
+            overflow-y: auto;
             box-sizing: border-box;
-            position: sticky;
-            top: 0;
-            z-index: 20;
         }
 
-        #topbar .topbar-left {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
+        #sidebar h2 { margin-top: 0; font-size: 1.2em; }
+        .saved-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.2s;
         }
-
-        #autosave-status {
-            font-size: 0.9em;
-            color: #ecf0f1;
-            opacity: 0.9;
-        }
-
-        #topbar .toolbar {
-            margin: 0;
-            padding: 6px 8px;
-            background: rgba(255,255,255,0.08);
-            box-shadow: none;
-            border-radius: 6px;
-            position: static;
-        }
-        #topbar .toolbar-group {
-            border-right: 1px solid rgba(255,255,255,0.25);
-            padding-right: 10px;
-        }
-        #topbar .toolbar-group:last-child { border-right: none; }
-        #topbar .access-btn {
-            background: rgba(255,255,255,0.9);
-        }
+        .saved-item:hover { background: rgba(255,255,255,0.2); }
         
         button.action-btn {
             width: 100%; padding: 10px; margin-bottom: 15px;
@@ -81,18 +55,6 @@
             transition: background 0.2s;
         }
         button.action-btn:hover { background: #2980b9; }
-        button.action-btn.small {
-            width: auto;
-            margin-bottom: 0;
-            padding: 8px 12px;
-        }
-        button.action-btn.success { background: #2ecc71; }
-        button.action-btn.success:hover { background: #27ae60; }
-        button.action-btn.ghost {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.4);
-        }
-        button.action-btn.ghost:hover { background: rgba(255,255,255,0.1); }
 
         /* Main Workspace */
         #workspace {
@@ -133,9 +95,6 @@
             padding: 10px 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 62px;
-            z-index: 5;
         }
         
         .toolbar-group {
@@ -164,23 +123,6 @@
 
         .btn-pdf { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: auto; font-weight: bold;}
         .btn-pdf:hover { background: #c0392b; }
-
-        #reading-progress {
-            position: sticky;
-            top: 52px;
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 999px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            z-index: 4;
-        }
-        #reading-progress .bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #2ecc71, #3498db);
-            transition: width 0.15s ease;
-        }
 
         /* Input Area */
         #input-area { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto; width: 100%; }
@@ -212,42 +154,12 @@
         }
 
         .paragraph-block:last-child { border-bottom: none; }
-        .paragraph-block.active-paragraph {
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
-            border-radius: 6px;
-            padding: 10px;
-        }
-
-        .paragraph-number {
-            display: inline-block;
-            font-weight: 700;
-            margin-right: 6px;
-            color: #2c3e50;
-            background: #ecf0f1;
-            border-radius: 6px;
-            padding: 2px 6px;
-        }
-        .speak-btn {
-            margin-left: 6px;
-            background: #f0f2f5;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            padding: 2px 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-        }
-        .speak-btn.active {
-            background: #3498db;
-            color: white;
-            border-color: #2980b9;
-        }
 
         .text-content {
             font-size: var(--article-size);
             line-height: 1.8;
             color: #2c3e50;
             transition: font-size 0.2s, font-family 0.2s;
-            min-width: 0;
         }
 
         .text-content.dyslexia {
@@ -266,25 +178,7 @@
         .highlighted-text:hover { opacity: 0.6; }
 
         /* Margin Notes & Scaffolding */
-        .note-container { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-        .note-actions {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-        .dictate-btn {
-            background: #f0f2f5;
-            border: 1px solid #ccc;
-            padding: 4px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8em;
-        }
-        .dictate-btn.active {
-            background: #3498db;
-            color: white;
-            border-color: #2980b9;
-        }
+        .note-container { display: flex; flex-direction: column; gap: 5px; }
 
         .scaffold-chips {
             display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 2px;
@@ -305,7 +199,7 @@
             padding: 12px;
             border-radius: 5px;
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            font-size: 1.1em;
+            font-size: 0.95em;
             resize: none; /* Controlled by auto-expand JS */
             box-sizing: border-box;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
@@ -334,137 +228,28 @@
             padding: 10px;
             border-radius: 5px;
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            font-size: 1em;
+            font-size: 0.9em;
             box-sizing: border-box;
             white-space: pre-wrap;
             word-wrap: break-word;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-            max-width: 100%;
         }
 
         /* PDF Output Specific Overrides */
-        .pdf-mode .margin-note, .pdf-mode .scaffold-chips, .pdf-mode .note-actions { display: none !important; }
+        .pdf-mode .margin-note, .pdf-mode .scaffold-chips { display: none !important; }
         .pdf-mode .margin-note-print { display: block !important; }
-        .pdf-mode .highlighted-text {
-            outline: none !important;
-            background-color: transparent !important;
-            text-decoration: none;
-            background-image: linear-gradient(var(--underline-color, #f1c40f), var(--underline-color, #f1c40f));
-            background-repeat: no-repeat;
-            background-size: 100% 4px;
-            background-position: 0 100%;
-            padding-bottom: 2px;
-        }
-        .pdf-mode .paragraph-block { border-bottom: none; break-inside: auto; page-break-inside: auto; }
-        .pdf-mode .note-container, .pdf-mode .text-content { min-width: 0; }
-        .pdf-mode .final-reflection-block { break-inside: auto; page-break-inside: auto; }
-        .pdf-mode { padding-top: 12px; }
-        .pdf-mode #temp-pdf-header { margin-top: 0; }
-
-
-        /* Saved Articles Page */
-        #saved-page {
-            display: none;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #saved-page.active { display: block; }
-        #saved-page h2 { margin-top: 0; }
-        #saved-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .saved-item {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-        }
-        .saved-item-info {
-            flex: 1;
-            cursor: pointer;
-        }
-        .saved-item-title { font-weight: 600; color: #2c3e50; }
-        .saved-item-date { font-size: 0.85em; color: #7f8c8d; }
-        .delete-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            font-weight: bold;
-            line-height: 28px;
-        }
-        .delete-btn:hover { background: #c0392b; }
-
-        /* Definition Panel */
-        #definition-panel {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 14px 16px;
-            max-width: 320px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-            display: none;
-            z-index: 10;
-        }
-        #definition-panel.active { display: block; }
-        #definition-panel h4 { margin: 0 0 6px; }
-        #definition-panel .def-text { color: #444; font-size: 0.95em; }
-        #definition-panel .def-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        #definition-panel .def-actions button {
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            background: #f7f7f7;
-            cursor: pointer;
-        }
+        .pdf-mode .highlighted-text { outline: none !important; }
+        .pdf-mode .paragraph-block { border-bottom: none; page-break-inside: avoid; }
+        .pdf-mode .final-reflection-block { page-break-inside: avoid; }
 
     </style>
 </head>
 <body>
 
-    <div id="topbar" class="no-print">
-        <div class="topbar-left">
-            <button class="action-btn small" onclick="startNewArticle()">+ New Article</button>
-            <button class="action-btn small success" onclick="saveCurrentArticle()">Save Article</button>
-            <button class="action-btn small ghost" onclick="openSavedPage()">Saved Articles</button>
-        </div>
-        <div class="toolbar no-print" id="toolbar" style="display:none;">
-            <div class="toolbar-group">
-                <span style="font-size: 0.9em; color: #fff;"><strong>Highlighter:</strong></span>
-                <div class="color-picker active" style="background: var(--highlight-yellow);" data-color="var(--highlight-yellow)"></div>
-                <div class="color-picker" style="background: var(--highlight-green);" data-color="var(--highlight-green)"></div>
-                <div class="color-picker" style="background: var(--highlight-blue);" data-color="var(--highlight-blue)"></div>
-                <div class="color-picker" style="background: var(--highlight-pink);" data-color="var(--highlight-pink)"></div>
-            </div>
-
-            <div class="toolbar-group">
-                <span style="font-size: 0.9em; color: #fff;"><strong>Text:</strong></span>
-                <button class="access-btn" onclick="adjustFontSize(-0.1)">A-</button>
-                <button class="access-btn" onclick="adjustFontSize(0.1)">A+</button>
-                <button class="access-btn" id="btn-dyslexia" onclick="toggleDyslexia()">Dyslexia Font</button>
-            </div>
-
-            <button class="btn-pdf" onclick="generatePDF()">🖨️ Export to PDF</button>
-        </div>
-        <div id="autosave-status">Autosave: Off</div>
+    <div id="sidebar" class="no-print">
+        <button class="action-btn" onclick="startNewArticle()">+ New Article</button>
+        <button class="action-btn" style="background:#2ecc71;" onclick="saveCurrentArticle()">Save Progress</button>
+        <h2>Saved Articles</h2>
+        <div id="saved-list"></div>
     </div>
 
     <div id="workspace">
@@ -474,17 +259,31 @@
             <div class="date-stamp" id="current-date"></div>
         </div>
 
+        <div class="toolbar no-print" id="toolbar" style="display:none;">
+            <div class="toolbar-group">
+                <span style="font-size: 0.9em; color: #555;"><strong>Highlighter:</strong></span>
+                <div class="color-picker active" style="background: var(--highlight-yellow);" data-color="var(--highlight-yellow)"></div>
+                <div class="color-picker" style="background: var(--highlight-green);" data-color="var(--highlight-green)"></div>
+                <div class="color-picker" style="background: var(--highlight-blue);" data-color="var(--highlight-blue)"></div>
+                <div class="color-picker" style="background: var(--highlight-pink);" data-color="var(--highlight-pink)"></div>
+            </div>
+
+            <div class="toolbar-group">
+                <span style="font-size: 0.9em; color: #555;"><strong>Reading Tools:</strong></span>
+                <button class="access-btn" onclick="adjustFontSize(-0.1)">A-</button>
+                <button class="access-btn" onclick="adjustFontSize(0.1)">A+</button>
+                <button class="access-btn" id="btn-dyslexia" onclick="toggleDyslexia()">Dyslexia Font</button>
+            </div>
+
+            <button class="btn-pdf" onclick="generatePDF()">🖨️ Export to PDF</button>
+        </div>
+
         <div id="input-area">
             <h2>Paste Article Text</h2>
             <p style="color: #666; margin-top: 0;">The tool will automatically break your text into paragraphs and generate an annotation workspace.</p>
             <input type="text" id="article-title" placeholder="Article Title" style="padding:10px; font-size: 1.1em;">
             <textarea id="raw-text" placeholder="Paste the text of your article here..."></textarea>
             <button class="action-btn" style="width: 200px; align-self: center;" onclick="generateWorkspace()">Start Annotating</button>
-            <button class="action-btn" id="resume-draft-btn" style="width: 220px; align-self: center; display:none;" onclick="resumeDraft()">Resume Last Autosave</button>
-        </div>
-
-        <div id="reading-progress" class="no-print" style="display:none;">
-            <div class="bar" id="reading-progress-bar"></div>
         </div>
 
         <div id="article-container">
@@ -493,22 +292,6 @@
         </div>
     </div>
 
-    <div id="saved-page" class="no-print">
-        <h2>Saved Articles</h2>
-        <button class="action-btn small" onclick="closeSavedPage()">Back to Annotating</button>
-        <div id="saved-list"></div>
-    </div>
-
-    <div id="definition-panel" class="no-print">
-        <h4 id="def-word">Definition</h4>
-        <div class="def-text" id="def-text">Select a word to see its meaning.</div>
-        <div class="def-actions">
-            <button onclick="speakDefinition()">Listen</button>
-            <button onclick="closeDefinition()">Close</button>
-        </div>
-    </div>
-
-
     <script>
         // Set Date
         document.getElementById('current-date').innerText = new Date().toLocaleDateString();
@@ -516,21 +299,6 @@
         let currentColor = 'var(--highlight-yellow)';
         let currentArticleId = null;
         let isDyslexia = false;
-        let autosaveTimer = null;
-        let activeUtterance = null;
-        let activeSpeakBtn = null;
-        let lastDefinedWord = '';
-        let highlightingReady = false;
-        let autosaveHooksReady = false;
-        let activeParagraphIndex = 0;
-        let recognition = null;
-        let activeDictationBtn = null;
-        let readingTrackerReady = false;
-        let readingObserver = null;
-        let readingProgressListenerReady = false;
-
-        const SAVED_KEY = 'student_annotations_saved';
-        const DRAFT_KEY = 'student_annotations_draft';
 
         // Highlighter Color Selection
         document.querySelectorAll('.color-picker').forEach(picker => {
@@ -543,21 +311,8 @@
 
         // Initialize App
         function init() {
-            migrateOldStorage();
             renderSavedList();
             setupAutoExpand();
-            checkForDraft();
-            setupGlobalAutosave();
-            setupReadingProgressListener();
-        }
-
-        function migrateOldStorage() {
-            const legacy = localStorage.getItem('student_annotations');
-            const saved = localStorage.getItem(SAVED_KEY);
-            if (legacy && !saved) {
-                localStorage.setItem(SAVED_KEY, legacy);
-                localStorage.removeItem('student_annotations');
-            }
         }
 
         // Accessibility Functions
@@ -630,26 +385,12 @@
                 
                 const block = document.createElement('div');
                 block.className = 'paragraph-block';
-                block.dataset.paragraph = (index + 1).toString();
-                block.dataset.plainText = para;
                 
                 // Text Area
                 const textDiv = document.createElement('div');
                 textDiv.className = 'text-content';
                 if(isDyslexia) textDiv.classList.add('dyslexia');
-                const numberSpan = document.createElement('span');
-                numberSpan.className = 'paragraph-number';
-                numberSpan.innerText = `${index + 1}`;
-                textDiv.appendChild(numberSpan);
-                const speakBtn = document.createElement('button');
-                speakBtn.className = 'speak-btn';
-                speakBtn.innerText = '🔊';
-                speakBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    toggleParagraphSpeech(speakBtn);
-                };
-                textDiv.appendChild(speakBtn);
-                textDiv.appendChild(document.createTextNode(` ${para}`));
+                textDiv.innerText = para;
                 
                 // Annotation Area 
                 const noteContainer = document.createElement('div');
@@ -664,10 +405,6 @@
                     <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'I wonder why...')">❓ Wonder</span>
                 `;
 
-                const actions = document.createElement('div');
-                actions.className = 'note-actions';
-                actions.innerHTML = `<button class="dictate-btn" onclick="toggleDictation(this)">🎤 Dictate</button>`;
-
                 const textarea = document.createElement('textarea');
                 textarea.className = 'margin-note';
                 textarea.placeholder = "Add your annotations here...";
@@ -676,7 +413,6 @@
                 printDiv.className = 'margin-note-print';
 
                 noteContainer.appendChild(chips);
-                noteContainer.appendChild(actions);
                 noteContainer.appendChild(textarea);
                 noteContainer.appendChild(printDiv);
                 
@@ -698,9 +434,6 @@
                         <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'One major takeaway is...')">💡 Takeaway</span>
                         <span class="scaffold-chip" onclick="insertStarter(this.parentElement.nextElementSibling, 'This connects to my life because...')">🌍 Real World</span>
                     </div>
-                    <div class="note-actions">
-                        <button class="dictate-btn" onclick="toggleDictation(this)">🎤 Dictate</button>
-                    </div>
                     <textarea id="final-reflection-text" class="margin-note" style="min-height: 120px;" placeholder="Write your final thoughts here..."></textarea>
                     <div class="margin-note-print" id="final-reflection-print"></div>
                 </div>
@@ -710,21 +443,13 @@
             document.getElementById('input-area').style.display = 'none';
             document.getElementById('toolbar').style.display = 'flex';
             document.getElementById('article-container').style.display = 'block';
-            document.getElementById('reading-progress').style.display = 'block';
 
             currentArticleId = Date.now().toString(); // New ID
             setupHighlighting();
-            setupAutosaveHooks();
-            updateAutosaveStatus('On');
-            scheduleAutoSave();
-            resetReadingTracker();
-            setupReadingTracker();
         }
 
         // Highlighting Logic (Select to highlight, click to remove)
         function setupHighlighting() {
-            if (highlightingReady) return;
-            highlightingReady = true;
             const articleContent = document.getElementById('article-content');
             
             // Apply highlight on text selection
@@ -747,7 +472,6 @@
                     try {
                         range.surroundContents(span);
                         selection.removeAllRanges(); // Clear selection
-                        scheduleAutoSave();
                     } catch (e) {
                         console.log("Could not highlight across HTML nodes cleanly. Try selecting text within a single sentence.");
                     }
@@ -757,42 +481,41 @@
             // Remove highlight on click
             articleContent.addEventListener('click', (e) => {
                 if (e.target.classList.contains('highlighted-text')) {
-                    if (e.target.style.backgroundColor !== currentColor) {
-                        e.target.style.backgroundColor = currentColor;
-                        return;
-                    }
                     const text = document.createTextNode(e.target.innerText);
                     e.target.parentNode.replaceChild(text, e.target);
-                    scheduleAutoSave();
-                    return;
                 }
-            });
-
-            // Double-click to define words
-            articleContent.addEventListener('dblclick', (e) => {
-                if (!e.target.closest('.text-content')) return;
-                const word = getWordFromPoint(e.clientX, e.clientY);
-                if (word) defineWord(word.toLowerCase());
             });
         }
 
-        // Save Article Locally (adds to Saved Articles)
+        // Save Article Locally
         function saveCurrentArticle() {
             if (!currentArticleId) return alert("No active article to save.");
 
-            const articleData = buildArticleData();
+            // Capture all textareas, including the final reflection
+            const textareas = document.querySelectorAll('.margin-note');
+            const notesData = Array.from(textareas).map(ta => ta.value);
 
-            let saved = JSON.parse(localStorage.getItem(SAVED_KEY)) || {};
+            const articleData = {
+                id: currentArticleId,
+                title: document.getElementById('display-title').innerText,
+                html: document.getElementById('article-content').innerHTML,
+                notes: notesData,
+                studentName: document.getElementById('student-name').value,
+                studentPeriod: document.getElementById('student-period').value,
+                date: document.getElementById('current-date').innerText
+            };
+
+            let saved = JSON.parse(localStorage.getItem('student_annotations')) || {};
             saved[currentArticleId] = articleData;
-            localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
-
-            alert("Article Saved!");
+            localStorage.setItem('student_annotations', JSON.stringify(saved));
+            
+            alert("Progress Saved!");
             renderSavedList();
         }
 
         // Load Article
         function loadArticle(id) {
-            let saved = JSON.parse(localStorage.getItem(SAVED_KEY)) || {};
+            let saved = JSON.parse(localStorage.getItem('student_annotations')) || {};
             const data = saved[id];
             if (!data) return;
 
@@ -816,16 +539,8 @@
             document.getElementById('input-area').style.display = 'none';
             document.getElementById('toolbar').style.display = 'flex';
             document.getElementById('article-container').style.display = 'block';
-            document.getElementById('reading-progress').style.display = 'block';
             
             setupHighlighting();
-            setupAutosaveHooks();
-            updateAutosaveStatus('On');
-            scheduleAutoSave();
-            ensureParagraphMetadata();
-            ensureDictationButtons();
-            resetReadingTracker();
-            setupReadingTracker();
         }
 
         function startNewArticle() {
@@ -835,445 +550,20 @@
             document.getElementById('input-area').style.display = 'flex';
             document.getElementById('toolbar').style.display = 'none';
             document.getElementById('article-container').style.display = 'none';
-            document.getElementById('reading-progress').style.display = 'none';
-            document.getElementById('saved-page').classList.remove('active');
-            document.getElementById('workspace').style.display = 'flex';
-            updateAutosaveStatus('Off');
-            resetReadingTracker();
         }
 
         function renderSavedList() {
             const list = document.getElementById('saved-list');
             list.innerHTML = '';
-            let saved = JSON.parse(localStorage.getItem(SAVED_KEY)) || {};
+            let saved = JSON.parse(localStorage.getItem('student_annotations')) || {};
             
             Object.values(saved).reverse().forEach(article => {
                 const div = document.createElement('div');
                 div.className = 'saved-item';
-
-                const info = document.createElement('div');
-                info.className = 'saved-item-info';
-                info.innerHTML = `<div class="saved-item-title">${article.title}</div><div class="saved-item-date">${article.date}</div>`;
-                info.onclick = () => {
-                    loadArticle(article.id);
-                    closeSavedPage();
-                };
-
-                const del = document.createElement('button');
-                del.className = 'delete-btn';
-                del.innerText = '×';
-                del.onclick = (e) => {
-                    e.stopPropagation();
-                    deleteSavedArticle(article.id);
-                };
-
-                div.appendChild(info);
-                div.appendChild(del);
+                div.innerText = article.title + " (" + article.date + ")";
+                div.onclick = () => loadArticle(article.id);
                 list.appendChild(div);
             });
-        }
-
-        function deleteSavedArticle(id) {
-            let saved = JSON.parse(localStorage.getItem(SAVED_KEY)) || {};
-            if (!saved[id]) return;
-            if (!confirm("Delete this saved article?")) return;
-            delete saved[id];
-            localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
-            renderSavedList();
-        }
-
-        function openSavedPage() {
-            document.getElementById('saved-page').classList.add('active');
-            document.getElementById('workspace').style.display = 'none';
-            renderSavedList();
-        }
-
-        function closeSavedPage() {
-            document.getElementById('saved-page').classList.remove('active');
-            document.getElementById('workspace').style.display = 'flex';
-        }
-
-        function buildArticleData() {
-            const textareas = document.querySelectorAll('.margin-note');
-            const notesData = Array.from(textareas).map(ta => ta.value);
-
-            return {
-                id: currentArticleId,
-                title: document.getElementById('display-title').innerText,
-                html: document.getElementById('article-content').innerHTML,
-                notes: notesData,
-                studentName: document.getElementById('student-name').value,
-                studentPeriod: document.getElementById('student-period').value,
-                date: document.getElementById('current-date').innerText
-            };
-        }
-
-        function scheduleAutoSave() {
-            if (!currentArticleId) return;
-            clearTimeout(autosaveTimer);
-            autosaveTimer = setTimeout(() => {
-                autoSaveDraft();
-            }, 800);
-        }
-
-        function setupAutosaveHooks() {
-            if (autosaveHooksReady) return;
-            autosaveHooksReady = true;
-            const articleContent = document.getElementById('article-content');
-            articleContent.addEventListener('input', (e) => {
-                if (e.target && e.target.classList.contains('margin-note')) {
-                    scheduleAutoSave();
-                }
-            });
-            document.getElementById('student-name').addEventListener('input', scheduleAutoSave);
-            document.getElementById('student-period').addEventListener('input', scheduleAutoSave);
-        }
-
-        function autoSaveDraft() {
-            if (!currentArticleId) return;
-            const data = buildArticleData();
-            data.autosavedAt = new Date().toISOString();
-            localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
-            updateAutosaveStatus('Saved');
-            checkForDraft();
-        }
-
-        function updateAutosaveStatus(state) {
-            const el = document.getElementById('autosave-status');
-            el.innerText = `Autosave: ${state}`;
-        }
-
-        function checkForDraft() {
-            const draft = localStorage.getItem(DRAFT_KEY);
-            const btn = document.getElementById('resume-draft-btn');
-            if (draft) {
-                btn.style.display = 'inline-block';
-            } else {
-                btn.style.display = 'none';
-            }
-        }
-
-        function resumeDraft() {
-            const draft = localStorage.getItem(DRAFT_KEY);
-            if (!draft) return;
-            const data = JSON.parse(draft);
-            if (!data || !data.html) return;
-
-            currentArticleId = data.id;
-            document.getElementById('student-name').value = data.studentName || '';
-            document.getElementById('student-period').value = data.studentPeriod || '';
-            document.getElementById('display-title').innerText = data.title || 'Untitled Article';
-            const contentDiv = document.getElementById('article-content');
-            contentDiv.innerHTML = data.html;
-
-            const textareas = document.querySelectorAll('.margin-note');
-            textareas.forEach((textarea, index) => {
-                if (data.notes && data.notes[index] !== undefined) {
-                    textarea.value = data.notes[index];
-                    autoExpand(textarea);
-                }
-            });
-
-            document.getElementById('input-area').style.display = 'none';
-            document.getElementById('toolbar').style.display = 'flex';
-            document.getElementById('article-container').style.display = 'block';
-            document.getElementById('reading-progress').style.display = 'block';
-
-            setupHighlighting();
-            setupAutosaveHooks();
-            updateAutosaveStatus('Resumed');
-            ensureParagraphMetadata();
-            ensureDictationButtons();
-            resetReadingTracker();
-            setupReadingTracker();
-        }
-
-        function toggleParagraphSpeech(btn) {
-            const block = btn.closest('.paragraph-block');
-            if (!block) return;
-            const text = block.dataset.plainText || '';
-            if (!text) return;
-
-            if (activeSpeakBtn === btn && window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-                btn.classList.remove('active');
-                activeSpeakBtn = null;
-                return;
-            }
-
-            if (activeSpeakBtn) {
-                activeSpeakBtn.classList.remove('active');
-                window.speechSynthesis.cancel();
-            }
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            activeUtterance = utterance;
-            activeSpeakBtn = btn;
-            btn.classList.add('active');
-            utterance.onend = () => {
-                if (activeSpeakBtn) activeSpeakBtn.classList.remove('active');
-                activeSpeakBtn = null;
-            };
-            utterance.onerror = () => {
-                if (activeSpeakBtn) activeSpeakBtn.classList.remove('active');
-                activeSpeakBtn = null;
-            };
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function setupReadingTracker() {
-            if (readingTrackerReady) return;
-            readingTrackerReady = true;
-            const blocks = Array.from(document.querySelectorAll('.paragraph-block'));
-            if (blocks.length === 0) return;
-            if (readingObserver) readingObserver.disconnect();
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        blocks.forEach(b => b.classList.remove('active-paragraph'));
-                        entry.target.classList.add('active-paragraph');
-                        activeParagraphIndex = parseInt(entry.target.dataset.paragraph || '1', 10);
-                    }
-                });
-            }, { root: document.querySelector('#workspace'), threshold: 0.35 });
-            blocks.forEach(b => observer.observe(b));
-            readingObserver = observer;
-
-            updateReadingProgress();
-        }
-
-        function setupReadingProgressListener() {
-            if (readingProgressListenerReady) return;
-            const workspace = document.getElementById('workspace');
-            if (!workspace) return;
-            workspace.addEventListener('scroll', updateReadingProgress);
-            readingProgressListenerReady = true;
-        }
-
-        function updateReadingProgress() {
-            const container = document.getElementById('workspace');
-            const progressBar = document.getElementById('reading-progress-bar');
-            if (!container || !progressBar) return;
-            const scrollTop = container.scrollTop;
-            const scrollHeight = container.scrollHeight - container.clientHeight;
-            const percent = scrollHeight > 0 ? Math.min(100, Math.round((scrollTop / scrollHeight) * 100)) : 0;
-            progressBar.style.width = `${percent}%`;
-        }
-
-        function setupGlobalAutosave() {
-            window.addEventListener('beforeunload', () => {
-                saveToSavedListQuiet();
-            });
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'hidden') {
-                    saveToSavedListQuiet();
-                }
-            });
-            window.addEventListener('blur', () => {
-                saveToSavedListQuiet();
-            });
-            window.addEventListener('pagehide', () => {
-                saveToSavedListQuiet();
-            });
-        }
-
-        function saveToSavedListQuiet() {
-            if (!currentArticleId) return;
-            const articleData = buildArticleData();
-            let saved = JSON.parse(localStorage.getItem(SAVED_KEY)) || {};
-            saved[currentArticleId] = articleData;
-            localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
-        }
-
-        function setupDictation() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) return null;
-            const rec = new SpeechRecognition();
-            rec.lang = 'en-US';
-            rec.interimResults = true;
-            rec.continuous = false;
-            return rec;
-        }
-
-        function toggleDictation(btn) {
-            if (!recognition) recognition = setupDictation();
-            if (!recognition) {
-                alert("Speech recognition is not supported in this browser.");
-                return;
-            }
-
-            const textarea = btn.parentElement?.nextElementSibling;
-            if (!textarea || textarea.tagName.toLowerCase() !== 'textarea') return;
-
-            if (activeDictationBtn === btn) {
-                recognition.stop();
-                btn.classList.remove('active');
-                activeDictationBtn = null;
-                return;
-            }
-
-            if (activeDictationBtn) {
-                activeDictationBtn.classList.remove('active');
-                recognition.stop();
-            }
-
-            activeDictationBtn = btn;
-            btn.classList.add('active');
-
-            let baseText = textarea.value;
-            recognition.onresult = (event) => {
-                let transcript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) {
-                        transcript += event.results[i][0].transcript;
-                    }
-                }
-                if (!transcript) return;
-                textarea.value = baseText + (baseText.trim() ? ' ' : '') + transcript;
-                baseText = textarea.value;
-                autoExpand(textarea);
-                scheduleAutoSave();
-            };
-            recognition.onend = () => {
-                if (activeDictationBtn) activeDictationBtn.classList.remove('active');
-                activeDictationBtn = null;
-            };
-            recognition.start();
-        }
-
-        function ensureParagraphMetadata() {
-            const blocks = Array.from(document.querySelectorAll('.paragraph-block'));
-            blocks.forEach((block, idx) => {
-                if (!block.dataset.paragraph) block.dataset.paragraph = (idx + 1).toString();
-                const textDiv = block.querySelector('.text-content');
-                if (!textDiv) return;
-                const hasNumber = textDiv.querySelector('.paragraph-number');
-                if (!hasNumber) {
-                    const numberSpan = document.createElement('span');
-                    numberSpan.className = 'paragraph-number';
-                    numberSpan.innerText = `${idx + 1}`;
-                    textDiv.insertBefore(numberSpan, textDiv.firstChild);
-                    textDiv.insertBefore(document.createTextNode(' '), textDiv.firstChild.nextSibling);
-                }
-                const hasSpeak = textDiv.querySelector('.speak-btn');
-                if (!hasSpeak) {
-                    const speakBtn = document.createElement('button');
-                    speakBtn.className = 'speak-btn';
-                    speakBtn.innerText = '🔊';
-                    speakBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        toggleParagraphSpeech(speakBtn);
-                    };
-                    const numberSpan = textDiv.querySelector('.paragraph-number');
-                    if (numberSpan) {
-                        numberSpan.insertAdjacentElement('afterend', speakBtn);
-                    } else {
-                        textDiv.insertBefore(speakBtn, textDiv.firstChild);
-                    }
-                }
-                if (!block.dataset.plainText) {
-                    const raw = textDiv.innerText.replace(/^\d+\s*/, '').replace('🔊', '').trim();
-                    block.dataset.plainText = raw;
-                }
-            });
-        }
-
-        function ensureDictationButtons() {
-            const containers = Array.from(document.querySelectorAll('.note-container'));
-            containers.forEach(container => {
-                const textarea = container.querySelector('textarea.margin-note');
-                if (!textarea) return;
-                if (container.querySelector('.note-actions')) return;
-                const actions = document.createElement('div');
-                actions.className = 'note-actions';
-                actions.innerHTML = `<button class="dictate-btn" onclick="toggleDictation(this)">🎤 Dictate</button>`;
-                container.insertBefore(actions, textarea);
-            });
-        }
-
-        function resetReadingTracker() {
-            readingTrackerReady = false;
-            if (readingObserver) {
-                readingObserver.disconnect();
-                readingObserver = null;
-            }
-            activeParagraphIndex = 0;
-        }
-
-        function getWordFromPoint(x, y) {
-            let range = null;
-            if (document.caretRangeFromPoint) {
-                range = document.caretRangeFromPoint(x, y);
-            } else if (document.caretPositionFromPoint) {
-                const pos = document.caretPositionFromPoint(x, y);
-                if (pos) {
-                    range = document.createRange();
-                    range.setStart(pos.offsetNode, pos.offset);
-                    range.collapse(true);
-                }
-            }
-            if (!range || !range.startContainer || range.startContainer.nodeType !== 3) return '';
-
-            const text = range.startContainer.textContent;
-            let start = range.startOffset;
-            let end = range.startOffset;
-
-            while (start > 0 && /[a-zA-Z'-]/.test(text[start - 1])) start--;
-            while (end < text.length && /[a-zA-Z'-]/.test(text[end])) end++;
-
-            const word = text.slice(start, end).trim();
-            if (word.length < 2) return '';
-            return word;
-        }
-
-        function defineWord(word) {
-            lastDefinedWord = word;
-            const panel = document.getElementById('definition-panel');
-            const wordEl = document.getElementById('def-word');
-            const textEl = document.getElementById('def-text');
-            wordEl.innerText = word;
-            textEl.innerText = 'Looking up definition...';
-            panel.classList.add('active');
-
-            fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!Array.isArray(data) || !data[0] || !data[0].meanings) {
-                        textEl.innerText = 'No definition found.';
-                        return;
-                    }
-                    const meaning = data[0].meanings[0];
-                    const definition = meaning.definitions[0]?.definition || 'No definition found.';
-                    const partOfSpeech = meaning.partOfSpeech ? ` (${meaning.partOfSpeech})` : '';
-                    textEl.innerText = `${definition}${partOfSpeech}`;
-                })
-                .catch(() => {
-                    textEl.innerText = 'Unable to reach the dictionary. Check your connection.';
-                });
-        }
-
-        function closeDefinition() {
-            document.getElementById('definition-panel').classList.remove('active');
-        }
-
-        function speakDefinition() {
-            if (!lastDefinedWord) return;
-            const text = `${lastDefinedWord}. ${document.getElementById('def-text').innerText}`;
-            const utterance = new SpeechSynthesisUtterance(text);
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function darkenColor(color, amount) {
-            const ctx = document.createElement('canvas').getContext('2d');
-            if (!ctx) return color;
-            ctx.fillStyle = color;
-            const computed = ctx.fillStyle;
-            const m = computed.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            if (!m) return color;
-            const r = Math.max(0, Math.floor(parseInt(m[1], 10) * (1 - amount)));
-            const g = Math.max(0, Math.floor(parseInt(m[2], 10) * (1 - amount)));
-            const b = Math.max(0, Math.floor(parseInt(m[3], 10) * (1 - amount)));
-            return `rgb(${r}, ${g}, ${b})`;
         }
 
         // Export to PDF
@@ -1289,14 +579,6 @@
                     printDiv.innerText = textarea.value || " "; // Add space to preserve empty blocks
                 }
             });
-            // Convert highlight background to underline color for PDF
-            document.querySelectorAll('.highlighted-text').forEach(span => {
-                const bg = span.style.backgroundColor || '';
-                if (bg) {
-                    const darker = darkenColor(bg, 0.35);
-                    span.style.setProperty('--underline-color', darker);
-                }
-            });
 
             // Add PDF mode class
             container.classList.add('pdf-mode');
@@ -1309,7 +591,7 @@
             const pdfHeader = document.createElement('div');
             pdfHeader.id = 'temp-pdf-header';
             pdfHeader.innerHTML = `
-                <div style="display:flex; justify-content:space-between; border-bottom: 2px solid #ccc; padding-bottom: 8px; margin-bottom: 12px;">
+                <div style="display:flex; justify-content:space-between; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 20px;">
                     <strong>Name:</strong> ${name} &nbsp;&nbsp;&nbsp; <strong>Period:</strong> ${period}
                     <strong>Date:</strong> ${date}
                 </div>
