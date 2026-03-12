@@ -68,9 +68,13 @@
         #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 8px; background: #ccc; z-index: 1000; }
         #progress-bar { height: 100%; background: var(--accent-color); width: 0%; transition: width 0.2s; }
 
-        /* Accessibility Menu */
+        /* Accessibility Menu & Audio Controls */
         #access-toggle { position: fixed; top: 16px; right: 16px; background: var(--primary-color); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; z-index: 1001; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); opacity: 0.7; transition: background 0.3s, opacity 0.2s, transform 0.2s;}
         #access-toggle:hover { background: var(--accent-color); opacity: 1; transform: scale(1.05); }
+        
+        #stop-tts-btn { position: fixed; top: 16px; right: 65px; background: var(--accent-color); color: white; border: none; height: 36px; padding: 0 15px; border-radius: 18px; cursor: pointer; z-index: 1001; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: none; transition: background 0.3s, transform 0.2s; }
+        #stop-tts-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+
         #access-panel { display: none; position: fixed; top: 70px; right: 20px; background: var(--container-bg); border: 2px solid var(--primary-color); padding: 15px; border-radius: 8px; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .access-btn { display: block; width: 100%; margin: 5px 0; padding: 8px; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer; }
         .access-btn:hover { background: var(--accent-color); }
@@ -148,11 +152,14 @@
             .action-btn { width: 100%; margin: 8px 0; }
         }
 
+        /* PRINT STYLES FIXED */
         @media print {
             body { background: white; color: black; max-width: 100%; padding: 0; margin: 0; }
-            #access-toggle, #progress-container, .bottom-actions, .tts-btn, #annotate-btn, .delete-btn { display: none !important; }
+            #access-toggle, #stop-tts-btn, #progress-container, .bottom-actions, .tts-btn, #annotate-btn, .delete-btn { display: none !important; }
             .container { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 20px; }
             .reading-grid { grid-template-columns: 1fr; }
+            /* FIXED: Force the grid to 3 columns for print since the audio button is hidden */
+            .para-row { grid-template-columns: 32px minmax(0, 2fr) minmax(0, 1fr) !important; }
             input, textarea, select { display: none !important; }
             .print-mirror { display: block !important; }
             mark.student-highlight { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -165,6 +172,8 @@
     <div id="progress-container"><div id="progress-bar"></div></div>
 
     <button id="access-toggle" onclick="toggleAccessMenu()" title="Accessibility">Aa</button>
+    <button id="stop-tts-btn" onclick="stopTts()" title="Stop Reading">⏹️ Stop Audio</button>
+    
     <div id="access-panel">
         <button class="access-btn" onclick="changeFontSize(2)">Increase Text Size</button>
         <button class="access-btn" onclick="changeFontSize(-2)">Decrease Text Size</button>
@@ -501,11 +510,25 @@
             document.getElementById("progress-bar").style.width = scrolled + "%";
         };
 
-        // --- Text to Speech ---
+        // --- UPDATED Text to Speech Controls ---
+        function stopTts() {
+            window.speechSynthesis.cancel();
+            document.getElementById('stop-tts-btn').style.display = 'none';
+        }
+
         function readAloud(text) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Hide the stop button when the audio finishes naturally
+            utterance.onend = function() {
+                document.getElementById('stop-tts-btn').style.display = 'none';
+            };
+
             window.speechSynthesis.speak(utterance);
+            
+            // Show the stop button when audio starts
+            document.getElementById('stop-tts-btn').style.display = 'block';
         }
 
         // --- Accessibility Menu ---
@@ -528,10 +551,8 @@
             }
         }
 
-        // --- UPDATED: Rebind TTS Buttons after load ---
         function bindTtsButtons() {
             document.querySelectorAll('.tts-btn').forEach(btn => {
-                // We removed the lock so they successfully rebind on a fresh page load
                 btn.addEventListener('click', () => readAloud(btn.getAttribute('data-tts') || ''));
             });
         }
@@ -718,7 +739,7 @@
             });
         }
 
-        // --- UPDATED: Grouped Drag and Drop Logic ---
+        // --- Drag and Drop Logic ---
         function bindDnDEvents() {
             const draggables = document.querySelectorAll('.draggable');
             const dropZones = document.querySelectorAll('.drop-zone');
@@ -749,10 +770,9 @@
                     zone.classList.remove('hover');
                     const id = e.dataTransfer.getData('text/plain');
                     const draggable = document.getElementById(id);
-                    // Only drop if zone is empty
                     if(draggable && !zone.querySelector('.draggable')) {
                         zone.appendChild(draggable);
-                        saveState(); // Save state instantly after drop!
+                        saveState(); 
                     }
                 });
             });
@@ -766,13 +786,12 @@
                     if(draggable) {
                         draggable.style.backgroundColor = 'var(--primary-color)';
                         source.appendChild(draggable);
-                        saveState(); // Save state instantly after drop!
+                        saveState(); 
                     }
                 });
             });
         }
 
-        // Universal function to check Drag and Drop Accuracy
         window.checkDnD = function(containerId) {
             const container = document.getElementById(containerId);
             const zones = container.querySelectorAll('.drop-zone');
@@ -788,7 +807,6 @@
                         child.style.backgroundColor = 'green';
                         correct++;
                     } else {
-                        // Flash red, then send back to the word bank
                         zone.style.borderColor = 'red';
                         child.style.backgroundColor = 'var(--primary-color)';
                         source.appendChild(child); 
@@ -812,7 +830,7 @@
             const reasoning = document.getElementById('cer-reasoning').value;
             const finalCerArea = document.getElementById('final-cer');
             finalCerArea.value = `${claim} ${evidence} ${reasoning}`;
-            finalCerArea.textContent = finalCerArea.value; // For saving
+            finalCerArea.textContent = finalCerArea.value; 
             syncPrintMirrors();
             saveState();
         }
@@ -954,8 +972,8 @@
             }
         }
 
-        // --- UPDATED: State Persistence (Autosave) ---
-        const STORAGE_KEY = 'night3lesson_state_v3'; // Changed version to prevent conflicts
+        // --- State Persistence (Autosave) ---
+        const STORAGE_KEY = 'night3lesson_state_v3'; 
         function saveState() {
             const state = {
                 inputs: {},
@@ -980,14 +998,13 @@
         
         function restoreState() {
             const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) { bindDnDEvents(); return; } // Need to bind if fresh page
+            if (!raw) { bindDnDEvents(); return; } 
             try {
                 const state = JSON.parse(raw);
                 if (state.annotCounter) annotCounter = state.annotCounter;
                 if (state.bodyClass) document.body.className = state.bodyClass;
                 if (state.fontSize) document.documentElement.style.setProperty('--font-size', state.fontSize.trim());
                 
-                // Restore complex HTML structures
                 if (state.readingHTML) document.getElementById('reading-text').innerHTML = state.readingHTML;
                 if (state.charDndHTML) document.getElementById('char-dnd').innerHTML = state.charDndHTML;
                 if (state.litDndHTML) document.getElementById('lit-dnd').innerHTML = state.litDndHTML;
@@ -1017,11 +1034,11 @@
                 restoreChoiceGroup('cer-reasoning-choices', 'cer-reasoning-choice', 'cer-reasoning', true);
                 restoreChoiceGroup('discussion-frame-choices', 'discussion-frame-choice', 'discussion-notes', true);
 
-                bindDnDEvents(); // MUST re-bind after loading HTML
+                bindDnDEvents(); 
 
             } catch (e) {
                 console.warn('Autosave restore failed.', e);
-                bindDnDEvents(); // Bind anyway if error
+                bindDnDEvents(); 
             }
         }
 
@@ -1051,7 +1068,6 @@
             const ok = window.confirm('Reset everything on this page? This will clear all responses and annotations.');
             if (!ok) return;
             localStorage.removeItem(STORAGE_KEY);
-            // The safest and easiest way to truly reset is to reload the page entirely!
             window.location.reload(); 
         }
 
