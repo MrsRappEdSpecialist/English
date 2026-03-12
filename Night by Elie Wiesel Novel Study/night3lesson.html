@@ -206,6 +206,7 @@
                 <div class="text-passage" id="reading-text">
                 </div>
             </div>
+        </div>
 
         <div class="container">
             <h2>Part 2: Comprehension & Literary Devices</h2>
@@ -371,7 +372,8 @@
             <button class="action-btn" onclick="resetAll()">Reset All</button>
         </div>
     </div>
-        <div id="annotate-btn">📝 Annotate</div>
+
+    <div id="annotate-btn">📝 Annotate</div>
 
     <script>
         // --- Setup Data ---
@@ -526,10 +528,10 @@
             }
         }
 
+        // --- UPDATED: Rebind TTS Buttons after load ---
         function bindTtsButtons() {
             document.querySelectorAll('.tts-btn').forEach(btn => {
-                if (btn.dataset.bound === '1') return;
-                btn.dataset.bound = '1';
+                // We removed the lock so they successfully rebind on a fresh page load
                 btn.addEventListener('click', () => readAloud(btn.getAttribute('data-tts') || ''));
             });
         }
@@ -641,9 +643,6 @@
                 window.getSelection().removeAllRanges();
                 annotateBtn.style.display = 'none';
                 
-                const hint = document.getElementById('annotation-hint');
-                if(hint) hint.style.display = 'none';
-
                 const box = document.createElement('div');
                 box.className = 'annotation-box';
                 box.dataset.annotId = annotId;
@@ -719,55 +718,59 @@
             });
         }
 
-        // --- Drag and Drop Logic ---
-        const draggables = document.querySelectorAll('.draggable');
-        const dropZones = document.querySelectorAll('.drop-zone');
-        const dragSources = document.querySelectorAll('.draggable-items');
+        // --- UPDATED: Grouped Drag and Drop Logic ---
+        function bindDnDEvents() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const dragSources = document.querySelectorAll('.draggable-items');
 
-        draggables.forEach(draggable => {
-            draggable.addEventListener('dragstart', (e) => {
-                draggable.classList.add('dragging');
-                e.dataTransfer.setData('text/plain', draggable.id);
-                setTimeout(() => draggable.style.opacity = '0.5', 0);
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    draggable.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', draggable.id);
+                    setTimeout(() => draggable.style.opacity = '0.5', 0);
+                });
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                    draggable.style.opacity = '1';
+                });
             });
-            draggable.addEventListener('dragend', () => {
-                draggable.classList.remove('dragging');
-                draggable.style.opacity = '1';
-            });
-        });
 
-        dropZones.forEach(zone => {
-            zone.addEventListener('dragover', e => {
-                e.preventDefault();
-                zone.classList.add('hover');
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('hover');
+                });
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('hover');
+                });
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('hover');
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggable = document.getElementById(id);
+                    // Only drop if zone is empty
+                    if(draggable && !zone.querySelector('.draggable')) {
+                        zone.appendChild(draggable);
+                        saveState(); // Save state instantly after drop!
+                    }
+                });
             });
-            zone.addEventListener('dragleave', () => {
-                zone.classList.remove('hover');
-            });
-            zone.addEventListener('drop', e => {
-                e.preventDefault();
-                zone.classList.remove('hover');
-                const id = e.dataTransfer.getData('text/plain');
-                const draggable = document.getElementById(id);
-                // Only drop if zone is empty
-                if(draggable && !zone.querySelector('.draggable')) {
-                    zone.appendChild(draggable);
-                }
-            });
-        });
 
-        dragSources.forEach(source => {
-            source.addEventListener('dragover', e => { e.preventDefault(); });
-            source.addEventListener('drop', e => {
-                e.preventDefault();
-                const id = e.dataTransfer.getData('text/plain');
-                const draggable = document.getElementById(id);
-                if(draggable) {
-                    draggable.style.backgroundColor = 'var(--primary-color)';
-                    source.appendChild(draggable);
-                }
+            dragSources.forEach(source => {
+                source.addEventListener('dragover', e => { e.preventDefault(); });
+                source.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggable = document.getElementById(id);
+                    if(draggable) {
+                        draggable.style.backgroundColor = 'var(--primary-color)';
+                        source.appendChild(draggable);
+                        saveState(); // Save state instantly after drop!
+                    }
+                });
             });
-        });
+        }
 
         // Universal function to check Drag and Drop Accuracy
         window.checkDnD = function(containerId) {
@@ -799,6 +802,7 @@
             const feedback = document.getElementById(containerId + '-feedback');
             feedback.textContent = `You got ${correct} out of ${total} correct!`;
             feedback.style.color = correct === total ? 'green' : 'red';
+            saveState();
         };
 
         // --- CER Generation ---
@@ -806,7 +810,11 @@
             const claim = document.getElementById('cer-claim').value;
             const evidence = document.getElementById('cer-evidence').value;
             const reasoning = document.getElementById('cer-reasoning').value;
-            document.getElementById('final-cer').value = `${claim} ${evidence} ${reasoning}`;
+            const finalCerArea = document.getElementById('final-cer');
+            finalCerArea.value = `${claim} ${evidence} ${reasoning}`;
+            finalCerArea.textContent = finalCerArea.value; // For saving
+            syncPrintMirrors();
+            saveState();
         }
 
         // --- Print Mirrors ---
@@ -828,6 +836,9 @@
             if (el.tagName.toLowerCase() === 'select') {
                 const opt = el.options[el.selectedIndex];
                 return opt ? opt.textContent.trim() : '';
+            }
+            if (el.type === 'checkbox') {
+                return el.checked ? '☑ Yes' : '☐ No';
             }
             return el.value || '';
         }
@@ -943,8 +954,8 @@
             }
         }
 
-        // --- State Persistence (Autosave) ---
-        const STORAGE_KEY = 'night3lesson_state_v2';
+        // --- UPDATED: State Persistence (Autosave) ---
+        const STORAGE_KEY = 'night3lesson_state_v3'; // Changed version to prevent conflicts
         function saveState() {
             const state = {
                 inputs: {},
@@ -952,25 +963,45 @@
                 selects: {},
                 annotCounter: annotCounter,
                 bodyClass: document.body.className,
-                fontSize: getComputedStyle(document.documentElement).getPropertyValue('--font-size')
+                fontSize: getComputedStyle(document.documentElement).getPropertyValue('--font-size'),
+                readingHTML: document.getElementById('reading-text').innerHTML,
+                charDndHTML: document.getElementById('char-dnd').innerHTML,
+                litDndHTML: document.getElementById('lit-dnd').innerHTML
             };
-            document.querySelectorAll('input[id]').forEach(el => state.inputs[el.id] = el.value);
+            
+            document.querySelectorAll('input[id]').forEach(el => {
+                if (el.type === 'checkbox') state.inputs[el.id] = el.checked;
+                else state.inputs[el.id] = el.value;
+            });
             document.querySelectorAll('textarea[id]').forEach(el => state.textareas[el.id] = el.value);
             document.querySelectorAll('select[id]').forEach(el => state.selects[el.id] = el.value);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
+        
         function restoreState() {
             const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) return;
+            if (!raw) { bindDnDEvents(); return; } // Need to bind if fresh page
             try {
                 const state = JSON.parse(raw);
                 if (state.annotCounter) annotCounter = state.annotCounter;
                 if (state.bodyClass) document.body.className = state.bodyClass;
                 if (state.fontSize) document.documentElement.style.setProperty('--font-size', state.fontSize.trim());
+                
+                // Restore complex HTML structures
+                if (state.readingHTML) document.getElementById('reading-text').innerHTML = state.readingHTML;
+                if (state.charDndHTML) document.getElementById('char-dnd').innerHTML = state.charDndHTML;
+                if (state.litDndHTML) document.getElementById('lit-dnd').innerHTML = state.litDndHTML;
 
                 Object.keys(state.inputs || {}).forEach(id => {
                     const el = document.getElementById(id);
-                    if (el) el.value = state.inputs[id];
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            el.checked = state.inputs[id];
+                            if(el.checked) el.setAttribute('checked', 'checked');
+                        } else {
+                            el.value = state.inputs[id];
+                        }
+                    }
                 });
                 Object.keys(state.textareas || {}).forEach(id => {
                     const el = document.getElementById(id);
@@ -986,8 +1017,11 @@
                 restoreChoiceGroup('cer-reasoning-choices', 'cer-reasoning-choice', 'cer-reasoning', true);
                 restoreChoiceGroup('discussion-frame-choices', 'discussion-frame-choice', 'discussion-notes', true);
 
+                bindDnDEvents(); // MUST re-bind after loading HTML
+
             } catch (e) {
                 console.warn('Autosave restore failed.', e);
+                bindDnDEvents(); // Bind anyway if error
             }
         }
 
@@ -1017,76 +1051,8 @@
             const ok = window.confirm('Reset everything on this page? This will clear all responses and annotations.');
             if (!ok) return;
             localStorage.removeItem(STORAGE_KEY);
-
-            document.querySelectorAll('input').forEach(el => {
-                if (el.type === 'checkbox' || el.type === 'radio') {
-                    el.checked = false;
-                    el.removeAttribute('checked');
-                } else {
-                    el.value = '';
-                }
-                if (el.id === 'current-date') {
-                    el.value = new Date().toLocaleDateString();
-                }
-            });
-
-            document.querySelectorAll('select').forEach(el => {
-                el.selectedIndex = 0;
-            });
-
-            document.querySelectorAll('textarea').forEach(el => {
-                if (el.dataset && el.dataset.frame) {
-                    el.value = el.dataset.frame;
-                    el.classList.add('frame-text');
-                } else {
-                    el.value = '';
-                }
-            });
-            const claim = document.getElementById('cer-claim');
-            const evidence = document.getElementById('cer-evidence');
-            if (claim) claim.readOnly = true;
-            if (evidence) evidence.readOnly = true;
-            const reasoning = document.getElementById('cer-reasoning');
-            if (reasoning) reasoning.readOnly = false;
-
-            document.querySelectorAll('#cer-claim-choices .choice-btn, #cer-evidence-choices .choice-btn, #cer-reasoning-choices .choice-btn')
-                .forEach(btn => btn.classList.remove('selected'));
-            const claimChoice = document.getElementById('cer-claim-choice');
-            const evidenceChoice = document.getElementById('cer-evidence-choice');
-            const reasoningChoice = document.getElementById('cer-reasoning-choice');
-            if (claimChoice) claimChoice.value = '';
-            if (evidenceChoice) evidenceChoice.value = '';
-            if (reasoningChoice) reasoningChoice.value = '';
-
-            document.querySelectorAll('#discussion-frame-choices .choice-btn')
-                .forEach(btn => btn.classList.remove('selected'));
-            const discussionChoice = document.getElementById('discussion-frame-choice');
-            if (discussionChoice) discussionChoice.value = '';
-            const discussionNotes = document.getElementById('discussion-notes');
-            if (discussionNotes) discussionNotes.value = '';
-
-            document.querySelectorAll('mark.student-highlight').forEach(mark => {
-                const parent = mark.parentNode;
-                while (mark.firstChild) {
-                    parent.insertBefore(mark.firstChild, mark);
-                }
-                parent.removeChild(mark);
-                parent.normalize();
-            });
-
-            readingContainer.querySelectorAll('.annotation-box').forEach(el => el.remove());
-            readingContainer.querySelectorAll('.para-notes').forEach(notes => {
-                notes.classList.add('empty');
-                const title = notes.querySelector('.para-notes-title');
-                if (title) title.remove();
-            });
-
-            annotCounter = 0;
-            document.body.className = '';
-            document.documentElement.style.removeProperty('--font-size');
-
-            syncPrintMirrors();
-            saveState();
+            // The safest and easiest way to truly reset is to reload the page entirely!
+            window.location.reload(); 
         }
 
         // --- Init ---
