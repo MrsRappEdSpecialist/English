@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star-Crossed Quests: The Verona Adventure</title>
+    <style>
+        :root {
+            --montague-color: #2c3e50;
+            --capulet-color: #8b0000;
+            --parchment: #f4ebd0;
+            --gold: #d4af37;
+        }
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            background-color: var(--parchment);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: var(--gold);
+            padding: 20px;
+            border-bottom: 5px solid var(--gold);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+        h2 {
+            color: #1a1a1a;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .hidden {
+            display: none;
+        }
+        .btn {
+            padding: 15px 25px;
+            font-size: 1.2em;
+            font-family: inherit;
+            margin: 10px;
+            cursor: pointer;
+            border: 2px solid var(--gold);
+            border-radius: 5px;
+            color: white;
+            transition: 0.3s;
+        }
+        .btn-montague {
+            background-color: var(--montague-color);
+        }
+        .btn-montague:hover { background-color: #1a252f; }
+        
+        .btn-capulet {
+            background-color: var(--capulet-color);
+        }
+        .btn-capulet:hover { background-color: #5c0000; }
+
+        .btn-action {
+            background-color: var(--gold);
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+        .btn-action:hover { background-color: #b5952f; }
+
+        .quiz-section {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .feedback {
+            font-weight: bold;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Star-Crossed Quests</h1>
+    <p>The Verona Adventure: A Journey through Romeo & Juliet</p>
+</header>
+
+<div id="welcome-section" class="container">
+    <h2>Welcome to Fair Verona</h2>
+    <p><em>"Two households, both alike in dignity..."</em></p>
+    <p>Before you walk our ancient streets, you must declare your allegiance. Will you stand with my family, the Montagues, or Juliet's family, the Capulets?</p>
+    <button class="btn btn-montague" onclick="chooseHouse('Montague')">House Montague</button>
+    <button class="btn btn-capulet" onclick="chooseHouse('Capulet')">House Capulet</button>
+</div>
+
+<div id="act1-section" class="container hidden">
+    <h2>Level 1 (Act 1): The Feud & The Feast</h2>
+    <p>You are navigating the heated streets of Verona. Watch out! The servants are brawling. Sampson yells, <em>"I will take the wall of any man or maid of Montague's."</em></p>
+    <p>Your mission is to sneak into the grand Capulet ball. But wait, Juliet has just learned my true identity!</p>
+    
+    <div class="quiz-section">
+        <h3>Knowledge Check</h3>
+        <p>Translate Juliet's shocking realization: <strong>"My only love sprung from my only hate!"</strong></p>
+        <button class="btn btn-action" onclick="checkAnswer('act1', false)">"I love a man who hates me."</button>
+        <button class="btn btn-action" onclick="checkAnswer('act1', true)">"The only man I love is the son of the only man I hate."</button>
+        <button class="btn btn-action" onclick="checkAnswer('act1', false)">"I hate that I am in love."</button>
+        <p id="act1-feedback" class="feedback"></p>
+    </div>
+    
+    <button id="btn-next-act2" class="btn btn-action hidden" onclick="nextLevel('act2-section')">Proceed to Act 2</button>
+</div>
+
+<div id="act2-section" class="container hidden">
+    <h2>Level 2 (Act 2): The Balcony & The Vows</h2>
+    <p>The moon shines bright upon the Capulet orchard. Help me, Romeo, sneak over the wall to find my sweet Juliet.</p>
+    
+    <div class="quiz-section">
+        <h3>Knowledge Check</h3>
+        <p>Friar Lawrence agrees to marry us. What does he mean when he says: <em>"Come, come with me, and we'll do the job quickly. Because if you don't mind, I'm not leaving you two alone until you're united in marriage."</em>?</p>
+        <button class="btn btn-action" onclick="checkAnswer('act2', true)">He will perform the wedding ceremony right now so we aren't left alone unchaperoned.</button>
+        <button class="btn btn-action" onclick="checkAnswer('act2', false)">He wants us to run away together immediately.</button>
+        <p id="act2-feedback" class="feedback"></p>
+    </div>
+
+    <button id="btn-next-act3" class="btn btn-action hidden" onclick="nextLevel('act3-section')">Proceed to Act 3</button>
+</div>
+
+<div id="act3-section" class="container hidden">
+    <h2>Level 3 (Act 3): Blood in the Streets</h2>
+    <p>The town square is scorching. Mercutio and Tybalt draw their swords! Oh, cruel fate...</p>
+    <p><em>(Educator note: Add interactive fiction choices here!)</em></p>
+    <button class="btn btn-action" onclick="nextLevel('act4-section')">Flee to Act 4</button>
+</div>
+
+<div id="act4-section" class="container hidden">
+    <h2>Level 4 (Act 4): The Desperate Plan</h2>
+    <p>Juliet must drink the sleeping potion! She tells the Friar, <em>"If all else fail, myself have power to die."</em></p>
+    <p><em>(Educator note: Add Apothecary puzzle here!)</em></p>
+    <button class="btn btn-action" onclick="nextLevel('act5-section')">Rush to Act 5</button>
+</div>
+
+<div id="act5-section" class="container hidden">
+    <h2>Level 5 (Act 5): Star-Crossed Defiance</h2>
+    <p>The dark tomb awaits. The tragic irony of my dream... I thought my lady came and found me dead.</p>
+    <p><strong>Epilogue:</strong> For never was a story of more woe than this of Juliet and her Romeo.</p>
+    <button class="btn btn-action" onclick="location.reload()">Restart the Tale</button>
+</div>
+
+<script>
+    let playerHouse = '';
+
+    function chooseHouse(house) {
+        playerHouse = house;
+        alert("You have sworn your allegiance to House " + house + "! May fate be kind to you.");
+        document.getElementById('welcome-section').classList.add('hidden');
+        document.getElementById('act1-section').classList.remove('hidden');
+    }
+
+    function checkAnswer(act, isCorrect) {
+        const feedbackEl = document.getElementById(act + '-feedback');
+        const nextBtn = document.getElementById('btn-next-' + (act === 'act1' ? 'act2' : 'act3'));
+
+        if (isCorrect) {
+            feedbackEl.style.color = "green";
+            feedbackEl.innerText = "Huzzah! You speak true. The way forward is clear.";
+            nextBtn.classList.remove('hidden');
+        } else {
+            feedbackEl.style.color = "red";
+            feedbackEl.innerText = "Alas, that is not correct. Try again, for our sake!";
+        }
+    }
+
+    function nextLevel(nextSectionId) {
+        // Hide all containers
+        const containers = document.querySelectorAll('.container');
+        containers.forEach(c => c.classList.add('hidden'));
+        
+        // Show the target section
+        document.getElementById(nextSectionId).classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
