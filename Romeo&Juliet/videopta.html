@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Reenactment Guide: Romeo & Juliet</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- 
+    Chosen Palette: "Verona Canvas" 
+    Backgrounds: Light cream/slate (bg-slate-50, bg-white) for readability.
+    Text: Dark charcoal (text-slate-800) for high contrast.
+    Accents: Crimson (text-rose-700) for Capulet/Tragedy, Royal Blue (text-indigo-700) for Montague/Night, Gold (amber-500) for highlights/interactive elements.
+    -->
+
+    <style>
+        /* Custom Styles & Overrides */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
+        }
+        
+        .font-serif-text {
+            font-family: 'Crimson Pro', serif;
+        }
+
+        /* Chart Container Styling - STRICT ADHERENCE TO REQUIREMENTS */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 30vh; /* Responsive height */
+            min-height: 250px;
+            max-height: 350px; /* Prevent vertical overflow */
+        }
+
+        /* Custom Scrollbar for Script Reader */
+        .script-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .script-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .script-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .script-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Interactive line highlighting */
+        .dialogue-row:hover .script-line {
+            background-color: #fef3c7; /* amber-50 */
+            transition: background-color 0.2s ease;
+        }
+        
+        .highlight-active {
+            background-color: #fef08a !important; /* amber-200 */
+            border-left: 4px solid #f59e0b; /* amber-500 */
+        }
+    </style>
+
+    <!-- 
+    Application Structure Plan: "The Director's Dashboard"
+    This SPA translates the linear markdown script into an interactive "Director's Dashboard" designed specifically for students reenacting the play.
+    
+    Structure:
+    1. Header & Intro: Establishes context and purpose (Video Project).
+    2. Narrative Arc Visualization: A Chart.js line graph showing the "Tension Arc" of the play. This gives students a visual understanding of where their scene sits emotionally in the overall story.
+    3. The Rehearsal Studio (Main Interactive Area):
+        - Act Selector (Tabs): Allows quick navigation without endless scrolling.
+        - Scene Context Panel: Explains the 'why' and 'what' of the selected scene.
+        - Actor's Tools (Filters): A dropdown to highlight specific character lines, aiding individual rehearsal.
+        - Interactive Script Viewer: Side-by-side (or stacked on mobile) presentation of Original vs. Modern text. Hovering highlights both versions simultaneously to build comprehension bridging.
+    
+    Why this structure? The original document is a long reference list. This SPA reorganizes it into a task-oriented workspace. Students can visualize the play's trajectory, isolate their assigned act/scene, filter for their character, and instantly compare Shakespearean text with modern meaning to inform their acting choices.
+    -->
+
+    <!-- 
+    Visualization & Content Choices:
+    1. Overall Narrative Flow -> Goal: Change/Understand -> Chart.js Line Chart ("Tension Arc") -> Interaction: Hover for Act summaries -> Justification: Helps actors understand the emotional stakes of their assigned scene relative to the whole play.
+    2. Act/Scene Navigation -> Goal: Organize -> Tabbed Interface & Sidebar -> Interaction: Click to swap content -> Justification: Replaces tedious scrolling with deliberate selection, keeping the user focused on one scene at a time.
+    3. Character Dialogue -> Goal: Inform/Organize -> Interactive Dropdown Filter -> Interaction: Select character to highlight their lines -> Justification: Students are playing specific roles; this allows them to easily pick out their lines from the dialogue blocks.
+    4. Text Comparison (Original vs Modern) -> Goal: Compare -> Responsive CSS Grid (Side-by-side) -> Interaction: Hover syncing -> Justification: Placing them side-by-side is the most direct way to translate the meaning for acting delivery.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Header Section -->
+    <header class="bg-slate-900 text-white py-8 px-4 shadow-md border-b-4 border-rose-700">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-serif-text font-bold mb-3">Romeo & Juliet</h1>
+            <h2 class="text-xl md:text-2xl font-light text-slate-300">Interactive Master Script for Video Reenactments</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-400 text-sm md:text-base">
+                Welcome to your digital rehearsal studio. Explore the narrative arc, select your assigned scene, and use the side-by-side modern translations to perfect your performance of these essential, high-impact moments.
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8 flex flex-col gap-8">
+
+        <!-- Visualization Section: The Narrative Arc -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div class="mb-4">
+                <h3 class="text-2xl font-serif-text font-bold text-slate-800 border-b-2 border-rose-700 inline-block pb-1">The Narrative Tension Arc</h3>
+                <p class="text-slate-600 mt-2 text-sm">
+                    Understanding the emotional stakes of your scene is crucial for acting. This chart visualizes the rising tension and ultimate tragedy across the five acts. Click or hover on the points to see a summary of that act's core conflict.
+                </p>
+            </div>
+            
+            <!-- MANDATORY CHART CONTAINER -->
+            <div class="chart-container">
+                <canvas id="tensionChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Main Workspace: Act Navigation & Script Viewer -->
+        <section class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Left Column: Navigation -->
+            <aside class="lg:w-1/4 flex flex-col gap-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sticky top-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 uppercase tracking-wider text-sm">Select Your Act</h3>
+                    
+                    <div id="act-nav-container" class="flex flex-col gap-2">
+                        <!-- Buttons injected by JS -->
+                    </div>
+
+                    <div class="mt-8 border-t border-slate-200 pt-6">
+                        <h4 class="text-sm font-bold text-slate-800 mb-3 uppercase tracking-wider">Scenes in <span id="nav-current-act-label">Act 1</span></h4>
+                        <div id="scene-nav-container" class="flex flex-col gap-2">
+                            <!-- Scene links injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Column: Scene Content & Script -->
+            <article class="lg:w-3/4 flex flex-col gap-6">
+                
+                <!-- Scene Header & Context -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 border-t-4 border-indigo-700">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                        <div>
+                            <span id="display-act-title" class="text-indigo-700 font-semibold tracking-wide text-sm uppercase">ACT 1: The Feud and the Meeting</span>
+                            <h2 id="display-scene-title" class="text-3xl font-serif-text font-bold text-slate-900 mt-1">Scene 1: The Street Brawl</h2>
+                        </div>
+                        
+                        <!-- Actor's Tool: Character Highlight -->
+                        <div class="w-full md:w-auto">
+                            <label for="character-filter" class="block text-xs font-semibold text-slate-500 uppercase mb-1">Highlight Character Lines:</label>
+                            <select id="character-filter" class="w-full md:w-48 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 outline-none transition-colors">
+                                <option value="ALL">Show All Characters</option>
+                                <!-- Options injected by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-indigo-50 rounded-lg p-4 border-l-4 border-indigo-300">
+                        <h4 class="font-bold text-indigo-900 mb-1 text-sm uppercase">Director's Context:</h4>
+                        <p id="display-scene-context" class="text-indigo-800 text-sm md:text-base leading-relaxed">
+                            Servants from the house of Capulet (Sampson/Gregory) provoke the Montagues. This establishes the violent "Ancient Grudge."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Script Viewer -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px]">
+                    <div class="bg-slate-100 border-b border-slate-200 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="font-bold text-slate-700 text-center md:text-left flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-slate-800 inline-block"></span>
+                            Original Shakespearean Text
+                        </div>
+                        <div class="font-bold text-slate-700 text-center md:text-left flex items-center gap-2 hidden md:flex">
+                            <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                            Modern No Fear Translation
+                        </div>
+                    </div>
+                    
+                    <div id="script-viewer" class="p-4 md:p-6 overflow-y-auto script-scroll flex-grow flex flex-col gap-4">
+                        <!-- Dialogue rows injected by JS -->
+                    </div>
+                </div>
+
+            </article>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-sm mt-12">
+        <p>Interactive Reenactment Guide based on "No Fear Shakespeare". Designed for educational video projects.</p>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // --- 1. DATA STORAGE ---
+        // Extracted directly from the provided "Romeo_and_Juliet_Master_Scripts.md"
+        const scriptData = [
+            {
+                actId: 1,
+                title: "ACT 1: The Feud and the Meeting",
+                tensionScore: 6, // Subjective score for chart
+                summary: "The ancient grudge erupts in violence, setting the dangerous stage where Romeo and Juliet will meet and fall in love.",
+                scenes: [
+                    {
+                        sceneId: 1,
+                        title: "Scene 1: The Street Brawl",
+                        context: "Servants from the house of Capulet (Sampson/Gregory) provoke the Montagues. This establishes the violent \"Ancient Grudge.\"",
+                        dialogue: [
+                            { speaker: "SAMPSON", original: "I will bite my thumb at them, which is a disgrace to them, if they bear it.", modern: "I’ll bite my thumb at them. That’s an insult, and if they let me get away with it, they’ll be dishonored." },
+                            { speaker: "BENVOLIO", original: "Part, fools! Put up your swords; you know not what you do.", modern: "Part, fools! Put your swords away. You don’t know what you’re doing." },
+                            { speaker: "TYBALT", original: "What, art thou drawn among these heartless hinds? Turn thee, Benvolio, look upon thy death.", modern: "What? You’ve pulled out your sword to fight with these worthless servants? Turn around, Benvolio, and look at the man who’s going to kill you." }
+                        ]
+                    },
+                    {
+                        sceneId: 2,
+                        title: "Scene 2: The First Meeting (The Sonnet)",
+                        context: "Romeo and Juliet meet at the Capulet party. They fall in love before knowing they are enemies.",
+                        dialogue: [
+                            { speaker: "ROMEO", original: "If I profane with my unworthiest hand / This holy shrine, the gentle sin is this: / My lips, two blushing pilgrims, ready stand / To smooth that rough touch with a tender kiss.", modern: "(taking JULIET’s hand) If I profane this holy shrine with my unworthy hand, my lips are like two blushing pilgrims ready to smooth over that rough touch with a tender kiss." },
+                            { speaker: "JULIET", original: "My only love sprung from my only hate! / Too early seen unknown, and known too late!", modern: "The only man I love is the son of the only man I hate! I saw him too early without knowing who he was, and I found out who he was too late!" }
+                        ]
+                    }
+                ]
+            },
+            {
+                actId: 2,
+                title: "ACT 2: The Secret Marriage",
+                tensionScore: 3,
+                summary: "In a rush of passion and secrecy, the lovers defy their families names and secretly marry, hoping to bridge the divide.",
+                scenes: [
+                    {
+                        sceneId: 1,
+                        title: "Scene 1: The Balcony",
+                        context: "Romeo climbs the orchard wall to find Juliet.",
+                        dialogue: [
+                            { speaker: "JULIET", original: "O Romeo, Romeo! Wherefore art thou Romeo? / Deny thy father and refuse thy name. / ...What’s in a name? That which we call a rose / By any other word would smell as sweet.", modern: "Oh, Romeo, Romeo, why do you have to be Romeo? Forget about your father and change your name. ...What’s in a name? The thing we call a rose would smell just as sweet if we called it by any other name." },
+                            { speaker: "ROMEO", original: "Parting is such sweet sorrow / That I shall say good night till it be morrow.", modern: "Parting is such sweet sorrow that I’ll say good night until tomorrow morning." }
+                        ]
+                    },
+                    {
+                        sceneId: 2,
+                        title: "Scene 2: The Friar's Warning",
+                        context: "Friar Lawrence agrees to marry them, hoping to end the feud, but warns against rushing.",
+                        dialogue: [
+                            { speaker: "FRIAR LAWRENCE", original: "These violent delights have violent ends / And in their triumph die, like fire and powder, / Which as they kiss consume.", modern: "These sudden joys have sudden endings. They burn up in victory like gunpowder and fire. When they meet, as in a kiss, they explode." }
+                        ]
+                    }
+                ]
+            },
+            {
+                actId: 3,
+                title: "ACT 3: The Turning Point",
+                tensionScore: 9,
+                summary: "Tragedy strikes the streets. A fatal duel leaves Mercutio and Tybalt dead, resulting in Romeo's banishment and Juliet's despair.",
+                scenes: [
+                    {
+                        sceneId: 1,
+                        title: "Scene 1: The Deaths of Mercutio and Tybalt",
+                        context: "A duel goes wrong. Romeo kills Tybalt to avenge Mercutio and is banished.",
+                        dialogue: [
+                            { speaker: "MERCUTIO", original: "I am hurt. A plague o' both your houses!", modern: "I’m hurt. May a plague strike both your houses!" },
+                            { speaker: "ROMEO", original: "Now, Tybalt, take the \"villain\" back again... Either thou, or I, or both, must go with him.", modern: "Now, Tybalt, take that \"villain\" insult back... Either you, or I, or both of us must go with Mercutio." },
+                            { speaker: "ROMEO", original: "O, I am fortune's fool!", modern: "Oh, I am the victim of bad luck!" }
+                        ]
+                    },
+                    {
+                        sceneId: 2,
+                        title: "Scene 2: The Ultimatum",
+                        context: "Lord Capulet demands Juliet marry Count Paris, or he will disown her.",
+                        dialogue: [
+                            { speaker: "CAPULET", original: "Hang thee, young baggage! Disobedient wretch! / ...get thee to church o' Thursday, / Or never after look me in the face.", modern: "Hang you, you baggage! You disobedient wretch! Get to church on Thursday, or never look me in the face again." }
+                        ]
+                    }
+                ]
+            },
+            {
+                actId: 4,
+                title: "ACT 4: The Desperate Plan",
+                tensionScore: 8,
+                summary: "Forced into a corner, Juliet undertakes the Friar's terrifying, desperate plan involving a sleeping potion to fake her own death.",
+                scenes: [
+                    {
+                        sceneId: 1,
+                        title: "Scene 1: The Potion",
+                        context: "The Friar gives Juliet a sleeping potion to make her appear dead.",
+                        dialogue: [
+                            { speaker: "FRIAR LAWRENCE", original: "Take thou this vial, being then in bed, / And this distillèd liquor drink thou off; / No warmth, no breath shall testify thou livest.", modern: "Take this vial when you go to bed and drink this distilled liquor. You’ll have no warmth or breath to show you’re alive." },
+                            { speaker: "JULIET", original: "Romeo, Romeo, Romeo! Here’s drink. I drink to thee.", modern: "Romeo, Romeo, Romeo! I drink to you." }
+                        ]
+                    }
+                ]
+            },
+            {
+                actId: 5,
+                title: "ACT 5: The Final Tragedy",
+                tensionScore: 10,
+                summary: "A fatal misunderstanding leads to the ultimate tragedy in the tomb. Their deaths finally force their warring parents into a gloomy peace.",
+                scenes: [
+                    {
+                        sceneId: 1,
+                        title: "Scene 1: The Misunderstanding",
+                        context: "Romeo hears Juliet is dead (he never got the Friar's letter) and buys poison.",
+                        dialogue: [
+                            { speaker: "ROMEO", original: "Is it e'en so? Then I defy you, stars! / ...Well, Juliet, I will lie with thee tonight.", modern: "Is that true? Then I rebel against you, stars! ...Well, Juliet, I’ll lie with you tonight." }
+                        ]
+                    },
+                    {
+                        sceneId: 2,
+                        title: "Scene 2: The Tomb",
+                        context: "Romeo dies just before Juliet wakes up. Juliet kills herself upon finding him dead.",
+                        dialogue: [
+                            { speaker: "ROMEO", original: "Eyes, look your last! / ...Thus with a kiss I die. (Dies)", modern: "Eyes, look your last look! ...So I die with a kiss. (He dies)" },
+                            { speaker: "JULIET", original: "(waking) Where is my Romeo? / ...O happy dagger! / This is thy sheath; there rust, and let me die. (Dies)", modern: "Where is my Romeo? ...Oh, lucky dagger! This is your sheath. Rust inside me and let me die. (She dies)" }
+                        ]
+                    },
+                    {
+                        sceneId: 3,
+                        title: "Scene 3: The Peace",
+                        context: "The families end the feud over the bodies of their children.",
+                        dialogue: [
+                            { speaker: "PRINCE", original: "For never was a story of more woe / Than this of Juliet and her Romeo.", modern: "For there was never a story more full of pain than the story of Juliet and her Romeo." }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // --- 2. STATE MANAGEMENT ---
+        let currentActIndex = 0;
+        let currentSceneIndex = 0;
+        let chartInstance = null;
+
+        // --- 3. DOM ELEMENTS ---
+        const els = {
+            actNav: document.getElementById('act-nav-container'),
+            sceneNav: document.getElementById('scene-nav-container'),
+            navActLabel: document.getElementById('nav-current-act-label'),
+            displayActTitle: document.getElementById('display-act-title'),
+            displaySceneTitle: document.getElementById('display-scene-title'),
+            displaySceneContext: document.getElementById('display-scene-context'),
+            scriptViewer: document.getElementById('script-viewer'),
+            charFilter: document.getElementById('character-filter')
+        };
+
+        // --- 4. CORE FUNCTIONS ---
+
+        function init() {
+            renderActNav();
+            renderTensionChart();
+            loadAct(0); // Load Act 1 by default
+            setupEventListeners();
+        }
+
+        function renderActNav() {
+            els.actNav.innerHTML = '';
+            scriptData.forEach((act, index) => {
+                const btn = document.createElement('button');
+                btn.className = `text-left px-4 py-3 rounded-lg font-semibold transition-all duration-200 border-l-4 ${index === currentActIndex ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-sm' : 'bg-transparent border-transparent text-slate-600 hover:bg-slate-100'}`;
+                btn.innerText = `Act ${act.actId}`;
+                btn.onclick = () => loadAct(index);
+                els.actNav.appendChild(btn);
+            });
+        }
+
+        function loadAct(actIndex) {
+            currentActIndex = actIndex;
+            currentSceneIndex = 0; // Reset to first scene of the act
+            
+            // Update UI styling for Act Nav
+            Array.from(els.actNav.children).forEach((btn, idx) => {
+                if (idx === actIndex) {
+                    btn.className = 'text-left px-4 py-3 rounded-lg font-semibold transition-all duration-200 border-l-4 bg-indigo-50 border-indigo-600 text-indigo-700 shadow-sm';
+                } else {
+                    btn.className = 'text-left px-4 py-3 rounded-lg font-semibold transition-all duration-200 border-l-4 bg-transparent border-transparent text-slate-600 hover:bg-slate-100 hover:border-slate-300';
+                }
+            });
+
+            const act = scriptData[actIndex];
+            els.navActLabel.innerText = `Act ${act.actId}`;
+            els.displayActTitle.innerText = act.title;
+
+            renderSceneNav(act.scenes);
+            loadScene(0); // Load first scene
+        }
+
+        function renderSceneNav(scenes) {
+            els.sceneNav.innerHTML = '';
+            scenes.forEach((scene, index) => {
+                const btn = document.createElement('button');
+                btn.className = `text-left text-sm px-3 py-2 rounded transition-colors ${index === currentSceneIndex ? 'bg-rose-100 text-rose-800 font-semibold' : 'text-slate-600 hover:bg-slate-100'}`;
+                
+                // Extract just "Scene X" or short title for sidebar
+                const shortTitle = scene.title.split(':')[0] || scene.title;
+                btn.innerText = shortTitle;
+                
+                btn.onclick = () => loadScene(index);
+                els.sceneNav.appendChild(btn);
+            });
+        }
+
+        function loadScene(sceneIndex) {
+            currentSceneIndex = sceneIndex;
+            const act = scriptData[currentActIndex];
+            const scene = act.scenes[sceneIndex];
+
+            // Update UI styling for Scene Nav
+            Array.from(els.sceneNav.children).forEach((btn, idx) => {
+                btn.className = `text-left text-sm px-3 py-2 rounded transition-colors ${idx === sceneIndex ? 'bg-rose-100 text-rose-800 font-semibold' : 'text-slate-600 hover:bg-slate-100'}`;
+            });
+
+            // Update Header & Context
+            els.displaySceneTitle.innerText = scene.title;
+            els.displaySceneContext.innerText = scene.context;
+
+            // Extract unique characters for the filter dropdown
+            updateCharacterFilter(scene.dialogue);
+
+            // Render Script Lines
+            renderScript(scene.dialogue, 'ALL');
+        }
+
+        function updateCharacterFilter(dialogue) {
+            const chars = new Set();
+            dialogue.forEach(line => chars.add(line.speaker.toUpperCase()));
+            
+            els.charFilter.innerHTML = '<option value="ALL">Show All Characters</option>';
+            chars.forEach(char => {
+                const opt = document.createElement('option');
+                opt.value = char;
+                opt.innerText = char;
+                els.charFilter.appendChild(opt);
+            });
+            els.charFilter.value = 'ALL';
+        }
+
+        function renderScript(dialogue, highlightChar) {
+            els.scriptViewer.innerHTML = '';
+            
+            if(dialogue.length === 0) {
+                els.scriptViewer.innerHTML = '<p class="text-slate-500 italic p-4">No essential dialogue mapped for this scene in the master script.</p>';
+                return;
+            }
+
+            dialogue.forEach(line => {
+                const isHighlighted = highlightChar !== 'ALL' && line.speaker.toUpperCase() === highlightChar;
+                
+                // Format text to handle poetry breaks '/' visually
+                const formatText = (text) => {
+                    return text.split('/').map(part => part.trim()).join('<br><span class="pl-4"></span>');
+                };
+
+                const rowDiv = document.createElement('div');
+                rowDiv.className = `dialogue-row grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-slate-100 pb-4 last:border-0 rounded p-2 ${isHighlighted ? 'highlight-active' : ''}`;
+                
+                // Determine color based on house/character (Optional UI enhancement)
+                let speakerColor = 'bg-slate-800';
+                if(['JULIET', 'CAPULET', 'TYBALT', 'NURSE'].includes(line.speaker)) speakerColor = 'bg-rose-700';
+                if(['ROMEO', 'MONTAGUE', 'BENVOLIO', 'MERCUTIO'].includes(line.speaker)) speakerColor = 'bg-indigo-700';
+                if(['FRIAR LAWRENCE', 'PRINCE'].includes(line.speaker)) speakerColor = 'bg-amber-600';
+
+                // HTML Construction
+                rowDiv.innerHTML = `
+                    <!-- Original Text Column -->
+                    <div class="script-line p-2 md:p-3 rounded md:border-r md:border-slate-100 md:pr-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs font-bold text-white px-2 py-0.5 rounded shadow-sm ${speakerColor}">${line.speaker}</span>
+                        </div>
+                        <p class="font-serif-text text-lg md:text-xl text-slate-800 leading-relaxed italic pr-2">${formatText(line.original)}</p>
+                    </div>
+                    
+                    <!-- Modern Text Column -->
+                    <div class="script-line p-2 md:p-3 rounded md:pl-6 bg-slate-50 md:bg-transparent">
+                        <div class="md:hidden flex items-center gap-2 mb-2">
+                             <span class="text-xs font-bold text-slate-500 uppercase">Translation:</span>
+                        </div>
+                        <p class="text-slate-700 leading-relaxed mt-1 md:mt-6">${formatText(line.modern)}</p>
+                    </div>
+                `;
+                els.scriptViewer.appendChild(rowDiv);
+            });
+        }
+
+        function setupEventListeners() {
+            els.charFilter.addEventListener('change', (e) => {
+                const act = scriptData[currentActIndex];
+                const scene = act.scenes[currentSceneIndex];
+                renderScript(scene.dialogue, e.target.value);
+            });
+        }
+
+        // --- 5. CHART.JS INTEGRATION ---
+        function renderTensionChart() {
+            const ctx = document.getElementById('tensionChart').getContext('2d');
+            
+            const labels = scriptData.map(act => `Act ${act.actId}`);
+            const dataPoints = scriptData.map(act => act.tensionScore);
+            const summaries = scriptData.map(act => act.summary);
+
+            if(chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Narrative Tension Level',
+                        data: dataPoints,
+                        borderColor: '#be123c', // rose-700
+                        backgroundColor: 'rgba(190, 18, 60, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#f59e0b', // amber-500
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: true,
+                        tension: 0.4 // smooth curves
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for chart-container compliance
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)', // slate-900
+                            titleFont: { family: 'Inter', size: 14 },
+                            bodyFont: { family: 'Inter', size: 13 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    // Wrap text logic (approx 40 chars for tooltip)
+                                    const summary = summaries[context.dataIndex];
+                                    const words = summary.split(' ');
+                                    let lines = [];
+                                    let currentLine = '';
+                                    words.forEach(word => {
+                                        if((currentLine + word).length > 40) {
+                                            lines.push(currentLine);
+                                            currentLine = word + ' ';
+                                        } else {
+                                            currentLine += word + ' ';
+                                        }
+                                    });
+                                    lines.push(currentLine);
+                                    return lines;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 11,
+                            ticks: { display: false }, // Hide numbers, purely visual
+                            grid: { color: '#f1f5f9' },
+                            title: {
+                                display: true,
+                                text: 'Conflict / Tragedy',
+                                color: '#64748b',
+                                font: { family: 'Inter', size: 12, weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { family: 'Inter', size: 14, weight: 'bold' },
+                                color: '#334155'
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        // Allow clicking chart nodes to navigate to that act
+                        if (elements.length > 0) {
+                            const dataIndex = elements[0].index;
+                            loadAct(dataIndex);
+                            
+                            // Scroll down smoothly to the act nav/viewer
+                            document.querySelector('main section:nth-child(2)').scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 6. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
