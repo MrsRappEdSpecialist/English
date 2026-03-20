@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romeo & Juliet: Act 1 Interactive Masterclass</title>
+    <style>
+        /* CSS Variables for Accessibility & Theming */
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --panel-bg: #1e1e1e;
+            --accent-capulet: #ff2a2a; 
+            --accent-montague: #00e5ff; 
+            --accent-neutral: #b142f5; 
+            --correct-color: #4caf50;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size: 16px;
+            --line-spacing: 1.6;
+            --sidebar-width: 280px;
+        }
+
+        /* Themes */
+        body.theme-light {
+            --bg-color: #f8f9fa; --text-color: #212529; --panel-bg: #ffffff;
+            --accent-capulet: #d32f2f; --accent-montague: #0288d1;
+        }
+        body.theme-sepia {
+            --bg-color: #f4ecd8; --text-color: #433422; --panel-bg: #e6dfc8;
+            --accent-capulet: #b71c1c; --accent-montague: #01579b;
+        }
+        body.theme-tragic {
+            --bg-color: #1a0000; --text-color: #fce8e8; --panel-bg: #330000;
+            --accent-capulet: #ff1a1a; --accent-montague: #ffd700; /* Star-crossed Gold */
+            --accent-neutral: #800020; /* Burgundy */
+        }
+        body.font-dyslexia {
+            --font-main: 'Comic Sans MS', 'OpenDyslexic', sans-serif;
+            letter-spacing: 0.1em; word-spacing: 0.2em;
+        }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: var(--font-main); font-size: var(--font-size);
+            line-height: var(--line-spacing); margin: 0; display: flex;
+            height: 100vh; overflow: hidden; transition: all 0.3s ease;
+        }
+
+        /* Sidebar Navigation */
+        nav {
+            width: var(--sidebar-width); background-color: var(--panel-bg);
+            border-right: 2px solid var(--accent-neutral); padding: 20px;
+            display: flex; flex-direction: column; gap: 10px;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.5); z-index: 10; overflow-y: auto;
+        }
+        nav h1 { font-size: 1.5rem; text-align: center; color: var(--accent-montague); margin-bottom: 20px; }
+        nav button {
+            background: transparent; color: var(--text-color);
+            border: 1px solid var(--accent-neutral); padding: 12px;
+            border-radius: 8px; cursor: pointer; font-size: 1rem;
+            text-align: left; transition: all 0.2s; font-family: inherit;
+        }
+        nav button:hover, nav button.active {
+            background-color: var(--accent-neutral); color: #fff;
+            box-shadow: 0 0 10px var(--accent-neutral);
+        }
+
+        /* Main Content */
+        main { flex: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
+        .module { display: none; max-width: 900px; margin: 0 auto; padding-bottom: 100px; }
+        .module.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--accent-montague); border-bottom: 2px solid var(--accent-neutral); padding-bottom: 10px; }
+        h3 { color: var(--accent-capulet); margin-top: 30px; }
+        
+        .scene-container {
+            background: rgba(0,0,0,0.05); border: 1px solid rgba(128,128,128,0.3);
+            border-radius: 8px; padding: 20px; margin-bottom: 30px;
+        }
+
+        .text-passage {
+            background-color: var(--panel-bg); padding: 20px;
+            border-left: 4px solid var(--accent-montague); border-radius: 5px;
+            margin: 15px 0; font-size: 1.1em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        /* Hover to Highlight Styles */
+        .hl-text {
+            border-radius: 4px; padding: 2px 4px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .hl-text:hover {
+            background-color: rgba(255, 215, 0, 0.3); /* Subtle gold hover */
+        }
+        .hl-text.saved {
+            background-color: var(--accent-montague); color: #000; font-weight: bold;
+        }
+
+        button.action-btn {
+            background-color: var(--accent-montague); color: #000; border: none;
+            padding: 10px 20px; border-radius: 5px; font-weight: bold;
+            cursor: pointer; font-family: inherit; transition: 0.2s; margin-top: 10px;
+        }
+        button.action-btn:hover { background-color: var(--accent-capulet); color: #fff; }
+
+        /* Floating Accessibility Hub */
+        #a11y-toggle {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            border-radius: 50%; background-color: var(--accent-neutral); color: #fff;
+            border: none; font-size: 30px; cursor: pointer; z-index: 1000;
+        }
+        #a11y-panel {
+            position: fixed; bottom: 100px; right: 30px; background-color: var(--panel-bg);
+            border: 2px solid var(--accent-neutral); padding: 20px; border-radius: 10px;
+            width: 250px; display: none; z-index: 999;
+        }
+        .a11y-group { margin-bottom: 15px; }
+        .a11y-group label { display: block; font-weight: bold; color: var(--accent-montague); }
+        .a11y-group select, .a11y-group button { width: 100%; padding: 8px; margin-top: 5px; background: var(--bg-color); color: var(--text-color); border: 1px solid gray; }
+
+        /* Dictionary Modal */
+        #dictionary-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--panel-bg); border: 2px solid var(--accent-montague);
+            padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            z-index: 2000; display: none; max-width: 300px; text-align: center;
+        }
+        #dictionary-word { color: var(--accent-capulet); font-size: 1.5em; margin-top: 0; }
+        #dictionary-def { font-style: italic; }
+        .close-dict { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--text-color); font-size: 1.2em; cursor: pointer; }
+
+        /* Interactive Activity Styles */
+        .interactive-box { background: var(--panel-bg); padding: 20px; border-radius: 8px; border: 1px dashed var(--accent-neutral); margin-top: 15px; }
+        
+        /* Matching Game */
+        .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .match-btn { padding: 12px; border: 2px solid var(--accent-montague); background: transparent; color: var(--text-color); cursor: pointer; border-radius: 8px; font-weight: bold; transition: all 0.3s ease; }
+        .match-btn.selected { background-color: var(--accent-montague); color: #000; }
+
+        /* Quiz Buttons */
+        .quiz-btn { padding: 10px; margin: 5px; border: 1px solid var(--accent-capulet); background: transparent; color: var(--text-color); border-radius: 5px; cursor: pointer; }
+        .quiz-btn:hover { background: var(--accent-capulet); color: white; }
+        
+        /* Clickable Text (Metaphor Hunt) */
+        .clickable-word { cursor: pointer; padding: 2px; border-radius: 3px; transition: 0.2s; }
+        .clickable-word:hover { background-color: rgba(177, 66, 245, 0.3); }
+        .clickable-word.found { background-color: var(--correct-color); color: white; font-weight: bold; }
+
+        /* Tone Slider */
+        .slider-container { margin: 20px 0; text-align: center; }
+        input[type=range] { width: 100%; margin: 10px 0; }
+        .tone-labels { display: flex; justify-content: space-between; font-weight: bold; color: var(--accent-montague); }
+        
+        .instructions-banner { background: rgba(0, 229, 255, 0.1); padding: 10px; border-left: 3px solid var(--accent-montague); margin-bottom: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>Romeo & Juliet<br><span style="font-size: 0.6em; color: var(--text-color);">Act 1 Masterclass</span></h1>
+        <button class="nav-btn active" onclick="openTab('scene1')">Scene 1: The Brawl</button>
+        <button class="nav-btn" onclick="openTab('scene2')">Scene 2: The Suitor</button>
+        <button class="nav-btn" onclick="openTab('scene3')">Scene 3: The Book</button>
+        <button class="nav-btn" onclick="openTab('scene4')">Scene 4: Queen Mab</button>
+        <button class="nav-btn" onclick="openTab('scene5')">Scene 5: The Shrine</button>
+        <button class="nav-btn" style="border-color: var(--accent-capulet);" onclick="openTab('locker')">🔒 Evidence Locker</button>
+    </nav>
+
+    <div id="dictionary-modal">
+        <button class="close-dict" onclick="document.getElementById('dictionary-modal').style.display='none'">✖</button>
+        <h3 id="dictionary-word">Word</h3>
+        <p id="dictionary-def">Definition will appear here...</p>
+    </div>
+
+    <main>
+        
+        <div class="instructions-banner">
+            ✨ <strong>New Tools:</strong> Hover over the text passages below and <strong>single-click</strong> to save a quote to your Evidence Locker. <strong>Double-click</strong> any word to instantly look up its definition!
+        </div>
+
+        <div id="scene1" class="module active">
+            <h2>Scene 1: The Brawl & The Broken Heart</h2>
+            <p><strong>Focus:</strong> Vocabulary & Author's Craft (Oxymorons)</p>
+
+            <div class="scene-container">
+                <h3>Romeo's Heavy Heart</h3>
+                <p>Romeo was not at the morning brawl. He is wandering the woods, depressed because the girl he loves (Rosaline) does not love him back. Notice how he combines opposite words to show his confusion.</p>
+                <div class="text-passage">
+                    <strong>ROMEO:</strong><br>
+                    <span class="hl-text" data-id="s1-1">Here's much to do with hate, but more with love.</span><br>
+                    <span class="hl-text" data-id="s1-2">Why then, O brawling love, O loving hate,</span><br>
+                    <span class="hl-text" data-id="s1-3">O anything of nothing first created!</span><br>
+                    <span class="hl-text" data-id="s1-4">O heavy lightness, serious vanity,</span><br>
+                    <span class="hl-text" data-id="s1-5">Misshapen chaos of well-seeming forms!</span><br>
+                    <span class="hl-text" data-id="s1-6">Feather of lead, bright smoke, cold fire, sick health,</span><br>
+                    <span class="hl-text" data-id="s1-7">Still-waking sleep, that is not what it is!</span><br>
+                    <span class="hl-text" data-id="s1-8">This love feel I, that feel no love in this.</span>
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <h3>Interactive: The Oxymoron Match</h3>
+                <p>An <strong>oxymoron</strong> is a figure of speech where two opposite ideas are joined to create an effect. Match the opposing words Romeo uses to describe his internal war!</p>
+                <div class="match-grid" id="match-game"></div>
+                <p id="match-feedback" style="color: var(--accent-montague); font-weight: bold; margin-top: 15px;"></p>
+            </div>
+        </div>
+
+        <div id="scene2" class="module">
+            <h2>Scene 2: The Suitor</h2>
+            <p><strong>Focus:</strong> Reading Comprehension & Character Motives</p>
+
+            <div class="scene-container">
+                <h3>A Father's Protective Will</h3>
+                <p>Count Paris asks Lord Capulet for permission to marry Juliet. Pay close attention to Capulet's reasoning.</p>
+                <div class="text-passage">
+                    <strong>CAPULET:</strong><br>
+                    <span class="hl-text" data-id="s2-1">But saying o'er what I have said before:</span><br>
+                    <span class="hl-text" data-id="s2-2">My child is yet a stranger in the world;</span><br>
+                    <span class="hl-text" data-id="s2-3">She hath not seen the change of fourteen years,</span><br>
+                    <span class="hl-text" data-id="s2-4">Let two more summers wither in their pride,</span><br>
+                    <span class="hl-text" data-id="s2-5">Ere we may think her ripe to be a bride.</span><br><br>
+                    <strong>PARIS:</strong><br>
+                    <span class="hl-text" data-id="s2-6">Younger than she are happy mothers made.</span><br><br>
+                    <strong>CAPULET:</strong><br>
+                    <span class="hl-text" data-id="s2-7">And too soon marred are those so early made.</span><br>
+                    <span class="hl-text" data-id="s2-8">The earth hath swallow'd all my hopes but she,</span><br>
+                    <span class="hl-text" data-id="s2-9">She is the hopeful lady of my earth:</span><br>
+                    <span class="hl-text" data-id="s2-10">But woo her, gentle Paris, get her heart,</span><br>
+                    <span class="hl-text" data-id="s2-11">My will to her consent is but a part...</span>
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <h3>Interactive: Comprehension Check</h3>
+                <p>Based on the text above, answer the following questions. Click the best answer.</p>
+                
+                <p><strong>1. How old is Juliet?</strong></p>
+                <button class="quiz-btn" onclick="checkQuiz(this, false)">14</button>
+                <button class="quiz-btn" onclick="checkQuiz(this, true)">13 (Not yet 14)</button>
+                <button class="quiz-btn" onclick="checkQuiz(this, false)">16</button>
+
+                <p><strong>2. What is Capulet's attitude toward girls marrying young?</strong></p>
+                <button class="quiz-btn" onclick="checkQuiz(this, true)">It ruins or "mars" them.</button>
+                <button class="quiz-btn" onclick="checkQuiz(this, false)">It makes them happy mothers.</button>
+                
+                <p><strong>3. What condition does Capulet give Paris?</strong></p>
+                <button class="quiz-btn" onclick="checkQuiz(this, false)">He must pay a large dowry.</button>
+                <button class="quiz-btn" onclick="checkQuiz(this, true)">He must win Juliet's heart/consent first.</button>
+            </div>
+        </div>
+
+        <div id="scene3" class="module">
+            <h2>Scene 3: The Book Metaphor</h2>
+            <p><strong>Focus:</strong> Theme & Figurative Language (Extended Metaphors)</p>
+
+            <div class="scene-container">
+                <h3>Lady Capulet's Pitch</h3>
+                <p>Lady Capulet tries to convince Juliet to marry Paris. She uses an <strong>extended metaphor</strong>, comparing Paris to a beautiful book.</p>
+                <div class="text-passage" id="clickable-passage">
+                    <strong>LADY CAPULET:</strong><br>
+                    <span class="hl-text" data-id="s3-1"><span class="clickable-word" data-answer="true">Read</span> o'er the <span class="clickable-word" data-answer="true">volume</span> of young Paris' face,</span><br>
+                    <span class="hl-text" data-id="s3-2">And find delight <span class="clickable-word" data-answer="true">writ</span> there with beauty's <span class="clickable-word" data-answer="true">pen</span>;</span><br>
+                    <span class="hl-text" data-id="s3-3">Examine every married lineament,</span><br>
+                    <span class="hl-text" data-id="s3-4">And see how one another lends content</span><br>
+                    <span class="hl-text" data-id="s3-5">And what obscured in this fair <span class="clickable-word" data-answer="true">volume</span> lies</span><br>
+                    <span class="hl-text" data-id="s3-6">Find <span class="clickable-word" data-answer="true">written</span> in the <span class="clickable-word" data-answer="true">margent</span> (margins) of his eyes.</span><br>
+                    <span class="hl-text" data-id="s3-7">This precious <span class="clickable-word" data-answer="true">book</span> of love, this unbound lover,</span><br>
+                    <span class="hl-text" data-id="s3-8">To beautify him, only lacks a <span class="clickable-word" data-answer="true">cover</span>.</span>
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <h3>Interactive: Metaphor Hunt</h3>
+                <p>An extended metaphor carries a comparison through several lines. <strong>Click on the words in the passage above</strong> that relate directly to <strong>reading, writing, or books</strong>.</p>
+                <p>Words found: <span id="metaphor-score" style="font-weight:bold; color:var(--accent-capulet)">0 / 8</span></p>
+            </div>
+        </div>
+
+        <div id="scene4" class="module">
+            <h2>Scene 4: Queen Mab</h2>
+            <p><strong>Focus:</strong> Tone Analysis</p>
+
+            <div class="scene-container">
+                <h3>Mercutio's Descent</h3>
+                <p>Romeo says he had a bad dream. Mercutio mocks him by telling a story about Queen Mab, the fairies' midwife who brings dreams. Notice how the tone shifts from playful fantasy to violent nightmare.</p>
+                <div class="text-passage">
+                    <strong>MERCUTIO:</strong><br>
+                    <span class="hl-text" data-id="s4-1">O, then, I see Queen Mab hath been with you.</span><br>
+                    <span class="hl-text" data-id="s4-2">She is the fairies' midwife, and she comes</span><br>
+                    <span class="hl-text" data-id="s4-3">In shape no bigger than an agate-stone...</span><br>
+                    <span class="hl-text" data-id="s4-4">Her chariot is an empty hazelnut...</span><br>
+                    <span class="hl-text" data-id="s4-5">And in this state she gallops night by night</span><br>
+                    <span class="hl-text" data-id="s4-6">Through lovers' brains, and then they dream of love...</span><br>
+                    <em>[The speech continues and grows darker...]</em><br>
+                    <span class="hl-text" data-id="s4-7">Sometime she driveth o'er a soldier's neck,</span><br>
+                    <span class="hl-text" data-id="s4-8">And then dreams he of cutting foreign throats,</span><br>
+                    <span class="hl-text" data-id="s4-9">Of breaches, ambuscadoes, Spanish blades...</span><br>
+                    <span class="hl-text" data-id="s4-10">And being thus frighted swears a prayer or two</span><br>
+                    <span class="hl-text" data-id="s4-11">And sleeps again. This is that very Mab...</span>
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <h3>Interactive: The Tone Slider</h3>
+                <p><strong>Tone</strong> is the author's/speaker's attitude. Read the first half of the speech (hazelnuts, fairies). Then read the second half (cutting throats, Spanish blades). Move the slider to show how the tone shifts.</p>
+                
+                <div class="slider-container">
+                    <div class="tone-labels">
+                        <span>🧚 Light & Playful</span>
+                        <span>⚔️ Dark & Violent</span>
+                    </div>
+                    <input type="range" id="tone-slider" min="1" max="10" value="5" oninput="updateToneFeedback()">
+                    <p id="tone-feedback" style="font-style: italic; color: var(--accent-montague);">Move the slider to analyze the shift...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene5" class="module">
+            <h2>Scene 5: The Shrine</h2>
+            <p><strong>Focus:</strong> Vocabulary in Context & Religious Imagery</p>
+
+            <div class="scene-container">
+                <h3>The First Conversation</h3>
+                <p>When Romeo and Juliet first meet, their dialogue perfectly forms a 14-line Sonnet. They use deep religious vocabulary to flirt.</p>
+                <div class="text-passage">
+                    <strong>ROMEO:</strong><br>
+                    <span class="hl-text" data-id="s5-1">If I <strong>profane</strong> with my unworthiest hand</span><br>
+                    <span class="hl-text" data-id="s5-2">This holy <strong>shrine</strong>, the gentle fine is this:</span><br>
+                    <span class="hl-text" data-id="s5-3">My lips, two blushing <strong>pilgrims</strong>, ready stand</span><br>
+                    <span class="hl-text" data-id="s5-4">To smooth that rough touch with a tender kiss.</span><br><br>
+                    <strong>JULIET:</strong><br>
+                    <span class="hl-text" data-id="s5-5">Good pilgrim, you do wrong your hand too much,</span><br>
+                    <span class="hl-text" data-id="s5-6">Which mannerly devotion shows in this;</span><br>
+                    <span class="hl-text" data-id="s5-7">For saints have hands that pilgrims' hands do touch,</span><br>
+                    <span class="hl-text" data-id="s5-8">And palm to palm is holy <strong>palmers'</strong> kiss.</span>
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <h3>Interactive: Vocabulary Decoder</h3>
+                <p>Match the Shakespearean word to its modern definition to understand their flirtation.</p>
+                <div class="match-grid" id="vocab-game"></div>
+            </div>
+        </div>
+
+        <div id="locker" class="module">
+            <h2>🔒 Your Evidence Locker</h2>
+            <p>Review the passages you clicked to save. These will be ready for your final essay!</p>
+            <div class="interactive-box">
+                <ul id="evidence-list" style="list-style-type: none; padding: 0;"></ul>
+                <button class="action-btn" onclick="clearLocker()">Clear Locker</button>
+            </div>
+        </div>
+
+    </main>
+
+    <button id="a11y-toggle" aria-label="Accessibility Options">⚙️</button>
+    <div id="a11y-panel">
+        <h3 style="margin-top:0;">Accessibility Hub</h3>
+        <div class="a11y-group">
+            <label>Theme</label>
+            <select id="theme-select" onchange="changeTheme()">
+                <option value="dark">Dark Mode (Default)</option>
+                <option value="light">Light Mode</option>
+                <option value="sepia">Sepia (Low Eye Strain)</option>
+                <option value="tragic">Tragic Love (Crimson & Gold)</option>
+            </select>
+        </div>
+        <div class="a11y-group">
+            <label>Font Style</label>
+            <select id="font-select" onchange="changeFont()">
+                <option value="standard">Standard (Sans-Serif)</option>
+                <option value="dyslexia">Dyslexia Friendly</option>
+            </select>
+        </div>
+        <div class="a11y-group">
+            <label>Text Size</label>
+            <div style="display:flex; gap:10px;">
+                <button onclick="changeFontSize(-2)">A-</button>
+                <button onclick="changeFontSize(2)">A+</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Navigation ---
+        function openTab(tabId) {
+            document.querySelectorAll('.module').forEach(mod => mod.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        // --- Accessibility Hub ---
+        const a11yToggle = document.getElementById('a11y-toggle');
+        const a11yPanel = document.getElementById('a11y-panel');
+        a11yToggle.addEventListener('click', () => {
+            a11yPanel.style.display = a11yPanel.style.display === 'block' ? 'none' : 'block';
+        });
+
+        function changeTheme() {
+            const theme = document.getElementById('theme-select').value;
+            document.body.className = document.body.className.replace(/theme-\w+/g, '');
+            if (theme !== 'dark') document.body.classList.add('theme-' + theme);
+        }
+
+        function changeFont() {
+            if (document.getElementById('font-select').value === 'dyslexia') {
+                document.body.classList.add('font-dyslexia');
+            } else {
+                document.body.classList.remove('font-dyslexia');
+            }
+        }
+
+        let currentFontSize = 16;
+        function changeFontSize(change) {
+            currentFontSize += change;
+            document.documentElement.style.setProperty('--font-size', currentFontSize + 'px');
+        }
+
+        // --- Dictionary Feature (Double Click) ---
+        document.addEventListener('dblclick', async (e) => {
+            const selectedText = window.getSelection().toString().trim().replace(/[^a-zA-Z]/g, '');
+            if (!selectedText) return;
+
+            const modal = document.getElementById('dictionary-modal');
+            const wordEl = document.getElementById('dictionary-word');
+            const defEl = document.getElementById('dictionary-def');
+
+            wordEl.innerText = selectedText;
+            defEl.innerText = "Searching the archives...";
+            modal.style.display = 'block';
+
+            try {
+                let res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`);
+                let data = await res.json();
+                if (data && data[0] && data[0].meanings) {
+                    defEl.innerText = data[0].meanings[0].definitions[0].definition;
+                } else {
+                    defEl.innerText = "Alas, this word was not found in our modern archives. Try looking for context clues!";
+                }
+            } catch (err) {
+                defEl.innerText = "The messengers failed to find a definition. Please check your connection.";
+            }
+        });
+
+        // --- Evidence Locker (Hover to Highlight, Click to Save) ---
+        let savedHighlights = JSON.parse(localStorage.getItem('romeoHighlights') || '[]');
+
+        function initHighlights() {
+            const spans = document.querySelectorAll('.hl-text');
+            
+            // Restore saved highlights on load
+            spans.forEach(span => {
+                if (savedHighlights.includes(span.dataset.id)) {
+                    span.classList.add('saved');
+                }
+
+                // We use a slight delay so double-clicking the dictionary doesn't toggle the highlight wildly
+                let clickTimer;
+                span.addEventListener('click', function(e) {
+                    if (e.detail === 1) {
+                        clickTimer = setTimeout(() => {
+                            // Toggle Class
+                            this.classList.toggle('saved');
+                            
+                            // Update Storage Array
+                            if (this.classList.contains('saved')) {
+                                if (!savedHighlights.includes(this.dataset.id)) {
+                                    savedHighlights.push(this.dataset.id);
+                                }
+                            } else {
+                                savedHighlights = savedHighlights.filter(id => id !== this.dataset.id);
+                            }
+                            
+                            localStorage.setItem('romeoHighlights', JSON.stringify(savedHighlights));
+                            renderEvidenceLocker();
+                        }, 250); // wait a quarter second to see if it's a double click
+                    }
+                });
+
+                // Cancel the highlight toggle if they were just double-clicking to define a word
+                span.addEventListener('dblclick', function(e) {
+                    clearTimeout(clickTimer);
+                });
+            });
+            renderEvidenceLocker();
+        }
+
+        function renderEvidenceLocker() {
+            const list = document.getElementById('evidence-list');
+            list.innerHTML = '';
+            
+            if(savedHighlights.length === 0) {
+                list.innerHTML = "<li style='padding: 10px; background: rgba(0,0,0,0.2);'>No evidence yet. Hover over the text and click to save a quote!</li>";
+            } else {
+                savedHighlights.forEach(id => {
+                    let span = document.querySelector(`.hl-text[data-id="${id}"]`);
+                    if(span) {
+                        let li = document.createElement('li');
+                        li.style.padding = "10px"; li.style.marginBottom = "10px";
+                        li.style.borderLeft = "3px solid var(--accent-capulet)";
+                        li.style.background = "rgba(0,0,0,0.2)";
+                        
+                        // Strip out any HTML tags (like the clickable metaphor words) for clean text
+                        let cleanText = span.innerText;
+                        li.innerText = `"${cleanText}"`;
+                        list.appendChild(li);
+                    }
+                });
+            }
+        }
+
+        function clearLocker() {
+            if(confirm("Are you sure you want to delete all evidence?")) {
+                savedHighlights = [];
+                localStorage.setItem('romeoHighlights', JSON.stringify(savedHighlights));
+                document.querySelectorAll('.hl-text.saved').forEach(span => span.classList.remove('saved'));
+                renderEvidenceLocker();
+            }
+        }
+
+        // --- INTERACTIVE ACTIVITIES ---
+
+        // Scene 1: Oxymoron Match (BULLETPROOF DIRECT STYLING)
+        function initOxymoronMatch() {
+            const words = [
+                {id: 1, text: "Feather"}, {id: 1, text: "Lead"},
+                {id: 2, text: "Bright"}, {id: 2, text: "Smoke"},
+                {id: 3, text: "Cold"}, {id: 3, text: "Fire"},
+                {id: 4, text: "Sick"}, {id: 4, text: "Health"}
+            ].sort(() => Math.random() - 0.5);
+            
+            const matchColors = ['#ff2a2a', '#4caf50', '#ffd700', '#b142f5'];
+            const grid = document.getElementById('match-game');
+            let firstSelection = null;
+            let pairsFound = 0;
+
+            words.forEach(w => {
+                let btn = document.createElement('button');
+                btn.className = 'match-btn'; btn.innerText = w.text; btn.dataset.id = w.id;
+                btn.onclick = function() {
+                    if (this.dataset.matched === "true") return;
+                    if (!firstSelection) {
+                        this.classList.add('selected'); firstSelection = this;
+                    } else if (firstSelection === this) {
+                        this.classList.remove('selected'); firstSelection = null;
+                    } else {
+                        if (firstSelection.dataset.id === this.dataset.id) {
+                            firstSelection.classList.remove('selected');
+                            firstSelection.dataset.matched = "true"; this.dataset.matched = "true";
+                            let color = matchColors[pairsFound];
+                            
+                            firstSelection.style.backgroundColor = color; firstSelection.style.borderColor = color; firstSelection.style.cursor = "not-allowed";
+                            this.style.backgroundColor = color; this.style.borderColor = color; this.style.cursor = "not-allowed";
+                            
+                            if (color === '#ffd700') {
+                                firstSelection.style.color = "#000"; this.style.color = "#000";
+                            } else {
+                                firstSelection.style.color = "#fff"; this.style.color = "#fff";
+                            }
+
+                            pairsFound++;
+                            if(pairsFound === 4) document.getElementById('match-feedback').innerText = "Perfect! Love is a confusing war of opposites!";
+                        } else {
+                            firstSelection.classList.remove('selected');
+                        }
+                        firstSelection = null;
+                    }
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        // Scene 2: Quiz Buttons
+        function checkQuiz(btn, isCorrect) {
+            if(isCorrect) {
+                btn.style.background = "var(--correct-color)"; btn.style.color = "white"; btn.innerText += " ✅ Correct!";
+            } else {
+                btn.style.background = "red"; btn.style.color = "white"; btn.innerText += " ❌ Try again.";
+                setTimeout(() => { btn.style.background="transparent"; btn.style.color="var(--text-color)"; btn.innerText = btn.innerText.replace(" ❌ Try again.", ""); }, 1500);
+            }
+        }
+
+        // Scene 3: Metaphor Hunt
+        let foundMetaphors = 0;
+        document.querySelectorAll('.clickable-word').forEach(word => {
+            word.addEventListener('click', function(e) {
+                e.stopPropagation(); // Stop it from triggering the hover-highlight underneath
+                if(this.dataset.answer === "true" && !this.classList.contains('found')) {
+                    this.classList.add('found');
+                    foundMetaphors++;
+                    document.getElementById('metaphor-score').innerText = `${foundMetaphors} / 8`;
+                    if(foundMetaphors === 8) alert("Brilliant! Lady Capulet is literally saying Paris is a book, and Juliet would be the beautiful cover that makes him complete.");
+                }
+            });
+        });
+
+        // Scene 4: Tone Slider
+        function updateToneFeedback() {
+            const val = document.getElementById('tone-slider').value;
+            const feedback = document.getElementById('tone-feedback');
+            if (val <= 3) feedback.innerText = "The speech starts out light, talking about tiny fairies and hazelnut carriages.";
+            else if (val <= 7) feedback.innerText = "The tone is shifting... dreams are becoming more specific and intense.";
+            else feedback.innerText = "The tone is now dark and violent. The dreams become nightmares of war and cutting throats!";
+        }
+
+        // Scene 5: Vocab Match (Standard Green)
+        function initVocabMatch() {
+            const words = [
+                {id: 1, text: "Profane"}, {id: 1, text: "Disrespect something holy"},
+                {id: 2, text: "Shrine"}, {id: 2, text: "A holy statue or place"},
+                {id: 3, text: "Pilgrim"}, {id: 3, text: "A religious traveler"},
+                {id: 4, text: "Palmers"}, {id: 4, text: "Travelers returning with palm branches"}
+            ].sort(() => Math.random() - 0.5);
+            
+            const grid = document.getElementById('vocab-game');
+            let firstSel = null;
+
+            words.forEach(w => {
+                let btn = document.createElement('button');
+                btn.className = 'match-btn'; btn.innerText = w.text; btn.dataset.id = w.id;
+                btn.onclick = function() {
+                    if (this.dataset.matched === "true") return;
+                    if (!firstSel) {
+                        this.classList.add('selected'); firstSel = this;
+                    } else if (firstSel === this) {
+                        this.classList.remove('selected'); firstSel = null;
+                    } else {
+                        if (firstSel.dataset.id === this.dataset.id) {
+                            firstSel.classList.remove('selected');
+                            firstSel.dataset.matched = "true"; this.dataset.matched = "true";
+                            
+                            firstSel.style.backgroundColor = "var(--correct-color)"; firstSel.style.borderColor = "var(--correct-color)"; firstSel.style.color = "#fff"; firstSel.style.cursor = "not-allowed";
+                            this.style.backgroundColor = "var(--correct-color)"; this.style.borderColor = "var(--correct-color)"; this.style.color = "#fff"; this.style.cursor = "not-allowed";
+                        } else {
+                            firstSel.classList.remove('selected');
+                        }
+                        firstSel = null;
+                    }
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        // Initialize Everything
+        document.addEventListener("DOMContentLoaded", () => {
+            initHighlights();
+            initOxymoronMatch();
+            initVocabMatch();
+        });
+    </script>
+</body>
+</html>
