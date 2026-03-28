@@ -1,0 +1,2014 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romeo &amp; Juliet Learning Lab</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&amp;family=Nunito:wght@400;600;700;800&amp;family=OpenDyslexic:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+html, body { height: 100%; margin: 0; }
+* { box-sizing: border-box; }
+
+:root {
+  --bg-primary: #1a0a1e;
+  --bg-secondary: #2d1233;
+  --bg-card: #3a1a42;
+  --text-primary: #f5e6fa;
+  --text-secondary: #c9a0d4;
+  --accent-primary: #e63946;
+  --accent-secondary: #d4a574;
+  --accent-gold: #f4c542;
+  --border-color: #5a2d6a;
+  --success: #4ade80;
+  --error: #f87171;
+}
+
+.theme-readable {
+  --bg-primary: #fefefe;
+  --bg-secondary: #f0f0f0;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #444444;
+  --accent-primary: #0055aa;
+  --accent-secondary: #006644;
+  --accent-gold: #b8860b;
+  --border-color: #cccccc;
+  --success: #2d8a4e;
+  --error: #cc3333;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.4s ease;
+}
+
+.font-body { font-family: 'Nunito', sans-serif; }
+.font-literary { font-family: 'Crimson Text', serif; }
+.font-dyslexic { font-family: 'OpenDyslexic', sans-serif !important; }
+
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+.glass-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(230,57,70,0.15); }
+
+.btn-primary {
+  background: var(--accent-primary);
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover { filter: brightness(1.15); transform: scale(1.03); }
+.btn-primary:focus { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent-secondary);
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  border: 2px solid var(--accent-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { background: var(--accent-secondary); color: #fff; }
+.btn-secondary:focus { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+
+.scene-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 700;
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-gold));
+  transition: width 0.6s ease;
+}
+
+.passage-block {
+  border-left: 4px solid var(--accent-primary);
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: rgba(230,57,70,0.07);
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+  line-height: 1.8;
+}
+
+.modern-translation {
+  display: none;
+  background: rgba(212,165,116,0.12);
+  border-left: 4px solid var(--accent-secondary);
+  padding: 14px 18px;
+  border-radius: 0 12px 12px 0;
+  margin: 8px 0;
+}
+.modern-translation.show { display: block; animation: fadeSlide 0.3s ease; }
+
+.scaffold-box {
+  background: rgba(244,197,66,0.1);
+  border: 1px dashed var(--accent-gold);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 10px 0;
+}
+
+.hint-btn {
+  background: var(--accent-gold);
+  color: #1a1a1a;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85em;
+}
+
+.drag-item {
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s;
+  touch-action: none;
+}
+.drag-item:active, .drag-item.dragging { 
+  opacity: 0.7; 
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+.drag-item.correct { border-color: var(--success); background: rgba(74,222,128,0.15); }
+.drag-item.incorrect { border-color: var(--error); background: rgba(248,113,113,0.15); }
+
+.drop-zone {
+  min-height: 48px;
+  border: 2px dashed var(--border-color);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 8px;
+}
+.drop-zone.drag-over { border-color: var(--accent-primary); background: rgba(230,57,70,0.1); }
+.drop-zone.filled { border-style: solid; }
+
+.mc-option {
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: inherit;
+}
+.mc-option:hover { border-color: var(--accent-primary); }
+.mc-option:focus { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+.mc-option.selected { border-color: var(--accent-primary); background: rgba(230,57,70,0.15); }
+.mc-option.correct { border-color: var(--success); background: rgba(74,222,128,0.15); }
+.mc-option.wrong { border-color: var(--error); background: rgba(248,113,113,0.15); }
+
+.cer-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: inherit;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.7;
+}
+.cer-textarea:focus { outline: none; border-color: var(--accent-primary); }
+
+.tab-btn {
+  padding: 10px 20px;
+  border-radius: 10px 10px 0 0;
+  border: 2px solid var(--border-color);
+  border-bottom: none;
+  cursor: pointer;
+  font-weight: 700;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.tab-btn.active { background: var(--bg-card); color: var(--accent-primary); border-color: var(--accent-primary); }
+.tab-btn:focus { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  z-index: 9999;
+  transition: transform 0.4s ease;
+  color: #fff;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--success); color: #1a1a1a; }
+.toast.error { background: var(--error); }
+.toast.info { background: var(--accent-primary); }
+
+.nav-item {
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+}
+.nav-item:hover, .nav-item.active { background: rgba(230,57,70,0.15); color: var(--accent-primary); }
+.nav-item:focus { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+
+@keyframes fadeSlide { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+@keyframes confetti {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  100% { transform: translateY(-60px) rotate(360deg); opacity:0; }
+}
+
+.animate-in { animation: fadeSlide 0.4s ease; }
+
+.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
+
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  .glass-card { border: 1px solid #ccc !important; box-shadow: none !important; background: #fff !important; }
+  .passage-block { background: #f5f5f5 !important; }
+}
+
+.speaking-prompt {
+  background: linear-gradient(135deg, rgba(230,57,70,0.1), rgba(212,165,116,0.1));
+  border: 2px solid var(--accent-secondary);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.sentence-frame {
+  background: rgba(244,197,66,0.08);
+  border: 1px solid var(--accent-gold);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.week-header {
+  background: linear-gradient(135deg, var(--accent-primary), #8b1a2b);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.ccss-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75em;
+  font-weight: 700;
+  background: rgba(244,197,66,0.2);
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold);
+}
+
+.linear-scale {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.linear-option {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+.linear-option:hover { border-color: var(--accent-primary); }
+.linear-option.selected { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); }
+.linear-option:focus { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 40;
+}
+.sidebar-overlay.show { display: block; }
+
+@media (max-width: 768px) {
+  .sidebar { 
+    position: fixed;
+    left: -280px;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    transition: left 0.3s ease;
+    width: 270px;
+  }
+  .sidebar.open { left: 0; }
+}
+</style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="font-body h-full">
+  <div id="app-root" class="h-full w-full flex flex-col overflow-auto" style="background:var(--bg-primary); color:var(--text-primary);"><!-- Top Bar -->
+   <header class="no-print flex items-center justify-between px-4 py-3 flex-shrink-0" style="background:var(--bg-secondary); border-bottom:1px solid var(--border-color);">
+    <div class="flex items-center gap-3"><button id="menu-toggle" class="md:hidden p-2 rounded-lg" style="color:var(--text-primary); background:transparent; border:none; cursor:pointer;" aria-label="Toggle menu"> <i data-lucide="menu" style="width:24px;height:24px;"></i> </button> <span style="font-size:1.6em;" aria-hidden="true">🌹</span>
+     <h1 id="main-title" class="font-literary" style="font-size:1.3em; font-weight:700; color:var(--accent-primary);"></h1>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap"><button id="theme-toggle" class="btn-secondary" style="font-size:0.8em; padding:6px 14px;" aria-label="Toggle readable theme"> <i data-lucide="eye" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> <span class="hidden sm:inline"> Readable</span> </button> <button id="dyslexic-toggle" class="btn-secondary" style="font-size:0.8em; padding:6px 14px;" aria-label="Toggle dyslexia-friendly font"> <span style="font-family:'OpenDyslexic',sans-serif;">Aa</span> </button>
+     <div class="flex items-center gap-1" role="group" aria-label="Font size controls"><button id="font-down" class="btn-secondary" style="padding:4px 10px; font-size:0.8em;" aria-label="Decrease font size">A-</button> <span id="font-size-display" style="font-size:0.8em; min-width:32px; text-align:center; color:var(--text-secondary);">16</span> <button id="font-up" class="btn-secondary" style="padding:4px 10px; font-size:0.8em;" aria-label="Increase font size">A+</button>
+     </div>
+    </div>
+   </header>
+   <div class="flex flex-1 overflow-hidden"><!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" role="presentation"></div><!-- Sidebar Nav -->
+    <nav id="sidebar" class="sidebar no-print flex-shrink-0 overflow-y-auto" style="width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); padding:16px;" aria-label="Scene navigation">
+     <div style="margin-bottom:16px;">
+      <p id="welcome-msg" style="font-size:0.9em; color:var(--text-secondary); margin-bottom:4px;"></p>
+      <p id="teacher-display" style="font-size:0.8em; color:var(--text-secondary);"></p>
+     </div>
+     <div class="progress-bar" style="margin-bottom:16px;">
+      <div id="overall-progress" class="progress-fill" style="width:0%;"></div>
+     </div>
+     <p id="progress-text" style="font-size:0.8em; color:var(--text-secondary); margin-bottom:16px;">0 / 8 scenes completed</p>
+     <div id="nav-list" role="list" style="display:flex; flex-direction:column; gap:4px;">
+     </div>
+     <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color);"><button id="save-all-btn" class="btn-primary" style="width:100%; font-size:0.85em; margin-bottom:8px;"> <i data-lucide="save" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Save Progress </button>
+     </div>
+    </nav><!-- Main Content -->
+    <main id="main-content" class="flex-1 overflow-y-auto" style="padding:24px;" role="main">
+     <div id="scene-content" style="max-width:900px; margin:0 auto;"><!-- Dynamic content loads here -->
+     </div>
+    </main>
+   </div>
+  </div>
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+  <script>
+// ============================================================
+// SCENE DATA - Comprehensive Romeo & Juliet curriculum
+// ============================================================
+
+const SCENES = [
+  {
+    id: "prologue",
+    title: "The Prologue",
+    subtitle: "The Set-Up",
+    week: 1,
+    act: "Prologue",
+    icon: "scroll",
+    color: "#e63946",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.4","RL.9-10.5","SL.9-10.1"],
+    summary: "A narrator explains that two powerful families in Verona are trapped in a deadly feud that only the death of their children will end.",
+    passages: [
+      {
+        original: "Two households, both alike in dignity,\nIn fair Verona, where we lay our scene,\nFrom ancient grudge break to new mutiny,\nWhere civil blood makes civil hands unclean.\nFrom forth the fatal loins of these two foes\nA pair of star-cross'd lovers take their life;\nWhose misadventured piteous overthrows\nDo with their death bury their parents' strife.\nThe fearful passage of their death-mark'd love,\nAnd the continuance of their parents' rage,\nWhich, but their children's end, nought could remove,\nIs now the two hours' traffic of our stage;\nThe which if you with patient ears attend,\nWhat here shall miss, our toil shall strive to mend.",
+        modern: "Two equally powerful families in beautiful Verona are at war. Their old hatred keeps erupting into new violence, staining everyone's hands with blood. From these two enemy families, two doomed lovers are born — and they will die. Only when their children die will the parents finally stop fighting. This tragic love story, and the rage that nothing else could stop, is what we're about to show you. Listen carefully, and we'll do our best to tell it well.",
+        label: "The Complete Prologue (Sonnet)"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Match the Shakespearean Words",
+        instructions: "Drag each Shakespearean word to its modern meaning.",
+        ccss: "RL.9-10.4",
+        pairs: [
+          { term: "mutiny", def: "rebellion / fighting" },
+          { term: "star-cross'd", def: "doomed by fate" },
+          { term: "civil", def: "belonging to citizens" },
+          { term: "strife", def: "conflict / struggle" },
+          { term: "piteous", def: "deserving of pity" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "According to the Prologue, what will end the feud between the two families?",
+            options: ["A peace treaty","The death of the lovers","A marriage arrangement","The Prince's command"],
+            correct: 1,
+            hint: "Look at the lines about 'star-cross'd lovers' and what 'bury their parents' strife.'"
+          },
+          {
+            q: "What does 'star-cross'd' most likely mean?",
+            options: ["Blessed by the stars","Traveling across stars","Doomed by fate","Famous like stars"],
+            correct: 2,
+            hint: "Think about what happens to the lovers. Does their fate seem lucky or unlucky?"
+          },
+          {
+            q: "The Prologue is written in what poetic form?",
+            options: ["Free verse","Haiku","Sonnet (14 lines)","Limerick"],
+            correct: 2,
+            hint: "Count the lines. This form has exactly 14 lines with a specific rhyme scheme."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: Fate vs. Free Will",
+        ccss: "W.9-10.1",
+        prompt: "Based on the Prologue, does Shakespeare suggest that Romeo and Juliet's fate is predetermined, or do they have free will? Use evidence from the text to support your claim.",
+        sentenceFrames: {
+          claim: "Based on the Prologue, Shakespeare suggests that Romeo and Juliet's fate is _____ because _____.",
+          evidence: "In the Prologue, Shakespeare writes, '_____ ,' which shows that _____.",
+          reasoning: "This evidence supports my claim because _____. The word(s) '_____ ' specifically suggest(s) that _____."
+        },
+        scaffoldTips: [
+          "Look for words that suggest destiny: 'star-cross'd,' 'fatal,' 'death-mark'd'",
+          "Consider: Does 'take their life' mean they choose, or is it decided for them?",
+          "Think about whether the audience knowing the ending changes how we see their choices."
+        ]
+      },
+      linear: {
+        title: "📊 Rate Your Understanding",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well do you understand the main conflict introduced in the Prologue?", scale: 5 },
+          { q: "How confident are you in identifying literary devices in the Prologue?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Discussion Circle",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Think of two families or groups in your community (or in media) that have a long-running rivalry. How does it compare to the Montagues and Capulets?",
+          "The Prologue tells us the ending before the play even starts. Why do you think Shakespeare does this? How does it change the experience of watching?"
+        ],
+        frames: [
+          "I think Shakespeare reveals the ending because _____.",
+          "A rivalry I can compare this to is _____ because _____.",
+          "I agree/disagree with _____ because _____.",
+          "Building on what _____ said, I also think _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act1scene1",
+    title: "Act 1, Scene 1",
+    subtitle: "The Brawl",
+    week: 1,
+    act: "Act 1",
+    icon: "swords",
+    color: "#dc2626",
+    ccss: ["RL.9-10.1","RL.9-10.3","RL.9-10.4","SL.9-10.1","W.9-10.1"],
+    summary: "A petty insult between servants escalates into a violent street fight, establishing the high stakes and danger of the family grudge.",
+    passages: [
+      {
+        original: "SAMPSON: I will bite my thumb at them, which is a disgrace to them if they bear it.\nABRAHAM: Do you bite your thumb at us, sir?\nSAMPSON: I do bite my thumb, sir.\nABRAHAM: Do you bite your thumb at us, sir?\nSAMPSON: [aside to Gregory] Is the law of our side if I say 'ay'?\nGREGORY: No.\nSAMPSON: No, sir. I do not bite my thumb at you, sir, but I bite my thumb, sir.",
+        modern: "SAMPSON: I'm going to make a rude gesture at them — it's basically like flipping them off.\nABRAHAM: Are you disrespecting us?\nSAMPSON: I am making the gesture, yes.\nABRAHAM: But are you doing it AT us?\nSAMPSON: [whispering] Will I get in trouble if I say yes?\nGREGORY: Yes.\nSAMPSON: No sir. I'm just doing it in general. Not at you specifically.",
+        label: "The Thumb-Biting Insult"
+      },
+      {
+        original: "PRINCE: Three civil brawls, bred of an airy word,\nBy thee, old Capulet, and Montague,\nHave thrice disturb'd the quiet of our streets.\nIf ever you disturb our streets again,\nYour lives shall pay the forfeit of the peace.",
+        modern: "PRINCE: Three times now, pointless arguments started by you, Capulet, and you, Montague, have turned into street fights that destroyed the peace of our city. If it happens again, you will pay with your lives.",
+        label: "The Prince's Warning"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Escalation Timeline",
+        instructions: "Put these events in the correct order from first to last.",
+        ccss: "RL.9-10.3",
+        pairs: [
+          { term: "1st", def: "Sampson bites his thumb" },
+          { term: "2nd", def: "Abraham confronts Sampson" },
+          { term: "3rd", def: "Servants begin fighting" },
+          { term: "4th", def: "Benvolio tries to stop it" },
+          { term: "5th", def: "The Prince threatens death" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "Why does Sampson hesitate before admitting he's biting his thumb at Abraham?",
+            options: ["He forgot why he's doing it","He's worried about getting in legal trouble","He's scared of Abraham","He wants to be friends"],
+            correct: 1,
+            hint: "Listen to what Sampson whispers to Gregory. What does he ask about?"
+          },
+          {
+            q: "What consequence does the Prince promise if there's another fight?",
+            options: ["A fine of gold","Jail time","Death","Banishment from Verona"],
+            correct: 2,
+            hint: "The Prince says 'Your lives shall pay the forfeit of the peace.' What does 'forfeit' your life mean?"
+          },
+          {
+            q: "What is the MAIN purpose of this scene in the play?",
+            options: ["To introduce Romeo and Juliet","To show how dangerous and intense the feud is","To explain the history of Verona","To introduce the Prince as the villain"],
+            correct: 1,
+            hint: "Think about what this scene shows us about the world Romeo and Juliet live in."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: Modern Connections",
+        ccss: "W.9-10.1",
+        prompt: "How does the brawl in Act 1, Scene 1 show that even small conflicts can escalate into serious violence? Use evidence from the text and connect it to real life.",
+        sentenceFrames: {
+          claim: "Shakespeare demonstrates that small conflicts can escalate into serious violence because _____.",
+          evidence: "For example, the scene begins with _____ and quickly escalates to _____ when Shakespeare writes, '_____.'",
+          reasoning: "This connects to real life because _____. Just like the servants in the play, people today sometimes _____."
+        },
+        scaffoldTips: [
+          "Notice how a simple thumb gesture led to a city-wide brawl.",
+          "Think about how social media arguments can escalate today.",
+          "Consider the role of peer pressure — Sampson checks with Gregory before acting."
+        ]
+      },
+      linear: {
+        title: "📊 Reflection Scale",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well can you explain how small conflicts escalate in this scene?", scale: 5 },
+          { q: "How confident are you connecting this scene to modern-day conflicts?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Think-Pair-Share",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Have you ever seen a small argument blow up into something much bigger? What happened?",
+          "Why do you think the servants feel the need to fight for their bosses' feud? How does this connect to loyalty in your community?"
+        ],
+        frames: [
+          "I've seen conflicts escalate when _____.",
+          "The servants fight because _____, which reminds me of _____.",
+          "I think loyalty can be dangerous when _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act1scene5",
+    title: "Act 1, Scene 5",
+    subtitle: "The Party",
+    week: 2,
+    act: "Act 1",
+    icon: "heart",
+    color: "#e63946",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.4","RL.9-10.5","W.9-10.1","SL.9-10.1"],
+    summary: "Romeo and Juliet fall in love at first sight at a masquerade ball, only to be devastated when they discover they are members of enemy houses.",
+    passages: [
+      {
+        original: "ROMEO: O, she doth teach the torches to burn bright!\nIt seems she hangs upon the cheek of night\nLike a rich jewel in an Ethiope's ear;\nBeauty too rich for use, for earth too dear!\nDid my heart love till now? Forswear it, sight!\nFor I ne'er saw true beauty till this night.",
+        modern: "ROMEO: Oh wow, she's so beautiful she makes the torches look dim! She stands out against the dark night like a diamond earring against dark skin. She's too beautiful for this world! Did I ever really love before? No way — I never knew what true beauty was until right now.",
+        label: "Romeo Sees Juliet for the First Time"
+      },
+      {
+        original: "ROMEO: [to Juliet] If I profane with my unworthiest hand\nThis holy shrine, the gentle fine is this:\nMy lips, two blushing pilgrims, ready stand\nTo smooth that rough touch with a tender kiss.\nJULIET: Good pilgrim, you do wrong your hand too much,\nWhich mannerly devotion shows in this;\nFor saints have hands that pilgrims' hands do touch,\nAnd palm to palm is holy palmers' kiss.\nROMEO: Have not saints lips, and holy palmers too?\nJULIET: Ay, pilgrim, lips that they must use in prayer.\nROMEO: O, then, dear saint, let lips do what hands do;\nThey pray, grant thou, lest faith turn to despair.\nJULIET: Saints do not move, though grant for prayers' sake.\nROMEO: Then move not, while my prayer's effect I take.",
+        modern: "ROMEO: If my hand isn't worthy enough to touch yours — which is like a holy statue — then let me make up for it with a kiss.\nJULIET: You're being too hard on yourself. Holding hands is perfectly fine — pilgrims shake hands all the time.\nROMEO: But don't pilgrims also have lips?\nJULIET: Yes, but those lips are for praying!\nROMEO: Well then, let my lips pray by kissing you. Please say yes, or I'll lose faith.\nJULIET: Saints stay still but answer prayers.\nROMEO: Then stay still while I take the answer to my prayer. [He kisses her.]",
+        label: "The Shared Sonnet — Romeo & Juliet's First Words"
+      },
+      {
+        original: "JULIET: My only love sprung from my only hate!\nToo early seen unknown, and known too late!\nProdigious birth of love it is to me,\nThat I must love a loathed enemy.",
+        modern: "JULIET: The only person I've ever truly loved turns out to be from the one family I'm supposed to hate! I saw him before I knew who he was, and by the time I found out, it was too late. What a terrible twist of fate — I've fallen in love with my enemy.",
+        label: "Juliet Discovers Romeo's Identity"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Sonnet Structure Match",
+        instructions: "Match each literary device to the correct example from the shared sonnet.",
+        ccss: "RL.9-10.4",
+        pairs: [
+          { term: "Extended Metaphor", def: "Comparing love to a religious pilgrimage" },
+          { term: "Personification", def: "'My lips, two blushing pilgrims'" },
+          { term: "Dramatic Irony", def: "Audience knows they're enemies; they don't" },
+          { term: "Oxymoron", def: "'My only love sprung from my only hate'" },
+          { term: "Rhyming Couplet", def: "The last two lines of their shared sonnet" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "When Romeo says Juliet 'teaches the torches to burn bright,' he means:",
+            options: ["She is standing near the torches","She is so beautiful she outshines everything","She is carrying a torch","She set something on fire"],
+            correct: 1,
+            hint: "This is a figure of speech. He's comparing her beauty to something brighter than fire."
+          },
+          {
+            q: "Romeo and Juliet's first conversation forms a complete sonnet (14 lines). This structure is significant because:",
+            options: ["It shows they are both good poets","It symbolizes their perfect connection and compatibility","It was an accident by Shakespeare","It means they've met before"],
+            correct: 1,
+            hint: "Think about what it means that they literally finish each other's lines. What does that symbolize?"
+          },
+          {
+            q: "What does Juliet mean by 'My only love sprung from my only hate'?",
+            options: ["She hates Romeo","She loves someone from the enemy family","She hates love","She regrets going to the party"],
+            correct: 1,
+            hint: "She's realizing that the person she just fell in love with is a Montague — her family's sworn enemy."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: Love at First Sight",
+        ccss: "W.9-10.1",
+        prompt: "Is the love between Romeo and Juliet in this scene genuine, or is it just infatuation based on appearance? Use evidence from their dialogue to support your claim.",
+        sentenceFrames: {
+          claim: "The connection between Romeo and Juliet in Act 1, Scene 5 is best described as _____ because _____.",
+          evidence: "When Romeo and Juliet speak for the first time, they _____ . For example, Shakespeare writes, '_____.'",
+          reasoning: "This evidence suggests _____ because _____. The fact that their dialogue forms a _____ shows that _____."
+        },
+        scaffoldTips: [
+          "Consider: Romeo's first words about Juliet focus on her appearance. Does that change when they speak?",
+          "The shared sonnet uses religious imagery. Why might love be compared to religion?",
+          "Think about whether their connection is just physical or if there's something deeper in how they communicate."
+        ]
+      },
+      linear: {
+        title: "📊 Rate Your Understanding",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well do you understand the literary devices in the shared sonnet?", scale: 5 },
+          { q: "How confident are you explaining dramatic irony in this scene?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Fishbowl Discussion",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Do you believe in love at first sight? Why or why not? Use evidence from the text and your own experience.",
+          "Romeo was in love with Rosaline just hours before meeting Juliet. Does this change how you see his feelings? Why?"
+        ],
+        frames: [
+          "I believe/don't believe in love at first sight because _____.",
+          "When Romeo says '_____ ,' it suggests his feelings are _____.",
+          "Romeo's quick change from Rosaline to Juliet makes me think _____.",
+          "I want to push back on what _____ said because _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act2scene2",
+    title: "Act 2, Scene 2",
+    subtitle: "The Balcony",
+    week: 3,
+    act: "Act 2",
+    icon: "moon",
+    color: "#7c3aed",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.4","RL.9-10.6","W.9-10.1","SL.9-10.1"],
+    summary: "Under the cover of night, the lovers confess their private feelings and decide to bypass their families by marrying in secret the very next day.",
+    passages: [
+      {
+        original: "ROMEO: But, soft! What light through yonder window breaks?\nIt is the east, and Juliet is the sun.\nArise, fair sun, and kill the envious moon,\nWho is already sick and pale with grief,\nThat thou, her maid, art far more fair than she.\nBe not her maid, since she is envious;\nHer vestal livery is but sick and green\nAnd none but fools do wear it; cast it off.",
+        modern: "ROMEO: Wait — what's that light in the window? Juliet is like the sun rising in the east. She's so beautiful that the moon is jealous of her. The moon looks sick and pale compared to her. Don't be like the moon, Juliet — you're way more beautiful than that.",
+        label: "Romeo's Opening Monologue"
+      },
+      {
+        original: "JULIET: O Romeo, Romeo! Wherefore art thou Romeo?\nDeny thy father and refuse thy name;\nOr, if thou wilt not, be but sworn my love,\nAnd I'll no longer be a Capulet.\n'Tis but thy name that is my enemy;\nThou art thyself, though not a Montague.\nWhat's Montague? It is nor hand, nor foot,\nNor arm, nor face, nor any other part\nBelonging to a man. O, be some other name!\nWhat's in a name? That which we call a rose\nBy any other name would smell as sweet.",
+        modern: "JULIET: Oh Romeo, Romeo! WHY do you have to be Romeo — a Montague? Just give up your family name. Or if you won't, just swear you love me and I'll stop being a Capulet. It's only your NAME that's my enemy. You're still you, even without the name 'Montague.' What even is a 'Montague'? It's not a hand, a foot, a face — it's nothing real. Please, just be called something else! What's in a name anyway? A rose would still smell amazing even if we called it something else.",
+        label: "Juliet's Famous Monologue — 'What's in a Name?'"
+      },
+      {
+        original: "JULIET: My bounty is as boundless as the sea,\nMy love as deep; the more I give to thee,\nThe more I have, for both are infinite.",
+        modern: "JULIET: My love for you is as vast and endless as the ocean. The more love I give you, the more I seem to have — because my love has no limits.",
+        label: "Juliet's Declaration of Infinite Love"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Identify the Figurative Language",
+        instructions: "Match each quote to the correct literary device.",
+        ccss: "RL.9-10.4",
+        pairs: [
+          { term: "Metaphor", def: "'Juliet is the sun'" },
+          { term: "Personification", def: "'the envious moon... sick and pale with grief'" },
+          { term: "Rhetorical Question", def: "'What's in a name?'" },
+          { term: "Simile", def: "'My bounty is as boundless as the sea'" },
+          { term: "Symbolism", def: "Night = secrecy and freedom from family conflict" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "'Wherefore art thou Romeo?' means:",
+            options: ["Where are you, Romeo?","WHY are you Romeo (a Montague)?","How are you, Romeo?","When did you arrive, Romeo?"],
+            correct: 1,
+            hint: "'Wherefore' is an old English word that means 'why' — not 'where.' She's upset about his name, not his location."
+          },
+          {
+            q: "When Juliet says 'a rose by any other name would smell as sweet,' she's arguing that:",
+            options: ["Roses are her favorite flower","Romeo should change his name to Rose","A person's identity isn't determined by their family name","Names are more important than personality"],
+            correct: 2,
+            hint: "She's saying that Romeo would still be the same person even if his last name wasn't Montague."
+          },
+          {
+            q: "Why is the nighttime setting important for this scene?",
+            options: ["It's more romantic","Night provides cover so they can speak freely without being caught","Juliet is nocturnal","Romeo works during the day"],
+            correct: 1,
+            hint: "Think about what would happen if their families saw them together. Night = secrecy."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: What's in a Name?",
+        ccss: "W.9-10.1",
+        prompt: "Do you agree with Juliet that 'a name' doesn't define who a person really is? Use evidence from the text AND your own experience to argue your point.",
+        sentenceFrames: {
+          claim: "I agree/disagree with Juliet's argument that names don't define us because _____.",
+          evidence: "Juliet argues, '_____ ,' which suggests that _____.",
+          reasoning: "In my own experience, _____. This connects to Juliet's point because _____."
+        },
+        scaffoldTips: [
+          "Think about your own name or nickname. Does it define who you are?",
+          "Consider: In your community, do family names or group labels affect how people are treated?",
+          "Juliet says names aren't real ('It is nor hand, nor foot'). But do names have real-world consequences?"
+        ]
+      },
+      linear: {
+        title: "📊 Rate Your Understanding",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well can you explain the meaning of Juliet's 'What's in a name?' speech?", scale: 5 },
+          { q: "How confident are you identifying figurative language in this scene?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Socratic Seminar",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Juliet says names don't matter. But do they? Think about labels, last names, reputations, and stereotypes in your own life.",
+          "Romeo and Juliet decide to get married after knowing each other for only a few hours. Is this brave or reckless? Defend your answer."
+        ],
+        frames: [
+          "Names do/don't matter because in my experience _____.",
+          "I think their decision to marry is _____ because _____.",
+          "Shakespeare might be trying to show us that _____.",
+          "To add to what _____ said, I think _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act3scene1",
+    title: "Act 3, Scene 1",
+    subtitle: "The Duel",
+    week: 4,
+    act: "Act 3",
+    icon: "flame",
+    color: "#ea580c",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.3","RL.9-10.5","W.9-10.1","SL.9-10.1"],
+    summary: "A hot-tempered street fight leads to the deaths of Mercutio and Tybalt, resulting in the Prince sentencing Romeo to permanent banishment.",
+    passages: [
+      {
+        original: "MERCUTIO: I am hurt.\nA plague o' both your houses! I am sped.\nIs he gone, and hath nothing?\nBENVOLIO: What, art thou hurt?\nMERCUTIO: Ay, ay, a scratch, a scratch; marry, 'tis enough.\nWhere is my page? Go, villain, fetch a surgeon.\nROMEO: Courage, man; the hurt cannot be much.\nMERCUTIO: No, 'tis not so deep as a well, nor so wide\nas a church-door; but 'tis enough, 'twill serve:\nask for me to-morrow, and you shall find me a\ngrave man. I am peppered, I warrant, for this\nworld. A plague o' both your houses!",
+        modern: "MERCUTIO: I'm hurt. A curse on BOTH your families! I'm done for. Did Tybalt get away without a scratch?\nBENVOLIO: Wait, are you really hurt?\nMERCUTIO: Yeah, just a scratch... but it's enough to kill me. Get me a doctor!\nROMEO: Stay strong, it can't be that bad.\nMERCUTIO: You're right — the wound isn't as deep as a well or as wide as a door. But it's enough. It'll do the job. Ask for me tomorrow and you'll find me in a GRAVE. I'm done for. A curse on BOTH your families!",
+        label: "Mercutio's Death — 'A Plague on Both Your Houses'"
+      },
+      {
+        original: "ROMEO: O, I am fortune's fool!\n\nPRINCE: And for that offence\nImmediately we do exile him hence.\nLet Romeo hence in haste,\nElse, when he's found, that hour is his last.",
+        modern: "ROMEO: I'm a fool played by fate!\n\nPRINCE: For this crime, Romeo is banished from Verona immediately. He needs to leave NOW — if he's found here, he dies.",
+        label: "Romeo's Banishment"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Cause and Effect Chain",
+        instructions: "Match each cause to its effect in the scene.",
+        ccss: "RL.9-10.3",
+        pairs: [
+          { term: "Tybalt challenges Romeo", def: "Romeo refuses to fight (he's now family)" },
+          { term: "Romeo won't fight back", def: "Mercutio fights Tybalt instead" },
+          { term: "Romeo tries to stop the fight", def: "Tybalt stabs Mercutio under Romeo's arm" },
+          { term: "Mercutio dies", def: "Romeo kills Tybalt in revenge" },
+          { term: "Romeo kills Tybalt", def: "The Prince banishes Romeo from Verona" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "Why does Romeo initially refuse to fight Tybalt?",
+            options: ["He's scared of Tybalt","He just secretly married Juliet, making Tybalt family","He promised Benvolio he wouldn't fight","The Prince is watching"],
+            correct: 1,
+            hint: "Think about what just happened in Act 2. Romeo and Juliet got married — so Tybalt is now Romeo's..."
+          },
+          {
+            q: "When Mercutio says 'A plague on both your houses,' he is blaming:",
+            options: ["Only the Montagues","Only the Capulets","BOTH families for his death","The Prince for not stopping the fight"],
+            correct: 2,
+            hint: "He repeats this line multiple times. 'Both your houses' means both families."
+          },
+          {
+            q: "This scene is the TURNING POINT (climax) of the play because:",
+            options: ["It's the funniest scene","Everything shifts from comedy/love to tragedy after this","Romeo gets a new sword","Juliet appears in this scene"],
+            correct: 1,
+            hint: "Before this scene, the play was mostly about love and hope. After this, everything goes wrong."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: Who Is Most to Blame?",
+        ccss: "W.9-10.1",
+        prompt: "Who is MOST responsible for the tragedy in Act 3, Scene 1: Romeo, Tybalt, Mercutio, or the family feud itself? Make a claim and support it with evidence.",
+        sentenceFrames: {
+          claim: "The character/force most responsible for the tragedy in Act 3, Scene 1 is _____ because _____.",
+          evidence: "This is shown when _____ . Shakespeare writes, '_____ ,' which demonstrates _____.",
+          reasoning: "This evidence proves my claim because _____. If _____ had acted differently, the outcome might have been _____ because _____."
+        },
+        scaffoldTips: [
+          "Consider everyone's choices: Tybalt started it, Mercutio escalated it, Romeo tried to stop it but then killed Tybalt.",
+          "Think about the bigger picture: Would any of this have happened without the family feud?",
+          "Mercutio blames BOTH houses. Is he right? Who really caused his death?"
+        ]
+      },
+      linear: {
+        title: "📊 Reflection Scale",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well can you explain why this scene is the turning point of the play?", scale: 5 },
+          { q: "How confident are you in analyzing character motivation in this scene?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Debate: Who's to Blame?",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Take a position: Who is MOST to blame for the deaths in this scene? Be ready to defend your answer against classmates who disagree.",
+          "Romeo says 'I am fortune's fool.' Do you think he's right — is fate to blame — or did his own choices lead to this moment?"
+        ],
+        frames: [
+          "I believe _____ is most to blame because _____.",
+          "While I understand that _____, I disagree because _____.",
+          "The text supports my position when _____.",
+          "If _____ had chosen differently, then _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act3scene5",
+    title: "Act 3, Scene 5",
+    subtitle: "The Ultimatum",
+    week: 4,
+    act: "Act 3",
+    icon: "shield-alert",
+    color: "#b91c1c",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.3","RL.9-10.6","W.9-10.1","SL.9-10.1"],
+    summary: "Juliet's father threatens to disown her if she refuses to marry Count Paris, leaving her isolated and desperate for a way out.",
+    passages: [
+      {
+        original: "CAPULET: Hang thee, young baggage! Disobedient wretch!\nI tell thee what: get thee to church o' Thursday,\nOr never after look me in the face.\nSpeak not, reply not, do not answer me;\nMy fingers itch. Wife, we scarce thought us blest\nThat God had lent us but this only child;\nBut now I see this one is one too much,\nAnd that we have a curse in having her.\nOut on her, hilding!",
+        modern: "CAPULET: You ungrateful brat! You disobedient wretch! Here's the deal: Get yourself to church on Thursday and marry Paris, or never look at me again. Don't even talk back to me — I'm so angry my hands are shaking. Wife, we used to feel blessed to have even one child. But now I see that even this one is too many. Having her feels like a curse. Get out of my sight!",
+        label: "Lord Capulet's Fury"
+      },
+      {
+        original: "JULIET: Is there no pity sitting in the clouds,\nThat sees into the bottom of my grief?\nO sweet my mother, cast me not away!\nDelay this marriage for a month, a week;\nOr, if you do not, make the bridal bed\nIn that dim monument where Tybalt lies.\n\nLADY CAPULET: Talk not to me, for I'll not speak a word.\nDo as thou wilt, for I have done with thee.",
+        modern: "JULIET: Is there no mercy in heaven that can see how much I'm suffering? Mom, please don't abandon me! Just delay this wedding — even a month, even a week! If you don't, you might as well make my wedding bed in the grave where Tybalt is buried — because I'd rather die.\n\nLADY CAPULET: Don't talk to me. I have nothing to say. Do whatever you want. I'm done with you.",
+        label: "Juliet Abandoned by Her Parents"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Character Response Match",
+        instructions: "Match each character to how they respond to Juliet in this scene.",
+        ccss: "RL.9-10.3",
+        pairs: [
+          { term: "Lord Capulet", def: "Threatens to disown her if she won't marry Paris" },
+          { term: "Lady Capulet", def: "'I have done with thee' — washes her hands of Juliet" },
+          { term: "The Nurse", def: "Advises Juliet to just marry Paris and forget Romeo" },
+          { term: "Juliet", def: "Feels completely alone and considers death" },
+          { term: "Romeo", def: "Already banished — cannot help her" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "When Capulet says 'my fingers itch,' he is threatening to:",
+            options: ["Write a letter","Count money","Hit Juliet","Play music"],
+            correct: 2,
+            hint: "This is a threatening phrase. When someone's fingers 'itch,' they want to use their hands aggressively."
+          },
+          {
+            q: "When Juliet asks her mother to 'make the bridal bed in that dim monument where Tybalt lies,' she means:",
+            options: ["She wants a tomb-themed wedding","She'd rather die than marry Paris","She wants to visit Tybalt's grave","She wants to move the wedding location"],
+            correct: 1,
+            hint: "A 'bridal bed' in a 'monument' (tomb) means she's saying she'd rather be dead than married to Paris."
+          },
+          {
+            q: "By the end of this scene, Juliet has been abandoned by:",
+            options: ["Only her father","Her father and mother","Her father, mother, and the Nurse","Nobody — they all support her"],
+            correct: 2,
+            hint: "Go through each person: Father threatens her, Mother says 'I'm done,' and the Nurse says to just marry Paris."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: Power and Control",
+        ccss: "W.9-10.1",
+        prompt: "How does this scene reveal the power dynamics in Juliet's family? How does being a young woman in this society limit her choices? Use evidence from the text.",
+        sentenceFrames: {
+          claim: "Act 3, Scene 5 reveals that Juliet's power in her family is _____ because _____.",
+          evidence: "Lord Capulet demonstrates his authority when he says, '_____ .' Lady Capulet responds by _____.",
+          reasoning: "This shows that in Verona's society, young women like Juliet _____. This connects to _____ because _____."
+        },
+        scaffoldTips: [
+          "Notice who gets to speak and who is told to be silent in this scene.",
+          "Think about Juliet's options: She can't tell them about Romeo. She can't refuse. She can't leave. What CAN she do?",
+          "Connect to today: Are there situations where teens feel they have no voice or no choice?"
+        ]
+      },
+      linear: {
+        title: "📊 Reflection Scale",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well can you explain the power dynamics in Juliet's family?", scale: 5 },
+          { q: "How confident are you connecting this scene to modern issues of teen autonomy?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Four Corners Debate",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Pick a corner: Lord Capulet is (A) a terrible father, (B) just a product of his time, (C) doing what he thinks is best, (D) completely out of control. Defend your position.",
+          "Has there ever been a time when you felt like no adult was listening to you? How does that connect to Juliet's experience?"
+        ],
+        frames: [
+          "I chose corner _____ because _____.",
+          "While Lord Capulet might think he's _____, the text shows _____.",
+          "Juliet's experience reminds me of _____ because _____.",
+          "I respectfully disagree with _____ because _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act4scene3",
+    title: "Act 4, Scene 3",
+    subtitle: "The Potion",
+    week: 5,
+    act: "Act 4",
+    icon: "flask-conical",
+    color: "#059669",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.3","RL.9-10.4","W.9-10.1","SL.9-10.1"],
+    summary: "Terrified of being forced into a second marriage, Juliet risks everything by drinking a sleeping potion that will make her appear dead to her family.",
+    passages: [
+      {
+        original: "JULIET: Farewell! God knows when we shall meet again.\nI have a faint cold fear thrills through my veins,\nThat almost freezes up the heat of life.\nI'll call them back again to comfort me:\nNurse! — What should she do here?\nMy dismal scene I needs must act alone.\nCome, vial.\nWhat if this mixture do not work at all?\nShall I be married then to-morrow morning?\nNo, no: this shall forbid it: lie thou there.\n[Laying down a dagger]\nWhat if it be a poison, which the friar\nSubtly hath minister'd to have me dead...?\nHow if, when I am laid into the tomb,\nI wake before the time that Romeo\nCome to redeem me? There's a fearful point!\nShall I not, then, be stifled in the vault,\nTo whose foul mouth no healthsome air breathes in,\nAnd there die strangled ere my Romeo comes?\nOr, if I live, is it not very like,\nThe horrible conceit of death and night,\nTogether with the terror of the place...?\nO, look! Methinks I see my cousin's ghost\nSeeking out Romeo, that did spit his body\nUpon a rapier's point: stay, Tybalt, stay!\nRomeo, I come! This do I drink to thee.",
+        modern: "JULIET: Goodbye! God knows if we'll ever see each other again. I feel a cold fear running through my body that nearly stops my heart. I want to call the Nurse back for comfort — but no. She can't help me. I have to do this alone.\n\nCome on, bottle. What if this potion doesn't work? Then I'll have to marry Paris tomorrow. No — I won't let that happen. [She puts a knife beside her.]\n\nBut what if it's actually poison and the Friar is trying to kill me so nobody finds out about the secret marriage? What if I wake up in the tomb before Romeo arrives? I'll be trapped in a dark, airless vault surrounded by dead bodies — I could suffocate! Or go insane from terror! Oh God — I think I see Tybalt's ghost looking for Romeo... Stop, Tybalt! Romeo, I'm coming! [She drinks.] I drink this for you.",
+        label: "Juliet's Soliloquy — Facing Her Fears Alone"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Juliet's Fears — Order of Worries",
+        instructions: "Put Juliet's fears in the order she expresses them in her soliloquy.",
+        ccss: "RL.9-10.3",
+        pairs: [
+          { term: "1st Fear", def: "What if the potion doesn't work?" },
+          { term: "2nd Fear", def: "What if it's actually poison?" },
+          { term: "3rd Fear", def: "What if she wakes up alone in the tomb?" },
+          { term: "4th Fear", def: "What if she suffocates or goes insane?" },
+          { term: "5th Fear", def: "She sees Tybalt's ghost (hallucination)" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "Why does Juliet lay a dagger beside her before drinking the potion?",
+            options: ["To protect herself from ghosts","As a backup plan — she'll kill herself rather than marry Paris","The Friar told her to","She's planning to fight someone"],
+            correct: 1,
+            hint: "She says 'this shall forbid it' — meaning the dagger will prevent the marriage if the potion fails."
+          },
+          {
+            q: "Juliet's soliloquy reveals she is experiencing:",
+            options: ["Only excitement about seeing Romeo","Deep courage with absolutely no fear","Extreme fear, anxiety, and isolation — but also determination","Anger at Romeo for leaving"],
+            correct: 2,
+            hint: "She lists multiple terrifying scenarios but STILL drinks the potion. What does that combination show?"
+          },
+          {
+            q: "When Juliet says 'My dismal scene I needs must act alone,' she means:",
+            options: ["She's rehearsing for a play","She must face this terrifying moment without any support","She wants to be a solo actress","She's tired of her friends"],
+            correct: 1,
+            hint: "Think about who has abandoned her: Romeo is banished, her parents threatened her, the Nurse betrayed her."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: Courage Under Pressure",
+        ccss: "W.9-10.1",
+        prompt: "Is Juliet brave or reckless for drinking the potion? Consider her fears, her isolation, and her limited options. Use evidence from her soliloquy.",
+        sentenceFrames: {
+          claim: "Juliet's decision to drink the potion is best described as _____ because _____.",
+          evidence: "Before drinking, Juliet expresses fear about _____ when she says, '_____ .' Despite this, she _____.",
+          reasoning: "This shows _____ because _____. Given that her options were _____, her choice reveals _____."
+        },
+        scaffoldTips: [
+          "List Juliet's options: Marry Paris, run away (impossible as a girl alone), tell her parents the truth (dangerous), take the potion, or use the dagger.",
+          "She names at least 4 terrifying possibilities but STILL drinks. What does that say about her character?",
+          "Is bravery the absence of fear, or acting despite fear?"
+        ]
+      },
+      linear: {
+        title: "📊 Rate Your Understanding",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well can you analyze Juliet's character through her soliloquy?", scale: 5 },
+          { q: "How confident are you in explaining what a soliloquy reveals about a character?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Inner-Outer Circle",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Have you ever had to make a terrifying decision completely alone? How does that connect to Juliet's moment?",
+          "Some people say Juliet is the bravest character in the whole play. Do you agree? Why or why not?"
+        ],
+        frames: [
+          "A time I had to be brave alone was when _____.",
+          "Juliet's bravery is shown when she _____ despite _____.",
+          "I agree/disagree that she's the bravest character because _____.",
+          "Compared to Romeo, Juliet shows more/less courage because _____."
+        ]
+      }
+    }
+  },
+  {
+    id: "act5scene3",
+    title: "Act 5, Scene 3",
+    subtitle: "The Tragedy & Peace",
+    week: 6,
+    act: "Act 5",
+    icon: "cross",
+    color: "#1e1b4b",
+    ccss: ["RL.9-10.1","RL.9-10.2","RL.9-10.3","RL.9-10.5","RL.9-10.6","W.9-10.1","W.9-10.2","SL.9-10.1"],
+    summary: "A tragic misunderstanding leads both lovers to take their own lives in the family tomb, finally forcing their grieving parents to end the feud.",
+    passages: [
+      {
+        original: "ROMEO: Eyes, look your last!\nArms, take your last embrace! And, lips, O you\nThe doors of breath, seal with a righteous kiss\nA dateless bargain to engrossing death!\nCome, bitter conduct, come, unsavoury guide!\nThou desperate pilot, now at once run on\nThe dashing rocks thy sea-sick weary bark!\nHere's to my love! [He drinks.] O true apothecary!\nThy drugs are quick. Thus with a kiss I die.",
+        modern: "ROMEO: Eyes, take one last look! Arms, hold her one last time! And lips — you who let me breathe — seal a final kiss as a contract with death that lasts forever! Come, poison — you bitter guide, you desperate captain — crash this exhausted ship onto the rocks! Here's to my love! [He drinks the poison.] The pharmacist was right — this stuff works fast. I die with a kiss.",
+        label: "Romeo's Final Words"
+      },
+      {
+        original: "JULIET: What's here? A cup, closed in my true love's hand?\nPoison, I see, hath been his timeless end:\nO churl! Drunk all, and left no friendly drop\nTo help me after? I will kiss thy lips;\nHaply some poison yet doth hang on them,\nTo make die with a restorative.\n[Kisses him]\nThy lips are warm.\n\nWATCH: [within] Lead, boy: which way?\n\nJULIET: Yea, noise? Then I'll be brief. O happy dagger!\n[Snatching Romeo's dagger]\nThis is thy sheath; [stabs herself] there rust, and let me die.",
+        modern: "JULIET: What's this? A cup in his hand? Poison — that's how he died. You jerk! You drank it all and didn't leave any for me? I'll kiss your lips — maybe there's still some poison on them that will kill me too. [She kisses him.] Your lips are still warm.\n\n[She hears people coming.]\n\nJULIET: I hear voices? Then I'll make this quick. Oh good — his dagger! [She grabs it.] My body is your sheath. [She stabs herself.] Let me die.",
+        label: "Juliet Wakes and Takes Her Life"
+      },
+      {
+        original: "PRINCE: A glooming peace this morning with it brings;\nThe sun, for sorrow, will not show his head:\nGo hence, to have more talk of these sad things;\nSome shall be pardon'd, and some punished:\nFor never was a story of more woe\nThan this of Juliet and her Romeo.",
+        modern: "PRINCE: This morning brings a dark, gloomy kind of peace. Even the sun refuses to come out — it's mourning too. Let's go talk more about all of this. Some people will be forgiven, and some will be punished. Because there has never been a sadder story than the story of Juliet and her Romeo.",
+        label: "The Prince's Final Words"
+      }
+    ],
+    activities: {
+      dragDrop: {
+        title: "🧩 Tragedy Timeline",
+        instructions: "Put the final events in the correct order.",
+        ccss: "RL.9-10.5",
+        pairs: [
+          { term: "1st", def: "Romeo finds Juliet 'dead' in the tomb" },
+          { term: "2nd", def: "Romeo drinks the poison and dies" },
+          { term: "3rd", def: "Juliet wakes up and finds Romeo dead" },
+          { term: "4th", def: "Juliet stabs herself with Romeo's dagger" },
+          { term: "5th", def: "The families agree to end the feud" }
+        ]
+      },
+      multipleChoice: {
+        title: "📝 Comprehension Check",
+        ccss: "RL.9-10.1",
+        questions: [
+          {
+            q: "The tragic ending happens because of:",
+            options: ["Romeo arriving too early","The Friar's letter about the plan never reaching Romeo","Juliet waking up too early","Paris refusing to leave the tomb"],
+            correct: 1,
+            hint: "The Friar had a plan to send Romeo a message explaining that Juliet was only faking death. What went wrong?"
+          },
+          {
+            q: "When Juliet says 'Thy lips are warm,' the dramatic impact comes from the audience knowing:",
+            options: ["Romeo just ate something hot","Romeo JUST died moments ago — she barely missed saving him","Romeo is still alive","The tomb is heated"],
+            correct: 1,
+            hint: "His lips are STILL warm. What does that tell us about timing? She was SO close to waking up in time."
+          },
+          {
+            q: "The Prince's final lines suggest that the story of Romeo and Juliet should serve as:",
+            options: ["Entertainment for the people of Verona","A warning about the devastating cost of hatred and feuds","A reason to celebrate the end of the feud","Proof that love always wins"],
+            correct: 1,
+            hint: "The Prince says the peace is 'glooming' — it's a sad peace. The price was too high."
+          }
+        ]
+      },
+      cer: {
+        title: "✍️ CER Response: The Price of Peace",
+        ccss: "W.9-10.1",
+        prompt: "The Prologue told us this would happen. Now that it has, answer this: Was the sacrifice of Romeo and Juliet 'worth it' if it ended generations of violence? Use evidence from the entire play.",
+        sentenceFrames: {
+          claim: "The sacrifice of Romeo and Juliet was/was not 'worth it' because _____.",
+          evidence: "Throughout the play, the feud caused _____. In the final scene, the Prince says, '_____ ,' which shows that _____.",
+          reasoning: "This evidence supports my claim because _____. The fact that _____ suggests that _____. Ultimately, _____."
+        },
+        scaffoldTips: [
+          "Think about everything the feud destroyed: Mercutio, Tybalt, Romeo, Juliet, Paris.",
+          "Consider: The parents only stopped fighting AFTER their children died. What does that say about them?",
+          "Is there ever a situation where two deaths can be 'worth it'? Or is this question meant to make us uncomfortable?"
+        ]
+      },
+      linear: {
+        title: "📊 Final Reflection",
+        ccss: "SL.9-10.1",
+        questions: [
+          { q: "How well do you understand the themes of the entire play?", scale: 5 },
+          { q: "How confident are you writing about Romeo and Juliet using textual evidence?", scale: 5 },
+          { q: "How much did this unit change how you think about conflict and love?", scale: 5 }
+        ]
+      },
+      speaking: {
+        title: "🎤 Final Seminar: Legacy & Relevance",
+        ccss: "SL.9-10.1",
+        prompts: [
+          "Romeo and Juliet was written over 400 years ago. Why do you think it's still taught and performed today? What makes it timeless?",
+          "If you could rewrite the ending, would you? Why or why not?",
+          "What lesson from this play do you think is most relevant to your life in Anaheim today?"
+        ],
+        frames: [
+          "Romeo and Juliet is still relevant because _____.",
+          "I would/wouldn't change the ending because _____.",
+          "The most important lesson for my life is _____ because _____.",
+          "This play taught me _____ about _____, which I can apply to _____."
+        ]
+      }
+    }
+  }
+];
+
+// ============================================================
+// APPLICATION STATE
+// ============================================================
+
+let allResponses = [];
+let currentScene = 0;
+let localState = {
+  answers: {},
+  scores: {},
+  cerTexts: {},
+  linearSelections: {},
+  dragDropStates: {}
+};
+let isDyslexicFont = false;
+let isReadableTheme = false;
+
+const defaultConfig = {
+  hub_title: "Romeo & Juliet Learning Lab",
+  welcome_message: "Welcome, scholars of Verona! 🌹",
+  teacher_name: "Your Teacher",
+  font_family: "Nunito",
+  font_size: 16,
+  background_color: "#1a0a1e",
+  surface_color: "#3a1a42",
+  text_color: "#f5e6fa",
+  accent_color: "#e63946",
+  secondary_color: "#d4a574"
+};
+
+// ============================================================
+// SDK INITIALIZATION
+// ============================================================
+
+const dataHandler = {
+  onDataChanged(data) {
+    allResponses = data;
+    updateProgressUI();
+  }
+};
+
+(async () => {
+  // Init Element SDK
+  if (window.elementSdk) {
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        const t = document.getElementById('main-title');
+        if (t) t.textContent = config.hub_title || defaultConfig.hub_title;
+        const w = document.getElementById('welcome-msg');
+        if (w) w.textContent = config.welcome_message || defaultConfig.welcome_message;
+        const teach = document.getElementById('teacher-display');
+        if (teach) teach.textContent = config.teacher_name ? `Teacher: ${config.teacher_name}` : '';
+
+        const font = config.font_family || defaultConfig.font_family;
+        const size = config.font_size || defaultConfig.font_size;
+        document.body.style.fontFamily = `${font}, Nunito, sans-serif`;
+        document.body.style.fontSize = `${size}px`;
+        document.getElementById('font-size-display').textContent = size;
+
+        // Apply colors
+        document.documentElement.style.setProperty('--bg-primary', config.background_color || defaultConfig.background_color);
+        document.documentElement.style.setProperty('--bg-card', config.surface_color || defaultConfig.surface_color);
+        document.documentElement.style.setProperty('--text-primary', config.text_color || defaultConfig.text_color);
+        document.documentElement.style.setProperty('--accent-primary', config.accent_color || defaultConfig.accent_color);
+        document.documentElement.style.setProperty('--accent-secondary', config.secondary_color || defaultConfig.secondary_color);
+      },
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+          { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+          { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+          { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } },
+          { get: () => config.secondary_color || defaultConfig.secondary_color, set: (v) => { config.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+        }
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ["hub_title", config.hub_title || defaultConfig.hub_title],
+        ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
+        ["teacher_name", config.teacher_name || defaultConfig.teacher_name]
+      ])
+    });
+  }
+
+  // Init Data SDK
+  if (window.dataSdk) {
+    const result = await window.dataSdk.init(dataHandler);
+    if (!result.isOk) console.error("Data SDK init failed");
+  }
+
+  initApp();
+})();
+
+// ============================================================
+// CORE APP
+// ============================================================
+
+function initApp() {
+  document.getElementById('main-title').textContent = defaultConfig.hub_title;
+  document.getElementById('welcome-msg').textContent = defaultConfig.welcome_message;
+  document.body.style.fontSize = `${defaultConfig.font_size}px`;
+
+  buildNav();
+  renderScene(0);
+  setupControls();
+  lucide.createIcons();
+}
+
+function buildNav() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = '';
+  let lastWeek = 0;
+  SCENES.forEach((s, i) => {
+    if (s.week !== lastWeek) {
+      lastWeek = s.week;
+      const wk = document.createElement('div');
+      wk.className = 'week-header';
+      wk.style.cssText = 'margin-bottom:6px; margin-top:' + (i > 0 ? '12px' : '0') + '; font-size:0.85em; padding:8px 14px;';
+      wk.textContent = `Week ${s.week}`;
+      nav.appendChild(wk);
+    }
+    const btn = document.createElement('button');
+    btn.className = 'nav-item' + (i === currentScene ? ' active' : '');
+    btn.setAttribute('role', 'listitem');
+    btn.dataset.index = i;
+    btn.innerHTML = `<i data-lucide="${s.icon}" style="width:18px;height:18px;flex-shrink:0;"></i><span style="font-size:0.85em; line-height:1.3;">${s.title}<br><span style="font-size:0.8em; opacity:0.7;">${s.subtitle}</span></span>`;
+    btn.addEventListener('click', () => {
+      currentScene = i;
+      renderScene(i);
+      closeSidebar();
+    });
+    nav.appendChild(btn);
+  });
+}
+
+function setupControls() {
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    isReadableTheme = !isReadableTheme;
+    document.body.classList.toggle('theme-readable', isReadableTheme);
+    showToast(isReadableTheme ? 'Readable theme activated' : 'Tragic Love theme activated', 'info');
+  });
+
+  document.getElementById('dyslexic-toggle').addEventListener('click', () => {
+    isDyslexicFont = !isDyslexicFont;
+    document.body.classList.toggle('font-dyslexic', isDyslexicFont);
+    showToast(isDyslexicFont ? 'OpenDyslexic font ON' : 'Standard font restored', 'info');
+  });
+
+  document.getElementById('font-up').addEventListener('click', () => {
+    let sz = parseInt(document.body.style.fontSize) || 16;
+    if (sz < 28) { sz += 2; document.body.style.fontSize = sz + 'px'; document.getElementById('font-size-display').textContent = sz; }
+    if (window.elementSdk) window.elementSdk.setConfig({ font_size: sz });
+  });
+
+  document.getElementById('font-down').addEventListener('click', () => {
+    let sz = parseInt(document.body.style.fontSize) || 16;
+    if (sz > 12) { sz -= 2; document.body.style.fontSize = sz + 'px'; document.getElementById('font-size-display').textContent = sz; }
+    if (window.elementSdk) window.elementSdk.setConfig({ font_size: sz });
+  });
+
+  document.getElementById('save-all-btn').addEventListener('click', () => {
+    localStorage.setItem('rj_local_state', JSON.stringify(localState));
+    showToast('Progress saved locally!', 'success');
+  });
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
+  });
+
+  document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
+
+  // Load local state
+  const saved = localStorage.getItem('rj_local_state');
+  if (saved) { try { localState = JSON.parse(saved); } catch(e) {} }
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+function updateProgressUI() {
+  const completedScenes = new Set(allResponses.filter(r => r.completed).map(r => r.scene_id));
+  const pct = Math.round((completedScenes.size / SCENES.length) * 100);
+  document.getElementById('overall-progress').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${completedScenes.size} / ${SCENES.length} scenes completed`;
+}
+
+// ============================================================
+// RENDER SCENE
+// ============================================================
+
+function renderScene(index) {
+  const scene = SCENES[index];
+  const container = document.getElementById('scene-content');
+  
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+
+  let html = `<div class="animate-in">`;
+  
+  // Scene Header
+  html += `<div class="glass-card" style="padding:28px; margin-bottom:24px;">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+      <span class="scene-badge" style="background:${scene.color}22; color:${scene.color}; border:1px solid ${scene.color};">${scene.act}</span>
+      <span style="font-size:0.9em; color:var(--text-secondary);">Week ${scene.week}</span>
+      ${scene.ccss.map(c => `<span class="ccss-badge">${c}</span>`).join('')}
+    </div>
+    <h2 class="font-literary" style="font-size:2em; font-weight:700; margin-bottom:8px; color:${scene.color};">
+      <i data-lucide="${scene.icon}" style="width:28px;height:28px;display:inline;vertical-align:middle;"></i>
+      ${scene.title}: ${scene.subtitle}
+    </h2>
+    <p style="font-size:1.05em; line-height:1.7; color:var(--text-secondary);">${scene.summary}</p>
+  </div>`;
+
+  // Passages
+  html += `<div class="glass-card" style="padding:24px; margin-bottom:24px;">
+    <h3 class="font-literary" style="font-size:1.4em; font-weight:700; margin-bottom:16px;">
+      <i data-lucide="book-open" style="width:22px;height:22px;display:inline;vertical-align:middle;"></i>
+      Key Passages
+    </h3>`;
+  
+  scene.passages.forEach((p, pi) => {
+    html += `<div style="margin-bottom:20px;">
+      <h4 style="font-weight:700; margin-bottom:8px; color:var(--accent-secondary);">${p.label}</h4>
+      <div class="passage-block font-literary" style="white-space:pre-line; font-size:1.05em;">${p.original}</div>
+      <button class="hint-btn" onclick="toggleTranslation('trans-${index}-${pi}')" style="margin-top:8px;">
+        <i data-lucide="languages" style="width:14px;height:14px;display:inline;vertical-align:middle;"></i> Click to See Modern Translation
+      </button>
+      <div id="trans-${index}-${pi}" class="modern-translation" style="font-size:1em; line-height:1.7;">${p.modern}</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Activity Tabs
+  const activities = scene.activities;
+  const tabIds = Object.keys(activities);
+  const tabLabels = { dragDrop: "🧩 Match", multipleChoice: "📝 Quiz", cer: "✍️ Write", linear: "📊 Rate", speaking: "🎤 Discuss" };
+
+  html += `<div class="no-print" style="margin-bottom:24px;">
+    <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:0;">
+      ${tabIds.map((t, ti) => `<button class="tab-btn ${ti === 0 ? 'active' : ''}" data-tab="${t}" data-scene="${index}" onclick="switchTab(this, '${t}', ${index})">${tabLabels[t] || t}</button>`).join('')}
+    </div>
+    <div class="glass-card" style="border-radius:0 16px 16px 16px; padding:24px;">
+      ${tabIds.map((t, ti) => `<div id="tab-${index}-${t}" style="display:${ti === 0 ? 'block' : 'none'};">${renderActivity(t, activities[t], index, scene)}</div>`).join('')}
+    </div>
+  </div>`;
+
+  // Save to PDF & Navigation
+  html += `<div class="no-print" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; margin-bottom:40px;">
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      ${index > 0 ? `<button class="btn-secondary" onclick="navScene(${index - 1})"><i data-lucide="arrow-left" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Previous</button>` : ''}
+      ${index < SCENES.length - 1 ? `<button class="btn-primary" onclick="navScene(${index + 1})">Next Scene <i data-lucide="arrow-right" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i></button>` : ''}
+    </div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn-primary" onclick="markComplete('${scene.id}')" style="background:var(--success); color:#1a1a1a;">
+        <i data-lucide="check-circle" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Mark Complete
+      </button>
+      <button class="btn-secondary" onclick="saveToPDF(${index})">
+        <i data-lucide="download" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Save to PDF
+      </button>
+    </div>
+  </div>`;
+
+  html += `</div>`;
+  container.innerHTML = html;
+  
+  // Re-initialize Lucide & drag-drop
+  lucide.createIcons();
+  initDragDrop(index);
+  restoreState(index);
+}
+
+// ============================================================
+// RENDER ACTIVITIES
+// ============================================================
+
+function renderActivity(type, data, sceneIdx, scene) {
+  let h = `<h3 style="font-size:1.2em; font-weight:700; margin-bottom:4px;">${data.title}</h3>
+    <span class="ccss-badge" style="margin-bottom:12px; display:inline-block;">${data.ccss}</span>`;
+
+  if (type === 'dragDrop') {
+    h += `<p style="margin-bottom:16px; color:var(--text-secondary);">${data.instructions}</p>`;
+    const shuffledDefs = [...data.pairs].sort(() => Math.random() - 0.5);
+    
+    h += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;" id="dd-container-${sceneIdx}">
+      <div>
+        <h4 style="font-weight:700; margin-bottom:10px; font-size:0.9em; text-transform:uppercase; letter-spacing:1px; color:var(--text-secondary);">Terms</h4>
+        ${data.pairs.map((p, i) => `<div class="drop-zone" data-term="${i}" data-scene="${sceneIdx}" id="dz-${sceneIdx}-${i}" style="margin-bottom:8px; min-height:48px;"><span style="color:var(--text-secondary); font-size:0.85em;">${p.term}</span></div>`).join('')}
+      </div>
+      <div>
+        <h4 style="font-weight:700; margin-bottom:10px; font-size:0.9em; text-transform:uppercase; letter-spacing:1px; color:var(--text-secondary);">Definitions</h4>
+        <div id="dd-bank-${sceneIdx}">
+          ${shuffledDefs.map((p, i) => `<div class="drag-item" draggable="true" data-answer="${data.pairs.indexOf(p)}" data-scene="${sceneIdx}" id="di-${sceneIdx}-${i}" style="margin-bottom:8px;">${p.def}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" style="margin-top:16px;" onclick="checkDragDrop(${sceneIdx})">Check Answers</button>
+    <div id="dd-feedback-${sceneIdx}" style="margin-top:12px;"></div>`;
+  }
+
+  if (type === 'multipleChoice') {
+    h += `<div id="mc-container-${sceneIdx}">`;
+    data.questions.forEach((q, qi) => {
+      h += `<div style="margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid var(--border-color);">
+        <p style="font-weight:700; margin-bottom:12px;">${qi + 1}. ${q.q}</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${q.options.map((o, oi) => `<button class="mc-option" data-scene="${sceneIdx}" data-q="${qi}" data-opt="${oi}" onclick="selectMC(this, ${sceneIdx}, ${qi}, ${oi})">${String.fromCharCode(65 + oi)}. ${o}</button>`).join('')}
+        </div>
+        <button class="hint-btn" style="margin-top:10px;" onclick="showHint(this, '${q.hint.replace(/'/g, "\\'")}')">💡 Need a Hint?</button>
+        <div id="mc-feedback-${sceneIdx}-${qi}" style="margin-top:8px;"></div>
+      </div>`;
+    });
+    h += `</div>
+    <button class="btn-primary" onclick="checkMC(${sceneIdx})">Submit Answers</button>
+    <div id="mc-score-${sceneIdx}" style="margin-top:12px;"></div>`;
+  }
+
+  if (type === 'cer') {
+    h += `<div style="margin-bottom:16px;">
+      <p style="font-weight:700; margin-bottom:8px; font-size:1.05em;">${data.prompt}</p>
+    </div>`;
+    
+    // Scaffold Tips
+    h += `<div class="scaffold-box" style="margin-bottom:16px;">
+      <h4 style="font-weight:700; margin-bottom:8px;">🔧 Scaffolds & Tips</h4>
+      <ul style="list-style:disc; padding-left:20px;">
+        ${data.scaffoldTips.map(t => `<li style="margin-bottom:6px; color:var(--text-secondary);">${t}</li>`).join('')}
+      </ul>
+    </div>`;
+
+    // Sentence Frames
+    h += `<div style="margin-bottom:16px;">
+      <button class="hint-btn" onclick="this.nextElementSibling.classList.toggle('show')" style="margin-bottom:8px;">📝 Show Sentence Frames</button>
+      <div class="modern-translation">
+        <p class="sentence-frame" style="margin-bottom:8px;"><strong>Claim:</strong> ${data.sentenceFrames.claim}</p>
+        <p class="sentence-frame" style="margin-bottom:8px;"><strong>Evidence:</strong> ${data.sentenceFrames.evidence}</p>
+        <p class="sentence-frame"><strong>Reasoning:</strong> ${data.sentenceFrames.reasoning}</p>
+      </div>
+    </div>`;
+
+    ['claim', 'evidence', 'reasoning'].forEach(part => {
+      h += `<div style="margin-bottom:16px;">
+        <label style="font-weight:700; display:block; margin-bottom:6px; text-transform:capitalize;">${part === 'cer' ? '' : part}:</label>
+        <textarea class="cer-textarea" id="cer-${sceneIdx}-${part}" data-scene="${sceneIdx}" data-part="${part}" placeholder="Write your ${part} here..." oninput="saveCERLocal(${sceneIdx}, '${part}', this.value)" style="min-height:100px;"></textarea>
+      </div>`;
+    });
+
+    h += `<button class="btn-primary" onclick="submitCER(${sceneIdx})">
+      <i data-lucide="save" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Save CER Response
+    </button>
+    <div id="cer-feedback-${sceneIdx}" style="margin-top:12px;"></div>`;
+  }
+
+  if (type === 'linear') {
+    data.questions.forEach((q, qi) => {
+      h += `<div style="margin-bottom:20px;">
+        <p style="font-weight:700; margin-bottom:10px;">${q.q}</p>
+        <div class="linear-scale">
+          ${Array.from({length: q.scale}, (_, i) => `<button class="linear-option" data-scene="${sceneIdx}" data-lq="${qi}" data-val="${i + 1}" onclick="selectLinear(this, ${sceneIdx}, ${qi}, ${i + 1})" aria-label="Rate ${i + 1} out of ${q.scale}">${i + 1}</button>`).join('')}
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.8em; color:var(--text-secondary); margin-top:4px;">
+          <span>Not confident</span><span>Very confident</span>
+        </div>
+      </div>`;
+    });
+    h += `<button class="btn-primary" onclick="saveLinear(${sceneIdx})">Save Ratings</button>
+    <div id="linear-feedback-${sceneIdx}" style="margin-top:12px;"></div>`;
+  }
+
+  if (type === 'speaking') {
+    h += `<div class="speaking-prompt" style="margin-bottom:16px;">
+      <h4 style="font-weight:700; margin-bottom:12px;">Discussion Prompts:</h4>
+      <ol style="list-style:decimal; padding-left:20px;">
+        ${data.prompts.map(p => `<li style="margin-bottom:10px; line-height:1.6;">${p}</li>`).join('')}
+      </ol>
+    </div>
+    <div style="margin-bottom:16px;">
+      <h4 style="font-weight:700; margin-bottom:8px;">🗣️ Sentence Starters for Discussion:</h4>
+      ${data.frames.map(f => `<div class="sentence-frame" style="margin-bottom:6px;">${f}</div>`).join('')}
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-weight:700; display:block; margin-bottom:6px;">My Discussion Notes / Response:</label>
+      <textarea class="cer-textarea" id="speak-${sceneIdx}" placeholder="Write your thoughts here before or after discussion..." oninput="saveSpeakLocal(${sceneIdx}, this.value)"></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveSpeaking(${sceneIdx})">
+      <i data-lucide="save" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Save Discussion Notes
+    </button>
+    <div id="speak-feedback-${sceneIdx}" style="margin-top:12px;"></div>`;
+  }
+
+  return h;
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+
+function toggleTranslation(id) {
+  document.getElementById(id).classList.toggle('show');
+}
+
+function switchTab(btn, tab, sceneIdx) {
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const allTabs = Object.keys(SCENES[sceneIdx].activities);
+  allTabs.forEach(t => {
+    const el = document.getElementById(`tab-${sceneIdx}-${t}`);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+}
+
+function showHint(btn, hint) {
+  const existing = btn.parentElement.querySelector('.hint-shown');
+  if (existing) { existing.remove(); return; }
+  const div = document.createElement('div');
+  div.className = 'hint-shown scaffold-box animate-in';
+  div.innerHTML = `<strong>💡 Hint:</strong> ${hint}`;
+  btn.after(div);
+}
+
+// Drag & Drop
+function initDragDrop(sceneIdx) {
+  const items = document.querySelectorAll(`.drag-item[data-scene="${sceneIdx}"]`);
+  const zones = document.querySelectorAll(`.drop-zone[data-scene="${sceneIdx}"]`);
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+    
+    // Touch support
+    let startX, startY, clone;
+    item.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      item.classList.add('dragging');
+    }, { passive: true });
+    item.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    item.addEventListener('touchend', (e) => {
+      item.classList.remove('dragging');
+      const touch = e.changedTouches[0];
+      const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+      const zone = dropTarget?.closest('.drop-zone');
+      if (zone && zone.dataset.scene == sceneIdx) {
+        handleDrop(zone, item);
+      }
+    });
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const itemId = e.dataTransfer.getData('text/plain');
+      const item = document.getElementById(itemId);
+      handleDrop(zone, item);
+    });
+  });
+}
+
+function handleDrop(zone, item) {
+  // If zone already has an item, move it back to bank
+  const existing = zone.querySelector('.drag-item');
+  if (existing) {
+    const bank = document.getElementById(`dd-bank-${zone.dataset.scene}`);
+    bank.appendChild(existing);
+  }
+  zone.appendChild(item);
+  zone.classList.add('filled');
+}
+
+function checkDragDrop(sceneIdx) {
+  const scene = SCENES[sceneIdx];
+  const pairs = scene.activities.dragDrop.pairs;
+  let correct = 0;
+  
+  pairs.forEach((p, i) => {
+    const zone = document.getElementById(`dz-${sceneIdx}-${i}`);
+    const item = zone.querySelector('.drag-item');
+    if (item) {
+      const answer = parseInt(item.dataset.answer);
+      if (answer === i) {
+        item.classList.add('correct');
+        item.classList.remove('incorrect');
+        correct++;
+      } else {
+        item.classList.add('incorrect');
+        item.classList.remove('correct');
+      }
+    }
+  });
+
+  const fb = document.getElementById(`dd-feedback-${sceneIdx}`);
+  fb.innerHTML = `<div class="animate-in" style="padding:12px; border-radius:10px; background:${correct === pairs.length ? 'rgba(74,222,128,0.15)' : 'rgba(248,113,113,0.15)'}; font-weight:700;">${correct === pairs.length ? '🎉 Perfect!' : `${correct}/${pairs.length} correct. Try again!`}</div>`;
+
+  localState.scores[`dd-${sceneIdx}`] = { correct, total: pairs.length };
+  saveLocalState();
+}
+
+// Multiple Choice
+function selectMC(btn, sceneIdx, qi, oi) {
+  const siblings = btn.parentElement.querySelectorAll('.mc-option');
+  siblings.forEach(s => s.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (!localState.answers[sceneIdx]) localState.answers[sceneIdx] = {};
+  localState.answers[sceneIdx][qi] = oi;
+}
+
+function checkMC(sceneIdx) {
+  const scene = SCENES[sceneIdx];
+  const questions = scene.activities.multipleChoice.questions;
+  let correct = 0;
+
+  questions.forEach((q, qi) => {
+    const btns = document.querySelectorAll(`.mc-option[data-scene="${sceneIdx}"][data-q="${qi}"]`);
+    const selected = localState.answers[sceneIdx]?.[qi];
+    btns.forEach((b, bi) => {
+      b.classList.remove('correct', 'wrong', 'selected');
+      if (bi === q.correct) b.classList.add('correct');
+      else if (bi === selected && selected !== q.correct) b.classList.add('wrong');
+      b.disabled = true;
+    });
+    if (selected === q.correct) correct++;
+
+    const fb = document.getElementById(`mc-feedback-${sceneIdx}-${qi}`);
+    if (selected === q.correct) {
+      fb.innerHTML = `<span class="animate-in" style="color:var(--success); font-weight:700;">✅ Correct!</span>`;
+    } else if (selected !== undefined) {
+      fb.innerHTML = `<span class="animate-in" style="color:var(--error); font-weight:700;">❌ The answer is: ${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]}</span>`;
+    }
+  });
+
+  const scoreDiv = document.getElementById(`mc-score-${sceneIdx}`);
+  scoreDiv.innerHTML = `<div class="animate-in" style="padding:14px; border-radius:10px; background:${correct === questions.length ? 'rgba(74,222,128,0.15)' : 'rgba(244,197,66,0.15)'}; font-weight:700; font-size:1.1em;">Score: ${correct}/${questions.length} ${correct === questions.length ? '🎉 Perfect!' : '— Review the highlighted answers above.'}</div>`;
+
+  localState.scores[`mc-${sceneIdx}`] = { correct, total: questions.length };
+  saveLocalState();
+  saveResponseToSDK(SCENES[sceneIdx].id, 'multiple_choice', 'mc', JSON.stringify(localState.answers[sceneIdx] || {}), correct, questions.length);
+}
+
+// CER
+function saveCERLocal(sceneIdx, part, value) {
+  if (!localState.cerTexts[sceneIdx]) localState.cerTexts[sceneIdx] = {};
+  localState.cerTexts[sceneIdx][part] = value;
+}
+
+async function submitCER(sceneIdx) {
+  const claim = document.getElementById(`cer-${sceneIdx}-claim`)?.value || '';
+  const evidence = document.getElementById(`cer-${sceneIdx}-evidence`)?.value || '';
+  const reasoning = document.getElementById(`cer-${sceneIdx}-reasoning`)?.value || '';
+  
+  if (!claim.trim() && !evidence.trim() && !reasoning.trim()) {
+    showToast('Please write at least one part of your CER response.', 'error');
+    return;
+  }
+
+  const score = (claim.trim() ? 1 : 0) + (evidence.trim() ? 1 : 0) + (reasoning.trim() ? 1 : 0);
+  const fb = document.getElementById(`cer-feedback-${sceneIdx}`);
+  fb.innerHTML = `<div class="animate-in scaffold-box"><strong>✅ Response saved!</strong> You completed ${score}/3 parts. ${score === 3 ? '🎉 Full CER response!' : 'Keep going — complete all three parts for full credit.'}</div>`;
+
+  localState.cerTexts[sceneIdx] = { claim, evidence, reasoning };
+  localState.scores[`cer-${sceneIdx}`] = { correct: score, total: 3 };
+  saveLocalState();
+  saveResponseToSDK(SCENES[sceneIdx].id, 'cer', 'cer', `C: ${claim} | E: ${evidence} | R: ${reasoning}`, score, 3);
+}
+
+// Linear
+function selectLinear(btn, sceneIdx, qi, val) {
+  const siblings = btn.parentElement.querySelectorAll('.linear-option');
+  siblings.forEach(s => s.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (!localState.linearSelections[sceneIdx]) localState.linearSelections[sceneIdx] = {};
+  localState.linearSelections[sceneIdx][qi] = val;
+}
+
+async function saveLinear(sceneIdx) {
+  const fb = document.getElementById(`linear-feedback-${sceneIdx}`);
+  fb.innerHTML = `<div class="animate-in" style="color:var(--success); font-weight:700;">✅ Ratings saved!</div>`;
+  saveLocalState();
+  const data = JSON.stringify(localState.linearSelections[sceneIdx] || {});
+  saveResponseToSDK(SCENES[sceneIdx].id, 'linear', 'linear', data, 0, 0);
+}
+
+// Speaking
+function saveSpeakLocal(sceneIdx, value) {
+  if (!localState.cerTexts[`speak-${sceneIdx}`]) localState.cerTexts[`speak-${sceneIdx}`] = '';
+  localState.cerTexts[`speak-${sceneIdx}`] = value;
+}
+
+async function saveSpeaking(sceneIdx) {
+  const text = document.getElementById(`speak-${sceneIdx}`)?.value || '';
+  if (!text.trim()) {
+    showToast('Write some discussion notes first!', 'error');
+    return;
+  }
+  const fb = document.getElementById(`speak-feedback-${sceneIdx}`);
+  fb.innerHTML = `<div class="animate-in" style="color:var(--success); font-weight:700;">✅ Discussion notes saved!</div>`;
+  localState.cerTexts[`speak-${sceneIdx}`] = text;
+  saveLocalState();
+  saveResponseToSDK(SCENES[sceneIdx].id, 'speaking', 'speaking', text, 1, 1);
+}
+
+// ============================================================
+// DATA SDK SAVE
+// ============================================================
+
+async function saveResponseToSDK(sceneId, activityType, questionId, answer, score, maxScore) {
+  if (!window.dataSdk) return;
+  
+  // Check for existing response
+  const existing = allResponses.find(r => r.scene_id === sceneId && r.activity_type === activityType && r.question_id === questionId);
+  
+  if (existing) {
+    const result = await window.dataSdk.update({
+      ...existing,
+      student_answer: answer,
+      score: score,
+      max_score: maxScore,
+      completed: true,
+      timestamp: new Date().toISOString()
+    });
+    if (result.isOk) showToast('Progress updated!', 'success');
+  } else {
+    if (allResponses.length >= 999) {
+      showToast('Storage limit reached. Please delete some old responses.', 'error');
+      return;
+    }
+    const result = await window.dataSdk.create({
+      scene_id: sceneId,
+      activity_type: activityType,
+      question_id: questionId,
+      student_answer: answer,
+      score: score,
+      max_score: maxScore,
+      completed: true,
+      timestamp: new Date().toISOString()
+    });
+    if (result.isOk) showToast('Response saved!', 'success');
+    else showToast('Could not save — try again.', 'error');
+  }
+}
+
+async function markComplete(sceneId) {
+  if (!window.dataSdk) { showToast('Scene marked complete!', 'success'); return; }
+  const existing = allResponses.find(r => r.scene_id === sceneId && r.activity_type === 'completion');
+  if (existing) {
+    showToast('Already marked complete! ✅', 'info');
+    return;
+  }
+  if (allResponses.length >= 999) { showToast('Storage limit reached.', 'error'); return; }
+  const result = await window.dataSdk.create({
+    scene_id: sceneId,
+    activity_type: 'completion',
+    question_id: 'complete',
+    student_answer: 'completed',
+    score: 1,
+    max_score: 1,
+    completed: true,
+    timestamp: new Date().toISOString()
+  });
+  if (result.isOk) showToast('🎉 Scene marked complete!', 'success');
+}
+
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
+
+function saveLocalState() {
+  localStorage.setItem('rj_local_state', JSON.stringify(localState));
+}
+
+function restoreState(sceneIdx) {
+  // Restore MC selections
+  if (localState.answers[sceneIdx]) {
+    Object.entries(localState.answers[sceneIdx]).forEach(([qi, oi]) => {
+      const btn = document.querySelector(`.mc-option[data-scene="${sceneIdx}"][data-q="${qi}"][data-opt="${oi}"]`);
+      if (btn) btn.classList.add('selected');
+    });
+  }
+  // Restore CER text
+  if (localState.cerTexts[sceneIdx]) {
+    ['claim', 'evidence', 'reasoning'].forEach(p => {
+      const ta = document.getElementById(`cer-${sceneIdx}-${p}`);
+      if (ta && localState.cerTexts[sceneIdx][p]) ta.value = localState.cerTexts[sceneIdx][p];
+    });
+  }
+  // Restore speaking
+  const speakTA = document.getElementById(`speak-${sceneIdx}`);
+  if (speakTA && localState.cerTexts[`speak-${sceneIdx}`]) speakTA.value = localState.cerTexts[`speak-${sceneIdx}`];
+  // Restore linear
+  if (localState.linearSelections[sceneIdx]) {
+    Object.entries(localState.linearSelections[sceneIdx]).forEach(([qi, val]) => {
+      const btn = document.querySelector(`.linear-option[data-scene="${sceneIdx}"][data-lq="${qi}"][data-val="${val}"]`);
+      if (btn) btn.classList.add('selected');
+    });
+  }
+}
+
+// ============================================================
+// PDF EXPORT
+// ============================================================
+
+function saveToPDF(sceneIdx) {
+  const scene = SCENES[sceneIdx];
+  let content = `
+    <html><head><title>${scene.title} - Student Responses</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 40px; color: #1a1a1a; font-size: 14px; line-height: 1.6; }
+      h1 { color: #e63946; border-bottom: 3px solid #e63946; padding-bottom: 8px; }
+      h2 { color: #333; margin-top: 24px; }
+      .passage { background: #f5f5f5; padding: 16px; border-left: 4px solid #e63946; margin: 12px 0; font-style: italic; white-space: pre-line; }
+      .response { background: #fff; border: 1px solid #ddd; padding: 14px; border-radius: 8px; margin: 10px 0; }
+      .score { background: #e8f5e9; padding: 8px 16px; border-radius: 6px; font-weight: bold; display: inline-block; margin: 8px 0; }
+      .label { font-weight: bold; color: #555; }
+      table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+      td, th { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+      th { background: #f0f0f0; }
+    </style></head><body>
+    <h1>🌹 ${scene.title}: ${scene.subtitle}</h1>
+    <p><strong>Student Name:</strong> _________________________ <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+    <p><strong>CCSS Standards:</strong> ${scene.ccss.join(', ')}</p>
+    <hr>
+    <h2>Key Passages</h2>`;
+
+  scene.passages.forEach(p => {
+    content += `<h3>${p.label}</h3><div class="passage">${p.original}</div>`;
+  });
+
+  // MC Scores
+  const mcScore = localState.scores[`mc-${sceneIdx}`];
+  if (mcScore) {
+    content += `<h2>📝 Quiz Score</h2><div class="score">Score: ${mcScore.correct}/${mcScore.total}</div>`;
+  }
+
+  // DD Scores
+  const ddScore = localState.scores[`dd-${sceneIdx}`];
+  if (ddScore) {
+    content += `<h2>🧩 Matching Score</h2><div class="score">Score: ${ddScore.correct}/${ddScore.total}</div>`;
+  }
+
+  // CER
+  const cer = localState.cerTexts[sceneIdx];
+  if (cer) {
+    content += `<h2>✍️ CER Response</h2>`;
+    content += `<div class="response"><span class="label">Claim:</span><br>${cer.claim || '<em>Not completed</em>'}</div>`;
+    content += `<div class="response"><span class="label">Evidence:</span><br>${cer.evidence || '<em>Not completed</em>'}</div>`;
+    content += `<div class="response"><span class="label">Reasoning:</span><br>${cer.reasoning || '<em>Not completed</em>'}</div>`;
+    const cerScore = localState.scores[`cer-${sceneIdx}`];
+    if (cerScore) content += `<div class="score">CER Score: ${cerScore.correct}/${cerScore.total} parts completed</div>`;
+  }
+
+  // Linear
+  const lin = localState.linearSelections[sceneIdx];
+  if (lin) {
+    content += `<h2>📊 Self-Assessment</h2><table><tr><th>Question</th><th>Rating</th></tr>`;
+    const linQs = scene.activities.linear.questions;
+    Object.entries(lin).forEach(([qi, val]) => {
+      content += `<tr><td>${linQs[qi]?.q || 'Question ' + qi}</td><td>${val} / ${linQs[qi]?.scale || 5}</td></tr>`;
+    });
+    content += `</table>`;
+  }
+
+  // Speaking
+  const speak = localState.cerTexts[`speak-${sceneIdx}`];
+  if (speak) {
+    content += `<h2>🎤 Discussion Notes</h2><div class="response">${speak}</div>`;
+  }
+
+  content += `<hr><p style="text-align:center; color:#999; margin-top:40px;">Romeo & Juliet Learning Lab — Generated ${new Date().toLocaleString()}</p></body></html>`;
+
+  const printWindow = window.open('', '_blank');
+  if (printWindow) {
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => printWindow.print(), 500);
+  } else {
+    showToast('Please allow pop-ups to save PDF.', 'error');
+  }
+}
+
+// ============================================================
+// NAVIGATION & TOAST
+// ============================================================
+
+function navScene(idx) {
+  currentScene = idx;
+  renderScene(idx);
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e37b35f26bac4c6',t:'MTc3NDcxMjA4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
