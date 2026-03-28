@@ -362,22 +362,29 @@ body {
   <style>body { box-sizing: border-box; }</style>
  </head>
  <body class="font-body h-full">
-  <div id="app-root" class="h-full w-full flex flex-col overflow-auto" style="background:var(--bg-primary); color:var(--text-primary);"><!-- Top Bar -->
+  <div id="app-root" class="h-full w-full flex flex-col overflow-auto" style="background:var(--bg-primary); color:var(--text-primary);">
+   <!-- Top Bar -->
    <header class="no-print flex items-center justify-between px-4 py-3 flex-shrink-0" style="background:var(--bg-secondary); border-bottom:1px solid var(--border-color);">
-    <div class="flex items-center gap-3"><button id="menu-toggle" class="md:hidden p-2 rounded-lg" style="color:var(--text-primary); background:transparent; border:none; cursor:pointer;" aria-label="Toggle menu"> <i data-lucide="menu" style="width:24px;height:24px;"></i> </button> <span style="font-size:1.6em;" aria-hidden="true">🌹</span>
+    <div class="flex items-center gap-3">
+     <button id="menu-toggle" class="md:hidden p-2 rounded-lg" style="color:var(--text-primary); background:transparent; border:none; cursor:pointer;" aria-label="Toggle menu"> <i data-lucide="menu" style="width:24px;height:24px;"></i> </button> <span style="font-size:1.6em;" aria-hidden="true">🌹</span>
      <h1 id="main-title" class="font-literary" style="font-size:1.3em; font-weight:700; color:var(--accent-primary);"></h1>
     </div>
-    <div class="flex items-center gap-2 flex-wrap"><button id="theme-toggle" class="btn-secondary" style="font-size:0.8em; padding:6px 14px;" aria-label="Toggle readable theme"> <i data-lucide="eye" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> <span class="hidden sm:inline"> Readable</span> </button> <button id="dyslexic-toggle" class="btn-secondary" style="font-size:0.8em; padding:6px 14px;" aria-label="Toggle dyslexia-friendly font"> <span style="font-family:'OpenDyslexic',sans-serif;">Aa</span> </button>
-     <div class="flex items-center gap-1" role="group" aria-label="Font size controls"><button id="font-down" class="btn-secondary" style="padding:4px 10px; font-size:0.8em;" aria-label="Decrease font size">A-</button> <span id="font-size-display" style="font-size:0.8em; min-width:32px; text-align:center; color:var(--text-secondary);">16</span> <button id="font-up" class="btn-secondary" style="padding:4px 10px; font-size:0.8em;" aria-label="Increase font size">A+</button>
+    <div class="flex items-center gap-2 flex-wrap">
+     <button id="theme-toggle" class="btn-secondary" style="font-size:0.8em; padding:6px 14px;" aria-label="Toggle readable theme"> <i data-lucide="eye" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> <span class="hidden sm:inline"> Readable</span> </button> <button id="dyslexic-toggle" class="btn-secondary" style="font-size:0.8em; padding:6px 14px;" aria-label="Toggle dyslexia-friendly font"> <span style="font-family:'OpenDyslexic',sans-serif;">Aa</span> </button>
+     <div class="flex items-center gap-1" role="group" aria-label="Font size controls">
+      <button id="font-down" class="btn-secondary" style="padding:4px 10px; font-size:0.8em;" aria-label="Decrease font size">A-</button> <span id="font-size-display" style="font-size:0.8em; min-width:32px; text-align:center; color:var(--text-secondary);">16</span> <button id="font-up" class="btn-secondary" style="padding:4px 10px; font-size:0.8em;" aria-label="Increase font size">A+</button>
      </div>
     </div>
    </header>
-   <div class="flex flex-1 overflow-hidden"><!-- Sidebar Overlay -->
+   <div class="flex flex-1 overflow-hidden">
+    <!-- Sidebar Overlay -->
     <div id="sidebar-overlay" class="sidebar-overlay" role="presentation"></div><!-- Sidebar Nav -->
     <nav id="sidebar" class="sidebar no-print flex-shrink-0 overflow-y-auto" style="width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); padding:16px;" aria-label="Scene navigation">
      <div style="margin-bottom:16px;">
       <p id="welcome-msg" style="font-size:0.9em; color:var(--text-secondary); margin-bottom:4px;"></p>
-      <p id="teacher-display" style="font-size:0.8em; color:var(--text-secondary);"></p>
+      <p id="teacher-display" style="font-size:0.8em; color:var(--text-secondary); margin-bottom:12px;"></p>
+      <div style="background:rgba(230,57,70,0.1); padding:10px; border-radius:10px; border:1px solid var(--accent-primary);"><label style="font-size:0.8em; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Student Name:</label> <input type="text" id="student-name" placeholder="Your name" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-secondary); color:var(--text-primary); font-size:0.85em; margin-bottom:8px;" oninput="saveStudentInfo()"> <label style="font-size:0.8em; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Period:</label> <input type="text" id="student-period" placeholder="E.g., Period 3" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-secondary); color:var(--text-primary); font-size:0.85em;" oninput="saveStudentInfo()">
+      </div>
      </div>
      <div class="progress-bar" style="margin-bottom:16px;">
       <div id="overall-progress" class="progress-fill" style="width:0%;"></div>
@@ -385,11 +392,13 @@ body {
      <p id="progress-text" style="font-size:0.8em; color:var(--text-secondary); margin-bottom:16px;">0 / 8 scenes completed</p>
      <div id="nav-list" role="list" style="display:flex; flex-direction:column; gap:4px;">
      </div>
-     <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color);"><button id="save-all-btn" class="btn-primary" style="width:100%; font-size:0.85em; margin-bottom:8px;"> <i data-lucide="save" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Save Progress </button>
+     <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color);">
+      <button id="save-all-btn" class="btn-primary" style="width:100%; font-size:0.85em; margin-bottom:8px;"> <i data-lucide="save" style="width:16px;height:16px;display:inline;vertical-align:middle;"></i> Save Progress </button>
      </div>
     </nav><!-- Main Content -->
     <main id="main-content" class="flex-1 overflow-y-auto" style="padding:24px;" role="main">
-     <div id="scene-content" style="max-width:900px; margin:0 auto;"><!-- Dynamic content loads here -->
+     <div id="scene-content" style="max-width:900px; margin:0 auto;">
+      <!-- Dynamic content loads here -->
      </div>
     </main>
    </div>
@@ -1204,7 +1213,9 @@ let localState = {
   scores: {},
   cerTexts: {},
   linearSelections: {},
-  dragDropStates: {}
+  dragDropStates: {},
+  studentName: '',
+  studentPeriod: ''
 };
 let isDyslexicFont = false;
 let isReadableTheme = false;
@@ -1373,14 +1384,30 @@ function setupControls() {
 
   document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
+  // Student info inputs
+  document.getElementById('student-name').addEventListener('change', saveStudentInfo);
+  document.getElementById('student-period').addEventListener('change', saveStudentInfo);
+
   // Load local state
   const saved = localStorage.getItem('rj_local_state');
-  if (saved) { try { localState = JSON.parse(saved); } catch(e) {} }
+  if (saved) { 
+    try { 
+      localState = JSON.parse(saved);
+      document.getElementById('student-name').value = localState.studentName || '';
+      document.getElementById('student-period').value = localState.studentPeriod || '';
+    } catch(e) {} 
+  }
 }
 
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+function saveStudentInfo() {
+  localState.studentName = document.getElementById('student-name').value;
+  localState.studentPeriod = document.getElementById('student-period').value;
+  saveLocalState();
 }
 
 function updateProgressUI() {
@@ -1916,11 +1943,17 @@ function restoreState(sceneIdx) {
 
 function saveToPDF(sceneIdx) {
   const scene = SCENES[sceneIdx];
+  const name = localState.studentName || 'Student';
+  const period = localState.studentPeriod || '';
   let content = `
     <html><head><title>${scene.title} - Student Responses</title>
     <style>
       body { font-family: Arial, sans-serif; padding: 40px; color: #1a1a1a; font-size: 14px; line-height: 1.6; }
-      h1 { color: #e63946; border-bottom: 3px solid #e63946; padding-bottom: 8px; }
+      .header-info { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px; border-bottom: 2px solid #e63946; padding-bottom: 12px; }
+      .header-field { display: flex; flex-direction: column; }
+      .header-field label { font-weight: bold; font-size: 12px; color: #666; margin-bottom: 2px; }
+      .header-field value { font-size: 13px; }
+      h1 { color: #e63946; border-bottom: 3px solid #e63946; padding-bottom: 8px; margin-top: 20px; }
       h2 { color: #333; margin-top: 24px; }
       .passage { background: #f5f5f5; padding: 16px; border-left: 4px solid #e63946; margin: 12px 0; font-style: italic; white-space: pre-line; }
       .response { background: #fff; border: 1px solid #ddd; padding: 14px; border-radius: 8px; margin: 10px 0; }
@@ -1930,8 +1963,21 @@ function saveToPDF(sceneIdx) {
       td, th { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
       th { background: #f0f0f0; }
     </style></head><body>
+    <div class="header-info">
+      <div class="header-field">
+        <label>Student Name:</label>
+        <value>${name}</value>
+      </div>
+      <div class="header-field">
+        <label>Period:</label>
+        <value>${period || '—'}</value>
+      </div>
+      <div class="header-field">
+        <label>Date:</label>
+        <value>${new Date().toLocaleDateString()}</value>
+      </div>
+    </div>
     <h1>🌹 ${scene.title}: ${scene.subtitle}</h1>
-    <p><strong>Student Name:</strong> _________________________ <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
     <p><strong>CCSS Standards:</strong> ${scene.ccss.join(', ')}</p>
     <hr>
     <h2>Key Passages</h2>`;
@@ -2010,5 +2056,5 @@ function showToast(msg, type) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e37b35f26bac4c6',t:'MTc3NDcxMjA4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e37ba66562cc4c6',t:'MTc3NDcxMjM3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
