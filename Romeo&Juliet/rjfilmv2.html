@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romeo & Juliet: Anaheim Learning Lab</title>
+    <style>
+        /* =========================================
+           THEMES & ACCESSIBILITY VARIABLES
+        ========================================= */
+        :root {
+            /* Theme 1: Tragic Love (Default) */
+            --bg-color: #1a0a0a;
+            --text-color: #fdf0f0;
+            --accent-color: #cda434; /* Gold */
+            --box-bg: rgba(255, 255, 255, 0.1);
+            --nav-bg: #2a1111;
+            --btn-hover: #e6b83b;
+            --input-bg: #331a1a;
+            --input-text: #fff;
+        }
+
+        body.readable-theme {
+            /* Theme 2: Easily Readable (High Contrast) */
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --accent-color: #0056b3; /* Dark Blue */
+            --box-bg: #f4f4f4;
+            --nav-bg: #e9ecef;
+            --btn-hover: #004494;
+            --input-bg: #ffffff;
+            --input-text: #000;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        /* =========================================
+           LAYOUT & NAVIGATION
+        ========================================= */
+        .sidebar {
+            width: 280px;
+            background-color: var(--nav-bg);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 2px solid var(--accent-color);
+        }
+
+        .sidebar h2 { margin-top: 0; font-size: 1.3rem; }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .accessibility-bar {
+            background-color: var(--nav-bg);
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--accent-color);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .action-btn:hover { background-color: var(--btn-hover); }
+
+        .content-area {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .module { display: none; }
+        .module.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* =========================================
+           LESSON COMPONENTS
+        ========================================= */
+        .standards { font-size: 0.85em; font-style: italic; opacity: 0.9; margin-bottom: 20px; }
+        
+        .translation-box {
+            background-color: var(--box-bg);
+            padding: 15px;
+            border-left: 5px solid var(--accent-color);
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 0 8px 8px 0;
+        }
+        .translation-box:hover { opacity: 0.9; }
+        .tap-hint { font-size: 0.8em; font-weight: bold; color: var(--accent-color); text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .modern-text { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--accent-color); font-weight: bold; }
+        .show-translation .modern-text { display: block; }
+
+        .activity-box {
+            background-color: var(--box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid var(--accent-color);
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .scaffold-btn {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            padding: 5px 10px;
+            font-size: 0.85em;
+            margin-top: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .scaffold-btn:hover { background-color: var(--accent-color); color: #fff; }
+
+        .mcq-label { display: block; margin: 10px 0; cursor: pointer; }
+        .feedback { font-weight: bold; margin-top: 10px; display: none; }
+        
+        select {
+            padding: 5px;
+            font-size: 1rem;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+        }
+
+        /* =========================================
+           PRINT / PDF EXPORT STYLES
+        ========================================= */
+        @media print {
+            .sidebar, .accessibility-bar, .scaffold-btn, .tap-hint, button { display: none !important; }
+            body { background: #fff !important; color: #000 !important; font-size: 12pt; display: block; height: auto; }
+            .content-area { padding: 0; overflow: visible; }
+            .module { display: block !important; page-break-after: always; }
+            .translation-box, .activity-box { border: 1px solid #000; break-inside: avoid; }
+            .modern-text { display: block !important; }
+            textarea { border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>R&J Student Hub</h2>
+        <button class="nav-btn active" onclick="showModule('mod1', this)">1. Prologue</button>
+        <button class="nav-btn" onclick="showModule('mod2', this)">2. The Brawl (1.1)</button>
+        <button class="nav-btn" onclick="showModule('mod3', this)">3. The Party (1.5)</button>
+        <button class="nav-btn" onclick="showModule('mod4', this)">4. The Balcony (2.2)</button>
+        <button class="nav-btn" onclick="showModule('mod5', this)">5. The Duel (3.1)</button>
+        <button class="nav-btn" onclick="showModule('mod6', this)">6. The Ultimatum (3.5)</button>
+        <button class="nav-btn" onclick="showModule('mod7', this)">7. The Potion (4.3)</button>
+        <button class="nav-btn" onclick="showModule('mod8', this)">8. Peace (5.3)</button>
+    </div>
+
+    <div class="main-content">
+        <div class="accessibility-bar">
+            <strong>⚙️ Tools:</strong>
+            <button class="action-btn" onclick="toggleTheme()">🌗 Change Theme</button>
+            <button class="action-btn" onclick="changeSize(2)">A+</button>
+            <button class="action-btn" onclick="changeSize(-2)">A-</button>
+            <button class="action-btn" onclick="toggleFont()">📖 Dyslexia Font</button>
+            <div style="flex-grow: 1;"></div>
+            <button class="action-btn" onclick="window.print()" style="background-color: #28a745;">🖨️ Save Work to PDF</button>
+            <button class="action-btn" onclick="clearData()" style="background-color: #dc3545;">🗑️ Reset All</button>
+        </div>
+
+        <div class="content-area">
+
+            <div id="mod1" class="module active">
+                <h2>Module 1: The Set-Up (Prologue)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.2: Determine a theme or central idea of a text.<br>📌 Focus: Theme, Foreshadowing</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>CHORUS:</strong><br>
+                        Two households, both alike in dignity,<br>
+                        In fair Verona, where we lay our scene,<br>
+                        From ancient grudge break to new mutiny,<br>
+                        Where civil blood makes civil hands unclean.<br>
+                        From forth the fatal loins of these two foes<br>
+                        A pair of star-crossed lovers take their life;
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        In the beautiful city of Verona, two wealthy families with a long-standing hatred erupt into new violence. Citizens stain their hands with the blood of their neighbors. Two unlucky children of these enemy families become lovers and commit suicide.
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Multiple Choice (Tone & Theme)</h3>
+                    <p>What does the phrase "star-crossed" suggest about Romeo and Juliet's situation?</p>
+                    <label class="mcq-label"><input type="radio" name="q1" value="A"> A) They were obsessed with astronomy.</label>
+                    <label class="mcq-label"><input type="radio" name="q1" value="B"> B) Their love was doomed by fate/destiny from the start.</label>
+                    <label class="mcq-label"><input type="radio" name="q1" value="C"> C) They only met at night under the stars.</label>
+                    <button class="action-btn" onclick="checkMCQ('q1', 'B', 'feed1')">Check Answer</button>
+                    <div id="feed1" class="feedback"></div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 2: CER Paragraph (Claim, Evidence, Reasoning)</h3>
+                    <p><strong>Prompt:</strong> Based on the Prologue, is the tragic ending of the play the fault of the parents or the fault of destiny?</p>
+                    <button class="scaffold-btn" onclick="insertFrame('cer1', 'I believe the tragic ending is the fault of [insert who]. In the text, the Chorus states, &quot;[insert quote].&quot; This evidence proves that [explain how the quote supports your claim].')">💡 Use Sentence Frame</button>
+                    <textarea id="cer1" placeholder="Type your CER response here... Work saves automatically!" oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <div id="mod2" class="module">
+                <h2>Module 2: The Brawl (Act 1, Scene 1)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.4: Determine the meaning of words and phrases (Diction).<br>📌 Focus: Character Choices, Escalation</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>SAMPSON:</strong> I will bite my thumb at them; which is a disgrace to them, if they bear it.<br><br>
+                        <strong>TYBALT:</strong> What, drawn, and talk of peace! I hate the word,<br>
+                        As I hate hell, all Montagues, and thee:<br>
+                        Have at thee, coward!
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>SAMPSON:</strong> I will bite my thumb at them [an insulting gesture]. That is a disgrace to them if they let me get away with it.<br><br>
+                        <strong>TYBALT:</strong> What? You take out your sword and then talk about peace? I hate the word peace like I hate hell, all Montagues, and you. Let’s go, coward!
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Match the Escalation (Accessible Drag & Drop Alternative)</h3>
+                    <p>Match the modern teenager conflict to the Shakespearean action:</p>
+                    <p>1. Throwing a punch: <select id="match1" onchange="saveData()"><option value="">--Select--</option><option value="tybalt">Tybalt yelling "Have at thee!"</option><option value="sampson">Sampson biting his thumb</option></select></p>
+                    <p>2. Making an insulting TikTok about a rival school: <select id="match2" onchange="saveData()"><option value="">--Select--</option><option value="tybalt">Tybalt yelling "Have at thee!"</option><option value="sampson">Sampson biting his thumb</option></select></p>
+                </div>
+                
+                <div class="activity-box">
+                    <h3>Activity 2: Discussion Notes</h3>
+                    <p><strong>Speaking & Listening:</strong> Why do you think Tybalt hates the word "peace"? Discuss with your partner, then jot your notes below.</p>
+                    <textarea id="notes1" placeholder="Type notes here..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <div id="mod3" class="module">
+                <h2>Module 3: The Party (Act 1, Scene 5)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.3: Analyze how complex characters develop over the course of a text.<br>📌 Focus: Tone Shift, Dramatic Irony</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>ROMEO:</strong> If I profane with my unworthiest hand<br>
+                        This holy shrine, the gentle fine is this:<br>
+                        My lips, two blushing pilgrims, ready stand<br>
+                        To smooth that rough touch with a tender kiss.<br><br>
+                        <strong>JULIET:</strong> My only love sprung from my only hate!<br>
+                        Too early seen unknown, and known too late!
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>ROMEO:</strong> If my hand is unworthy when it touches your hand (this holy place), then my lips are two blushing pilgrims, ready to make things better with a kiss.<br><br>
+                        <strong>JULIET:</strong> The only man I love is the son of the only man I hate! I saw him too early without knowing who he was, and I found out who he was too late!
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Diction & Metaphor</h3>
+                    <p>Romeo compares his lips to "pilgrims" and Juliet's hand to a "holy shrine." What <strong>tone</strong> does this create?</p>
+                    <textarea id="resp_tone" placeholder="This creates a tone of..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <div id="mod4" class="module">
+                <h2>Module 4: The Balcony (Act 2, Scene 2)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.4: Analyze the cumulative impact of specific word choices on meaning.<br>📌 Focus: Metaphor, Character Logic</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>JULIET:</strong> O Romeo, Romeo! wherefore art thou Romeo?<br>
+                        Deny thy father and refuse thy name;<br>
+                        Or, if thou wilt not, be but sworn my love,<br>
+                        And I'll no longer be a Capulet.<br>
+                        ...What's in a name? that which we call a rose<br>
+                        By any other name would smell as sweet;
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>JULIET:</strong> Oh, Romeo, why do you have to be Romeo? Forget about your father and change your name. Or just swear you love me, and I’ll stop being a Capulet... What does a name mean? The thing we call a rose would smell just as sweet if we called it by any other name.
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: CER Paragraph (Logic)</h3>
+                    <p><strong>Prompt:</strong> Explain Juliet's logic regarding the "rose." Why does she believe Romeo's last name doesn't matter?</p>
+                    <button class="scaffold-btn" onclick="insertFrame('cer2', 'Juliet believes that Romeo’s last name does not matter because [insert reason]. She uses the metaphor of a rose to explain that [explain metaphor]. This shows that she values [insert value] over family loyalty.')">💡 Use Sentence Frame</button>
+                    <textarea id="cer2" placeholder="Type your CER response here..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <div id="mod5" class="module">
+                <h2>Module 5: The Duel (Act 3, Scene 1)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.5: Analyze how an author's choices concerning how to structure a text create tension.<br>📌 Focus: Plot Structure, Climax</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>MERCUTIO:</strong> I am hurt.<br>
+                        A plague o' both your houses! I am sped.<br>
+                        Why the devil came you between us? I was hurt under your arm.<br><br>
+                        <strong>ROMEO:</strong> (After killing Tybalt) O, I am fortune's fool!
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>MERCUTIO:</strong> I’ve been hurt. May a plague strike both your houses! I’m finished. Why the devil did you step between us? He stabbed me from under your arm.<br><br>
+                        <strong>ROMEO:</strong> Oh, I have the worst luck in the world!
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Linear Sequencing</h3>
+                    <p>Put the events in order (1 = First, 3 = Last):</p>
+                    <p>Romeo kills Tybalt: <select id="seq1" onchange="saveData()"><option value="">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></p>
+                    <p>Tybalt kills Mercutio: <select id="seq2" onchange="saveData()"><option value="">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></p>
+                    <p>Romeo tries to break up the fight: <select id="seq3" onchange="saveData()"><option value="">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></p>
+                </div>
+            </div>
+
+            <div id="mod6" class="module">
+                <h2>Module 6: The Ultimatum (Act 3, Scene 5)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.4: Analyze tone.<br>📌 Focus: Power Dynamics, Toxic Traits</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>CAPULET:</strong> Hang thee, young baggage! disobedient wretch!<br>
+                        I tell thee what: get thee to church o' Thursday,<br>
+                        Or never after look me in the face.<br>
+                        ...And you be mine, I'll give you to my friend;<br>
+                        And you be not, hang, beg, starve, die in the streets.
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>CAPULET:</strong> Forget about you, you worthless girl! You disobedient wretch! I’ll tell you what: go to the church on Thursday or never look me in the face again... If you are my daughter, I will give you to my friend Paris. If you don't agree, you can hang, beg, starve, and die in the streets.
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Tone Analysis</h3>
+                    <p>List three words Capulet uses to describe Juliet. What does this diction reveal about how fathers viewed daughters in the 1500s?</p>
+                    <textarea id="resp_ult" placeholder="Capulet uses the words..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <div id="mod7" class="module">
+                <h2>Module 7: The Potion (Act 4, Scene 3)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.3: Analyze complex characters.<br>📌 Focus: Internal Conflict, Soliloquy</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>JULIET:</strong> Come, vial.<br>
+                        What if this mixture do not work at all?<br>
+                        Shall I be married then tomorrow morning?<br>
+                        No, no: this shall forbid it: lie thou there.<br>
+                        ...What if it be a poison, which the friar<br>
+                        Subtly hath ministered to have me dead?<br>
+                        ...Romeo, I come! this do I drink to thee.
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>JULIET:</strong> Come, vial. What if this mixture doesn’t work at all? Will I be forced to marry Paris tomorrow? No, this knife will stop it... What if the Friar actually mixed poison to kill me?... Romeo, Romeo! Here’s a drink for you. I drink to you.
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Fear Check</h3>
+                    <p>What is Juliet's ultimate motivation to drink the potion despite her massive anxiety?</p>
+                    <textarea id="resp_potion" placeholder="Juliet drinks it because..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <div id="mod8" class="module">
+                <h2>Module 8: Tragedy & Peace (Act 5, Scene 3)</h2>
+                <div class="standards">📌 CCSS.ELA-LITERACY.RL.9-10.2: Determine a theme.<br>📌 Focus: Resolution, Consequences</div>
+
+                <div class="translation-box" onclick="this.classList.toggle('show-translation')">
+                    <span class="tap-hint">👆 Click to Reveal Modern Translation</span>
+                    <div class="original-text">
+                        <strong>CAPULET:</strong> O brother Montague, give me thy hand:<br>
+                        This is my daughter's jointure.<br>
+                        <strong>MONTAGUE:</strong> For I will raise her statue in pure gold.<br>
+                        <strong>PRINCE:</strong> A glooming peace this morning with it brings;<br>
+                        The sun, for sorrow, will not show his head:<br>
+                        ...For never was a story of more woe<br>
+                        Than this of Juliet and her Romeo.
+                    </div>
+                    <div class="modern-text">
+                        <strong>MODERN:</strong><br>
+                        <strong>CAPULET:</strong> Oh, brother Montague, give me your hand. This is my daughter’s dowry.<br>
+                        <strong>MONTAGUE:</strong> I will raise a statue of her in pure gold.<br>
+                        <strong>PRINCE:</strong> This morning brings a gloomy peace. The sun is too sad to show its face... For there was never a story more full of pain than the story of Juliet and her Romeo.
+                    </div>
+                </div>
+
+                <div class="activity-box">
+                    <h3>Activity 1: Final Reflection (Theme)</h3>
+                    <p>What is the overarching theme or lesson of the play regarding grudges and hatred?</p>
+                    <button class="scaffold-btn" onclick="insertFrame('cer_final', 'The ultimate lesson of Romeo and Juliet is that [insert lesson]. We see this at the end of the play when the parents realize [insert realization] after it is too late.')">💡 Use Sentence Frame</button>
+                    <textarea id="cer_final" placeholder="Type your final response here..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 1. Navigation
+        function showModule(modId, btn) {
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            document.getElementById(modId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+
+        // 2. Accessibility & Theming
+        function toggleTheme() {
+            document.body.classList.toggle('readable-theme');
+        }
+
+        let currentSize = 16;
+        function changeSize(step) {
+            currentSize += step;
+            if(currentSize >= 12 && currentSize <= 26) {
+                document.body.style.fontSize = currentSize + 'px';
+            } else {
+                currentSize -= step; // Revert if out of bounds
+            }
+        }
+
+        let isDyslexic = false;
+        function toggleFont() {
+            isDyslexic = !isDyslexic;
+            if(isDyslexic) {
+                // System-level fonts that mimic dyslexia-friendly irregular weights
+                document.body.style.fontFamily = "'Comic Sans MS', 'Chalkboard SE', sans-serif";
+            } else {
+                document.body.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            }
+        }
+
+        // 3. Activity Functions
+        function checkMCQ(name, correctAnswer, feedbackId) {
+            let radios = document.getElementsByName(name);
+            let selected = "";
+            for(let r of radios) { if(r.checked) selected = r.value; }
+            
+            let fb = document.getElementById(feedbackId);
+            fb.style.display = "block";
+            if(selected === correctAnswer) {
+                fb.innerHTML = "✅ Correct! Their love was predetermined by fate to fail.";
+                fb.style.color = "#28a745";
+            } else {
+                fb.innerHTML = "❌ Try again! Think about what 'stars' represent in destiny.";
+                fb.style.color = "#dc3545";
+            }
+            saveData();
+        }
+
+        function insertFrame(elementId, frameText) {
+            let el = document.getElementById(elementId);
+            if(el.value.trim() === "") {
+                el.value = frameText;
+            } else {
+                if(confirm("Replace your current text with the sentence frame?")) {
+                    el.value = frameText;
+                }
+            }
+            saveData();
+        }
+
+        // 4. Local Storage (Save / Load data automatically)
+        function saveData() {
+            let data = {};
+            // Save textareas
+            document.querySelectorAll('textarea').forEach(ta => { data[ta.id] = ta.value; });
+            // Save selects
+            document.querySelectorAll('select').forEach(sel => { data[sel.id] = sel.value; });
+            // Save radios
+            document.querySelectorAll('input[type="radio"]:checked').forEach(rad => { data[rad.name] = rad.value; });
+            
+            localStorage.setItem('RJ_Hub_Data', JSON.stringify(data));
+        }
+
+        function loadData() {
+            let saved = localStorage.getItem('RJ_Hub_Data');
+            if(saved) {
+                let data = JSON.parse(saved);
+                for(let key in data) {
+                    let el = document.getElementById(key);
+                    if(el) {
+                        if(el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+                            el.value = data[key];
+                        }
+                    } else {
+                        // Check for radios
+                        let rad = document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
+                        if(rad) rad.checked = true;
+                    }
+                }
+            }
+        }
+
+        function clearData() {
+            if(confirm("Are you sure you want to delete all your work? This cannot be undone.")) {
+                localStorage.removeItem('RJ_Hub_Data');
+                location.reload();
+            }
+        }
+
+        // Initialize on load
+        window.onload = loadData;
+
+    </script>
+</body>
+</html>
