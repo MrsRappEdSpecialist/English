@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romeo &amp; Juliet Interactive Lesson</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+
+    .theme-tragic-love {
+      --bg: #1a0a14;
+      --surface: #2d1225;
+      --text: #f5e6ee;
+      --primary: #c2185b;
+      --secondary: #7b1fa2;
+    }
+    .theme-golden-dawn {
+      --bg: #fdf6e3;
+      --surface: #fff8dc;
+      --text: #3e2723;
+      --primary: #e65100;
+      --secondary: #bf360c;
+    }
+    .theme-ocean-calm {
+      --bg: #0d1b2a;
+      --surface: #1b2838;
+      --text: #e0f7fa;
+      --primary: #0097a7;
+      --secondary: #00695c;
+    }
+    .theme-high-contrast {
+      --bg: #000000;
+      --surface: #1a1a1a;
+      --text: #ffffff;
+      --primary: #ffeb3b;
+      --secondary: #ff9800;
+    }
+
+    .app-wrapper {
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.5s, color 0.5s;
+    }
+
+    .scene-card {
+      background: var(--surface);
+      border-left: 4px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+    .scene-card:hover, .scene-card:focus-within {
+      transform: translateX(4px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    .scene-card.active {
+      border-left-color: var(--secondary);
+      box-shadow: 0 0 0 2px var(--secondary);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { filter: brightness(1.2); }
+    .btn-primary:focus-visible { outline: 3px solid var(--secondary); outline-offset: 2px; }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: #fff;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { filter: brightness(1.2); }
+    .btn-secondary:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+    .quiz-option {
+      background: var(--surface);
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .quiz-option:hover { border-color: var(--primary); }
+    .quiz-option:focus-visible { outline: 3px solid var(--secondary); outline-offset: 2px; }
+    .quiz-option.correct { border-color: #4caf50; background: rgba(76,175,80,0.15); }
+    .quiz-option.incorrect { border-color: #f44336; background: rgba(244,67,54,0.15); }
+    .quiz-option.reveal-correct { border-color: #4caf50; opacity: 0.7; }
+
+    .progress-bar { background: var(--surface); }
+    .progress-fill { background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.5s ease; }
+
+    .emoji-icon { font-size: 2em; display: block; margin-bottom: 0.5rem; }
+
+    .theme-btn { border: 2px solid transparent; transition: all 0.2s; cursor: pointer; }
+    .theme-btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+    .theme-btn.active-theme { border-color: var(--text); }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      padding: 12px 24px; border-radius: 12px; z-index: 100;
+      background: var(--primary); color: #fff;
+      animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    @keyframes fadeOut { to { opacity: 0; } }
+
+    .fade-in { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Dyslexia-friendly option */
+    .dyslexia-font { font-family: 'Nunito', 'Comic Sans MS', sans-serif !important; letter-spacing: 0.05em; word-spacing: 0.1em; }
+
+    .settings-panel {
+      background: var(--surface);
+      border: 1px solid var(--primary);
+    }
+
+    .toggle-switch {
+      width: 48px; height: 26px; border-radius: 13px;
+      background: #555; cursor: pointer; position: relative; transition: background 0.2s;
+    }
+    .toggle-switch.on { background: var(--primary); }
+    .toggle-switch .toggle-knob {
+      width: 22px; height: 22px; border-radius: 50%; background: #fff;
+      position: absolute; top: 2px; left: 2px; transition: left 0.2s;
+    }
+    .toggle-switch.on .toggle-knob { left: 24px; }
+
+    .teacher-mode-active {
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --primary: #d32f2f;
+      --secondary: #1976d2;
+    }
+
+    .teacher-mode-active .header { background: var(--surface); }
+    .teacher-mode-active h1, .teacher-mode-active h2, .teacher-mode-active h3 { color: var(--text); }
+    .teacher-mode-active p { color: var(--text); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="app-wrapper h-full w-full overflow-auto theme-tragic-love" style="font-family: 'Crimson Text', Georgia, serif;">
+   <!-- Skip Navigation --> <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 btn-primary px-4 py-2 rounded-lg">Skip to main content</a> <!-- Header -->
+   <header class="sticky top-0 z-40 px-4 py-3" style="background: var(--surface); border-bottom: 2px solid var(--primary);">
+    <div class="max-w-4xl mx-auto flex items-center justify-between flex-wrap gap-2">
+     <div>
+      <h1 id="main-title" class="font-bold leading-tight" style="font-size: 1.6em;">🌹 Romeo &amp; Juliet</h1>
+      <p id="subtitle" class="opacity-80" style="font-size: 0.85em;">An Interactive Journey Through Shakespeare's Tragedy</p>
+     </div>
+     <div class="flex items-center gap-2 flex-wrap">
+      <button id="settings-toggle" class="btn-secondary px-3 py-2 rounded-lg flex items-center gap-1" aria-label="Open accessibility settings" style="font-size: 0.85em;"> <i data-lucide="settings" style="width:18px;height:18px;"></i> <span class="hidden sm:inline">Settings</span> </button> <button id="nav-prev" class="btn-secondary px-3 py-2 rounded-lg" aria-label="Previous scene" style="font-size: 0.85em;"> <i data-lucide="chevron-left" style="width:18px;height:18px;"></i> </button> <span id="nav-indicator" style="font-size: 0.8em; min-width: 50px; text-align: center;"></span> <button id="nav-next" class="btn-primary px-3 py-2 rounded-lg" aria-label="Next scene" style="font-size: 0.85em;"> <i data-lucide="chevron-right" style="width:18px;height:18px;"></i> </button>
+     </div>
+    </div>
+   </header><!-- Settings Panel -->
+   <div id="settings-panel" class="settings-panel fixed top-0 right-0 z-50 w-80 max-w-full h-full p-6 overflow-auto" style="display:none; transform: translateX(100%); transition: transform 0.3s ease;" role="dialog" aria-label="Accessibility Settings">
+    <div class="flex items-center justify-between mb-6">
+     <h2 class="font-bold" style="font-size:1.3em;">⚙️ Settings</h2><button id="settings-close" class="btn-secondary px-2 py-1 rounded" aria-label="Close settings"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+    </div>
+    <div class="mb-6">
+     <h3 class="font-bold mb-3" style="font-size:1.1em;">🎨 Color Theme</h3>
+     <div class="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Color theme selection">
+      <button class="theme-btn rounded-lg p-3 text-left active-theme" data-theme="tragic-love" role="radio" aria-checked="true" style="background: #1a0a14; color: #f5e6ee; border-color: #c2185b; font-size: 0.85em;"> 💔 Tragic Love </button> <button class="theme-btn rounded-lg p-3 text-left" data-theme="golden-dawn" role="radio" aria-checked="false" style="background: #fdf6e3; color: #3e2723; font-size: 0.85em;"> 🌅 Golden Dawn </button> <button class="theme-btn rounded-lg p-3 text-left" data-theme="ocean-calm" role="radio" aria-checked="false" style="background: #0d1b2a; color: #e0f7fa; font-size: 0.85em;"> 🌊 Ocean Calm </button> <button class="theme-btn rounded-lg p-3 text-left" data-theme="high-contrast" role="radio" aria-checked="false" style="background: #000; color: #fff; font-size: 0.85em;"> ⚡ High Contrast </button>
+     </div>
+    </div>
+    <div class="mb-6">
+     <h3 class="font-bold mb-3" style="font-size:1.1em;">🔤 Text Size</h3>
+     <div class="flex items-center gap-3">
+      <button id="font-decrease" class="btn-secondary px-3 py-2 rounded-lg" aria-label="Decrease text size" style="font-size:1.1em;">A-</button> <span id="font-size-label" class="font-bold" style="min-width: 40px; text-align: center;">16</span> <button id="font-increase" class="btn-secondary px-3 py-2 rounded-lg" aria-label="Increase text size" style="font-size:1.1em;">A+</button>
+     </div><input id="font-slider" type="range" min="12" max="28" value="16" class="w-full mt-2" aria-label="Text size slider" style="accent-color: var(--primary);">
+    </div>
+    <div class="mb-6">
+     <h3 class="font-bold mb-3" style="font-size:1.1em;">📊 Display Mode</h3>
+     <div class="flex flex-col gap-2">
+      <button class="mode-btn btn-secondary px-3 py-2 rounded-lg text-left active-mode" data-mode="student" style="font-size: 0.9em;">👤 Student View (Adjustable)</button> <button class="mode-btn btn-secondary px-3 py-2 rounded-lg text-left" data-mode="teacher" style="font-size: 0.9em;">📺 Teacher/Projector Mode</button>
+     </div>
+    </div>
+    <div class="mb-6">
+     <div class="flex flex-col gap-2">
+      <button class="font-btn btn-secondary px-3 py-2 rounded-lg text-left" data-font="'Crimson Text', Georgia, serif" style="font-family: 'Crimson Text', serif; font-size: 0.9em;">Classic Serif</button> <button class="font-btn btn-secondary px-3 py-2 rounded-lg text-left" data-font="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif; font-size: 0.9em;">Easy Read (Nunito)</button>
+     </div>
+    </div>
+    <div class="mb-6">
+     <h3 class="font-bold mb-3" style="font-size:1.1em;">♿ Accessibility</h3>
+     <div class="flex items-center justify-between mb-3">
+      <label for="dyslexia-toggle" style="font-size: 0.9em;">Dyslexia-friendly spacing</label>
+      <div id="dyslexia-toggle" class="toggle-switch" role="switch" aria-checked="false" tabindex="0">
+       <div class="toggle-knob"></div>
+      </div>
+     </div>
+     <div class="flex items-center justify-between">
+      <label for="reduce-motion" style="font-size: 0.9em;">Reduce motion</label>
+      <div id="reduce-motion" class="toggle-switch" role="switch" aria-checked="false" tabindex="0">
+       <div class="toggle-knob"></div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div id="settings-overlay" style="display:none;" class="fixed inset-0 z-40 bg-black bg-opacity-50"></div><!-- Main Content -->
+   <main id="main-content" class="max-w-4xl mx-auto px-4 py-6" role="main">
+    <!-- Progress -->
+    <div class="mb-6" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Lesson progress">
+     <div class="flex justify-between items-center mb-1">
+      <span style="font-size: 0.8em; font-weight: 600;">Your Progress</span> <span id="progress-text" style="font-size: 0.8em;">0 / 8 scenes</span>
+     </div>
+     <div class="progress-bar rounded-full" style="height: 8px;">
+      <div id="progress-fill" class="progress-fill rounded-full" style="height: 100%; width: 0%;"></div>
+     </div>
+    </div><!-- Scene Content Area -->
+    <div id="scene-content" class="fade-in">
+     <!-- Dynamically filled -->
+    </div>
+   </main><!-- Footer -->
+   <footer class="text-center py-4 px-4 opacity-60" style="font-size: 0.75em;">
+    <p>Made for Anaheim teens 🍊 | Tap settings ⚙️ to customize your experience</p>
+   </footer>
+  </div>
+  <script>
+    // ==================== SCENE DATA ====================
+    const scenes = [
+      {
+        id: 'prologue',
+        emoji: '📜',
+        label: 'Prologue',
+        title: 'The Prologue — The Set-Up',
+        tagline: '"Two households, both alike in dignity..."',
+        summary: 'A narrator steps out and drops a huge spoiler right away: two powerful families in Verona have been beefing for years. Their hatred is so deep that only the death of their own kids — Romeo and Juliet — will finally end it. Shakespeare basically says, "Here\'s the ending. Now watch HOW it happens."',
+        whyItMatters: 'This is like the opening crawl of a movie. Shakespeare wants you to know the ending so you feel the tension building every step of the way. It\'s not about IF they die — it\'s about watching helplessly as it unfolds.',
+        discussion: 'Have you ever known the ending of a show but still felt emotional watching it? Why does knowing a spoiler sometimes make things MORE intense?',
+        quiz: {
+          question: 'What does the Prologue reveal about Romeo and Juliet\'s story?',
+          options: ['They live happily ever after', 'Their deaths will end the family feud', 'They run away to another city', 'Their parents approve of the relationship'],
+          correct: 1,
+          explanation: 'The Prologue straight-up tells us that these "star-crossed lovers" will die, and only THEN will the families stop fighting. It\'s a bold move — Shakespeare gives away the ending before Scene 1!'
+        }
+      },
+      {
+        id: 'brawl',
+        emoji: '⚔️',
+        label: 'Act 1.1',
+        title: 'The Brawl — Act 1, Scene 1',
+        tagline: '"Do you bite your thumb at us, sir?"',
+        summary: 'Servants from the Montague and Capulet families start trash-talking each other on the street. A petty insult ("I bite my thumb at you!") escalates into an all-out sword fight. The Prince of Verona shows up furious and announces that the next person who starts a fight will be executed.',
+        whyItMatters: 'This shows you how toxic and dangerous the feud is. It\'s not just the parents fighting — even the servants are ready to throw hands. The whole city is affected. It\'s like gang tension where everyone picks a side.',
+        discussion: 'Think about your school or neighborhood. Have you ever seen a conflict between two people drag in others who weren\'t even involved? How does that happen?',
+        quiz: {
+          question: 'What starts the street fight in Act 1, Scene 1?',
+          options: ['Romeo insults Tybalt', 'A servant bites his thumb (an insult)', 'Juliet\'s father attacks a Montague', 'The Prince challenges both families'],
+          correct: 1,
+          explanation: 'It all starts with a petty gesture — a servant biting his thumb, which was basically the Renaissance version of flipping someone off. Something that small led to a full-on brawl!'
+        }
+      },
+      {
+        id: 'party',
+        emoji: '🎭',
+        label: 'Act 1.5',
+        title: 'The Party — Act 1, Scene 5',
+        tagline: '"Did my heart love till now?"',
+        summary: 'Romeo sneaks into a Capulet masquerade party (wearing a mask) and spots Juliet across the room. They\'re immediately drawn to each other — talking in poetry, flirting, and even sharing a kiss. But then they each find out the truth: Romeo is a Montague, and Juliet is a Capulet. Their families are sworn enemies.',
+        whyItMatters: 'This is the "love at first sight" moment, but it comes with a devastating catch. They fall for each other BEFORE knowing who the other person really is. By the time they find out, it\'s too late — the feelings are already real.',
+        discussion: 'Has social media ever made you like someone before you really knew them? What happens when you find out something about them that complicates things?',
+        quiz: {
+          question: 'What devastating discovery do Romeo and Juliet make at the party?',
+          options: ['They are cousins', 'They belong to enemy families', 'Romeo is already engaged', 'Juliet is leaving Verona'],
+          correct: 1,
+          explanation: 'After falling for each other at first sight, they discover the worst possible news — they\'re from the two families that hate each other most. Romeo is a Montague, Juliet is a Capulet. 💔'
+        }
+      },
+      {
+        id: 'balcony',
+        emoji: '🌙',
+        label: 'Act 2.2',
+        title: 'The Balcony — Act 2, Scene 2',
+        tagline: '"What\'s in a name? That which we call a rose by any other name would smell as sweet."',
+        summary: 'After the party, Romeo sneaks into the Capulet garden and finds Juliet on her balcony. She\'s talking to herself about how unfair it is that Romeo is a Montague. Romeo reveals himself, and they pour their hearts out. They decide right then and there to get married in secret the very next day.',
+        whyItMatters: 'This is one of the most famous scenes in all of literature. Juliet\'s question — "What\'s in a name?" — is really asking: why should a label (a last name, a group, a background) define who we can love? It\'s about identity vs. what others expect of you.',
+        discussion: 'Have you ever felt like your family name, background, or group identity put pressure on your choices? What would you do if people judged you for who you hung out with?',
+        quiz: {
+          question: 'What do Romeo and Juliet decide to do during the balcony scene?',
+          options: ['Run away from Verona together', 'Get married in secret the next day', 'Tell their parents about their love', 'Never see each other again'],
+          correct: 1,
+          explanation: 'Despite knowing their families are enemies, they decide to secretly marry the very next day. They\'re so in love they believe they can beat the odds — even though the Prologue already told us they can\'t. 😢'
+        }
+      },
+      {
+        id: 'duel',
+        emoji: '🔥',
+        label: 'Act 3.1',
+        title: 'The Duel — Act 3, Scene 1',
+        tagline: '"A plague on both your houses!"',
+        summary: 'Tybalt (Juliet\'s hot-headed cousin) picks a fight with Romeo on the street. Romeo tries to keep the peace because he\'s now secretly married to Juliet — making Tybalt his family. But Romeo\'s best friend Mercutio steps in and fights Tybalt instead. Romeo tries to break it up, but Tybalt stabs Mercutio under Romeo\'s arm. Mercutio dies cursing both families. In a rage, Romeo kills Tybalt. The Prince banishes Romeo from Verona forever.',
+        whyItMatters: 'This is the turning point — everything falls apart here. Romeo tried to do the right thing by NOT fighting, but it backfired. Mercutio\'s dying words — "A plague on both your houses!" — is basically saying the feud is poisoning everyone. Romeo goes from newlywed to killer to exile in minutes.',
+        discussion: 'Have you ever tried to stay out of drama, but it pulled you in anyway? How does it feel when doing the right thing still leads to a bad outcome?',
+        quiz: {
+          question: 'Why does Romeo initially refuse to fight Tybalt?',
+          options: ['He\'s afraid of Tybalt\'s skills', 'He\'s secretly married to Juliet (Tybalt\'s cousin)', 'The Prince is watching', 'Mercutio tells him not to'],
+          correct: 1,
+          explanation: 'Romeo just married Juliet, making Tybalt his family now! He tries to de-escalate, but Mercutio jumps in, gets killed, and Romeo loses control. One moment of rage changes everything.'
+        }
+      },
+      {
+        id: 'ultimatum',
+        emoji: '😰',
+        label: 'Act 3.5',
+        title: 'The Ultimatum — Act 3, Scene 5',
+        tagline: '"Hang, beg, starve, die in the streets..."',
+        summary: 'After spending one night together as newlyweds, Romeo has to flee Verona because he\'s been banished. Then Juliet\'s father drops a bomb: she MUST marry Count Paris, a rich nobleman. When Juliet refuses, her father goes off — threatening to throw her out on the streets and disown her completely. Her mother won\'t help. Even her nurse tells her to just marry Paris. Juliet is completely alone.',
+        whyItMatters: 'This scene shows how trapped Juliet is. She\'s 13, already secretly married, her husband just got banished for killing her cousin, and now her own parents are forcing her into another marriage. She has zero support. This is when desperation kicks in.',
+        discussion: 'Imagine being told you HAVE to do something huge that goes against everything you believe. Who would you turn to for help? What if nobody was on your side?',
+        quiz: {
+          question: 'What does Juliet\'s father threaten when she refuses to marry Paris?',
+          options: ['To send her to a convent', 'To disown her and throw her out', 'To have Romeo arrested', 'To cancel the Capulet party'],
+          correct: 1,
+          explanation: 'Lord Capulet basically says: marry Paris or you\'re dead to me. He threatens to kick her out with nothing. And her mom says, "I\'m done with you too." Juliet is completely abandoned by her own family.'
+        }
+      },
+      {
+        id: 'potion',
+        emoji: '🧪',
+        label: 'Act 4.3',
+        title: 'The Potion — Act 4, Scene 3',
+        tagline: '"Romeo, Romeo! Here\'s drink. I drink to thee."',
+        summary: 'With no one to turn to, Juliet goes to Friar Lawrence, who comes up with a risky plan: drink a potion that will make her look dead for 42 hours. Her family will put her in the tomb, then Romeo will come rescue her and they\'ll escape together. Alone in her room, Juliet is terrified — what if the potion is actually poison? What if she wakes up in the tomb surrounded by dead bodies and goes insane? But she drinks it anyway.',
+        whyItMatters: 'This shows incredible courage AND desperation. Juliet literally considers every worst-case scenario — dying, going crazy, being trapped — and still drinks the potion. She\'d rather risk death than be forced into a life she didn\'t choose.',
+        discussion: 'Have you ever had to make a scary decision with no good options? What helped you choose? What does bravery look like when every option is terrifying?',
+        quiz: {
+          question: 'What is Juliet\'s biggest fear about taking the potion?',
+          options: ['That Romeo won\'t come', 'That it might actually kill her or she\'ll wake up trapped', 'That Paris will find out', 'That her mother will be sad'],
+          correct: 1,
+          explanation: 'Juliet imagines the potion being real poison, or waking up alone in a dark tomb full of her dead ancestors and going insane. She faces ALL of these fears and still drinks it. That takes serious courage. 💪'
+        }
+      },
+      {
+        id: 'tragedy',
+        emoji: '💀',
+        label: 'Act 5.3',
+        title: 'The Tragedy & Peace — Act 5, Scene 3',
+        tagline: '"For never was a story of more woe, than this of Juliet and her Romeo."',
+        summary: 'The Friar\'s message never reaches Romeo. Instead, Romeo hears that Juliet is dead (not knowing it\'s fake). Heartbroken, he buys real poison and rushes to her tomb. He finds her "body," says goodbye, and drinks the poison. Moments later, Juliet wakes up, sees Romeo dead beside her, and stabs herself with his dagger. When both families arrive and see their dead children, they finally realize their hatred caused this. They agree to end the feud and build statues in honor of Romeo and Juliet.',
+        whyItMatters: 'The ultimate tragedy: if the message had arrived just a few hours earlier, both would be alive. Their deaths are the direct result of the feud, miscommunication, and bad timing. But their sacrifice finally breaks the cycle of hate. Sometimes it takes losing everything for people to change.',
+        discussion: 'Do you think the families truly changed, or did they just feel guilty? Can tragedy really end cycles of hate in real life? What would it take to break a real-world conflict?',
+        quiz: {
+          question: 'What ultimately causes both Romeo and Juliet to die?',
+          options: ['Their families attack them', 'A tragic miscommunication about the potion plan', 'The Prince orders their execution', 'Friar Lawrence poisons them'],
+          correct: 1,
+          explanation: 'Romeo never gets the message that Juliet is just sleeping. He thinks she\'s really dead, so he poisons himself. She wakes up, finds him dead, and kills herself too. One missed message destroyed everything. 💔'
+        }
+      }
+    ];
+
+    // ==================== STATE ====================
+    let currentScene = 0;
+    let quizAnswers = {};
+    let settingsOpen = false;
+
+    const defaultConfig = {
+      main_title: 'Romeo & Juliet',
+      subtitle: 'An Interactive Journey Through Shakespeare\'s Tragedy',
+      background_color: '#1a0a14',
+      surface_color: '#2d1225',
+      text_color: '#f5e6ee',
+      primary_color: '#c2185b',
+      secondary_color: '#7b1fa2',
+      font_family: "'Crimson Text', Georgia, serif",
+      font_size: 24,
+      theme: 'tragic-love',
+      dyslexia_mode: true,
+      reduce_motion: false,
+      display_mode: 'student'
+    };
+
+    // ==================== RENDER SCENE ====================
+    function renderScene(index) {
+      const s = scenes[index];
+      const answered = quizAnswers[s.id];
+      const container = document.getElementById('scene-content');
+
+      const reduceMotion = window.elementSdk?.config?.reduce_motion || false;
+
+      container.innerHTML = `
+        <!-- Scene Navigation Pills -->
+        <nav class="flex flex-wrap gap-2 mb-6" aria-label="Scene navigation" role="tablist">
+          ${scenes.map((sc, i) => `
+            <button role="tab" aria-selected="${i === index}" class="scene-pill px-3 py-1.5 rounded-full font-semibold transition-all"
+              style="font-size: 0.75em; background: ${i === index ? 'var(--primary)' : 'var(--surface)'}; color: ${i === index ? '#fff' : 'var(--text)'}; opacity: ${i === index ? 1 : 0.7}; border: 1px solid ${i === index ? 'var(--primary)' : 'transparent'};"
+              data-scene="${i}" aria-label="${sc.label}: ${sc.title}">
+              ${sc.emoji} ${sc.label}
+            </button>
+          `).join('')}
+        </nav>
+
+        <!-- Scene Card -->
+        <article class="scene-card active rounded-2xl p-6 mb-6 ${reduceMotion ? '' : 'fade-in'}" aria-labelledby="scene-title-${s.id}">
+          <span class="emoji-icon" aria-hidden="true">${s.emoji}</span>
+          <h2 id="scene-title-${s.id}" class="font-bold mb-2" style="font-size: 1.5em;">${s.title}</h2>
+          <p class="italic mb-4 opacity-80" style="font-size: 0.95em;">${s.tagline}</p>
+
+          <div class="mb-4">
+            <h3 class="font-bold mb-2" style="font-size: 1.1em; color: var(--primary);">📖 What Happens</h3>
+            <p style="line-height: 1.7;">${s.summary}</p>
+          </div>
+
+          <div class="mb-4 p-4 rounded-xl" style="background: rgba(255,255,255,0.05); border-left: 3px solid var(--secondary);">
+            <h3 class="font-bold mb-2" style="font-size: 1.1em; color: var(--secondary);">💡 Why It Matters</h3>
+            <p style="line-height: 1.7;">${s.whyItMatters}</p>
+          </div>
+
+          <div class="mb-4 p-4 rounded-xl" style="background: rgba(255,255,255,0.05); border-left: 3px solid var(--primary);">
+            <h3 class="font-bold mb-2" style="font-size: 1.1em; color: var(--primary);">💬 Think About It</h3>
+            <p style="line-height: 1.7; font-style: italic;">${s.discussion}</p>
+          </div>
+        </article>
+
+        <!-- Quiz -->
+        <section class="scene-card rounded-2xl p-6 mb-6 ${reduceMotion ? '' : 'fade-in'}" aria-labelledby="quiz-title-${s.id}" style="${reduceMotion ? '' : 'animation-delay: 0.1s;'}">
+          <h3 id="quiz-title-${s.id}" class="font-bold mb-4" style="font-size: 1.2em;">🧠 Quick Check</h3>
+          <p class="mb-4 font-semibold">${s.quiz.question}</p>
+          <div class="flex flex-col gap-3" role="radiogroup" aria-label="Quiz answers">
+            ${s.quiz.options.map((opt, i) => {
+              let extraClass = '';
+              if (answered !== undefined) {
+                if (i === s.quiz.correct) extraClass = 'correct';
+                else if (i === answered && answered !== s.quiz.correct) extraClass = 'incorrect';
+              }
+              return `<button class="quiz-option rounded-xl p-4 text-left ${extraClass}" data-quiz="${i}"
+                ${answered !== undefined ? 'disabled' : ''} role="radio" aria-checked="${answered === i}"
+                style="font-size: 0.95em;">
+                <span class="font-bold" style="color: var(--primary);">${String.fromCharCode(65 + i)}.</span> ${opt}
+              </button>`;
+            }).join('')}
+          </div>
+          ${answered !== undefined ? `
+            <div class="mt-4 p-4 rounded-xl ${answered === s.quiz.correct ? 'correct' : 'incorrect'}" style="background: ${answered === s.quiz.correct ? 'rgba(76,175,80,0.1)' : 'rgba(244,67,54,0.1)'}; border: 1px solid ${answered === s.quiz.correct ? '#4caf50' : '#f44336'};">
+              <p class="font-bold mb-1">${answered === s.quiz.correct ? '✅ Correct!' : '❌ Not quite!'}</p>
+              <p style="line-height: 1.6;">${s.quiz.explanation}</p>
+            </div>
+          ` : ''}
+        </section>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center gap-4 mb-8">
+          <button id="btn-prev" class="btn-secondary px-5 py-3 rounded-xl font-bold flex items-center gap-2 ${index === 0 ? 'opacity-30' : ''}" ${index === 0 ? 'disabled' : ''} style="font-size: 0.95em;">
+            <i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Previous
+          </button>
+          <button id="btn-next" class="btn-primary px-5 py-3 rounded-xl font-bold flex items-center gap-2 ${index === scenes.length - 1 ? 'opacity-30' : ''}" ${index === scenes.length - 1 ? 'disabled' : ''} style="font-size: 0.95em;">
+            Next <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+
+        ${index === scenes.length - 1 && Object.keys(quizAnswers).length === scenes.length ? `
+          <div class="scene-card rounded-2xl p-6 text-center mb-6 fade-in">
+            <span class="emoji-icon">🎉</span>
+            <h3 class="font-bold mb-2" style="font-size: 1.4em;">You Finished the Lesson!</h3>
+            <p class="mb-2">Score: ${Object.entries(quizAnswers).filter(([id, ans]) => scenes.find(s => s.id === id).quiz.correct === ans).length} / ${scenes.length} correct</p>
+            <p class="opacity-70" style="font-size: 0.9em;">Great job working through the whole play! 🌹</p>
+          </div>
+        ` : ''}
+      `;
+
+      // Re-bind events
+      container.querySelectorAll('.scene-pill').forEach(btn => {
+        btn.addEventListener('click', () => { currentScene = parseInt(btn.dataset.scene); renderScene(currentScene); });
+      });
+      container.querySelectorAll('.quiz-option:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          quizAnswers[s.id] = parseInt(btn.dataset.quiz);
+          renderScene(currentScene);
+          updateProgress();
+        });
+      });
+      document.getElementById('btn-prev')?.addEventListener('click', () => goScene(-1));
+      document.getElementById('btn-next')?.addEventListener('click', () => goScene(1));
+
+      updateNav();
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: settingsOpen ? 'auto' : 'smooth' });
+    }
+
+    function goScene(dir) {
+      const next = currentScene + dir;
+      if (next >= 0 && next < scenes.length) {
+        currentScene = next;
+        renderScene(currentScene);
+      }
+    }
+
+    function updateNav() {
+      document.getElementById('nav-indicator').textContent = `${currentScene + 1} / ${scenes.length}`;
+    }
+
+    function updateProgress() {
+      const answered = Object.keys(quizAnswers).length;
+      const pct = Math.round((answered / scenes.length) * 100);
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = `${answered} / ${scenes.length} scenes`;
+      const bar = document.querySelector('[role="progressbar"]');
+      if (bar) bar.setAttribute('aria-valuenow', pct);
+    }
+
+    // ==================== SETTINGS ====================
+    function openSettings() {
+      settingsOpen = true;
+      const panel = document.getElementById('settings-panel');
+      const overlay = document.getElementById('settings-overlay');
+      panel.style.display = 'block';
+      overlay.style.display = 'block';
+      requestAnimationFrame(() => { panel.style.transform = 'translateX(0)'; });
+      panel.querySelector('button').focus();
+    }
+    function closeSettings() {
+      settingsOpen = false;
+      const panel = document.getElementById('settings-panel');
+      const overlay = document.getElementById('settings-overlay');
+      panel.style.transform = 'translateX(100%)';
+      overlay.style.display = 'none';
+      setTimeout(() => { panel.style.display = 'none'; }, 300);
+    }
+
+    document.getElementById('settings-toggle').addEventListener('click', openSettings);
+    document.getElementById('settings-close').addEventListener('click', closeSettings);
+    document.getElementById('settings-overlay').addEventListener('click', closeSettings);
+
+    // Theme buttons
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const theme = btn.dataset.theme;
+        const app = document.getElementById('app');
+        app.className = app.className.replace(/theme-\S+/, '') + ' theme-' + theme;
+        document.querySelectorAll('.theme-btn').forEach(b => { b.classList.remove('active-theme'); b.setAttribute('aria-checked', 'false'); });
+        btn.classList.add('active-theme');
+        btn.setAttribute('aria-checked', 'true');
+
+        // Update config colors based on theme
+        const themes = {
+          'tragic-love': { background_color: '#1a0a14', surface_color: '#2d1225', text_color: '#f5e6ee', primary_color: '#c2185b', secondary_color: '#7b1fa2' },
+          'golden-dawn': { background_color: '#fdf6e3', surface_color: '#fff8dc', text_color: '#3e2723', primary_color: '#e65100', secondary_color: '#bf360c' },
+          'ocean-calm': { background_color: '#0d1b2a', surface_color: '#1b2838', text_color: '#e0f7fa', primary_color: '#0097a7', secondary_color: '#00695c' },
+          'high-contrast': { background_color: '#000000', surface_color: '#1a1a1a', text_color: '#ffffff', primary_color: '#ffeb3b', secondary_color: '#ff9800' }
+        };
+        if (themes[theme]) {
+          window.elementSdk.setConfig({ theme, ...themes[theme] });
+        }
+      });
+    });
+
+    // Font size
+    function updateFontSize(size) {
+      size = Math.max(12, Math.min(28, size));
+      document.getElementById('app').style.fontSize = size + 'px';
+      document.getElementById('font-size-label').textContent = size;
+      document.getElementById('font-slider').value = size;
+      window.elementSdk.setConfig({ font_size: size });
+    }
+    document.getElementById('font-decrease').addEventListener('click', () => {
+      updateFontSize((window.elementSdk.config.font_size || 16) - 2);
+    });
+    document.getElementById('font-increase').addEventListener('click', () => {
+      updateFontSize((window.elementSdk.config.font_size || 16) + 2);
+    });
+    document.getElementById('font-slider').addEventListener('input', (e) => {
+      updateFontSize(parseInt(e.target.value));
+    });
+
+    // Font family buttons
+    document.querySelectorAll('.font-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.elementSdk.setConfig({ font_family: btn.dataset.font });
+      });
+    });
+
+    // Display mode buttons
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+        const app = document.getElementById('app');
+        
+        if (mode === 'teacher') {
+          app.classList.add('teacher-mode-active');
+          updateFontSize(40);
+          document.getElementById('settings-toggle').style.display = 'none';
+          document.getElementById('nav-prev').style.display = 'none';
+          document.getElementById('nav-next').style.opacity = '0.4';
+          document.getElementById('nav-next').style.pointerEvents = 'none';
+        } else {
+          app.classList.remove('teacher-mode-active');
+          updateFontSize(24);
+          document.getElementById('settings-toggle').style.display = 'inline-block';
+          document.getElementById('nav-prev').style.display = 'inline-block';
+          document.getElementById('nav-next').style.opacity = '1';
+          document.getElementById('nav-next').style.pointerEvents = 'auto';
+        }
+        
+        document.querySelectorAll('.mode-btn').forEach(b => { b.classList.remove('active-mode'); });
+        btn.classList.add('active-mode');
+        window.elementSdk.setConfig({ display_mode: mode });
+      });
+    });
+
+    // Dyslexia toggle
+    document.getElementById('dyslexia-toggle').addEventListener('click', function() {
+      const isOn = !this.classList.contains('on');
+      this.classList.toggle('on', isOn);
+      this.setAttribute('aria-checked', isOn);
+      window.elementSdk.setConfig({ dyslexia_mode: isOn });
+    });
+    document.getElementById('dyslexia-toggle').addEventListener('keydown', function(e) {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); this.click(); }
+    });
+
+    // Reduce motion toggle
+    document.getElementById('reduce-motion').addEventListener('click', function() {
+      const isOn = !this.classList.contains('on');
+      this.classList.toggle('on', isOn);
+      this.setAttribute('aria-checked', isOn);
+      window.elementSdk.setConfig({ reduce_motion: isOn });
+    });
+    document.getElementById('reduce-motion').addEventListener('keydown', function(e) {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); this.click(); }
+    });
+
+    // Keyboard nav
+    document.getElementById('nav-prev').addEventListener('click', () => goScene(-1));
+    document.getElementById('nav-next').addEventListener('click', () => goScene(1));
+    document.addEventListener('keydown', (e) => {
+      if (settingsOpen) return;
+      if (e.key === 'ArrowLeft') goScene(-1);
+      if (e.key === 'ArrowRight') goScene(1);
+    });
+
+    // ==================== ELEMENT SDK ====================
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        const app = document.getElementById('app');
+        const c = { ...defaultConfig, ...config };
+
+        // Font
+        app.style.fontFamily = c.font_family;
+        app.style.fontSize = c.font_size + 'px';
+        document.getElementById('font-size-label').textContent = c.font_size;
+        document.getElementById('font-slider').value = c.font_size;
+
+        // Title/subtitle
+        document.getElementById('main-title').textContent = '🌹 ' + (c.main_title || defaultConfig.main_title);
+        document.getElementById('subtitle').textContent = c.subtitle || defaultConfig.subtitle;
+
+        // Dyslexia
+        if (c.dyslexia_mode) {
+          app.classList.add('dyslexia-font');
+        } else {
+          app.classList.remove('dyslexia-font');
+        }
+
+        // Reduce motion
+        if (c.reduce_motion) {
+          app.style.setProperty('--transition', 'none');
+        }
+
+        // Theme class
+        if (c.theme) {
+          app.className = app.className.replace(/theme-\S+/, '') + ' theme-' + c.theme;
+        }
+      },
+      mapToCapabilities: (config) => {
+        const c = { ...defaultConfig, ...config };
+        return {
+          recolorables: [
+            { get: () => c.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+            { get: () => c.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+            { get: () => c.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+            { get: () => c.primary_color, set: (v) => { config.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+            { get: () => c.secondary_color, set: (v) => { config.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } }
+          ],
+          borderables: [],
+          fontEditable: { get: () => c.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+          fontSizeable: { get: () => c.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+        };
+      },
+      mapToEditPanelValues: (config) => {
+        const c = { ...defaultConfig, ...config };
+        return new Map([
+          ['main_title', c.main_title],
+          ['subtitle', c.subtitle]
+        ]);
+      }
+    });
+
+    // Initial render
+    renderScene(0);
+    updateProgress();
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e3782c562ecc4c6',t:'MTc3NDcxMDA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
