@@ -1341,23 +1341,107 @@
             printContainer.innerHTML = htmlContent;
             document.body.appendChild(printContainer); // Attach to DOM so html2pdf can read it
 
-            // Generate PDF from the clean container
-            const opt = {
-                margin:       [0.5, 0.5, 0.5, 0.5],
-                filename:     `${name}_${title}_Summary.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
+            // Export Clean Summary to PDF
+function generatePDF() {
+    const name = document.getElementById('student-name').value || 'Student Name';
+    const period = document.getElementById('student-period').value || 'Period';
+    const date = document.getElementById('current-date').innerText;
+    const title = document.getElementById('display-title').innerText || 'Annotation Summary';
 
-            html2pdf().set(opt).from(printContainer).save().then(() => {
-                // Remove the hidden print container from the DOM once the PDF downloads
-                document.body.removeChild(printContainer);
-            });
+    // Build the HTML for the PDF entirely in memory
+    let htmlContent = `
+        <div style="padding: 10px; font-family: Arial, sans-serif; color: #000;">
+            <div style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+                <h1 style="margin: 0 0 10px 0; font-size: 24px; color: #2c3e50;">${title}</h1>
+                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                    <span><strong>Name:</strong> ${name}</span>
+                    <span><strong>Period:</strong> ${period}</span>
+                    <span><strong>Date:</strong> ${date}</span>
+                </div>
+            </div>
+            <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Annotations & Highlights</h2>
+    `;
+
+    const blocks = document.querySelectorAll('.paragraph-block');
+    let hasAnnotations = false;
+
+    blocks.forEach(block => {
+        const paraNum = block.dataset.paragraph || '';
+        const textContent = block.querySelector('.text-content');
+        const noteArea = block.querySelector('textarea.margin-note');
+        
+        // Extract highlighted text safely
+        const highlights = Array.from(textContent.querySelectorAll('.highlighted-text'))
+                              .map(span => {
+                                  const bg = span.style.backgroundColor || 'rgba(255, 235, 59, 0.4)';
+                                  return { text: span.innerText.trim(), color: bg };
+                              })
+                              .filter(hl => hl.text.length > 0);
+        
+        // Grab the note text
+        const noteText = noteArea ? noteArea.value.trim() : '';
+
+        // Only add the paragraph to the PDF if the student actually highlighted or wrote a note
+        if (highlights.length > 0 || noteText) {
+            hasAnnotations = true;
+            htmlContent += `
+                <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; page-break-inside: avoid;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #34495e;">Paragraph ${paraNum}</h3>
+            `;
+            
+            // Print Highlights
+            if (highlights.length > 0) {
+                htmlContent += `<div style="margin-bottom: 10px;"><strong>Highlights:</strong><ul style="margin: 5px 0; padding-left: 20px;">`;
+                highlights.forEach(hl => {
+                    htmlContent += `<li style="margin-bottom: 4px;"><span style="background-color: ${hl.color}; padding: 2px 4px; border-radius: 2px;">"${hl.text}"</span></li>`;
+                });
+                htmlContent += `</ul></div>`;
+            }
+            
+            // Print Margin Notes
+            if (noteText) {
+                const formattedNote = noteText.replace(/\n/g, '<br>'); // Preserve line breaks
+                htmlContent += `<div><strong>Note:</strong><div style="margin-top: 5px; padding: 10px; background: #fff; border: 1px dashed #ccc; border-radius: 4px; font-family: 'Comic Sans MS', sans-serif;">${formattedNote}</div></div>`;
+            }
+
+            htmlContent += `</div>`;
         }
+    });
 
-        // Run Init
-        init();
+    if (!hasAnnotations) {
+        htmlContent += `<p style="font-style: italic; color: #777;">No highlights or notes were added to the text.</p>`;
+    }
+
+    // Final Reflection Section
+    const reflectionArea = document.getElementById('final-reflection-text');
+    const reflectionText = reflectionArea ? reflectionArea.value.trim() : '';
+    const formattedReflection = reflectionText ? reflectionText.replace(/\n/g, '<br>') : '<em style="color:#999;">No final reflection written.</em>';
+    
+    htmlContent += `
+        <div style="margin-top: 30px; page-break-inside: avoid;">
+            <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Final Reflection</h2>
+            <div style="padding: 15px; background: #fff; border: 2px solid #2c3e50; border-radius: 6px; font-family: 'Comic Sans MS', sans-serif;">
+                ${formattedReflection}
+            </div>
+        </div>
+        </div>
+    `;
+
+    // Create a temporary element but DO NOT attach it to the screen
+    const printContainer = document.createElement('div');
+    printContainer.innerHTML = htmlContent;
+
+    // Generate PDF directly from the in-memory element
+    const opt = {
+        margin:       [0.5, 0.5, 0.5, 0.5],
+        filename:     `${name}_${title}_Summary.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(printContainer).save();
+}
 
     </script>
 </body>
