@@ -203,7 +203,7 @@
         /* Grid layout for Paragraphs + Margin Notes */
         .paragraph-block {
             display: grid;
-            grid-template-columns: 2fr 1.2fr;
+            grid-template-columns: 2fr 1.2fr; /* slightly wider notes area */
             gap: 30px;
             margin-bottom: 25px;
             align-items: start;
@@ -306,7 +306,7 @@
             border-radius: 5px;
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             font-size: 1.1em;
-            resize: none; 
+            resize: none; /* Controlled by auto-expand JS */
             box-sizing: border-box;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
             overflow: hidden;
@@ -324,6 +324,44 @@
         }
         .final-reflection-block h3 { margin-top: 0; color: #2c3e50; }
         .final-reflection-block p { color: #555; margin-bottom: 15px; font-size: 0.95em; }
+
+        /* Div used for PDF printing to allow expanding text */
+        .margin-note-print {
+            display: none;
+            width: 100%;
+            background-color: var(--margin-note-bg);
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 1em;
+            box-sizing: border-box;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        /* PDF Output Specific Overrides */
+        .pdf-mode .margin-note, .pdf-mode .scaffold-chips, .pdf-mode .note-actions { display: none !important; }
+        .pdf-mode .margin-note-print { display: block !important; }
+        .pdf-mode .highlighted-text {
+            outline: none !important;
+            background-color: transparent !important;
+            text-decoration: none;
+            background-image: linear-gradient(var(--underline-color, #f1c40f), var(--underline-color, #f1c40f));
+            background-repeat: no-repeat;
+            background-size: 100% 4px;
+            background-position: 0 100%;
+            padding-bottom: 2px;
+        }
+        .pdf-mode .paragraph-block { border-bottom: none; break-inside: auto; page-break-inside: auto; }
+        .pdf-mode .note-container, .pdf-mode .text-content { min-width: 0; }
+        .pdf-mode .final-reflection-block { break-inside: auto; page-break-inside: auto; }
+        .pdf-mode { padding-top: 12px; }
+        .pdf-mode #temp-pdf-header { margin-top: 0; }
+
 
         /* Saved Articles Page */
         #saved-page {
@@ -424,7 +462,7 @@
                 <button class="access-btn" id="btn-dyslexia" onclick="toggleDyslexia()">Dyslexia Font</button>
             </div>
 
-            <button class="btn-pdf" onclick="generatePDF()">🖨️ Export Summary to PDF</button>
+            <button class="btn-pdf" onclick="generatePDF()">🖨️ Export to PDF</button>
         </div>
         <div id="autosave-status">Autosave: Off</div>
     </div>
@@ -653,9 +691,13 @@
                 textarea.className = 'margin-note';
                 textarea.placeholder = "Add your annotations here...";
                 
+                const printDiv = document.createElement('div');
+                printDiv.className = 'margin-note-print';
+
                 noteContainer.appendChild(chips);
                 noteContainer.appendChild(actions);
                 noteContainer.appendChild(textarea);
+                noteContainer.appendChild(printDiv);
                 
                 block.appendChild(textDiv);
                 block.appendChild(noteContainer);
@@ -686,6 +728,7 @@
                         <button class="dictate-btn" onclick="toggleDictation(this)">🎤 Dictate</button>
                     </div>
                     <textarea id="final-reflection-text" class="margin-note" style="min-height: 140px;" placeholder="Write your final reflection here..."></textarea>
+                    <div class="margin-note-print" id="final-reflection-print"></div>
                 </div>
             `;
             contentDiv.appendChild(finalBlock);
@@ -1246,6 +1289,19 @@
             window.speechSynthesis.speak(utterance);
         }
 
+        function darkenColor(color, amount) {
+            const ctx = document.createElement('canvas').getContext('2d');
+            if (!ctx) return color;
+            ctx.fillStyle = color;
+            const computed = ctx.fillStyle;
+            const m = computed.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+            if (!m) return color;
+            const r = Math.max(0, Math.floor(parseInt(m[1], 10) * (1 - amount)));
+            const g = Math.max(0, Math.floor(parseInt(m[2], 10) * (1 - amount)));
+            const b = Math.max(0, Math.floor(parseInt(m[3], 10) * (1 - amount)));
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
         // Export Clean Summary to PDF
         function generatePDF() {
             const name = document.getElementById('student-name').value || 'Student Name';
@@ -1253,28 +1309,29 @@
             const date = document.getElementById('current-date').innerText;
             const title = document.getElementById('display-title').innerText || 'Annotation Summary';
 
-            // Create a temporary, clean container for the PDF
+            // Create a temporary container for the PDF
             const printContainer = document.createElement('div');
-            printContainer.style.padding = '30px';
-            printContainer.style.fontFamily = 'Arial, sans-serif';
-            printContainer.style.color = '#000';
-            printContainer.style.width = '800px'; // Fixed width to ensure perfect page breaks
             printContainer.style.position = 'absolute';
-            printContainer.style.left = '-9999px';
             printContainer.style.top = '0';
+            printContainer.style.left = '0';
+            printContainer.style.width = '800px'; 
+            printContainer.style.zIndex = '-1000'; // Hide it safely behind the app
+            printContainer.style.backgroundColor = '#ffffff';
+            printContainer.style.padding = '40px';
+            printContainer.style.color = '#000000';
+            printContainer.style.fontFamily = 'Arial, sans-serif';
             printContainer.style.boxSizing = 'border-box';
 
-            // Document Header
             let htmlContent = `
-                <div style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+                <div style="border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-bottom: 20px;">
                     <h1 style="margin: 0 0 10px 0; font-size: 24px; color: #2c3e50;">${title}</h1>
-                    <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 14px; color: #444;">
                         <span><strong>Name:</strong> ${name}</span>
                         <span><strong>Period:</strong> ${period}</span>
                         <span><strong>Date:</strong> ${date}</span>
                     </div>
                 </div>
-                <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Annotations & Highlights</h2>
+                <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #2c3e50;">Annotations & Highlights</h2>
             `;
 
             const blocks = document.querySelectorAll('.paragraph-block');
@@ -1285,7 +1342,6 @@
                 const textContent = block.querySelector('.text-content');
                 const noteArea = block.querySelector('textarea.margin-note');
                 
-                // Extract highlighted text
                 const highlights = Array.from(textContent.querySelectorAll('.highlighted-text'))
                                       .map(span => {
                                           const bg = span.style.backgroundColor || 'rgba(255, 235, 59, 0.4)';
@@ -1295,25 +1351,24 @@
                 
                 const noteText = noteArea ? noteArea.value.trim() : '';
 
-                // Only print the paragraph if the student actually interacted with it
                 if (highlights.length > 0 || noteText) {
                     hasAnnotations = true;
                     htmlContent += `
-                        <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; page-break-inside: avoid;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #34495e;">Paragraph ${paraNum}</h3>
+                        <div style="margin-bottom: 20px; page-break-inside: avoid;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #34495e; background: #ecf0f1; display: inline-block; padding: 4px 8px; border-radius: 4px;">Paragraph ${paraNum}</h3>
                     `;
                     
                     if (highlights.length > 0) {
                         htmlContent += `<div style="margin-bottom: 10px;"><strong>Highlights:</strong><ul style="margin: 5px 0; padding-left: 20px;">`;
                         highlights.forEach(hl => {
-                            htmlContent += `<li style="margin-bottom: 4px;"><span style="background-color: ${hl.color}; padding: 2px 4px; border-radius: 2px;">"${hl.text}"</span></li>`;
+                            htmlContent += `<li style="margin-bottom: 6px;"><span style="background-color: ${hl.color}; padding: 2px 4px; border-radius: 2px;">"${hl.text}"</span></li>`;
                         });
                         htmlContent += `</ul></div>`;
                     }
                     
                     if (noteText) {
-                        const formattedNote = noteText.replace(/\n/g, '<br>'); // Preserve line breaks
-                        htmlContent += `<div><strong>Note:</strong><div style="margin-top: 5px; padding: 10px; background: #fff; border: 1px dashed #ccc; border-radius: 4px; font-family: 'Comic Sans MS', sans-serif;">${formattedNote}</div></div>`;
+                        const formattedNote = noteText.replace(/\n/g, '<br>'); // Preserve line breaks safely
+                        htmlContent += `<div><strong>Note:</strong><div style="margin-top: 5px; padding: 12px; background: #fff9c4; border: 1px solid #e0e0e0; border-radius: 4px; font-family: 'Comic Sans MS', sans-serif;">${formattedNote}</div></div>`;
                     }
 
                     htmlContent += `</div>`;
@@ -1324,124 +1379,40 @@
                 htmlContent += `<p style="font-style: italic; color: #777;">No highlights or notes were added to the text.</p>`;
             }
 
-            // Final Reflection Section
             const reflectionArea = document.getElementById('final-reflection-text');
             const reflectionText = reflectionArea ? reflectionArea.value.trim() : '';
             const formattedReflection = reflectionText ? reflectionText.replace(/\n/g, '<br>') : '<em style="color:#999;">No final reflection written.</em>';
             
             htmlContent += `
                 <div style="margin-top: 30px; page-break-inside: avoid;">
-                    <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Final Reflection</h2>
-                    <div style="padding: 15px; background: #fff; border: 2px solid #2c3e50; border-radius: 6px; font-family: 'Comic Sans MS', sans-serif;">
+                    <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #2c3e50;">Final Reflection</h2>
+                    <div style="padding: 15px; background: #f8f9fa; border: 2px solid #bdc3c7; border-radius: 6px; font-family: 'Comic Sans MS', sans-serif; line-height: 1.5;">
                         ${formattedReflection}
                     </div>
                 </div>
             `;
 
             printContainer.innerHTML = htmlContent;
-            document.body.appendChild(printContainer); // Attach to DOM so html2pdf can read it
+            document.body.appendChild(printContainer);
 
-            // Export Clean Summary to PDF
-function generatePDF() {
-    const name = document.getElementById('student-name').value || 'Student Name';
-    const period = document.getElementById('student-period').value || 'Period';
-    const date = document.getElementById('current-date').innerText;
-    const title = document.getElementById('display-title').innerText || 'Annotation Summary';
+            const opt = {
+                margin:       0.5,
+                filename:     `${name}_${title}_Summary.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
 
-    // Build the HTML for the PDF entirely in memory
-    let htmlContent = `
-        <div style="padding: 10px; font-family: Arial, sans-serif; color: #000;">
-            <div style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
-                <h1 style="margin: 0 0 10px 0; font-size: 24px; color: #2c3e50;">${title}</h1>
-                <div style="display: flex; justify-content: space-between; font-size: 14px;">
-                    <span><strong>Name:</strong> ${name}</span>
-                    <span><strong>Period:</strong> ${period}</span>
-                    <span><strong>Date:</strong> ${date}</span>
-                </div>
-            </div>
-            <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Annotations & Highlights</h2>
-    `;
-
-    const blocks = document.querySelectorAll('.paragraph-block');
-    let hasAnnotations = false;
-
-    blocks.forEach(block => {
-        const paraNum = block.dataset.paragraph || '';
-        const textContent = block.querySelector('.text-content');
-        const noteArea = block.querySelector('textarea.margin-note');
-        
-        // Extract highlighted text safely
-        const highlights = Array.from(textContent.querySelectorAll('.highlighted-text'))
-                              .map(span => {
-                                  const bg = span.style.backgroundColor || 'rgba(255, 235, 59, 0.4)';
-                                  return { text: span.innerText.trim(), color: bg };
-                              })
-                              .filter(hl => hl.text.length > 0);
-        
-        // Grab the note text
-        const noteText = noteArea ? noteArea.value.trim() : '';
-
-        // Only add the paragraph to the PDF if the student actually highlighted or wrote a note
-        if (highlights.length > 0 || noteText) {
-            hasAnnotations = true;
-            htmlContent += `
-                <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; page-break-inside: avoid;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #34495e;">Paragraph ${paraNum}</h3>
-            `;
-            
-            // Print Highlights
-            if (highlights.length > 0) {
-                htmlContent += `<div style="margin-bottom: 10px;"><strong>Highlights:</strong><ul style="margin: 5px 0; padding-left: 20px;">`;
-                highlights.forEach(hl => {
-                    htmlContent += `<li style="margin-bottom: 4px;"><span style="background-color: ${hl.color}; padding: 2px 4px; border-radius: 2px;">"${hl.text}"</span></li>`;
+            // Small delay to ensure the DOM is rendered before capturing
+            setTimeout(() => {
+                html2pdf().set(opt).from(printContainer).save().then(() => {
+                    document.body.removeChild(printContainer);
                 });
-                htmlContent += `</ul></div>`;
-            }
-            
-            // Print Margin Notes
-            if (noteText) {
-                const formattedNote = noteText.replace(/\n/g, '<br>'); // Preserve line breaks
-                htmlContent += `<div><strong>Note:</strong><div style="margin-top: 5px; padding: 10px; background: #fff; border: 1px dashed #ccc; border-radius: 4px; font-family: 'Comic Sans MS', sans-serif;">${formattedNote}</div></div>`;
-            }
-
-            htmlContent += `</div>`;
+            }, 200);
         }
-    });
 
-    if (!hasAnnotations) {
-        htmlContent += `<p style="font-style: italic; color: #777;">No highlights or notes were added to the text.</p>`;
-    }
-
-    // Final Reflection Section
-    const reflectionArea = document.getElementById('final-reflection-text');
-    const reflectionText = reflectionArea ? reflectionArea.value.trim() : '';
-    const formattedReflection = reflectionText ? reflectionText.replace(/\n/g, '<br>') : '<em style="color:#999;">No final reflection written.</em>';
-    
-    htmlContent += `
-        <div style="margin-top: 30px; page-break-inside: avoid;">
-            <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Final Reflection</h2>
-            <div style="padding: 15px; background: #fff; border: 2px solid #2c3e50; border-radius: 6px; font-family: 'Comic Sans MS', sans-serif;">
-                ${formattedReflection}
-            </div>
-        </div>
-        </div>
-    `;
-
-    // Create a temporary element but DO NOT attach it to the screen
-    const printContainer = document.createElement('div');
-    printContainer.innerHTML = htmlContent;
-
-    // Generate PDF directly from the in-memory element
-    const opt = {
-        margin:       [0.5, 0.5, 0.5, 0.5],
-        filename:     `${name}_${title}_Summary.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(printContainer).save();
-}
+        // Run Init
+        init();
 
     </script>
 </body>
