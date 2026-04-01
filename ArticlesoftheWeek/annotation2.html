@@ -162,8 +162,8 @@
         .access-btn:hover { background: #e4e6e9; }
         .access-btn.active { background: #3498db; color: white; border-color: #2980b9; }
 
-        .btn-pdf { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: auto; font-weight: bold;}
-        .btn-pdf:hover { background: #c0392b; }
+        .btn-pdf { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: auto; font-weight: bold;}
+        .btn-pdf:hover { background: #219653; }
 
         #reading-progress {
             position: sticky;
@@ -462,7 +462,7 @@
                 <button class="access-btn" id="btn-dyslexia" onclick="toggleDyslexia()">Dyslexia Font</button>
             </div>
 
-            <button class="btn-pdf" onclick="generatePDF()">🖨️ Export to PDF</button>
+            <button class="btn-pdf" onclick="exportToText()">📄 Export to Text</button>
         </div>
         <div id="autosave-status">Autosave: Off</div>
     </div>
@@ -1289,140 +1289,94 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        function darkenColor(color, amount) {
-            const ctx = document.createElement('canvas').getContext('2d');
-            if (!ctx) return color;
-            ctx.fillStyle = color;
-            const computed = ctx.fillStyle;
-            const m = computed.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            if (!m) return color;
-            const r = Math.max(0, Math.floor(parseInt(m[1], 10) * (1 - amount)));
-            const g = Math.max(0, Math.floor(parseInt(m[2], 10) * (1 - amount)));
-            const b = Math.max(0, Math.floor(parseInt(m[3], 10) * (1 - amount)));
-            return `rgb(${r}, ${g}, ${b})`;
-        }
+        // ==========================================
+        // NEW EXPORT TO TEXT FILE SCRIPT
+        // ==========================================
+        function exportToText() {
+            const name = document.getElementById('student-name').value || 'Student Name';
+            const period = document.getElementById('student-period').value || 'Period';
+            const date = document.getElementById('current-date').innerText;
+            const title = document.getElementById('display-title').innerText || 'Annotation Summary';
 
-        // Export Clean Summary to PDF
-function generatePDF() {
-    const name = document.getElementById('student-name').value || 'Student Name';
-    const period = document.getElementById('student-period').value || 'Period';
-    const date = document.getElementById('current-date').innerText;
-    const title = document.getElementById('display-title').innerText || 'Annotation Summary';
+            let textContent = `=================================================\n`;
+            textContent += `ANNOTATION SUMMARY: ${title}\n`;
+            textContent += `=================================================\n`;
+            textContent += `Name: ${name}\n`;
+            textContent += `Period: ${period}\n`;
+            textContent += `Date: ${date}\n\n`;
 
-    // 1. Create a temporary container that covers the whole screen
-    const printContainer = document.createElement('div');
-    printContainer.id = 'print-summary-container';
-    printContainer.style.position = 'absolute';
-    printContainer.style.top = '0';
-    printContainer.style.left = '0';
-    printContainer.style.width = '100%';
-    printContainer.style.minHeight = '100vh'; 
-    printContainer.style.backgroundColor = '#ffffff';
-    printContainer.style.zIndex = '9999'; // Places it ON TOP so the engine can see it
-    printContainer.style.padding = '40px';
-    printContainer.style.boxSizing = 'border-box';
-    printContainer.style.fontFamily = 'Arial, sans-serif';
-    printContainer.style.color = '#000';
+            const blocks = document.querySelectorAll('.paragraph-block');
+            let hasAnnotations = false;
 
-    // 2. Build the summary content
-    let htmlContent = `
-        <div style="max-width: 800px; margin: 0 auto;">
-            <div style="border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-bottom: 20px;">
-                <h1 style="margin: 0 0 10px 0; font-size: 24px; color: #2c3e50;">${title}</h1>
-                <div style="display: flex; justify-content: space-between; font-size: 14px; color: #444;">
-                    <span><strong>Name:</strong> ${name}</span>
-                    <span><strong>Period:</strong> ${period}</span>
-                    <span><strong>Date:</strong> ${date}</span>
-                </div>
-            </div>
-            <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #2c3e50;">Annotations & Highlights</h2>
-    `;
+            // Loop through paragraphs and extract highlights/notes
+            blocks.forEach(block => {
+                const paraNum = block.dataset.paragraph || '';
+                const textContentNode = block.querySelector('.text-content');
+                const noteArea = block.querySelector('textarea.margin-note');
 
-    const blocks = document.querySelectorAll('.paragraph-block');
-    let hasAnnotations = false;
+                // Extract any text that the student highlighted
+                const highlights = Array.from(textContentNode.querySelectorAll('.highlighted-text'))
+                                      .map(span => span.innerText.trim())
+                                      .filter(text => text.length > 0);
 
-    // Loop through paragraphs to extract highlights and notes
-    blocks.forEach(block => {
-        const paraNum = block.dataset.paragraph || '';
-        const textContent = block.querySelector('.text-content');
-        const noteArea = block.querySelector('textarea.margin-note');
-        
-        const highlights = Array.from(textContent.querySelectorAll('.highlighted-text'))
-                              .map(span => {
-                                  const bg = span.style.backgroundColor || 'rgba(255, 235, 59, 0.4)';
-                                  return { text: span.innerText.trim(), color: bg };
-                              })
-                              .filter(hl => hl.text.length > 0);
-        
-        const noteText = noteArea ? noteArea.value.trim() : '';
+                const noteText = noteArea ? noteArea.value.trim() : '';
 
-        // Only add to PDF if student interacted with this paragraph
-        if (highlights.length > 0 || noteText) {
-            hasAnnotations = true;
-            htmlContent += `
-                <div style="margin-bottom: 20px; page-break-inside: avoid;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #34495e; background: #ecf0f1; display: inline-block; padding: 4px 8px; border-radius: 4px;">Paragraph ${paraNum}</h3>
-            `;
-            
-            if (highlights.length > 0) {
-                htmlContent += `<div style="margin-bottom: 10px;"><strong>Highlights:</strong><ul style="margin: 5px 0; padding-left: 20px;">`;
-                highlights.forEach(hl => {
-                    htmlContent += `<li style="margin-bottom: 6px;"><span style="background-color: ${hl.color}; padding: 2px 4px; border-radius: 2px;">"${hl.text}"</span></li>`;
-                });
-                htmlContent += `</ul></div>`;
-            }
-            
-            if (noteText) {
-                const formattedNote = noteText.replace(/\n/g, '<br>');
-                htmlContent += `<div><strong>Note:</strong><div style="margin-top: 5px; padding: 12px; background: #fff9c4; border: 1px solid #e0e0e0; border-radius: 4px; font-family: 'Comic Sans MS', sans-serif;">${formattedNote}</div></div>`;
+                // If they interacted with this paragraph, add it to the text file
+                if (highlights.length > 0 || noteText) {
+                    hasAnnotations = true;
+                    textContent += `--- Paragraph ${paraNum} ---\n`;
+                    
+                    if (highlights.length > 0) {
+                        textContent += `Evidence (Highlights):\n`;
+                        highlights.forEach(hl => {
+                            textContent += `  * "${hl}"\n`;
+                        });
+                    }
+                    
+                    if (noteText) {
+                        // Keep the linebreaks nicely indented
+                        textContent += `Annotation:\n  ${noteText.replace(/\\n/g, '\\n  ')}\n`;
+                    }
+                    textContent += `\n`;
+                }
+            });
+
+            if (!hasAnnotations) {
+                textContent += `No highlights or annotations were added to the text.\n\n`;
             }
 
-            htmlContent += `</div>`;
+            // Grab the final reflection area
+            const reflectionArea = document.getElementById('final-reflection-text');
+            const reflectionText = reflectionArea ? reflectionArea.value.trim() : '';
+            
+            textContent += `=================================================\n`;
+            textContent += `FINAL REFLECTION\n`;
+            textContent += `=================================================\n`;
+            if (reflectionText) {
+                textContent += `${reflectionText}\n`;
+            } else {
+                textContent += `No final reflection written.\n`;
+            }
+
+            // Create a Blob file and instantly trigger the download to the student's computer
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            // Name the file based on the student and article title
+            a.download = `${name}_${title}_Summary.txt`.replace(/\\s+/g, '_');
+            
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up behind the scenes
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
-    });
 
-    if (!hasAnnotations) {
-        htmlContent += `<p style="font-style: italic; color: #777;">No highlights or notes were added to the text.</p>`;
-    }
-
-    // Append Final Reflection
-    const reflectionArea = document.getElementById('final-reflection-text');
-    const reflectionText = reflectionArea ? reflectionArea.value.trim() : '';
-    const formattedReflection = reflectionText ? reflectionText.replace(/\n/g, '<br>') : '<em style="color:#999;">No final reflection written.</em>';
-    
-    htmlContent += `
-        <div style="margin-top: 30px; page-break-inside: avoid;">
-            <h2 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #2c3e50;">Final Reflection</h2>
-            <div style="padding: 15px; background: #f8f9fa; border: 2px solid #bdc3c7; border-radius: 6px; font-family: 'Comic Sans MS', sans-serif; line-height: 1.5;">
-                ${formattedReflection}
-            </div>
-        </div>
-        </div>
-    `;
-
-    printContainer.innerHTML = htmlContent;
-    
-    // 3. Attach it to the body outside of the scrolling area
-    document.body.appendChild(printContainer);
-
-    // Forces the window to the top so html2canvas doesn't get offset bugs
-    window.scrollTo(0, 0);
-
-    const opt = {
-        margin:       0.5,
-        filename:     `${name}_${title}_Summary.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, scrollY: 0 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    // 4. Give the browser a split second to paint the new div, capture it, then remove it
-    setTimeout(() => {
-        html2pdf().set(opt).from(printContainer).save().then(() => {
-            document.body.removeChild(printContainer);
-        });
-    }, 150);
-}
+        // Run Init
+        init();
 
     </script>
 </body>
