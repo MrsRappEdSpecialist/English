@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Annotation Studio</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary: #2c3e50;
@@ -203,7 +202,7 @@
         /* Grid layout for Paragraphs + Margin Notes */
         .paragraph-block {
             display: grid;
-            grid-template-columns: 2fr 1.2fr; /* slightly wider notes area */
+            grid-template-columns: 2fr 1.2fr;
             gap: 30px;
             margin-bottom: 25px;
             align-items: start;
@@ -306,7 +305,7 @@
             border-radius: 5px;
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             font-size: 1.1em;
-            resize: none; /* Controlled by auto-expand JS */
+            resize: none;
             box-sizing: border-box;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
             overflow: hidden;
@@ -324,44 +323,6 @@
         }
         .final-reflection-block h3 { margin-top: 0; color: #2c3e50; }
         .final-reflection-block p { color: #555; margin-bottom: 15px; font-size: 0.95em; }
-
-        /* Div used for PDF printing to allow expanding text */
-        .margin-note-print {
-            display: none;
-            width: 100%;
-            background-color: var(--margin-note-bg);
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            font-size: 1em;
-            box-sizing: border-box;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-            max-width: 100%;
-        }
-
-        /* PDF Output Specific Overrides */
-        .pdf-mode .margin-note, .pdf-mode .scaffold-chips, .pdf-mode .note-actions { display: none !important; }
-        .pdf-mode .margin-note-print { display: block !important; }
-        .pdf-mode .highlighted-text {
-            outline: none !important;
-            background-color: transparent !important;
-            text-decoration: none;
-            background-image: linear-gradient(var(--underline-color, #f1c40f), var(--underline-color, #f1c40f));
-            background-repeat: no-repeat;
-            background-size: 100% 4px;
-            background-position: 0 100%;
-            padding-bottom: 2px;
-        }
-        .pdf-mode .paragraph-block { border-bottom: none; break-inside: auto; page-break-inside: auto; }
-        .pdf-mode .note-container, .pdf-mode .text-content { min-width: 0; }
-        .pdf-mode .final-reflection-block { break-inside: auto; page-break-inside: auto; }
-        .pdf-mode { padding-top: 12px; }
-        .pdf-mode #temp-pdf-header { margin-top: 0; }
-
 
         /* Saved Articles Page */
         #saved-page {
@@ -436,6 +397,17 @@
             cursor: pointer;
         }
 
+        /* NATIVE PRINT STYLES - This completely bypasses download restrictions */
+        #print-area { display: none; }
+        @media print {
+            /* Hide the main application when printing */
+            #topbar, #workspace, #saved-page, #definition-panel { display: none !important; }
+            /* Show ONLY the cleanly generated report */
+            #print-area { display: block !important; width: 100%; color: #000; background: #fff; }
+            body { background: #fff; margin: 0; padding: 0; }
+            @page { margin: 0.75in; }
+        }
+
     </style>
 </head>
 <body>
@@ -462,7 +434,7 @@
                 <button class="access-btn" id="btn-dyslexia" onclick="toggleDyslexia()">Dyslexia Font</button>
             </div>
 
-            <button class="btn-pdf" onclick="exportToText()">📄 Export to Text</button>
+            <button class="btn-pdf" onclick="generatePDF()">🖨️ Print / Save PDF</button>
         </div>
         <div id="autosave-status">Autosave: Off</div>
     </div>
@@ -507,7 +479,6 @@
             <button onclick="closeDefinition()">Close</button>
         </div>
     </div>
-
 
     <script>
         // Set Date
@@ -691,13 +662,9 @@
                 textarea.className = 'margin-note';
                 textarea.placeholder = "Add your annotations here...";
                 
-                const printDiv = document.createElement('div');
-                printDiv.className = 'margin-note-print';
-
                 noteContainer.appendChild(chips);
                 noteContainer.appendChild(actions);
                 noteContainer.appendChild(textarea);
-                noteContainer.appendChild(printDiv);
                 
                 block.appendChild(textDiv);
                 block.appendChild(noteContainer);
@@ -728,7 +695,6 @@
                         <button class="dictate-btn" onclick="toggleDictation(this)">🎤 Dictate</button>
                     </div>
                     <textarea id="final-reflection-text" class="margin-note" style="min-height: 140px;" placeholder="Write your final reflection here..."></textarea>
-                    <div class="margin-note-print" id="final-reflection-print"></div>
                 </div>
             `;
             contentDiv.appendChild(finalBlock);
@@ -1290,89 +1256,98 @@
         }
 
         // ==========================================
-        // NEW EXPORT TO TEXT FILE SCRIPT
+        // NATIVE PRINT FUNCTION (Bypasses Download Blockers)
         // ==========================================
-        function exportToText() {
+        function generatePDF() {
             const name = document.getElementById('student-name').value || 'Student Name';
             const period = document.getElementById('student-period').value || 'Period';
             const date = document.getElementById('current-date').innerText;
             const title = document.getElementById('display-title').innerText || 'Annotation Summary';
 
-            let textContent = `=================================================\n`;
-            textContent += `ANNOTATION SUMMARY: ${title}\n`;
-            textContent += `=================================================\n`;
-            textContent += `Name: ${name}\n`;
-            textContent += `Period: ${period}\n`;
-            textContent += `Date: ${date}\n\n`;
+            // Create or grab the hidden print area
+            let printArea = document.getElementById('print-area');
+            if (!printArea) {
+                printArea = document.createElement('div');
+                printArea.id = 'print-area';
+                document.body.appendChild(printArea);
+            }
+
+            // Build beautifully formatted HTML for the print dialog
+            let html = `
+                <div style="font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: black; line-height: 1.6;">
+                    <h1 style="border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px;">Annotation Summary: ${title}</h1>
+                    <p style="font-size: 1.1em; margin-bottom: 30px;">
+                        <strong>Name:</strong> ${name} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                        <strong>Period:</strong> ${period} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                        <strong>Date:</strong> ${date}
+                    </p>
+            `;
 
             const blocks = document.querySelectorAll('.paragraph-block');
             let hasAnnotations = false;
 
-            // Loop through paragraphs and extract highlights/notes
             blocks.forEach(block => {
                 const paraNum = block.dataset.paragraph || '';
                 const textContentNode = block.querySelector('.text-content');
                 const noteArea = block.querySelector('textarea.margin-note');
 
-                // Extract any text that the student highlighted
+                // Grab highlights
                 const highlights = Array.from(textContentNode.querySelectorAll('.highlighted-text'))
                                       .map(span => span.innerText.trim())
                                       .filter(text => text.length > 0);
 
                 const noteText = noteArea ? noteArea.value.trim() : '';
 
-                // If they interacted with this paragraph, add it to the text file
+                // Only add paragraphs they interacted with
                 if (highlights.length > 0 || noteText) {
                     hasAnnotations = true;
-                    textContent += `--- Paragraph ${paraNum} ---\n`;
+                    html += `<div style="margin-bottom: 25px; page-break-inside: avoid;">
+                                <h3 style="background-color: #eee; display: inline-block; padding: 5px 10px; margin-bottom: 10px; border-radius: 4px;">Paragraph ${paraNum}</h3>`;
                     
                     if (highlights.length > 0) {
-                        textContent += `Evidence (Highlights):\n`;
+                        html += `<div><strong>Evidence (Highlights):</strong><ul style="margin-top: 5px;">`;
                         highlights.forEach(hl => {
-                            textContent += `  * "${hl}"\n`;
+                            html += `<li style="margin-bottom: 5px;">"${hl}"</li>`;
                         });
+                        html += `</ul></div>`;
                     }
                     
                     if (noteText) {
-                        // Keep the linebreaks nicely indented
-                        textContent += `Annotation:\n  ${noteText.replace(/\\n/g, '\\n  ')}\n`;
+                        const formattedNote = noteText.replace(/\n/g, '<br>');
+                        html += `<div style="margin-top: 10px;"><strong>Annotation:</strong>
+                                    <div style="margin-top: 5px; padding: 10px; border: 1px dashed #999; border-radius: 5px; background-color: #fafafa;">${formattedNote}</div>
+                                 </div>`;
                     }
-                    textContent += `\n`;
+                    html += `</div>`;
                 }
             });
 
             if (!hasAnnotations) {
-                textContent += `No highlights or annotations were added to the text.\n\n`;
+                html += `<p style="font-style: italic; color: #555;">No highlights or annotations were added to the text.</p>`;
             }
 
-            // Grab the final reflection area
+            // Grab the final reflection
             const reflectionArea = document.getElementById('final-reflection-text');
             const reflectionText = reflectionArea ? reflectionArea.value.trim() : '';
             
-            textContent += `=================================================\n`;
-            textContent += `FINAL REFLECTION\n`;
-            textContent += `=================================================\n`;
+            html += `<div style="margin-top: 40px; page-break-inside: avoid;">
+                        <h2 style="border-bottom: 2px solid black; padding-bottom: 5px;">Final Reflection</h2>`;
             if (reflectionText) {
-                textContent += `${reflectionText}\n`;
+                html += `<div style="padding: 15px; border: 2px solid black; background-color: #fafafa; border-radius: 5px; font-size: 1.1em;">
+                            ${reflectionText.replace(/\n/g, '<br>')}
+                         </div>`;
             } else {
-                textContent += `No final reflection written.\n`;
+                html += `<p style="font-style: italic; color: #555;">No final reflection written.</p>`;
             }
+            
+            html += `</div></div>`;
 
-            // Create a Blob file and instantly trigger the download to the student's computer
-            const blob = new Blob([textContent], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            // Name the file based on the student and article title
-            a.download = `${name}_${title}_Summary.txt`.replace(/\\s+/g, '_');
-            
-            document.body.appendChild(a);
-            a.click();
-            
-            // Clean up behind the scenes
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            // Insert HTML into the print area
+            printArea.innerHTML = html;
+
+            // Trigger the browser's native print screen
+            // The @media print CSS rules will automatically hide the app and ONLY show this text!
+            window.print();
         }
 
         // Run Init
