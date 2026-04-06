@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Final Exam</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+  html, body { height: 100%; margin: 0; }
+  body { font-family: 'Atkinson Hyperlegible', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Bitter', serif; }
+  .exam-section { page-break-inside: avoid; }
+  textarea { font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 1.05rem; line-height: 1.8; }
+  input[type="text"], input[type="number"] { font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 1.05rem; }
+  .question-label { font-size: 1.1rem; line-height: 1.7; }
+  .choice-label { font-size: 1.05rem; line-height: 1.6; cursor: pointer; }
+  .choice-label:hover { background: #f0eadd; }
+  .choice-label:focus-within { outline: 3px solid #b8860b; outline-offset: 2px; border-radius: 6px; }
+  input[type="radio"] { width: 20px; height: 20px; accent-color: #5c4a1e; }
+  .print-area { max-width: 820px; }
+  @media print {
+    .no-print { display: none !important; }
+    body { font-size: 12pt; background: white; }
+    .print-area { max-width: 100%; box-shadow: none; border: none; }
+  }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-stone-100 overflow-auto">
+  <div class="h-full w-full overflow-auto" id="app-wrapper">
+   <!-- Top bar -->
+   <header class="no-print bg-stone-800 text-amber-50 py-3 px-4 flex items-center justify-between sticky top-0 z-30">
+    <div class="flex items-center gap-2">
+     <i data-lucide="book-open" style="width:22px;height:22px;"></i> <span class="font-bold text-lg" style="font-family:'Bitter',serif;" id="top-title">Night — Final Exam</span>
+    </div>
+    <div class="flex gap-2">
+     <button onclick="calculateScore()" class="bg-amber-700 hover:bg-amber-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1 transition" aria-label="Calculate score"> <i data-lucide="calculator" style="width:16px;height:16px;"></i> Score </button> <button onclick="saveAsText()" class="bg-stone-600 hover:bg-stone-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1 transition" aria-label="Save as text file"> <i data-lucide="download" style="width:16px;height:16px;"></i> Save Text File </button>
+    </div>
+   </header><!-- Score toast -->
+   <div id="score-toast" class="no-print fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-stone-800 text-amber-100 px-6 py-3 rounded-xl shadow-xl text-lg font-bold hidden transition-all" role="alert" aria-live="polite"></div><!-- Main exam -->
+   <main class="print-area mx-auto bg-white shadow-lg my-6 rounded-xl p-6 sm:p-10" role="main">
+    <!-- Header -->
+    <section class="text-center mb-8 border-b-2 border-stone-300 pb-6">
+     <h1 id="exam-title" class="text-3xl font-bold text-stone-800 mb-1">Final Exam: <em>Night</em> by Elie Wiesel</h1>
+     <p class="text-stone-500 text-sm">Accessible Assessment — Read each question carefully. Take your time.</p>
+     <div class="mt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <label class="flex items-center gap-2 text-stone-700 font-semibold text-base"> <span id="name-label">Student Name:</span> <input type="text" id="student-name" class="border-2 border-stone-300 rounded-lg px-3 py-2 w-60 focus:border-amber-600 focus:outline-none" placeholder="Your name" aria-label="Student name"> </label> <label class="flex items-center gap-2 text-stone-700 font-semibold text-base"> Date: <input type="text" id="exam-date" class="border-2 border-stone-300 rounded-lg px-3 py-2 w-40 focus:border-amber-600 focus:outline-none" placeholder="Today's date" aria-label="Date"> </label>
+     </div>
+    </section><!-- PART 1: Multiple Choice -->
+    <section class="exam-section mb-10" aria-labelledby="part1-heading">
+     <h2 id="part1-heading" class="text-xl font-bold text-stone-800 bg-amber-100 px-4 py-2 rounded-lg mb-5 flex items-center gap-2"><i data-lucide="list" style="width:20px;height:20px;"></i> Part 1: Multiple Choice <span class="text-sm font-normal text-stone-500 ml-2">(2 points each — 20 points)</span></h2>
+     <p class="text-stone-600 mb-4 text-base"><strong>Directions:</strong> Pick the <strong>best</strong> answer for each question. Circle or click your choice.</p>
+     <div id="mc-container" class="space-y-6"></div>
+    </section><!-- PART 2: True or False -->
+    <section class="exam-section mb-10" aria-labelledby="part2-heading">
+     <h2 id="part2-heading" class="text-xl font-bold text-stone-800 bg-amber-100 px-4 py-2 rounded-lg mb-5 flex items-center gap-2"><i data-lucide="check-circle" style="width:20px;height:20px;"></i> Part 2: True or False <span class="text-sm font-normal text-stone-500 ml-2">(2 points each — 10 points)</span></h2>
+     <p class="text-stone-600 mb-4 text-base"><strong>Directions:</strong> Read each sentence. Pick <strong>True</strong> or <strong>False</strong>.</p>
+     <div id="tf-container" class="space-y-5"></div>
+    </section><!-- PART 3: Letter Writing -->
+    <section class="exam-section mb-6" aria-labelledby="part3-heading">
+     <h2 id="part3-heading" class="text-xl font-bold text-stone-800 bg-amber-100 px-4 py-2 rounded-lg mb-5 flex items-center gap-2"><i data-lucide="mail" style="width:20px;height:20px;"></i> Part 3: Letter Writing <span class="text-sm font-normal text-stone-500 ml-2">(70 points)</span></h2>
+     <div class="bg-stone-50 border-2 border-stone-200 rounded-xl p-5 mb-5">
+      <h3 class="font-bold text-stone-800 text-lg mb-2">Your Task</h3>
+      <p class="text-stone-700 text-base leading-relaxed mb-3">Pretend you are <strong>Elie Wiesel</strong> after the war is over. Write a <strong>3-paragraph letter</strong> to <strong>Moishe the Beadle</strong>. In your letter, tell Moishe what happened to you. Use the <strong>3 key events</strong> below. Each paragraph starts with a piece of evidence. Then connect your thoughts using the sentence starters.</p>
+      <p class="text-stone-600 text-sm"><strong>Rubric:</strong> Evidence use (15 pts) • Connection to events (15 pts) • Voice &amp; feeling (10 pts) • Complete sentences (10 pts)</p>
+     </div><!-- Paragraph 1 -->
+     <div class="bg-amber-50 border-l-4 border-amber-600 rounded-r-xl p-5 mb-4">
+      <h4 class="font-bold text-stone-800 mb-1">Paragraph 1 — Arrival at the Camp</h4>
+      <p class="text-stone-700 text-sm mb-2"><strong>Key Event:</strong> Elie was separated from his mother and sisters. He lied about his age to stay alive.</p>
+      <div class="bg-white rounded-lg p-3 mb-3 text-stone-600 text-sm border border-amber-200">
+       <p class="font-semibold mb-1">Evidence to start with:</p>
+       <p class="italic">"Men to the left! Women to the right!" These were the words that tore Elie's family apart at Auschwitz.</p>
+      </div>
+      <p class="text-stone-600 text-sm mb-2"><strong>Sentence starters to help you:</strong></p>
+      <ul class="list-disc ml-6 text-stone-600 text-sm space-y-1">
+       <li>"Dear Moishe, I wish I had listened to you because…"</li>
+       <li>"When we got off the train, they made us…"</li>
+       <li>"I told them I was eighteen because…"</li>
+      </ul><label for="para1" class="sr-only">Paragraph 1 response</label> <textarea id="para1" rows="7" class="w-full mt-3 border-2 border-stone-300 rounded-lg p-3 focus:border-amber-600 focus:outline-none" placeholder="Dear Moishe, I wish I had listened to you because..."></textarea>
+     </div><!-- Paragraph 2 -->
+     <div class="bg-amber-50 border-l-4 border-amber-600 rounded-r-xl p-5 mb-4">
+      <h4 class="font-bold text-stone-800 mb-1">Paragraph 2 — The Horrors Inside the Camp</h4>
+      <p class="text-stone-700 text-sm mb-2"><strong>Key Event:</strong> Elie saw a man murdered for crawling to the soup cauldron. He also watched a young Jewish boy be hanged.</p>
+      <div class="bg-white rounded-lg p-3 mb-3 text-stone-600 text-sm border border-amber-200">
+       <p class="font-semibold mb-1">Evidence to start with:</p>
+       <p class="italic">A prisoner crawled toward the soup cauldron during an air raid and was shot. Later, a young boy was hanged in front of everyone, and someone asked, "Where is God now?"</p>
+      </div>
+      <p class="text-stone-600 text-sm mb-2"><strong>Sentence starters to help you:</strong></p>
+      <ul class="list-disc ml-6 text-stone-600 text-sm space-y-1">
+       <li>"Moishe, the things I saw inside the camp were…"</li>
+       <li>"One day, a man was so hungry that he…"</li>
+       <li>"The hardest moment was when they hanged a boy and I thought…"</li>
+      </ul><label for="para2" class="sr-only">Paragraph 2 response</label> <textarea id="para2" rows="7" class="w-full mt-3 border-2 border-stone-300 rounded-lg p-3 focus:border-amber-600 focus:outline-none" placeholder="Moishe, the things I saw inside the camp were..."></textarea>
+     </div><!-- Paragraph 3 -->
+     <div class="bg-amber-50 border-l-4 border-amber-600 rounded-r-xl p-5 mb-4">
+      <h4 class="font-bold text-stone-800 mb-1">Paragraph 3 — The Death March and After</h4>
+      <p class="text-stone-700 text-sm mb-2"><strong>Key Event:</strong> Elie ran through the snow with his father, who later died. After being freed, Elie looked in a mirror and did not know who he was.</p>
+      <div class="bg-white rounded-lg p-3 mb-3 text-stone-600 text-sm border border-amber-200">
+       <p class="font-semibold mb-1">Evidence to start with:</p>
+       <p class="italic">Elie and his father ran for miles through freezing snow. His father grew weaker and died in the camp. When Elie was freed and looked in a mirror, he wrote, "A corpse gazed back at me."</p>
+      </div>
+      <p class="text-stone-600 text-sm mb-2"><strong>Sentence starters to help you:</strong></p>
+      <ul class="list-disc ml-6 text-stone-600 text-sm space-y-1">
+       <li>"After we left the camp, we had to run through…"</li>
+       <li>"My father was too weak and I felt…"</li>
+       <li>"When I looked in the mirror after it was all over, I saw…"</li>
+      </ul><label for="para3" class="sr-only">Paragraph 3 response</label> <textarea id="para3" rows="7" class="w-full mt-3 border-2 border-stone-300 rounded-lg p-3 focus:border-amber-600 focus:outline-none" placeholder="After we left the camp, we had to run through..."></textarea>
+     </div><!-- Letter Preview -->
+     <div class="bg-stone-50 border-2 border-stone-200 rounded-xl p-5 mb-4">
+      <h4 class="font-bold text-stone-800 mb-3 flex items-center gap-2"><i data-lucide="eye" style="width:18px;height:18px;"></i> Letter Preview (Formatted)</h4>
+      <div class="bg-white border-2 border-stone-300 rounded-lg p-6 text-stone-700 text-sm font-mono whitespace-pre-wrap leading-relaxed overflow-auto max-h-80" id="letter-preview" style="font-family: 'Courier New', monospace;">
+       (Your letter will appear here as you type...)
+      </div><button onclick="copyLetter()" class="mt-3 bg-stone-600 hover:bg-stone-500 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition"> <i data-lucide="copy" style="width:16px;height:16px;"></i> Copy to Clipboard </button>
+     </div>
+    </section>
+    <section id="score-section" class="hidden exam-section mb-6 bg-stone-800 text-amber-50 rounded-xl p-6" aria-labelledby="score-heading">
+     <h2 id="score-heading" class="text-xl font-bold mb-3 flex items-center gap-2"><i data-lucide="award" style="width:22px;height:22px;"></i> Score Summary</h2>
+     <div id="score-details" class="space-y-2 text-base"></div>
+    </section>
+   </main>
+  </div>
+  <script>
+// === DATA ===
+const mcQuestions = [
+  { q: "Who is Moishe the Beadle?", choices: ["Elie's teacher and friend who tried to warn everyone", "A soldier in the army", "The leader of the town", "Elie's brother"], answer: 0 },
+  { q: "Why did no one believe Moishe when he came back?", choices: ["He spoke a different language", "His story was too scary and people thought he was crazy", "He was too young", "He left town right away"], answer: 1 },
+  { q: "What did Elie lie about when he got to the camp?", choices: ["His name", "His age", "Where he was from", "His religion"], answer: 1 },
+  { q: "What happened when Elie's family arrived at Auschwitz?", choices: ["They were kept together", "Men and women were separated", "They were sent home", "They were given food"], answer: 1 },
+  { q: "What happened to the man who crawled to the soup cauldron?", choices: ["He was saved by others", "He was taken to a hospital", "He was shot and killed", "He escaped the camp"], answer: 2 },
+  { q: "Why was the hanging of the young boy so painful for everyone?", choices: ["He was very old", "He was innocent and it took a long time for him to die", "He had tried to escape", "No one saw it happen"], answer: 1 },
+  { q: "What is a 'death march'?", choices: ["A parade in the town", "A long, forced walk or run in terrible conditions", "A type of dance", "A march to celebrate freedom"], answer: 1 },
+  { q: "What happened to Elie's father?", choices: ["He escaped the camp", "He grew weak and died before the camp was freed", "He was freed first", "He moved to another country"], answer: 1 },
+  { q: "What did Elie see when he looked in the mirror after being freed?", choices: ["A happy, healthy face", "A corpse staring back at him", "His mother's face", "Nothing at all"], answer: 1 },
+  { q: "What is the main message of the book <em>Night</em>?", choices: ["War is fun and exciting", "We must remember the Holocaust so it never happens again", "People should not read books", "Camps were a safe place"], answer: 1 }
+];
+
+const tfQuestions = [
+  { q: "Elie Wiesel grew up in Sighet, a small town in Romania.", answer: true },
+  { q: "Elie and his family were excited to go to the concentration camp.", answer: false },
+  { q: "Elie was separated from his mother and sisters and never saw them again.", answer: true },
+  { q: "The prisoners were treated with kindness and given plenty of food.", answer: false },
+  { q: "At the end of the book, Elie is freed when the American army arrives at Buchenwald.", answer: true }
+];
+
+const evidenceOptions = [
+  "Elie loved God and studied the Torah at the beginning. He said \"Never shall I forget that night.\" This shows he changed from believer to someone who lost his faith.",
+  "At the end, Elie looked in a mirror and wrote, \"A corpse gazed back at me.\" This shows his body and spirit were broken by the camp.",
+  "Elie worked hard to stay alive and protect his father. By the end, his father died and he was alone with no family left. This shows he became hardened and lost hope."
+];
+
+let selectedEvidence = new Set();
+
+// === RENDER QUESTIONS ===
+function renderMC() {
+  const c = document.getElementById('mc-container');
+  mcQuestions.forEach((item, i) => {
+    const fieldset = document.createElement('fieldset');
+    fieldset.className = 'border-0 p-0 m-0';
+    fieldset.innerHTML = `
+      <legend class="question-label font-semibold text-stone-800 mb-2"><span class="text-amber-700 font-bold">${i+1}.</span> ${item.q}</legend>
+      ${item.choices.map((ch, ci) => `
+        <label class="choice-label flex items-center gap-3 px-3 py-2 rounded-lg transition">
+          <input type="radio" name="mc${i}" value="${ci}" aria-label="Choice ${String.fromCharCode(65+ci)}">
+          <span><strong>${String.fromCharCode(65+ci)}.</strong> ${ch}</span>
+        </label>
+      `).join('')}
+    `;
+    c.appendChild(fieldset);
+  });
+}
+
+function renderTF() {
+  const c = document.getElementById('tf-container');
+  tfQuestions.forEach((item, i) => {
+    const fieldset = document.createElement('fieldset');
+    fieldset.className = 'border-0 p-0 m-0';
+    fieldset.innerHTML = `
+      <legend class="question-label font-semibold text-stone-800 mb-2"><span class="text-amber-700 font-bold">${i+1}.</span> ${item.q}</legend>
+      <div class="flex gap-6 ml-2">
+        <label class="choice-label flex items-center gap-2 px-3 py-2 rounded-lg transition">
+          <input type="radio" name="tf${i}" value="true"> <span><strong>True</strong></span>
+        </label>
+        <label class="choice-label flex items-center gap-2 px-3 py-2 rounded-lg transition">
+          <input type="radio" name="tf${i}" value="false"> <span><strong>False</strong></span>
+        </label>
+      </div>
+    `;
+    c.appendChild(fieldset);
+  });
+}
+
+function renderSA() {
+  const c = document.getElementById('sa-container');
+  saQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <label for="sa${i}" class="question-label font-semibold text-stone-800 block mb-2"><span class="text-amber-700 font-bold">${i+1}.</span> ${q}</label>
+      <textarea id="sa${i}" rows="4" class="w-full border-2 border-stone-300 rounded-lg p-3 focus:border-amber-600 focus:outline-none" placeholder="Write your answer here..."></textarea>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function addEvidence(num) {
+  selectedEvidence.add(num);
+  const box = document.getElementById('evidence');
+  const list = Array.from(selectedEvidence).sort().map(n => evidenceOptions[n-1]);
+  box.value = list.join('\n\n---\n\n');
+}
+
+function updateLetterPreview() {
+  const para1 = document.getElementById('para1').value;
+  const para2 = document.getElementById('para2').value;
+  const para3 = document.getElementById('para3').value;
+  
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  
+  const letter = `May 15, 1945
+${dateStr}
+
+Dear Moishe the Beadle,
+
+${para1}
+
+${para2}
+
+${para3}
+
+Sincerely,
+Elie Wiesel`;
+
+  document.getElementById('letter-preview').textContent = letter;
+}
+
+function copyLetter() {
+  const text = document.getElementById('letter-preview').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target.closest('button');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i> Copied!';
+    btn.classList.add('bg-green-600', 'hover:bg-green-600');
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.classList.remove('bg-green-600', 'hover:bg-green-600');
+      lucide.createIcons();
+    }, 2000);
+  }).catch(() => {
+    alert('Could not copy. Please try again.');
+  });
+}
+
+// === SCORING ===
+function calculateScore() {
+  let mcScore = 0, tfScore = 0;
+  mcQuestions.forEach((item, i) => {
+    const sel = document.querySelector(`input[name="mc${i}"]:checked`);
+    if (sel && parseInt(sel.value) === item.answer) mcScore += 2;
+  });
+  tfQuestions.forEach((item, i) => {
+    const sel = document.querySelector(`input[name="tf${i}"]:checked`);
+    if (sel && (sel.value === 'true') === item.answer) tfScore += 2;
+  });
+  const totalAuto = mcScore + tfScore;
+  const details = document.getElementById('score-details');
+  details.innerHTML = `
+    <p>Multiple Choice: <strong>${mcScore} / 20</strong></p>
+    <p>True or False: <strong>${tfScore} / 10</strong></p>
+    <p>Letter Writing: <strong>__ / 70</strong> (teacher graded)</p>
+    <hr class="border-amber-700 my-2">
+    <p class="text-lg">Auto-Scored Total: <strong>${totalAuto} / 30</strong></p>
+    <p class="text-lg">Final Total: <strong>${totalAuto} + __ / 100</strong></p>
+  `;
+  document.getElementById('score-section').classList.remove('hidden');
+  const toast = document.getElementById('score-toast');
+  toast.textContent = `Auto-scored: ${totalAuto}/30 — See bottom for details`;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 4000);
+  document.getElementById('score-section').scrollIntoView({ behavior: 'smooth' });
+  lucide.createIcons();
+}
+
+// === SAVE AS TEXT ===
+function saveAsText() {
+  const name = document.getElementById('student-name').value || 'Unknown Student';
+  const date = document.getElementById('exam-date').value || 'No date';
+  let text = '';
+  text += '='.repeat(60) + '\n';
+  text += '  FINAL EXAM: NIGHT by Elie Wiesel\n';
+  text += '='.repeat(60) + '\n';
+  text += `Student: ${name}\nDate: ${date}\n\n`;
+
+  // MC
+  text += '-'.repeat(40) + '\n';
+  text += 'PART 1: MULTIPLE CHOICE (2 pts each — 20 pts)\n';
+  text += '-'.repeat(40) + '\n';
+  let mcScore = 0;
+  mcQuestions.forEach((item, i) => {
+    const sel = document.querySelector(`input[name="mc${i}"]:checked`);
+    const chosen = sel ? String.fromCharCode(65 + parseInt(sel.value)) : 'No answer';
+    const correct = String.fromCharCode(65 + item.answer);
+    const isRight = sel && parseInt(sel.value) === item.answer;
+    if (isRight) mcScore += 2;
+    text += `\n${i+1}. ${item.q.replace(/<[^>]*>/g, '')}\n`;
+    text += `   Student Answer: ${chosen}  |  Correct: ${correct}  |  ${isRight ? '✓ CORRECT' : '✗ INCORRECT'}\n`;
+  });
+  text += `\nMultiple Choice Score: ${mcScore}/20\n\n`;
+
+  // TF
+  text += '-'.repeat(40) + '\n';
+  text += 'PART 2: TRUE OR FALSE (2 pts each — 10 pts)\n';
+  text += '-'.repeat(40) + '\n';
+  let tfScore = 0;
+  tfQuestions.forEach((item, i) => {
+    const sel = document.querySelector(`input[name="tf${i}"]:checked`);
+    const chosen = sel ? (sel.value === 'true' ? 'True' : 'False') : 'No answer';
+    const correct = item.answer ? 'True' : 'False';
+    const isRight = sel && (sel.value === 'true') === item.answer;
+    if (isRight) tfScore += 2;
+    text += `\n${i+1}. ${item.q}\n`;
+    text += `   Student Answer: ${chosen}  |  Correct: ${correct}  |  ${isRight ? '✓ CORRECT' : '✗ INCORRECT'}\n`;
+  });
+  text += `\nTrue/False Score: ${tfScore}/10\n\n`;
+
+  // Letter
+  text += '-'.repeat(40) + '\n';
+  text += 'PART 3: LETTER WRITING (70 pts)\n';
+  text += '-'.repeat(40) + '\n';
+  text += 'Rubric: Evidence (15) | Connection (15) | Voice (10) | Sentences (15) | Format (15)\n\n';
+  ['para1','para2','para3'].forEach((id, i) => {
+    const val = document.getElementById(id).value || '(No answer)';
+    text += `--- Paragraph ${i+1} ---\n${val}\n\n`;
+  });
+  text += `   Letter Score: ___/70\n\n`;
+
+  // Totals
+  const autoTotal = mcScore + tfScore;
+  text += '='.repeat(60) + '\n';
+  text += 'SCORE SUMMARY\n';
+  text += '='.repeat(60) + '\n';
+  text += `Multiple Choice:  ${mcScore}/20\n`;
+  text += `True or False:    ${tfScore}/10\n`;
+  text += `Letter Writing:   ___/70  (teacher graded)\n`;
+  text += '-'.repeat(30) + '\n';
+  text += `Auto-Scored:      ${autoTotal}/30\n`;
+  text += `FINAL TOTAL:      ${autoTotal} + ___  = ___/100\n`;
+  text += '\nTeacher Notes:\n\n\n';
+
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Night_Exam_${name.replace(/\s+/g, '_')}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// === INIT ===
+renderMC();
+renderTF();
+lucide.createIcons();
+
+// Add event listeners for letter preview updates
+['para1', 'para2', 'para3'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateLetterPreview);
+});
+
+updateLetterPreview();
+
+// === ELEMENT SDK ===
+const defaultConfig = {
+  exam_title: 'Final Exam: Night by Elie Wiesel',
+  student_name_label: 'Student Name:',
+  background_color: '#f5f5f4',
+  surface_color: '#ffffff',
+  text_color: '#292524',
+  accent_color: '#b45309',
+  header_color: '#292524',
+  font_family: 'Atkinson Hyperlegible',
+  font_size: 16
+};
+
+async function onConfigChange(config) {
+  const c = key => config[key] || defaultConfig[key];
+  document.getElementById('exam-title').innerHTML = c('exam_title');
+  document.getElementById('top-title').textContent = c('exam_title');
+  document.getElementById('name-label').textContent = c('student_name_label');
+  document.getElementById('app-wrapper').style.backgroundColor = c('background_color');
+  document.querySelector('.print-area').style.backgroundColor = c('surface_color');
+  document.querySelectorAll('.question-label, legend, h3, h4, label, p, li, span').forEach(el => {
+    if (!el.closest('header') && !el.closest('#score-section')) el.style.color = c('text_color');
+  });
+  document.querySelectorAll('h1,h2').forEach(el => {
+    if (!el.closest('#score-section')) el.style.color = c('header_color');
+  });
+  const ff = c('font_family');
+  document.body.style.fontFamily = `${ff}, sans-serif`;
+  const fs = c('font_size');
+  document.querySelectorAll('.question-label, legend').forEach(el => el.style.fontSize = `${fs * 1.1}px`);
+  document.querySelectorAll('.choice-label').forEach(el => el.style.fontSize = `${fs}px`);
+  document.querySelectorAll('textarea, input[type="text"]').forEach(el => el.style.fontSize = `${fs}px`);
+}
+
+function mapToCaps(config) {
+  const c = key => config[key] || defaultConfig[key];
+  const mut = (key) => ({
+    get: () => c(key),
+    set: (v) => { config[key] = v; window.elementSdk.setConfig({ [key]: v }); }
+  });
+  return {
+    recolorables: [mut('background_color'), mut('surface_color'), mut('text_color'), mut('accent_color'), mut('header_color')],
+    borderables: [],
+    fontEditable: mut('font_family'),
+    fontSizeable: mut('font_size')
+  };
+}
+
+function mapToEditPanelValues(config) {
+  return new Map([
+    ['exam_title', config.exam_title || defaultConfig.exam_title],
+    ['student_name_label', config.student_name_label || defaultConfig.student_name_label]
+  ]);
+}
+
+window.elementSdk.init({ defaultConfig, onConfigChange, mapToCapabilities: mapToCaps, mapToEditPanelValues });
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e7d88d875542b9c',t:'MTc3NTQ0NDM0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
