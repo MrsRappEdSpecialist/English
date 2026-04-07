@@ -342,6 +342,11 @@
                 </div>
 
                 <div>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <input type="text" id="student-name" placeholder="First & Last Name" style="padding: 10px; border-radius: 8px; border: 2px solid #444; background-color: #2A2A2A; color: white; flex: 2; font-family: inherit; font-size: 16px;">
+    <input type="text" id="student-period" placeholder="Period" style="padding: 10px; border-radius: 8px; border: 2px solid #444; background-color: #2A2A2A; color: white; flex: 1; font-family: inherit; font-size: 16px;">
+    <input type="date" id="student-date" style="padding: 10px; border-radius: 8px; border: 2px solid #444; background-color: #2A2A2A; color: white; flex: 1; color-scheme: dark; font-family: inherit; font-size: 16px;">
+</div>
                     <textarea id="student-letter">Dear Members of the School Board,
 
 I am writing to you today regarding Barbers Hill High School's hair policy and the recent suspension of Darryl George. This policy is...[Write your Claim here: Do you believe the policy is fair? Why or why not?] [Click a quote from your Evidence Locker to insert it here] This evidence shows...[Write your Reasoning here: Make it make sense! Explain how your quote proves your claim is correct.]
@@ -471,16 +476,32 @@ Sincerely,
 
         // --- SAVE LOCALLY LOGIC ---
         function saveTextAsFile() {
-            const textToSave = textarea.value;
+            const studentName = document.getElementById('student-name').value;
+            const studentPeriod = document.getElementById('student-period').value;
+            const studentDate = document.getElementById('student-date').value;
+            const bodyText = textarea.value;
+
+            // Check if they put their name
+            if(!studentName) {
+                alert("Hold up! Please enter your Name before saving!");
+                return;
+            }
+
             // Prevent saving if they haven't changed the default text much
-            if(textToSave.includes("[Write your Claim here")) {
+            if(bodyText.includes("[Write your Claim here")) {
                 alert("Hold up! Make sure you fill in the bracketed areas with your own writing before saving!");
                 return;
             }
             
-            const textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+            // Combine the info into the final text file layout
+            const finalDocumentText = `Name: ${studentName}\nPeriod: ${studentPeriod}\nDate: ${studentDate}\n\n----------------------------------------\n\n${bodyText}`;
+
+            const textToSaveAsBlob = new Blob([finalDocumentText], {type:"text/plain"});
             const textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-            const fileNameToSaveAs = "Colony_CER_Letter.txt";
+            
+            // Name the file dynamically based on the student's name
+            const safeName = studentName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            const fileNameToSaveAs = `${safeName}_CER_Letter.txt`;
 
             const downloadLink = document.createElement("a");
             downloadLink.download = fileNameToSaveAs;
