@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star-Cross'd Translators: The Prologue</title>
+    <style>
+        :root {
+            --bg-color: #1a0b14;
+            --text-color: #fce4ec;
+            --accent-red: #e53935;
+            --accent-purple: #8e24aa;
+            --card-bg: #2d1322;
+            --drop-bg: #4a1f38;
+            --selected-glow: #ffeb3b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h4 {
+            text-align: center;
+            font-family: 'Georgia', serif;
+            color: var(--accent-red);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            color: #ffb4a2;
+            font-family: 'Georgia', serif;
+            border-bottom: 2px solid var(--accent-purple);
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid var(--accent-purple);
+        }
+
+        .instructions {
+            background-color: rgba(142, 36, 170, 0.2);
+            padding: 15px;
+            border-left: 5px solid var(--accent-purple);
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input[type="text"], input[type="date"], textarea {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-purple);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 16px;
+            margin-top: 5px;
+            font-family: inherit;
+        }
+
+        .glossary {
+            text-decoration: underline dotted var(--accent-red);
+            cursor: help;
+            font-weight: bold;
+            color: #ffb4a2;
+        }
+
+        /* Stanza Sections */
+        .stanza-section {
+            background-color: rgba(0,0,0,0.2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(142, 36, 170, 0.5);
+        }
+
+        /* Fixed Line-by-Line Grid */
+        .line-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr; /* Gives 60% width to Shakespeare, 40% to drop zone */
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: stretch; /* Ensures boxes are equal height */
+        }
+
+        @media (max-width: 768px) {
+            .line-grid { grid-template-columns: 1fr; }
+        }
+
+        .shakespeare-text {
+            background-color: rgba(0,0,0,0.4);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-purple);
+            font-family: 'Georgia', serif;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Sonnet Couplet Indent */
+        .couplet-text {
+            margin-left: 40px; 
+        }
+
+        @media (max-width: 768px) {
+            .couplet-text { margin-left: 20px; }
+        }
+
+        .drop-zone {
+            background-color: var(--drop-bg);
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px dashed var(--accent-purple);
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.95em;
+        }
+
+        .drop-zone:hover { background-color: rgba(142, 36, 170, 0.5); }
+
+        /* Localized Mini Banks */
+        .mini-bank {
+            padding: 15px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            border: 2px solid var(--accent-red);
+        }
+
+        @media (max-width: 600px) {
+            .mini-bank { grid-template-columns: 1fr; }
+        }
+
+        .tap-item {
+            background-color: var(--accent-red);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            user-select: none;
+            transition: transform 0.1s, box-shadow 0.1s;
+            font-weight: bold;
+            font-size: 0.95em;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .tap-item.selected {
+            border: 3px solid var(--selected-glow);
+            box-shadow: 0 0 15px var(--selected-glow);
+            transform: scale(1.02);
+            background-color: #f44336;
+        }
+
+        button.save-btn {
+            background: linear-gradient(45deg, var(--accent-red), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        button.save-btn:hover { transform: scale(1.02); }
+
+        /* Modal */
+        #dictModal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            padding: 25px;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 0 0 1000px rgba(0,0,0,0.8);
+            text-align: center;
+            max-width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="dictModal">
+    <h2 id="dictWord" style="margin-top:0; color: #e53935;"></h2>
+    <p id="dictDef" style="font-size: 1.2em;"></p>
+    <button onclick="document.getElementById('dictModal').style.display='none'" style="padding: 10px 20px; background-color: #e53935; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+</div>
+
+<div class="container">
+    <h1>💔 Star-Cross'd Translators</h1>
+    
+    <div class="instructions">
+        <strong>📱 How to play (Tap & Place):</strong> 
+        <ol>
+            <li><strong>Tap</strong> a modern translation from the mini-bank below each section.</li>
+            <li><strong>Tap</strong> the empty dashed box next to the Shakespeare line where it belongs.</li>
+            <li><em>💡 Double-tap any <span class="glossary">underlined word</span> to see its definition!</em></li>
+        </ol>
+    </div>
+
+    <div class="info-grid">
+        <div class="input-group">
+            <label><strong>Student Name:</strong></label>
+            <input type="text" id="studentName" placeholder="First and Last Name">
+        </div>
+        <div class="input-group">
+            <label><strong>Period:</strong></label>
+            <input type="text" id="period" placeholder="e.g. 3">
+        </div>
+        <div class="input-group">
+            <label><strong>Date:</strong></label>
+            <input type="date" id="date">
+        </div>
+    </div>
+
+    <h2>1. Translate the Sonnet</h2>
+    
+    <div class="stanza-section">
+        <h3>Quatrain 1 (Lines 1-4)</h3>
+        <div class="line-grid">
+            <div class="shakespeare-text">Two households, both alike in <span class="glossary">dignity</span>,</div>
+            <div class="drop-zone" data-match="1"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">In fair Verona, where we lay our scene,</div>
+            <div class="drop-zone" data-match="2"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">From ancient grudge break to new <span class="glossary">mutiny</span>,</div>
+            <div class="drop-zone" data-match="3"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">Where <span class="glossary">civil</span> blood makes civil hands unclean.</div>
+            <div class="drop-zone" data-match="4"><em>Tap here to place</em></div>
+        </div>
+        <div class="mini-bank drop-zone">
+            <div class="tap-item" id="item2" data-id="2">Here in gorgeous Verona, where our story takes place,</div>
+            <div class="tap-item" id="item4" data-id="4">Where regular citizens are getting blood on their hands.</div>
+            <div class="tap-item" id="item1" data-id="1">Two super popular, high-status families,</div>
+            <div class="tap-item" id="item3" data-id="3">Let an old beef turn into fresh, violent street fights,</div>
+        </div>
+    </div>
+
+    <div class="stanza-section">
+        <h3>Quatrain 2 (Lines 5-8)</h3>
+        <div class="line-grid">
+            <div class="shakespeare-text">From forth the <span class="glossary">fatal</span> loins of these two foes</div>
+            <div class="drop-zone" data-match="5"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">A pair of <span class="glossary">star-cross'd</span> lovers take their life;</div>
+            <div class="drop-zone" data-match="6"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">Whose misadventured <span class="glossary">piteous</span> overthrows</div>
+            <div class="drop-zone" data-match="7"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">Do with their death bury their parents' <span class="glossary">strife</span>.</div>
+            <div class="drop-zone" data-match="8"><em>Tap here to place</em></div>
+        </div>
+        <div class="mini-bank drop-zone">
+            <div class="tap-item" id="item6" data-id="6">Two teens fall toxic-in-love and take their own lives;</div>
+            <div class="tap-item" id="item8" data-id="8">Finally buries their parents' toxic drama for good.</div>
+            <div class="tap-item" id="item5" data-id="5">Born to these deadly rival parents,</div>
+            <div class="tap-item" id="item7" data-id="7">Their tragic, disastrous downfall</div>
+        </div>
+    </div>
+
+    <div class="stanza-section">
+        <h3>Quatrain 3 (Lines 9-12)</h3>
+        <div class="line-grid">
+            <div class="shakespeare-text">The fearful passage of their death-mark'd love,</div>
+            <div class="drop-zone" data-match="9"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">And the continuance of their parents' rage,</div>
+            <div class="drop-zone" data-match="10"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">Which, but their children's end, nought could remove,</div>
+            <div class="drop-zone" data-match="11"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text">Is now the two hours' traffic of our stage;</div>
+            <div class="drop-zone" data-match="12"><em>Tap here to place</em></div>
+        </div>
+        <div class="mini-bank drop-zone">
+            <div class="tap-item" id="item10" data-id="10">And the nonstop, raging family feud,</div>
+            <div class="tap-item" id="item12" data-id="12">Is what we're performing on stage for the next two hours;</div>
+            <div class="tap-item" id="item9" data-id="9">The stressful timeline of their doomed relationship,</div>
+            <div class="tap-item" id="item11" data-id="11">Which literally nothing could stop except their kids dying,</div>
+        </div>
+    </div>
+
+    <div class="stanza-section">
+        <h3>The Couplet (Lines 13-14)</h3>
+        <div class="line-grid">
+            <div class="shakespeare-text couplet-text">The which if you with patient ears <span class="glossary">attend</span>,</div>
+            <div class="drop-zone" data-match="13"><em>Tap here to place</em></div>
+            
+            <div class="shakespeare-text couplet-text">What here shall miss, our <span class="glossary">toil</span> shall strive to mend.</div>
+            <div class="drop-zone" data-match="14"><em>Tap here to place</em></div>
+        </div>
+        <div class="mini-bank drop-zone">
+            <div class="tap-item" id="item14" data-id="14">We'll act out whatever details this intro left out.</div>
+            <div class="tap-item" id="item13" data-id="13">So if you actually chill and listen right now,</div>
+        </div>
+    </div>
+
+    <hr style="border-color: var(--accent-purple); margin: 30px 0;">
+
+    <h2>2. Analyze the Impact</h2>
+    <div class="input-group">
+        <label for="analysisText"><strong>Director's Chair:</strong> Shakespeare literally spoils the ending in the very first minute of the play. How does knowing they are going to die right at the start change how the audience watches the rest of the story?</label>
+        <textarea id="analysisText" rows="6" placeholder="Type your brilliant analysis here..."></textarea>
+    </div>
+
+    <button class="save-btn" onclick="saveAndDownload()">Save Progress & Generate File</button>
+</div>
+
+<script>
+    document.getElementById('date').valueAsDate = new Date();
+
+    const dictionary = {
+        "dignity": "Social status, respect, or high reputation.",
+        "mutiny": "Violence, rioting, or rebelling against authority.",
+        "civil": "Relating to ordinary citizens and their behavior.",
+        "fatal": "Causing death, ruin, or leading to disaster.",
+        "star-cross'd": "Doomed by bad luck or fate; stars not aligned.",
+        "piteous": "Deserving pity or making you feel sad.",
+        "strife": "Bitter conflict, fighting, or angry disagreement.",
+        "attend": "To pay close attention or listen carefully.",
+        "toil": "Hard work, physical labor, or intense effort."
+    };
+
+    document.querySelectorAll('.glossary').forEach(word => {
+        word.addEventListener('dblclick', function() {
+            let cleanWord = this.innerText.replace(/[^a-zA-Z\-']/g, '').toLowerCase();
+            if (dictionary[cleanWord]) {
+                document.getElementById('dictWord').innerText = cleanWord.toUpperCase();
+                document.getElementById('dictDef').innerText = dictionary[cleanWord];
+                document.getElementById('dictModal').style.display = 'block';
+            }
+        });
+    });
+
+    let currentlySelected = null;
+
+    const tapItems = document.querySelectorAll('.tap-item');
+    tapItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation(); 
+            if (currentlySelected === this) {
+                this.classList.remove('selected');
+                currentlySelected = null;
+                return;
+            }
+            tapItems.forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            currentlySelected = this;
+        });
+    });
+
+    const dropZones = document.querySelectorAll('.drop-zone');
+    dropZones.forEach(zone => {
+        zone.addEventListener('click', function() {
+            if (currentlySelected) {
+                if (this.classList.contains('mini-bank') || !this.querySelector('.tap-item')) {
+                    if (this.innerText.includes("Tap here")) this.innerText = ""; 
+                    
+                    this.appendChild(currentlySelected);
+                    currentlySelected.classList.remove('selected');
+                    currentlySelected = null;
+
+                    dropZones.forEach(z => {
+                        if (!z.classList.contains('mini-bank') && z.children.length === 0) {
+                            z.innerHTML = "<em>Tap here to place</em>";
+                        }
+                    });
+                } else if (this.querySelector('.tap-item') && !this.classList.contains('mini-bank')) {
+                     const existingItem = this.querySelector('.tap-item');
+                     const parentOfSelected = currentlySelected.parentNode;
+                     
+                     this.appendChild(currentlySelected);
+                     parentOfSelected.appendChild(existingItem);
+                     
+                     currentlySelected.classList.remove('selected');
+                     currentlySelected = null;
+                }
+            }
+        });
+    });
+
+    function saveAndDownload() {
+        const name = document.getElementById('studentName').value.trim();
+        const period = document.getElementById('period').value.trim();
+        const date = document.getElementById('date').value;
+        const analysis = document.getElementById('analysisText').value.trim();
+        
+        if (!name) {
+            alert("Please enter your name before saving!");
+            return;
+        }
+
+        let correctCount = 0;
+        const totalLines = 14;
+        const zones = document.querySelectorAll('.line-grid .drop-zone');
+        
+        zones.forEach(zone => {
+            const requiredId = zone.getAttribute('data-match');
+            const droppedChild = zone.querySelector('.tap-item');
+            if (droppedChild && droppedChild.getAttribute('data-id') === requiredId) {
+                correctCount++;
+            }
+        });
+
+        const scorePercent = Math.round((correctCount / totalLines) * 100);
+
+        const textContent = 
+`=========================================
+ROMEO & JULIET: PROLOGUE ANALYSIS
+=========================================
+Student Name: ${name}
+Period: ${period || "Not provided"}
+Date: ${date}
+
+--- TRANSLATION ACTIVITY SCORE ---
+Score: ${scorePercent}% (${correctCount} / ${totalLines} correct)
+
+--- DIRECTOR's CHAIR ANALYSIS ---
+Prompt: How does knowing they are going to die right at the start change how the audience watches the rest of the story?
+Response:
+${analysis ? analysis : "[No response provided by student]"}
+
+=========================================
+* Note for EKadence: Please upload this document directly to the assignment submission folder.
+`;
+
+        const blob = new Blob([textContent], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        let fileName = `RomeoJuliet_${name.replace(/\s+/g, '_')}`;
+        if (period) fileName += `_P${period}`;
+        fileName += `.txt`;
+        
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        alert("Progress saved! Your score and analysis have been downloaded as a text file. Please upload this file to EKadence.");
+    }
+</script>
+
+</body>
+</html>
