@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anaheim High: CER Learning Adventure</title>
+    <style>
+        :root {
+            /* Anaheim High Inspired Dark Mode */
+            --primary: #4A90E2; 
+            --secondary: #FFD100; 
+            --bg-color: #121212;
+            --surface-color: #1E1E1E;
+            --text-color: #E0E0E0;
+            --text-muted: #9E9E9E;
+            --highlight-color: rgba(255, 209, 0, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            background: linear-gradient(135deg, #0033A0, #001540);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 51, 160, 0.3);
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--secondary);
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 1.2em;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        /* Module Styles */
+        .module {
+            background: var(--surface-color);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* Slide Deck Styles */
+        .slide {
+            display: none;
+            text-align: center;
+            min-height: 220px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide h3 {
+            color: var(--secondary);
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+        }
+
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background-color: #357ABD;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Reading Section Styles */
+        .interactive-text {
+            font-size: 1.15em;
+            padding: 20px;
+            background: #252525;
+            border-radius: 8px;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .highlight-target {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom: 2px dashed var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .highlight-target:hover {
+            background-color: rgba(255, 209, 0, 0.2);
+        }
+
+        .highlight-target.active-highlight {
+            background-color: var(--highlight-color);
+            border-bottom: 2px solid var(--secondary);
+            color: #fff;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--primary);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+
+        /* Workspace: Locker + Writing */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .evidence-locker {
+            background: #252525;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .evidence-locker h3 {
+            margin-top: 0;
+            color: var(--secondary);
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .locker-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .evidence-btn {
+            background: #333;
+            color: var(--text-color);
+            border: 1px solid #444;
+            text-align: left;
+            padding: 10px;
+            font-size: 0.9em;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .evidence-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            padding: 15px;
+            font-size: 16px;
+            background-color: #2A2A2A;
+            color: #fff;
+            border: 2px solid #444;
+            border-radius: 8px;
+            resize: vertical;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .accommodations {
+            background-color: rgba(255, 209, 0, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            border-radius: 0 8px 8px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Colony CER Adventure 👑</h1>
+        <p>The CROWN Act | Anaheim High School</p>
+    </header>
+
+    <div class="container">
+        <section class="module slides-container">
+            <h2>🧠 Mini-Lesson: Level Up Your Argument (CER)</h2>
+            
+            <div id="slide1" class="slide active">
+                <h3>What's the Tea? ☕</h3>
+                <p>To win an argument with a teacher, a principal, or the school board, you can't just say "trust me bro." You need the formula: <strong>CER</strong>.</p>
+                <p><strong>C</strong>laim, <strong>E</strong>vidence, <strong>R</strong>easoning. It's how you drop facts and make them listen.</p>
+            </div>
+            
+            <div id="slide2" class="slide">
+                <h3>C - Claim (Your Hot Take) 🔥</h3>
+                <p>This is your main point. State your vibe clearly.</p>
+                <p><em>Example: "Schools have zero right to police student hairstyles unless there's a literal safety hazard."</em></p>
+            </div>
+            
+            <div id="slide3" class="slide">
+                <h3>E - Evidence (The Receipts) 🧾</h3>
+                <p>Don't just talk—prove it. Drop a quote or fact straight from the text.</p>
+                <p><em>Pro Tip: Use sentence starters like "The article states..." or "According to the author..."</em></p>
+            </div>
+
+            <div id="slide4" class="slide">
+                <h3>R - Reasoning (Make it Make Sense) 🧩</h3>
+                <p>The "So What?" Connect the dots for the boomers on the board. Explain exactly *why* your receipt proves your hot take.</p>
+                <p><em>Example: "This proves that attacking a hairstyle is actually attacking someone's culture, which ruins the vibe of a safe learning environment."</em></p>
+            </div>
+
+            <div class="controls">
+                <button onclick="prevSlide()">&#8592; Back</button>
+                <span id="slide-counter" style="color: var(--text-muted); font-weight: bold;">1 / 4</span>
+                <button onclick="nextSlide()">Next &#8594;</button>
+            </div>
+        </section>
+
+        <section class="module reading-section">
+            <h2>📖 Article: Suspended for His Hairstyle</h2>
+            <div class="accommodations">
+                💡 <strong>Colony Pro-Tips:</strong><br>
+                1. <strong>Double-click</strong> any difficult word to reveal its definition.<br>
+                2. <strong>Tap the dashed sentences</strong> to highlight key passages and save them to your Evidence Locker below!
+            </div>
+            
+            <div class="interactive-text" id="reading-text">
+                <p><span class="highlight-target">A Black high school student in Texas has served more than two weeks of in-school suspensions for wearing twisted dreadlocks to school.</span> Darryl George, a junior at Barbers Hill High School in Mont Belvieu, was initially suspended the same week his state outlawed racial discrimination based on hairstyles.</p>
+
+                <p>The incident recalls debates over hair discrimination in schools and the workplace and is already testing the state’s newly enacted CROWN Act. <span class="highlight-target">The law is intended to prohibit race-based hair discrimination and bars employers and schools from penalizing people because of hair texture or protective hairstyles including Afros, braids, dreadlocks, twists or Bantu knots.</span></p>
+
+                <p>For Black people, hairstyles are more than just a fashion statement. In George’s family, all the men have dreadlocks, going back generations. To them, the hairstyle has cultural and religious importance, his mother said. <span class="highlight-target">"Our hair is where our strength is, that’s our roots," Darresha George said.</span></p>
+                
+                <p>The issue of race-based hair discrimination in the workplace has long existed alongside concerns in public and private schools. <span class="highlight-target">In 2018, a white referee in New Jersey told a Black high school wrestler to cut his dreadlocks or forfeit a match.</span> Viral video of the wrestler having his hair cut with scissors as the crowd watched prompted the referee’s suspension and spurred passage of the state’s CROWN Act.</p>
+
+                <p>Darresha George said her son has been growing his dreadlocks for nearly 10 years and the family never received pushback or complaints until now. When let down, his dreadlocks hang above his shoulders but she said he has not worn his hair down since school started in mid-August. <span class="highlight-target">George said she couldn’t understand how he violated the dress code when his hair was tied on top of his head.</span></p>
+
+                <p>The district defends its dress code, which says its policies are meant to "teach grooming and hygiene, instill discipline, prevent disruption, avoid safety hazards and teach respect for authority". However, Darresha George said she and her son refuse to conform to a standard set by someone who is uncomfortable or ignorant.</p>
+            </div>
+        </section>
+
+        <section class="module writing-section">
+            <h2>✍️ Your Task: Letter to the Board</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;"><strong>Prompt:</strong> Make a <strong>Claim</strong> about whether their hair policy is fair, provide <strong>Evidence</strong> from the text, and use <strong>Reasoning</strong> to explain why the policy should or shouldn't be changed.</p>
+            
+            <div class="workspace">
+                <div class="evidence-locker">
+                    <h3>🔐 Evidence Locker</h3>
+                    <p style="font-size: 0.85em; color: var(--text-muted);">Tap a dashed sentence in the article to save it here. Then click a button below to drop it into your essay!</p>
+                    <div id="locker-items" class="locker-items">
+                        <p style="color: #666; font-style: italic;">Your locker is empty. Go highlight some receipts!</p>
+                    </div>
+                </div>
+
+                <div>
+                    <textarea id="student-letter">Dear Members of the School Board,
+
+I am writing to you today regarding the school's hair policy and the recent suspension of Darryl George. 
+
+[Write your Claim here: Do you believe the policy is fair? Why or why not?]
+
+[Click a quote from your Evidence Locker to insert it here]
+
+[Write your Reasoning here: Make it make sense! Explain how your quote proves your claim is correct.]
+
+Sincerely,
+[Your Name]</textarea>
+                    
+                    <div class="action-buttons">
+                        <button onclick="saveTextAsFile()">💾 Save .txt</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // --- SLIDE DECK LOGIC ---
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function showSlide(n) {
+            for (let i = 1; i <= totalSlides; i++) {
+                document.getElementById('slide' + i).classList.remove('active');
+            }
+            document.getElementById('slide' + n).classList.add('active');
+            document.getElementById('slide-counter').innerText = `${n} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // --- DICTIONARY LOGIC (Double Click) ---
+        const dictionary = {
+            "suspensions": "Temporary removal from school as a punishment.",
+            "dreadlocks": "A hairstyle where hair is twisted into tight braids or ringlets.",
+            "discrimination": "Treating people unfairly based on their race, age, or sex.",
+            "prohibit": "To officially forbid or ban something.",
+            "penalizing": "Punishing someone for breaking a rule.",
+            "cultural": "Relating to the ideas, customs, and history of a group of people.",
+            "heritage": "Valued objects, qualities, and traditions passed down from previous generations.",
+            "hygiene": "Practices that maintain health and prevent disease, like cleanliness.",
+            "conform": "To fit in or comply with rules and standards.",
+            "ignorant": "Lacking knowledge or awareness; uneducated on a topic.",
+            "forfeit": "To lose or be forced to give up something as a penalty.",
+            "spurred": "To encourage or prompt an action."
+        };
+
+        const readingText = document.getElementById('reading-text');
+        const tooltip = document.getElementById('tooltip');
+
+        readingText.addEventListener('dblclick', function(e) {
+            let selection = window.getSelection().toString().trim().toLowerCase();
+            selection = selection.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"]/g,""); // strip punctuation
+            
+            if (dictionary[selection]) {
+                tooltip.innerText = dictionary[selection];
+                tooltip.style.left = e.pageX + 'px';
+                tooltip.style.top = (e.pageY - 40) + 'px';
+                tooltip.style.opacity = 1;
+
+                setTimeout(() => {
+                    tooltip.style.opacity = 0;
+                }, 3500);
+            }
+        });
+
+        // --- HIGHLIGHT & EVIDENCE LOCKER LOGIC ---
+        const highlightTargets = document.querySelectorAll('.highlight-target');
+        const lockerItems = document.getElementById('locker-items');
+        const textarea = document.getElementById('student-letter');
+
+        highlightTargets.forEach(target => {
+            target.addEventListener('click', () => {
+                target.classList.toggle('active-highlight');
+                updateLocker();
+            });
+        });
+
+        function updateLocker() {
+            lockerItems.innerHTML = '';
+            const activeHighlights = document.querySelectorAll('.active-highlight');
+            
+            if (activeHighlights.length === 0) {
+                lockerItems.innerHTML = '<p style="color: #666; font-style: italic;">Your locker is empty. Go highlight some receipts!</p>';
+                return;
+            }
+
+            activeHighlights.forEach((el, index) => {
+                const fullQuote = el.innerText;
+                // Make the button text a bit shorter so it fits nicely
+                const shortQuote = fullQuote.length > 50 ? fullQuote.substring(0, 50) + "..." : fullQuote;
+                
+                const btn = document.createElement('button');
+                btn.className = 'evidence-btn';
+                btn.innerHTML = `➕ "${shortQuote}"`;
+                btn.title = "Click to insert into your writing";
+                
+                btn.onclick = () => {
+                    // Get current cursor position
+                    const cursorPosition = textarea.selectionStart;
+                    const textBefore = textarea.value.substring(0, cursorPosition);
+                    const textAfter = textarea.value.substring(cursorPosition);
+                    
+                    // Format the insertion
+                    const insertion = `According to the article, "${fullQuote}" `;
+                    
+                    textarea.value = textBefore + insertion + textAfter;
+                    textarea.focus();
+                };
+                
+                lockerItems.appendChild(btn);
+            });
+        }
+
+        // --- SAVE LOCALLY LOGIC ---
+        function saveTextAsFile() {
+            const textToSave = textarea.value;
+            // Prevent saving if they haven't changed the default text much
+            if(textToSave.includes("[Write your Claim here")) {
+                alert("Hold up! Make sure you fill in the bracketed areas with your own writing before saving!");
+                return;
+            }
+            
+            const textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+            const textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+            const fileNameToSaveAs = "Colony_CER_Letter.txt";
+
+            const downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            downloadLink.href = textToSaveAsURL;
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+    </script>
+</body>
+</html>
