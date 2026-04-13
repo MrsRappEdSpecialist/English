@@ -4,33 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How Bad Is It? — Romeo &amp; Juliet</title>
+  
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <style>
-    @media print {
-      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-      .scenario-card { break-inside: avoid; page-break-inside: avoid; border: 1.5px solid #333 !important; background: white !important; margin-bottom: 12px !important; padding: 14px !important; box-shadow: none !important; }
-      .scenario-card .rating-bar-segment { border: 1px solid #999 !important; }
-      .scenario-card .rating-bar-segment.filled-print { background: #333 !important; }
-      .app-wrapper { padding: 0 !important; background: white !important; }
-      .main-content-area { max-width: 100% !important; padding: 0 !important; gap: 8px !important; }
-      .header-section { padding: 10px 0 !important; margin-bottom: 4px !important; background: none !important; border-bottom: 2px solid #333 !important; }
-      .header-section h1 { font-size: 22pt !important; color: #000 !important; }
-      .header-section p { color: #333 !important; font-size: 10pt !important; }
-      .group-names-print { display: flex !important; gap: 16px; margin-top: 6px; font-size: 10pt; }
-      .summary-section { break-before: page; page-break-before: always; }
-      .print-instructions { display: block !important; font-size: 9pt; color: #555; margin-top: 4px; border-top: 1px solid #ccc; padding-top: 4px; }
-      .rating-number-print { display: inline-block !important; font-weight: 700; font-size: 14pt; }
-      .scenario-description { font-size: 9pt !important; }
-    }
-    .print-only { display: none; }
-    .print-instructions { display: none; }
-    .rating-number-print { display: none; }
-  </style>
+  
   <script>
     tailwind.config = {
       theme: {
@@ -47,33 +29,44 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full font-body bg-stone-950 text-stone-100 overflow-auto">
-  <div id="app" class="app-wrapper w-full min-h-full" style="background: linear-gradient(160deg, #1a0a0a 0%, #0c0c0c 40%, #0a0a12 100%);"><!-- Header -->
+  <div id="app" class="app-wrapper w-full min-h-full" style="background: linear-gradient(160deg, #1a0a0a 0%, #0c0c0c 40%, #0a0a12 100%);">
+    
    <div class="header-section text-center py-10 px-4" style="background: linear-gradient(180deg, rgba(139,0,0,0.15) 0%, transparent 100%);">
     <h1 id="title-el" class="font-display text-5xl md:text-6xl font-900 tracking-tight" style="color: #c41e3a;">How Bad Is It?</h1>
     <p id="subtitle-el" class="font-display text-xl md:text-2xl mt-2 italic" style="color: #d4a574;">Romeo &amp; Juliet Edition</p>
     <p class="text-stone-500 text-sm mt-3 max-w-xl mx-auto">Rate each scenario from 1 (Not Bad At All) to 10 (Absolutely Terrible). Discuss with your group and come to a consensus!</p>
-    <div class="group-names-print print-only"><span>Group Members: ___________________ ___________________ ___________________ ___________________</span>
-    </div>
-    <div class="print-instructions">
-     <p>Instructions: Circle or fill in your group's rating (1–10) for each scenario. 1 = Not Bad, 10 = Terrible. Discuss before deciding!</p>
-    </div>
-   </div><!-- Group Names Input -->
+   </div>
+
    <div class="no-print max-w-3xl mx-auto px-4 mb-6">
     <div class="flex flex-wrap gap-2 items-center justify-center"><label class="text-stone-400 text-sm font-semibold">Group Members:</label>
-     <div class="flex flex-wrap gap-2 justify-center" id="group-names"><input type="text" placeholder="Name 1" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="0"> <input type="text" placeholder="Name 2" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="1"> <input type="text" placeholder="Name 3" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="2"> <input type="text" placeholder="Name 4" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="3">
+     <div class="flex flex-wrap gap-2 justify-center" id="group-names">
+        <input type="text" placeholder="Name 1" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="0"> 
+        <input type="text" placeholder="Name 2" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="1"> 
+        <input type="text" placeholder="Name 3" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="2"> 
+        <input type="text" placeholder="Name 4" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="3">
      </div>
     </div>
-   </div><!-- Scenarios -->
-   <div class="main-content-area max-w-3xl mx-auto px-4 pb-10 flex flex-col gap-5" id="scenarios-container"></div><!-- Summary -->
+   </div>
+
+   <div class="main-content-area max-w-3xl mx-auto px-4 pb-10 flex flex-col gap-5" id="scenarios-container"></div>
+   
    <div class="summary-section max-w-3xl mx-auto px-4 pb-16" id="summary-section" style="display:none;">
     <div class="border-t-2 border-stone-800 pt-8 mt-4">
      <h2 class="font-display text-3xl font-bold mb-6 text-center" style="color: #c41e3a;">Group Rankings</h2>
      <div id="summary-list" class="flex flex-col gap-2"></div>
     </div>
-   </div><!-- Actions -->
-   <div class="no-print fixed bottom-4 right-4 flex gap-2 z-50"><button onclick="resetAll()" class="flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-300 text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all"> <i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i> Reset </button> <button onclick="window.print()" class="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all" style="background:#c41e3a;color:#fff;"> <i data-lucide="printer" style="width:15px;height:15px;"></i> Print </button>
+   </div>
+
+   <div class="no-print fixed bottom-4 right-4 flex gap-2 z-50">
+    <button onclick="resetAll()" class="flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-300 text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all"> 
+      <i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i> Reset 
+    </button> 
+    <button onclick="downloadStudentWork()" class="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all" style="background:#c41e3a;color:#fff;"> 
+      <i data-lucide="download" style="width:15px;height:15px;"></i> Save as PDF 
+    </button>
    </div>
   </div>
+
   <script>
     const SCENARIOS = [
       { id: "tybalt_kills", emoji: "⚔️", title: "Tybalt Killing Mercutio", desc: "Tybalt stabs Romeo's best friend Mercutio during a street brawl, killing him.", theme: "Violence & Revenge" },
@@ -138,7 +131,7 @@
               </div>
               <p class="scenario-description text-stone-400 text-sm mt-1">${s.desc}</p>
             </div>
-            <span class="rating-number-print">${rating || '___'}/10</span>
+            <span class="rating-number-print" style="display:none;">${rating || '___'}/10</span>
           </div>
           <div class="flex gap-1.5 items-center">
             <span class="text-xs text-stone-500 font-semibold w-16 shrink-0 no-print">Not Bad</span>
@@ -153,7 +146,6 @@
     }
 
     function setRating(id, value) {
-      // Toggle off if clicking same value
       if (ratings[id] === value) {
         delete ratings[id];
       } else {
@@ -191,6 +183,79 @@
       saveState();
       document.querySelectorAll('#group-names input').forEach((inp, i) => inp.value = '');
       buildScenarios();
+    }
+
+    // NEW FUNCTION: Pure Text PDF Download using jsPDF
+    function downloadStudentWork() {
+      // 1. Grab group members
+      const validMembers = groupMembers.filter(n => n.trim() !== '');
+      const memberNames = validMembers.join(', ') || 'No names provided';
+      let safeName = validMembers.length > 0 ? validMembers[0].replace(/[^a-z0-9]/gi, '_') : 'Group';
+
+      // 2. Initialize the pure text PDF document
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      let yPos = 20; // Starting vertical position on the page
+
+      // Helper function to act like a typewriter and automatically flip to a new page if we run out of room
+      const addLine = (text, size = 12, isBold = false) => {
+        if (yPos > 280) { // If we hit the bottom of the page, add a new one
+          doc.addPage();
+          yPos = 20;
+        }
+        doc.setFontSize(size);
+        doc.setFont("helvetica", isBold ? "bold" : "normal");
+        
+        // This ensures long titles wrap to the next line instead of going off the edge of the paper
+        const lines = doc.splitTextToSize(text, 170); 
+        doc.text(lines, 20, yPos);
+        yPos += (7 * lines.length); // Move the "typewriter" down for the next line
+      };
+
+      // 3. Write the Header Information
+      addLine("How Bad Is It? - Romeo & Juliet Edition", 16, true);
+      addLine(`Group Members: ${memberNames}`, 12, false);
+      addLine(`Date: ${new Date().toLocaleDateString()}`, 12, false);
+      yPos += 8; // Add some extra space
+      
+      addLine("--- SCENARIO RATINGS ---", 14, true);
+      yPos += 4;
+
+      let ratedScenarios = [];
+
+      // 4. Loop through and write out all the ratings
+      SCENARIOS.forEach((s, i) => {
+        const rating = ratings[s.id] || 'Not rated';
+        addLine(`${i + 1}. ${s.title}`, 12, true);
+        addLine(`Rating: ${rating === 'Not rated' ? rating : rating + ' / 10'}`, 12, false);
+        yPos += 4; // Space between scenarios
+        
+        if (ratings[s.id]) {
+          ratedScenarios.push({ title: s.title, rating: ratings[s.id] });
+        }
+      });
+
+      // 5. Write the Summary Rankings on a new page
+      if (ratedScenarios.length > 0) {
+        doc.addPage();
+        yPos = 20;
+        addLine("--- FINAL GROUP RANKINGS (Highest to Lowest) ---", 14, true);
+        yPos += 6;
+        
+        // Sort highest to lowest
+        ratedScenarios.sort((a, b) => b.rating - a.rating);
+        ratedScenarios.forEach((s, i) => {
+          addLine(`#${i + 1}. ${s.title} (${s.rating}/10)`, 12, false);
+          yPos += 2;
+        });
+      } else {
+        addLine("No scenarios were rated.", 12, false);
+      }
+
+      // 6. Trigger the download!
+      doc.save(`How_Bad_Is_It_${safeName}.pdf`);
+      alert('📁 PDF downloaded! Please upload this to eKadence.');
     }
 
     // Init
@@ -258,5 +323,5 @@
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9eb7045b930af7c9',t:'MTc3NjA0NzA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
