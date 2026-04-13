@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Bad Is It? — Romeo &amp; Juliet</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      .scenario-card { break-inside: avoid; page-break-inside: avoid; border: 1.5px solid #333 !important; background: white !important; margin-bottom: 12px !important; padding: 14px !important; box-shadow: none !important; }
+      .scenario-card .rating-bar-segment { border: 1px solid #999 !important; }
+      .scenario-card .rating-bar-segment.filled-print { background: #333 !important; }
+      .app-wrapper { padding: 0 !important; background: white !important; }
+      .main-content-area { max-width: 100% !important; padding: 0 !important; gap: 8px !important; }
+      .header-section { padding: 10px 0 !important; margin-bottom: 4px !important; background: none !important; border-bottom: 2px solid #333 !important; }
+      .header-section h1 { font-size: 22pt !important; color: #000 !important; }
+      .header-section p { color: #333 !important; font-size: 10pt !important; }
+      .group-names-print { display: flex !important; gap: 16px; margin-top: 6px; font-size: 10pt; }
+      .summary-section { break-before: page; page-break-before: always; }
+      .print-instructions { display: block !important; font-size: 9pt; color: #555; margin-top: 4px; border-top: 1px solid #ccc; padding-top: 4px; }
+      .rating-number-print { display: inline-block !important; font-weight: 700; font-size: 14pt; }
+      .scenario-description { font-size: 9pt !important; }
+    }
+    .print-only { display: none; }
+    .print-instructions { display: none; }
+    .rating-number-print { display: none; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body bg-stone-950 text-stone-100 overflow-auto">
+  <div id="app" class="app-wrapper w-full min-h-full" style="background: linear-gradient(160deg, #1a0a0a 0%, #0c0c0c 40%, #0a0a12 100%);"><!-- Header -->
+   <div class="header-section text-center py-10 px-4" style="background: linear-gradient(180deg, rgba(139,0,0,0.15) 0%, transparent 100%);">
+    <h1 id="title-el" class="font-display text-5xl md:text-6xl font-900 tracking-tight" style="color: #c41e3a;">How Bad Is It?</h1>
+    <p id="subtitle-el" class="font-display text-xl md:text-2xl mt-2 italic" style="color: #d4a574;">Romeo &amp; Juliet Edition</p>
+    <p class="text-stone-500 text-sm mt-3 max-w-xl mx-auto">Rate each scenario from 1 (Not Bad At All) to 10 (Absolutely Terrible). Discuss with your group and come to a consensus!</p>
+    <div class="group-names-print print-only"><span>Group Members: ___________________ ___________________ ___________________ ___________________</span>
+    </div>
+    <div class="print-instructions">
+     <p>Instructions: Circle or fill in your group's rating (1–10) for each scenario. 1 = Not Bad, 10 = Terrible. Discuss before deciding!</p>
+    </div>
+   </div><!-- Group Names Input -->
+   <div class="no-print max-w-3xl mx-auto px-4 mb-6">
+    <div class="flex flex-wrap gap-2 items-center justify-center"><label class="text-stone-400 text-sm font-semibold">Group Members:</label>
+     <div class="flex flex-wrap gap-2 justify-center" id="group-names"><input type="text" placeholder="Name 1" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="0"> <input type="text" placeholder="Name 2" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="1"> <input type="text" placeholder="Name 3" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="2"> <input type="text" placeholder="Name 4" class="bg-stone-900 border border-stone-700 rounded-lg px-3 py-1.5 text-sm text-stone-200 w-32 focus:outline-none focus:border-red-800" data-member="3">
+     </div>
+    </div>
+   </div><!-- Scenarios -->
+   <div class="main-content-area max-w-3xl mx-auto px-4 pb-10 flex flex-col gap-5" id="scenarios-container"></div><!-- Summary -->
+   <div class="summary-section max-w-3xl mx-auto px-4 pb-16" id="summary-section" style="display:none;">
+    <div class="border-t-2 border-stone-800 pt-8 mt-4">
+     <h2 class="font-display text-3xl font-bold mb-6 text-center" style="color: #c41e3a;">Group Rankings</h2>
+     <div id="summary-list" class="flex flex-col gap-2"></div>
+    </div>
+   </div><!-- Actions -->
+   <div class="no-print fixed bottom-4 right-4 flex gap-2 z-50"><button onclick="resetAll()" class="flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-300 text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all"> <i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i> Reset </button> <button onclick="window.print()" class="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all" style="background:#c41e3a;color:#fff;"> <i data-lucide="printer" style="width:15px;height:15px;"></i> Print </button>
+   </div>
+  </div>
+  <script>
+    const SCENARIOS = [
+      { id: "tybalt_kills", emoji: "⚔️", title: "Tybalt Killing Mercutio", desc: "Tybalt stabs Romeo's best friend Mercutio during a street brawl, killing him.", theme: "Violence & Revenge" },
+      { id: "romeo_kills", emoji: "🗡️", title: "Romeo Killing Tybalt", desc: "Romeo avenges Mercutio's death by killing Tybalt, Juliet's cousin, in a rage.", theme: "Violence & Revenge" },
+      { id: "double_suicide", emoji: "💀", title: "Romeo & Juliet Taking Their Own Lives", desc: "Both Romeo and Juliet choose to end their lives rather than live without each other.", theme: "Death & Despair" },
+      { id: "secret_marriage", emoji: "💒", title: "Marrying Behind Your Parents' Back", desc: "Romeo and Juliet secretly marry without telling either of their families.", theme: "Secrecy & Deception" },
+      { id: "forbidden_dating", emoji: "💔", title: "Dating Someone Your Family Disapproves Of", desc: "Falling in love with someone from a family your own family considers an enemy.", theme: "Love vs. Loyalty" },
+      { id: "keeping_secrets", emoji: "🤫", title: "Keeping Major Secrets from Family", desc: "The Nurse and Friar Lawrence help the teens hide their relationship and marriage.", theme: "Secrecy & Deception" },
+      { id: "biting_thumb", emoji: "👎", title: "Biting Your Thumb at Someone", desc: "Sampson bites his thumb at the Montagues — a rude, provocative insult meant to start a fight.", theme: "Pride & Provocation" },
+      { id: "fake_death", emoji: "⚗️", title: "Faking Your Own Death", desc: "Juliet takes a potion to appear dead so she can escape her arranged marriage and be with Romeo.", theme: "Secrecy & Deception" },
+      { id: "forced_marriage", emoji: "👰", title: "Forcing Your Child to Marry Someone", desc: "Lord Capulet demands Juliet marry Paris, threatening to disown her if she refuses.", theme: "Power & Control" },
+      { id: "banishment", emoji: "🚪", title: "Banishing Someone from Their Home", desc: "Prince Escalus banishes Romeo from Verona after he kills Tybalt — never to return.", theme: "Justice & Punishment" },
+      { id: "rushed_love", emoji: "⏰", title: "Falling in Love After One Meeting", desc: "Romeo and Juliet declare their undying love and decide to marry after knowing each other for hours.", theme: "Love & Impulsiveness" },
+      { id: "friar_plan", emoji: "📜", title: "An Adult Helping Teens Make Risky Choices", desc: "Friar Lawrence agrees to marry the teens in secret and later gives Juliet a dangerous potion.", theme: "Responsibility & Trust" }
+    ];
+
+    let ratings = {};
+    let groupMembers = ['','','',''];
+
+    // Load from localStorage
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('rj_activity');
+        if (saved) {
+          const data = JSON.parse(saved);
+          ratings = data.ratings || {};
+          groupMembers = data.groupMembers || ['','','',''];
+        }
+      } catch(e) {}
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('rj_activity', JSON.stringify({ ratings, groupMembers }));
+      } catch(e) {}
+    }
+
+    function buildScenarios() {
+      const container = document.getElementById('scenarios-container');
+      container.innerHTML = '';
+      SCENARIOS.forEach((s, idx) => {
+        const rating = ratings[s.id] || 0;
+        const card = document.createElement('div');
+        card.className = 'scenario-card rounded-xl p-5 transition-all';
+        card.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);';
+
+        let barsHTML = '';
+        for (let i = 1; i <= 10; i++) {
+          const filled = i <= rating;
+          const hue = 120 - (i - 1) * 12; // green(1) to red(10)
+          const color = `hsl(${hue}, 70%, 45%)`;
+          barsHTML += `<button onclick="setRating('${s.id}', ${i})" class="rating-bar-segment flex-1 h-9 rounded-md transition-all text-xs font-bold flex items-center justify-center cursor-pointer hover:scale-110 ${filled ? 'filled-print' : ''}" style="background:${filled ? color : 'rgba(255,255,255,0.06)'}; color:${filled ? '#fff' : 'rgba(255,255,255,0.25)'}; min-width:28px;" aria-label="Rate ${i} out of 10">${i}</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-2xl">${s.emoji}</span>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="font-display text-lg font-bold text-stone-100">${s.title}</h3>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:rgba(196,30,58,0.15);color:#e8857a;">${s.theme}</span>
+              </div>
+              <p class="scenario-description text-stone-400 text-sm mt-1">${s.desc}</p>
+            </div>
+            <span class="rating-number-print">${rating || '___'}/10</span>
+          </div>
+          <div class="flex gap-1.5 items-center">
+            <span class="text-xs text-stone-500 font-semibold w-16 shrink-0 no-print">Not Bad</span>
+            <div class="flex gap-1 flex-1">${barsHTML}</div>
+            <span class="text-xs text-stone-500 font-semibold w-16 text-right shrink-0 no-print">Terrible</span>
+          </div>
+          ${rating > 0 ? `<div class="mt-2 text-right no-print"><span class="text-sm font-bold" style="color:hsl(${120 - (rating-1)*12}, 70%, 55%);">${rating}/10</span></div>` : ''}
+        `;
+        container.appendChild(card);
+      });
+      updateSummary();
+    }
+
+    function setRating(id, value) {
+      // Toggle off if clicking same value
+      if (ratings[id] === value) {
+        delete ratings[id];
+      } else {
+        ratings[id] = value;
+      }
+      saveState();
+      buildScenarios();
+    }
+
+    function updateSummary() {
+      const rated = SCENARIOS.filter(s => ratings[s.id]).map(s => ({ ...s, rating: ratings[s.id] }));
+      const section = document.getElementById('summary-section');
+      const list = document.getElementById('summary-list');
+      if (rated.length < 2) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      rated.sort((a, b) => b.rating - a.rating);
+      list.innerHTML = rated.map((s, i) => {
+        const hue = 120 - (s.rating - 1) * 12;
+        const barWidth = s.rating * 10;
+        return `<div class="flex items-center gap-3 py-2 px-3 rounded-lg" style="background:rgba(255,255,255,0.02);">
+          <span class="text-stone-500 font-bold text-sm w-6 text-right">#${i+1}</span>
+          <span class="text-lg">${s.emoji}</span>
+          <span class="font-semibold text-sm text-stone-200 flex-1">${s.title}</span>
+          <div class="w-24 h-3 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06);">
+            <div class="h-full rounded-full transition-all" style="width:${barWidth}%;background:hsl(${hue},70%,45%);"></div>
+          </div>
+          <span class="font-bold text-sm w-10 text-right" style="color:hsl(${hue},70%,55%);">${s.rating}/10</span>
+        </div>`;
+      }).join('');
+    }
+
+    function resetAll() {
+      ratings = {};
+      groupMembers = ['','','',''];
+      saveState();
+      document.querySelectorAll('#group-names input').forEach((inp, i) => inp.value = '');
+      buildScenarios();
+    }
+
+    // Init
+    loadState();
+
+    // Restore group names
+    document.querySelectorAll('#group-names input').forEach((inp, i) => {
+      inp.value = groupMembers[i] || '';
+      inp.addEventListener('input', () => {
+        groupMembers[i] = inp.value;
+        saveState();
+      });
+    });
+
+    buildScenarios();
+    lucide.createIcons();
+
+    // Element SDK
+    const defaultConfig = {
+      activity_title: "How Bad Is It?",
+      subtitle: "Romeo & Juliet Edition",
+      background_color: "#0c0a0a",
+      accent_color: "#c41e3a",
+      card_color: "#1a1a1a",
+      text_color: "#f5f0eb",
+      secondary_color: "#d4a574",
+      font_family: "Playfair Display",
+      font_size: 16
+    };
+
+    function applyConfig(config) {
+      const c = { ...defaultConfig, ...config };
+      document.getElementById('title-el').textContent = c.activity_title;
+      document.getElementById('subtitle-el').textContent = c.subtitle;
+      document.getElementById('title-el').style.color = c.accent_color;
+      document.getElementById('subtitle-el').style.color = c.secondary_color;
+      document.getElementById('title-el').style.fontFamily = `${c.font_family}, Georgia, serif`;
+      document.getElementById('subtitle-el').style.fontFamily = `${c.font_family}, Georgia, serif`;
+      document.querySelectorAll('.font-display').forEach(el => el.style.fontFamily = `${c.font_family}, Georgia, serif`);
+      const base = c.font_size || 16;
+      document.getElementById('title-el').style.fontSize = `${base * 3}px`;
+      document.getElementById('subtitle-el').style.fontSize = `${base * 1.4}px`;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => applyConfig(config),
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+            { get: () => config.card_color || defaultConfig.card_color, set: (v) => { config.card_color = v; window.elementSdk.setConfig({ card_color: v }); } },
+            { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+            { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } },
+            { get: () => config.secondary_color || defaultConfig.secondary_color, set: (v) => { config.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } }
+          ],
+          borderables: [],
+          fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+          fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["activity_title", config.activity_title || defaultConfig.activity_title],
+          ["subtitle", config.subtitle || defaultConfig.subtitle]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9eb7045b930af7c9',t:'MTc3NjA0NzA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
