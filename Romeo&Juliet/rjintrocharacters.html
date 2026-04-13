@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romeo &amp; Juliet: Meet the Characters</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+html, body { height: 100%; margin: 0; }
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #0f0a1a;
+  --surface: #1a1229;
+  --text: #e8e0f0;
+  --primary: #c9384b;
+  --secondary: #d4a853;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+
+.font-display { font-family: 'Playfair Display', serif; }
+
+.app-wrapper {
+  width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(201,56,75,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(212,168,83,0.06) 0%, transparent 60%);
+}
+
+.card-glow { transition: all 0.3s ease; }
+.card-glow:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(201,56,75,0.15); }
+
+.family-montague { border-left: 4px solid #3b82f6; }
+.family-capulet { border-left: 4px solid var(--primary); }
+.family-neutral { border-left: 4px solid var(--secondary); }
+
+.tag-montague { background: rgba(59,130,246,0.15); color: #93bbfd; }
+.tag-capulet { background: rgba(201,56,75,0.15); color: #f0707f; }
+.tag-neutral { background: rgba(212,168,83,0.15); color: var(--secondary); }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.anim-fade-up { animation: fadeUp 0.5s ease forwards; }
+.anim-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.anim-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.anim-delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+.emoji-avatar { font-size: 2.5rem; line-height: 1; }
+
+.progress-bar { transition: width 0.5s ease; }
+
+.tooltip-trigger { position: relative; cursor: help; border-bottom: 1px dashed var(--secondary); }
+.tooltip-trigger:hover .tooltip-box { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.tooltip-box {
+  position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%) translateY(5px);
+  background: #2a2040; color: var(--text); padding: 8px 12px; border-radius: 8px;
+  font-size: 0.75rem; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: all 0.2s ease; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.tab-btn { transition: all 0.2s ease; }
+.tab-btn.active { background: var(--primary); color: white; }
+
+.quiz-option { transition: all 0.2s ease; cursor: pointer; }
+.quiz-option:hover { background: rgba(201,56,75,0.1); border-color: var(--primary); }
+.quiz-option.selected { background: rgba(201,56,75,0.15); border-color: var(--primary); }
+.quiz-option.correct { background: rgba(34,197,94,0.15); border-color: #22c55e; }
+.quiz-option.incorrect { background: rgba(239,68,68,0.15); border-color: #ef4444; }
+
+textarea { resize: vertical; }
+textarea:focus, input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(201,56,75,0.2); }
+
+.print-section { display: none; }
+
+@media print {
+  .no-print { display: none !important; }
+  .print-section { display: block !important; background: white !important; color: black !important; padding: 20px !important; }
+  .print-section h1, .print-section h2, .print-section h3 { color: black !important; }
+  .print-section .response-block { border: 1px solid #ccc; padding: 10px; margin: 8px 0; break-inside: avoid; }
+  body { background: white !important; }
+  .app-wrapper { background: white !important; }
+}
+
+.shake { animation: shake 0.5s ease; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+
+.relationship-line {
+  stroke-dasharray: 5,5;
+  animation: dash 20s linear infinite;
+}
+@keyframes dash { to { stroke-dashoffset: -200; } }
+
+.collab-pulse { animation: pulse 2s ease infinite; }
+@keyframes pulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(212,168,83,0.3); } 50%{ box-shadow: 0 0 0 8px rgba(212,168,83,0); } }
+
+.notification {
+  position: fixed; top: 20px; right: 20px; z-index: 999;
+  padding: 12px 20px; border-radius: 12px;
+  background: #2a2040; border: 1px solid var(--secondary);
+  color: var(--text); font-size: 0.875rem;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+@keyframes slideIn { from { transform: translateX(100px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+@keyframes fadeOut { to { opacity:0; transform: translateY(-10px); } }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="app-wrapper no-print" id="appWrapper"><header class="w-full px-4 sm:px-8 py-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/5">
+    <div>
+     <h1 class="font-display text-2xl sm:text-3xl font-900 tracking-tight" id="mainTitle"><span style="color:var(--primary)">Romeo</span> &amp; <span style="color:var(--secondary)">Juliet</span></h1>
+     <p class="text-sm opacity-60 mt-1" id="subtitleText">Meet the Characters — An Interactive Introduction</p>
+    </div>
+    <div class="flex items-center gap-3">
+     <div class="text-right text-xs opacity-50">
+      <div id="teacherDisplay"></div>
+      <div id="periodDisplay"></div>
+     </div><button onclick="printStudentWork()" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold" style="background:var(--secondary);color:var(--bg);"> <i data-lucide="printer" style="width:16px;height:16px;"></i> Print / Save </button>
+    </div>
+   </header><div class="w-full px-4 sm:px-8 py-4 anim-fade-up">
+    <div class="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 items-end">
+     <div class="flex-1 w-full"><label for="studentName" class="block text-xs font-semibold mb-1 opacity-70">Your Name</label> <input type="text" id="studentName" placeholder="Enter your name to begin..." class="w-full px-4 py-2.5 rounded-lg border border-white/10 text-sm" style="background:var(--surface);color:var(--text);">
+     </div>
+     <div class="w-full sm:w-auto"><label for="studentPeriod" class="block text-xs font-semibold mb-1 opacity-70">Period</label> <input type="text" id="studentPeriod" placeholder="Period" class="w-full sm:w-24 px-4 py-2.5 rounded-lg border border-white/10 text-sm" style="background:var(--surface);color:var(--text);">
+     </div>
+    </div>
+   </div><div class="w-full px-4 sm:px-8 py-2">
+    <div class="max-w-4xl mx-auto">
+     <div class="flex items-center justify-between text-xs mb-2 opacity-60"><span>Progress</span> <span id="progressLabel">0 / 5 sections</span>
+     </div>
+     <div class="w-full h-2 rounded-full" style="background:var(--surface);">
+      <div class="h-2 rounded-full progress-bar" style="background:linear-gradient(90deg,var(--primary),var(--secondary));width:0%;" id="progressBar"></div>
+     </div>
+    </div>
+   </div><nav class="w-full px-4 sm:px-8 py-4 no-print">
+    <div class="max-w-4xl mx-auto flex flex-wrap gap-2" id="sectionTabs"><button class="tab-btn active px-4 py-2 rounded-full text-xs font-semibold" style="background:var(--surface);" onclick="showSection(0)">🎭 The Setting</button> <button class="tab-btn px-4 py-2 rounded-full text-xs font-semibold" style="background:var(--surface);" onclick="showSection(1)">⚔️ The Families</button> <button class="tab-btn px-4 py-2 rounded-full text-xs font-semibold" style="background:var(--surface);" onclick="showSection(2)">👥 Characters</button> <button class="tab-btn px-4 py-2 rounded-full text-xs font-semibold" style="background:var(--surface);" onclick="showSection(3)">🔗 Connections</button> <button class="tab-btn px-4 py-2 rounded-full text-xs font-semibold" style="background:var(--surface);" onclick="showSection(4)">🧠 Check In</button>
+    </div>
+   </nav><main class="w-full px-4 sm:px-8 pb-12" id="mainContent"><section class="section-panel max-w-4xl mx-auto" data-section="0">
+     <div class="anim-fade-up rounded-2xl p-6 sm:p-8 mb-6" style="background:var(--surface);border:1px solid rgba(255,255,255,0.05);">
+      <div class="flex items-center gap-3 mb-4"><span class="text-3xl">🏰</span>
+       <div>
+        <h2 class="font-display text-xl font-bold">Before We Begin: The World of the Play</h2>
+        <p class="text-xs opacity-50 mt-0.5">Scaffold: Setting the stage</p>
+       </div>
+      </div>
+      <div class="space-y-4 text-sm leading-relaxed opacity-80">
+       <p>Imagine a beautiful Italian city called <strong style="color:var(--secondary)">Verona</strong> — think narrow stone streets, grand houses, hot summers, and two powerful families who absolutely <em>hate</em> each other.</p>
+       <p>This isn't just a love story. It's a story about what happens when the people around you won't stop fighting — and you're caught in the middle.</p>
+       <div class="rounded-xl p-4 mt-4" style="background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.15);">
+        <p class="font-semibold text-xs mb-1" style="color:var(--secondary);">📌 Key Context</p>
+        <ul class="text-xs space-y-1 opacity-80">
+         <li>• Written by <span class="tooltip-trigger">William Shakespeare<span class="tooltip-box">English playwright, 1564–1616. Wrote 37+ plays!</span></span> around 1597</li>
+         <li>• Set in Verona, Italy — a real city, but the story is fiction</li>
+         <li>• The play is a <span class="tooltip-trigger">tragedy<span class="tooltip-box">A type of story that ends in suffering or death for the main characters</span></span> — meaning it does NOT end happily</li>
+         <li>• Two wealthy families — the <strong class="text-blue-400">Montagues</strong> and the <strong style="color:var(--primary)">Capulets</strong> — are in a bitter, long-running feud</li>
+        </ul>
+       </div>
+      </div>
+      <div class="mt-6 rounded-xl p-4" style="background:rgba(201,56,75,0.06);border:1px solid rgba(201,56,75,0.1);">
+       <p class="text-xs font-semibold mb-2" style="color:var(--primary);">💬 Think-Pair-Share: Quick Discussion</p>
+       <p class="text-xs opacity-70 mb-3">Before we meet the characters, discuss with a partner:</p>
+       <p class="text-sm italic opacity-80 mb-3">"Have you ever been in a situation where two groups of people didn't get along, and you were stuck in the middle? What was that like?"</p><label for="settingReflection" class="text-xs font-semibold opacity-60 block mb-1">Jot your thoughts below:</label> <textarea id="settingReflection" rows="3" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="Write your thoughts here..."></textarea>
+      </div>
+      <div class="mt-4 text-right"><button onclick="completeSection(0); showSection(1);" class="px-5 py-2.5 rounded-lg text-sm font-semibold" style="background:var(--primary);color:white;">Continue to The Families →</button>
+      </div>
+     </div>
+    </section><section class="section-panel max-w-4xl mx-auto hidden" data-section="1">
+     <div class="anim-fade-up rounded-2xl p-6 sm:p-8 mb-6" style="background:var(--surface);border:1px solid rgba(255,255,255,0.05);">
+      <h2 class="font-display text-xl font-bold mb-2">⚔️ Two Households, Both Alike in Dignity...</h2>
+      <p class="text-sm opacity-60 mb-6">That's the very first line of the play. It means both families are equally powerful and important — which is exactly why their feud is so destructive.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"><div class="rounded-xl p-5 card-glow family-montague" style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.15);">
+        <div class="flex items-center gap-3 mb-3"><span class="text-3xl">🔵</span>
+         <div>
+          <h3 class="font-display font-bold text-lg text-blue-400">House Montague</h3><span class="tag-montague text-xs px-2 py-0.5 rounded-full">Romeo's Family</span>
+         </div>
+        </div>
+        <ul class="text-xs space-y-1.5 opacity-80">
+         <li>• One of the two most powerful families in Verona</li>
+         <li>• Romeo is their only son — their whole future</li>
+         <li>• They worry about Romeo's moodiness</li>
+         <li>• Includes Romeo's friends and loyal servants</li>
+        </ul>
+       </div><div class="rounded-xl p-5 card-glow family-capulet" style="background:rgba(201,56,75,0.05);border:1px solid rgba(201,56,75,0.15);">
+        <div class="flex items-center gap-3 mb-3"><span class="text-3xl">🔴</span>
+         <div>
+          <h3 class="font-display font-bold text-lg" style="color:var(--primary);">House Capulet</h3><span class="tag-capulet text-xs px-2 py-0.5 rounded-full">Juliet's Family</span>
+         </div>
+        </div>
+        <ul class="text-xs space-y-1.5 opacity-80">
+         <li>• Equally powerful — fierce rivals of the Montagues</li>
+         <li>• Juliet is their only daughter — just 13 years old</li>
+         <li>• Her father is planning her marriage already</li>
+         <li>• Very protective of family honor and reputation</li>
+        </ul>
+       </div>
+      </div>
+      <div class="rounded-xl p-4 mb-6" style="background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.12);">
+       <p class="text-xs font-semibold mb-1" style="color:var(--secondary);">🤔 Scaffold: Modern Parallel</p>
+       <p class="text-xs opacity-70">Think of this like two rival families in a TV drama or movie — maybe <em>The Outsiders</em> (Socs vs. Greasers), rival neighborhoods, or even sports rivals taken way too far. The key: <strong>nobody remembers why the feud started</strong>, but everyone keeps fighting anyway.</p>
+      </div>
+      <div class="rounded-xl p-4" style="background:rgba(201,56,75,0.06);border:1px solid rgba(201,56,75,0.1);">
+       <p class="text-xs font-semibold mb-2" style="color:var(--primary);">💬 Group Discussion Prompt</p>
+       <p class="text-sm italic opacity-80 mb-3">"Why do you think people keep fighting even when no one remembers how it started? What would it take to end a feud like this?"</p><label for="feudReflection" class="text-xs font-semibold opacity-60 block mb-1">Your response:</label> <textarea id="feudReflection" rows="3" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="Share your thinking..."></textarea>
+      </div>
+      <div class="mt-4 flex justify-between"><button onclick="showSection(0)" class="px-4 py-2 rounded-lg text-sm opacity-60 hover:opacity-100" style="border:1px solid rgba(255,255,255,0.1);">← Back</button> <button onclick="completeSection(1); showSection(2);" class="px-5 py-2.5 rounded-lg text-sm font-semibold" style="background:var(--primary);color:white;">Meet the Characters →</button>
+      </div>
+     </div>
+    </section><section class="section-panel max-w-4xl mx-auto hidden" data-section="2">
+     <div class="anim-fade-up rounded-2xl p-6 sm:p-8 mb-6" style="background:var(--surface);border:1px solid rgba(255,255,255,0.05);">
+      <h2 class="font-display text-xl font-bold mb-2">👥 Meet the Cast</h2>
+      <p class="text-sm opacity-60 mb-2">Click any character to learn more. There's a lot of people — focus on the bolded names first!</p>
+      <div class="flex flex-wrap gap-2 mb-4"><button class="char-filter active px-3 py-1.5 rounded-full text-xs font-semibold" style="background:var(--primary);color:white;" onclick="filterChars('all')">All</button> <button class="char-filter px-3 py-1.5 rounded-full text-xs font-semibold" style="background:var(--surface);border:1px solid rgba(59,130,246,0.3);color:#93bbfd;" onclick="filterChars('montague')">🔵 Montagues</button> <button class="char-filter px-3 py-1.5 rounded-full text-xs font-semibold" style="background:var(--surface);border:1px solid rgba(201,56,75,0.3);color:#f0707f;" onclick="filterChars('capulet')">🔴 Capulets</button> <button class="char-filter px-3 py-1.5 rounded-full text-xs font-semibold" style="background:var(--surface);border:1px solid rgba(212,168,83,0.3);color:var(--secondary);" onclick="filterChars('neutral')">🟡 Neutral</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="characterGrid"></div>
+      <div id="characterDetail" class="hidden mt-4 rounded-xl p-5 anim-fade-up" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);"></div>
+      <div class="rounded-xl p-4 mt-6" style="background:rgba(201,56,75,0.06);border:1px solid rgba(201,56,75,0.1);">
+       <p class="text-xs font-semibold mb-2" style="color:var(--primary);">✍️ Activity: Character First Impressions</p>
+       <p class="text-xs opacity-70 mb-3">Pick <strong>two characters</strong> you find most interesting. For each, write: Who are they? What do you think their role in the story might be?</p><label for="charImpression1" class="text-xs font-semibold opacity-60 block mb-1">Character 1:</label> <textarea id="charImpression1" rows="2" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10 mb-3" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="e.g. 'Mercutio seems like the funny friend who might get in trouble...'"></textarea> <label for="charImpression2" class="text-xs font-semibold opacity-60 block mb-1">Character 2:</label> <textarea id="charImpression2" rows="2" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="Write about your second character pick..."></textarea>
+      </div>
+      <div class="mt-4 flex justify-between"><button onclick="showSection(1)" class="px-4 py-2 rounded-lg text-sm opacity-60 hover:opacity-100" style="border:1px solid rgba(255,255,255,0.1);">← Back</button> <button onclick="completeSection(2); showSection(3);" class="px-5 py-2.5 rounded-lg text-sm font-semibold" style="background:var(--primary);color:white;">See Connections →</button>
+      </div>
+     </div>
+    </section><section class="section-panel max-w-4xl mx-auto hidden" data-section="3">
+     <div class="anim-fade-up rounded-2xl p-6 sm:p-8 mb-6" style="background:var(--surface);border:1px solid rgba(255,255,255,0.05);">
+      <h2 class="font-display text-xl font-bold mb-2">🔗 How They're All Connected</h2>
+      <p class="text-sm opacity-60 mb-6">Drag over the relationship map to explore. The dashed lines show key relationships.</p>
+      <div class="rounded-xl p-4 overflow-x-auto" style="background:rgba(0,0,0,0.3);">
+       <svg id="relationshipMap" viewbox="0 0 700 420" class="w-full" style="min-width:500px;"><rect x="10" y="10" width="320" height="400" rx="16" fill="rgba(59,130,246,0.04)" stroke="rgba(59,130,246,0.15)" stroke-width="1" /> <rect x="370" y="10" width="320" height="400" rx="16" fill="rgba(201,56,75,0.04)" stroke="rgba(201,56,75,0.15)" stroke-width="1" /> <text x="170" y="40" text-anchor="middle" fill="#93bbfd" font-size="14" font-family="Playfair Display" font-weight="700">
+         MONTAGUES
+        </text> <text x="530" y="40" text-anchor="middle" fill="#f0707f" font-size="14" font-family="Playfair Display" font-weight="700">
+         CAPULETS
+        </text> <line x1="200" y1="120" x2="490" y2="120" class="relationship-line" stroke="#d4a853" stroke-width="2" /> <text x="345" y="108" text-anchor="middle" fill="#d4a853" font-size="10" font-family="DM Sans">
+         ❤️ SECRET LOVE
+        </text> <line x1="170" y1="200" x2="170" y2="280" stroke="rgba(59,130,246,0.3)" stroke-width="1" stroke-dasharray="3,3" /> <line x1="140" y1="200" x2="140" y2="120" stroke="rgba(59,130,246,0.3)" stroke-width="1" stroke-dasharray="3,3" /> <line x1="530" y1="200" x2="530" y2="280" stroke="rgba(201,56,75,0.3)" stroke-width="1" stroke-dasharray="3,3" /> <line x1="500" y1="200" x2="490" y2="135" stroke="rgba(201,56,75,0.3)" stroke-width="1" stroke-dasharray="3,3" /> <line x1="250" y1="200" x2="440" y2="200" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" /> <text x="345" y="195" text-anchor="middle" fill="#ef4444" font-size="9" font-family="DM Sans">
+         ⚔️ DEADLY ENEMIES
+        </text> <g transform="translate(140,90)">
+         <circle cx="30" cy="20" r="22" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2" />
+         <text x="30" y="26" text-anchor="middle" font-size="20">
+          🤴
+         </text>
+         <text x="30" y="55" text-anchor="middle" fill="#93bbfd" font-size="11" font-weight="700" font-family="DM Sans">
+          Romeo
+         </text>
+        </g> <g transform="translate(100,170)">
+         <circle cx="30" cy="20" r="18" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          🎭
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#93bbfd" font-size="9" font-family="DM Sans">
+          Mercutio
+         </text>
+        </g> <g transform="translate(200,170)">
+         <circle cx="30" cy="20" r="18" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          🤝
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#93bbfd" font-size="9" font-family="DM Sans">
+          Benvolio
+         </text>
+        </g> <g transform="translate(100,260)">
+         <circle cx="30" cy="20" r="18" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          👑
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#93bbfd" font-size="9" font-family="DM Sans">
+          Lord M.
+         </text>
+        </g> <g transform="translate(200,260)">
+         <circle cx="30" cy="20" r="18" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          👸
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#93bbfd" font-size="9" font-family="DM Sans">
+          Lady M.
+         </text>
+        </g> <g transform="translate(460,90)">
+         <circle cx="30" cy="20" r="22" fill="rgba(201,56,75,0.15)" stroke="#c9384b" stroke-width="2" />
+         <text x="30" y="26" text-anchor="middle" font-size="20">
+          👩
+         </text>
+         <text x="30" y="55" text-anchor="middle" fill="#f0707f" font-size="11" font-weight="700" font-family="DM Sans">
+          Juliet
+         </text>
+        </g> <g transform="translate(400,170)">
+         <circle cx="30" cy="20" r="18" fill="rgba(201,56,75,0.1)" stroke="rgba(201,56,75,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          😤
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#f0707f" font-size="9" font-family="DM Sans">
+          Tybalt
+         </text>
+        </g> <g transform="translate(500,170)">
+         <circle cx="30" cy="20" r="18" fill="rgba(201,56,75,0.1)" stroke="rgba(201,56,75,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          👩‍🦳
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#f0707f" font-size="9" font-family="DM Sans">
+          Nurse
+         </text>
+        </g> <g transform="translate(400,260)">
+         <circle cx="30" cy="20" r="18" fill="rgba(201,56,75,0.1)" stroke="rgba(201,56,75,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          👑
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#f0707f" font-size="9" font-family="DM Sans">
+          Lord C.
+         </text>
+        </g> <g transform="translate(500,260)">
+         <circle cx="30" cy="20" r="18" fill="rgba(201,56,75,0.1)" stroke="rgba(201,56,75,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          👸
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#f0707f" font-size="9" font-family="DM Sans">
+          Lady C.
+         </text>
+        </g> <g transform="translate(315,340)">
+         <circle cx="30" cy="20" r="18" fill="rgba(212,168,83,0.1)" stroke="rgba(212,168,83,0.4)" stroke-width="1" />
+         <text x="30" y="26" text-anchor="middle" font-size="16">
+          ⛪
+         </text>
+         <text x="30" y="50" text-anchor="middle" fill="#d4a853" font-size="9" font-family="DM Sans">
+          Friar Lawrence
+         </text>
+        </g> <line x1="200" y1="145" x2="340" y2="345" stroke="rgba(212,168,83,0.2)" stroke-width="1" stroke-dasharray="3,3" /> <line x1="490" y1="145" x2="350" y2="345" stroke="rgba(212,168,83,0.2)" stroke-width="1" stroke-dasharray="3,3" />
+       </svg>
+      </div>
+      <div class="rounded-xl p-4 mt-6" style="background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.12);">
+       <p class="text-xs font-semibold mb-2" style="color:var(--secondary);">🗣️ Collaborative Activity: Predictions</p>
+       <p class="text-xs opacity-70 mb-3">With your table group, discuss and answer:</p>
+       <div class="space-y-3">
+        <div><label for="prediction1" class="text-xs font-semibold opacity-80 block mb-1">1. What problems do you predict Romeo and Juliet will face?</label> <textarea id="prediction1" rows="2" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="Based on what you've learned so far..."></textarea>
+        </div>
+        <div><label for="prediction2" class="text-xs font-semibold opacity-80 block mb-1">2. Which character do you think will cause the MOST trouble? Why?</label> <textarea id="prediction2" rows="2" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="Pick someone and explain your reasoning..."></textarea>
+        </div>
+        <div><label for="prediction3" class="text-xs font-semibold opacity-80 block mb-1">3. If this play were set TODAY, what modern setting would fit? (School? Rival companies? Sports teams?)</label> <textarea id="prediction3" rows="2" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="Get creative!"></textarea>
+        </div>
+       </div>
+      </div>
+      <div class="mt-4 flex justify-between"><button onclick="showSection(2)" class="px-4 py-2 rounded-lg text-sm opacity-60 hover:opacity-100" style="border:1px solid rgba(255,255,255,0.1);">← Back</button> <button onclick="completeSection(3); showSection(4);" class="px-5 py-2.5 rounded-lg text-sm font-semibold" style="background:var(--primary);color:white;">Final Check-In →</button>
+      </div>
+     </div>
+    </section><section class="section-panel max-w-4xl mx-auto hidden" data-section="4">
+     <div class="anim-fade-up rounded-2xl p-6 sm:p-8 mb-6" style="background:var(--surface);border:1px solid rgba(255,255,255,0.05);">
+      <h2 class="font-display text-xl font-bold mb-2">🧠 Quick Check-In</h2>
+      <p class="text-sm opacity-60 mb-6">Let's see what stuck! This isn't graded — it's just to help you (and your teacher) see what you remember.</p>
+      <div id="quizContainer"></div>
+      <div id="quizResult" class="hidden mt-4 rounded-xl p-5 text-center"></div>
+      <div class="mt-4 flex justify-between"><button onclick="showSection(3)" class="px-4 py-2 rounded-lg text-sm opacity-60 hover:opacity-100" style="border:1px solid rgba(255,255,255,0.1);">← Back</button> <button id="submitQuizBtn" onclick="submitQuiz()" class="px-5 py-2.5 rounded-lg text-sm font-semibold" style="background:var(--primary);color:white;">Check My Answers</button>
+      </div><div class="rounded-xl p-4 mt-6" style="background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.12);">
+       <p class="text-xs font-semibold mb-2" style="color:var(--secondary);">🎟️ Exit Ticket</p><label for="exitTicket" class="text-xs opacity-70 block mb-2">In 2-3 sentences: What are you MOST curious about going into this play?</label> <textarea id="exitTicket" rows="3" class="w-full rounded-lg px-4 py-3 text-sm border border-white/10" style="background:rgba(0,0,0,0.3);color:var(--text);" placeholder="What questions do you have? What do you want to find out?"></textarea> <button onclick="completeSection(4); showNotification('🎉 All done! Hit Print/Save to download your work.')" class="mt-3 px-5 py-2.5 rounded-lg text-sm font-semibold w-full" style="background:var(--secondary);color:var(--bg);">✅ Submit Exit Ticket</button>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div><div class="print-section" id="printSection">
+   <div style="text-align:center;margin-bottom:20px;border-bottom:2px solid black;padding-bottom:10px;">
+    <h1 style="font-size:22px;margin:0;">Romeo &amp; Juliet: Character Introduction</h1>
+    <h2 style="font-size:14px;margin:4px 0;font-weight:normal;" id="printSubtitle">Student Responses</h2>
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:8px;"><span><strong>Student:</strong> <span id="printName">—</span></span> <span><strong>Period:</strong> <span id="printPeriod">—</span></span> <span><strong>Date:</strong> <span id="printDate"></span></span>
+    </div>
+   </div>
+   <div id="printResponses"></div>
+  </div>
+  <script>
+// CHARACTER DATA
+const characters = [
+  { id:'romeo', name:'Romeo Montague', emoji:'🤴', family:'montague', key:true,
+    role:'The Romantic Hero',
+    short:'A young man deeply driven by emotion — passionate, impulsive, and poetic.',
+    detail:'Romeo is a teenager from the Montague family. At the start of the play, he\'s moping around heartbroken over a girl who doesn\'t like him back. He falls FAST and HARD. He\'s the kind of person who leads with his heart, not his head — which will cause big problems.',
+    modern:'That friend who changes their phone wallpaper to their crush after one conversation.'},
+  { id:'juliet', name:'Juliet Capulet', emoji:'👩', family:'capulet', key:true,
+    role:'Smarter Than You\'d Expect',
+    short:'Only 13 years old but sharp, brave, and more mature than the adults around her.',
+    detail:'Juliet is the only daughter of the Capulet family. She\'s been sheltered her whole life and is expected to marry whoever her father picks. But when she meets Romeo, she makes her own choices for the first time — and she turns out to be incredibly brave and clever.',
+    modern:'The quiet kid in class who suddenly speaks up and says the smartest thing anyone\'s ever heard.'},
+  { id:'mercutio', name:'Mercutio', emoji:'🎭', family:'montague', key:true,
+    role:'The Wild Card Best Friend',
+    short:'Romeo\'s best friend — funny, dramatic, and absolutely fearless.',
+    detail:'Mercutio is not actually a Montague by blood — he\'s related to the Prince. But he\'s Romeo\'s ride-or-die friend. He\'s the funniest character in the play, loves making dirty jokes, and will fight ANYONE. His name comes from "mercurial" meaning unpredictable.',
+    modern:'That friend who\'s hilarious but always one bad decision away from getting everyone in trouble.'},
+  { id:'tybalt', name:'Tybalt Capulet', emoji:'😤', family:'capulet', key:true,
+    role:'The Hothead Villain',
+    short:'Juliet\'s cousin — aggressive, proud, and an expert swordsman.',
+    detail:'Tybalt is nicknamed "The Prince of Cats" because he\'s sleek, quick, and dangerous. He HATES the Montagues with a burning passion and is always looking for a fight. He takes the family feud more seriously than anyone.',
+    modern:'That person who takes a group rivalry WAY too seriously and won\'t let anything go.'},
+  { id:'benvolio', name:'Benvolio', emoji:'🤝', family:'montague', key:false,
+    role:'The Peacekeeper',
+    short:'Romeo\'s cousin who always tries to stop fights.',
+    detail:'Benvolio\'s name literally means "good will." He\'s the reasonable one who tries to calm everyone down. He\'s the opposite of Tybalt — where Tybalt starts fights, Benvolio tries to end them.',
+    modern:'The friend who\'s always saying "guys, let\'s just calm down" while everyone ignores them.'},
+  { id:'nurse', name:'The Nurse', emoji:'👩‍🦳', family:'capulet', key:false,
+    role:'Juliet\'s Ride-or-Die',
+    short:'Juliet\'s caretaker since birth — more like a mom than her actual mom.',
+    detail:'The Nurse raised Juliet and loves her dearly. She\'s chatty, funny, and a bit crude. She becomes Juliet\'s secret messenger and confidant when the love story begins. She\'s one of the most human characters in the play.',
+    modern:'That aunt or family friend who knows ALL your secrets and helps you sneak around (but means well).'},
+  { id:'friar', name:'Friar Lawrence', emoji:'⛪', family:'neutral', key:true,
+    role:'The Secret Helper',
+    short:'A monk and herbalist who agrees to help Romeo and Juliet in secret.',
+    detail:'Friar Lawrence is like a mentor and father figure to Romeo. He knows a lot about plants and medicine (important later!). He agrees to help the young lovers because he hopes their marriage might end the family feud. His plans... don\'t go well.',
+    modern:'That well-meaning teacher or counselor whose "brilliant plan" makes everything worse.'},
+  { id:'paris', name:'Count Paris', emoji:'🎩', family:'neutral', key:false,
+    role:'The "Perfect" Suitor',
+    short:'A wealthy nobleman who wants to marry Juliet — with her father\'s approval.',
+    detail:'Paris is handsome, rich, and polite. He\'s the guy Juliet\'s dad picks for her to marry. He\'s not a bad person — he genuinely thinks he\'d be a good husband. But Juliet has other plans.',
+    modern:'The person your parents love but you have zero chemistry with.'},
+  { id:'prince', name:'Prince Escalus', emoji:'⚖️', family:'neutral', key:false,
+    role:'The Authority',
+    short:'The ruler of Verona who is SICK of the Montague-Capulet fighting.',
+    detail:'The Prince is the law in Verona. He threatens severe punishment — including death — if the families keep brawling in the streets. He represents order in a city falling apart.',
+    modern:'The principal who announces "the next person who starts a fight is EXPELLED."'}
+];
+
+const quizQuestions = [
+  { q:'Which two families are feuding in Verona?', opts:['Montague & Capulet','Montague & Escalus','Capulet & Lawrence','Romeo & Paris'], ans:0 },
+  { q:'How old is Juliet?', opts:['16','13','18','15'], ans:1 },
+  { q:'What is Tybalt\'s nickname?', opts:['The Peacekeeper','The Prince of Cats','The Wild Card','The Romantic'], ans:1 },
+  { q:'Who is Friar Lawrence?', opts:['Romeo\'s father','A monk who helps the lovers','The Prince\'s advisor','Juliet\'s uncle'], ans:1 },
+  { q:'What kind of play is Romeo and Juliet?', opts:['Comedy','History','Tragedy','Romance with a happy ending'], ans:2 },
+  { q:'Who is Mercutio?', opts:['Juliet\'s brother','Romeo\'s funny best friend','A Capulet servant','The Prince of Verona'], ans:1 }
+];
+
+// STATE
+let completedSections = new Set();
+let quizAnswers = {};
+let currentFilter = 'all';
+
+// DEFAULT CONFIG
+const defaultConfig = {
+  lesson_title: 'Meet the Characters',
+  teacher_name: '',
+  class_period: '',
+  background_color: '#0f0a1a',
+  surface_color: '#1a1229',
+  text_color: '#e8e0f0',
+  primary_color: '#c9384b',
+  secondary_color: '#d4a853',
+  font_family: 'Playfair Display',
+  font_size: 16
+};
+
+// ELEMENT SDK INIT
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => {
+    const bg = config.background_color || defaultConfig.background_color;
+    const surface = config.surface_color || defaultConfig.surface_color;
+    const text = config.text_color || defaultConfig.text_color;
+    const primary = config.primary_color || defaultConfig.primary_color;
+    const secondary = config.secondary_color || defaultConfig.secondary_color;
+    const font = config.font_family || defaultConfig.font_family;
+    const size = config.font_size || defaultConfig.font_size;
+
+    document.documentElement.style.setProperty('--bg', bg);
+    document.documentElement.style.setProperty('--surface', surface);
+    document.documentElement.style.setProperty('--text', text);
+    document.documentElement.style.setProperty('--primary', primary);
+    document.documentElement.style.setProperty('--secondary', secondary);
+
+    document.body.style.fontFamily = `${font}, DM Sans, sans-serif`;
+    document.body.style.fontSize = size + 'px';
+    document.body.style.background = bg;
+    document.body.style.color = text;
+
+    const wrapper = document.getElementById('appWrapper');
+    if(wrapper) wrapper.style.background = bg;
+
+    const title = document.getElementById('subtitleText');
+    if(title) title.textContent = (config.lesson_title || defaultConfig.lesson_title) + ' — An Interactive Introduction';
+
+    const teacher = document.getElementById('teacherDisplay');
+    if(teacher) teacher.textContent = config.teacher_name || '';
+    const period = document.getElementById('periodDisplay');
+    if(period) period.textContent = config.class_period || '';
+  },
+  mapToCapabilities: (config) => ({
+    recolorables: [
+      { get: () => config.background_color || defaultConfig.background_color, set: v => { config.background_color = v; window.elementSdk.setConfig({background_color:v}); }},
+      { get: () => config.surface_color || defaultConfig.surface_color, set: v => { config.surface_color = v; window.elementSdk.setConfig({surface_color:v}); }},
+      { get: () => config.text_color || defaultConfig.text_color, set: v => { config.text_color = v; window.elementSdk.setConfig({text_color:v}); }},
+      { get: () => config.primary_color || defaultConfig.primary_color, set: v => { config.primary_color = v; window.elementSdk.setConfig({primary_color:v}); }},
+      { get: () => config.secondary_color || defaultConfig.secondary_color, set: v => { config.secondary_color = v; window.elementSdk.setConfig({secondary_color:v}); }}
+    ],
+    borderables: [],
+    fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: v => { config.font_family = v; window.elementSdk.setConfig({font_family:v}); }},
+    fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: v => { config.font_size = v; window.elementSdk.setConfig({font_size:v}); }}
+  }),
+  mapToEditPanelValues: (config) => new Map([
+    ['lesson_title', config.lesson_title || defaultConfig.lesson_title],
+    ['teacher_name', config.teacher_name || defaultConfig.teacher_name],
+    ['class_period', config.class_period || defaultConfig.class_period]
+  ])
+});
+
+// RENDER CHARACTERS
+function renderCharacters() {
+  const grid = document.getElementById('characterGrid');
+  grid.innerHTML = '';
+  const filtered = currentFilter === 'all' ? characters : characters.filter(c => c.family === currentFilter);
+  filtered.forEach((c, i) => {
+    const tag = c.family === 'montague' ? 'tag-montague' : c.family === 'capulet' ? 'tag-capulet' : 'tag-neutral';
+    const border = c.family === 'montague' ? 'family-montague' : c.family === 'capulet' ? 'family-capulet' : 'family-neutral';
+    const el = document.createElement('div');
+    el.className = `rounded-xl p-4 card-glow cursor-pointer ${border} anim-fade-up`;
+    el.style.cssText = `background:var(--surface);border:1px solid rgba(255,255,255,0.06);animation-delay:${i*0.05}s;opacity:0;`;
+    el.onclick = () => showCharDetail(c.id);
+    el.innerHTML = `
+      <div class="flex items-center gap-3">
+        <span class="emoji-avatar">${c.emoji}</span>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-display font-bold text-sm ${c.key?'':'opacity-70'}">${c.name}${c.key?' ⭐':''}</h3>
+          <span class="${tag} text-xs px-2 py-0.5 rounded-full inline-block mt-0.5">${c.family}</span>
+          <p class="text-xs opacity-60 mt-1">${c.role}</p>
+        </div>
+        <i data-lucide="chevron-right" style="width:16px;height:16px;opacity:0.3;"></i>
+      </div>`;
+    grid.appendChild(el);
+  });
+  lucide.createIcons();
+}
+
+function showCharDetail(id) {
+  const c = characters.find(x => x.id === id);
+  if(!c) return;
+  const det = document.getElementById('characterDetail');
+  det.classList.remove('hidden');
+  const tag = c.family === 'montague' ? 'tag-montague' : c.family === 'capulet' ? 'tag-capulet' : 'tag-neutral';
+  det.innerHTML = `
+    <div class="flex items-start gap-4">
+      <span style="font-size:3rem;">${c.emoji}</span>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 flex-wrap">
+          <h3 class="font-display text-lg font-bold">${c.name}</h3>
+          <span class="${tag} text-xs px-2 py-0.5 rounded-full">${c.family}</span>
+        </div>
+        <p class="text-xs font-semibold opacity-60 mt-0.5">${c.role}</p>
+        <p class="text-sm opacity-80 mt-3 leading-relaxed">${c.detail}</p>
+        <div class="mt-3 rounded-lg p-3" style="background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.1);">
+          <p class="text-xs"><strong style="color:var(--secondary);">Modern equivalent:</strong> ${c.modern}</p>
+        </div>
+      </div>
+      <button onclick="document.getElementById('characterDetail').classList.add('hidden')" class="opacity-40 hover:opacity-100">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+      </button>
+    </div>`;
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+  lucide.createIcons();
+}
+
+function filterChars(family) {
+  currentFilter = family;
+  document.querySelectorAll('.char-filter').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'var(--surface)';
+  });
+  event.target.classList.add('active');
+  event.target.style.background = family === 'all' ? 'var(--primary)' : 'var(--surface)';
+  renderCharacters();
+}
+
+// QUIZ
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizQuestions.forEach((q, qi) => {
+    const qEl = document.createElement('div');
+    qEl.className = 'mb-5';
+    qEl.innerHTML = `
+      <p class="text-sm font-semibold mb-2">${qi+1}. ${q.q}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="quiz-q${qi}">
+        ${q.opts.map((o,oi) => `
+          <div class="quiz-option rounded-lg px-4 py-3 text-sm border border-white/10" data-q="${qi}" data-o="${oi}" onclick="selectQuizOption(${qi},${oi})">
+            ${o}
+          </div>
+        `).join('')}
+      </div>`;
+    container.appendChild(qEl);
+  });
+}
+
+function selectQuizOption(qi, oi) {
+  quizAnswers[qi] = oi;
+  document.querySelectorAll(`[data-q="${qi}"]`).forEach(el => el.classList.remove('selected'));
+  document.querySelector(`[data-q="${qi}"][data-o="${oi}"]`).classList.add('selected');
+}
+
+function submitQuiz() {
+  let score = 0;
+  quizQuestions.forEach((q, qi) => {
+    const opts = document.querySelectorAll(`[data-q="${qi}"]`);
+    opts.forEach(el => {
+      el.style.pointerEvents = 'none';
+      const oi = parseInt(el.dataset.o);
+      if(oi === q.ans) el.classList.add('correct');
+      if(quizAnswers[qi] === oi && oi !== q.ans) el.classList.add('incorrect');
+    });
+    if(quizAnswers[qi] === q.ans) score++;
+  });
+
+  const res = document.getElementById('quizResult');
+  res.classList.remove('hidden');
+  const pct = Math.round(score/quizQuestions.length*100);
+  const msg = pct >= 80 ? "🎉 Excellent! You're ready for the play!" : pct >= 50 ? "👍 Good start! You've got the basics down." : "💪 No worries — you'll learn more as we read!";
+  res.innerHTML = `
+    <div class="text-3xl font-display font-bold mb-2">${score} / ${quizQuestions.length}</div>
+    <p class="text-sm opacity-70">${msg}</p>`;
+  res.style.background = pct >= 80 ? 'rgba(34,197,94,0.1)' : pct >= 50 ? 'rgba(212,168,83,0.1)' : 'rgba(201,56,75,0.1)';
+  res.style.border = '1px solid ' + (pct >= 80 ? 'rgba(34,197,94,0.2)' : pct >= 50 ? 'rgba(212,168,83,0.2)' : 'rgba(201,56,75,0.2)');
+
+  document.getElementById('submitQuizBtn').disabled = true;
+  document.getElementById('submitQuizBtn').style.opacity = '0.4';
+  completeSection(4);
+}
+
+// SECTIONS
+function showSection(idx) {
+  document.querySelectorAll('.section-panel').forEach(s => s.classList.add('hidden'));
+  const target = document.querySelector(`[data-section="${idx}"]`);
+  if(target) target.classList.remove('hidden');
+
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  window.scrollTo({top: 0, behavior:'smooth'});
+}
+
+function completeSection(idx) {
+  completedSections.add(idx);
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 5;
+  const done = completedSections.size;
+  const pct = Math.round(done/total*100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} / ${total} sections`;
+}
+
+function showNotification(msg) {
+  const n = document.createElement('div');
+  n.className = 'notification';
+  n.textContent = msg;
+  document.body.appendChild(n);
+  setTimeout(() => n.remove(), 3000);
+}
+
+// PRINT / SAVE FILE FOR EKADENCE (Text File Version)
+function printStudentWork() {
+  const name = document.getElementById('studentName')?.value || 'Student';
+  const period = document.getElementById('studentPeriod')?.value || '—';
+
+  const fields = [
+    { label:'Setting Reflection (Think-Pair-Share)', id:'settingReflection' },
+    { label:'Feud Discussion Response', id:'feudReflection' },
+    { label:'Character First Impression #1', id:'charImpression1' },
+    { label:'Character First Impression #2', id:'charImpression2' },
+    { label:'Prediction: Problems Romeo & Juliet will face', id:'prediction1' },
+    { label:'Prediction: Most troublesome character', id:'prediction2' },
+    { label:'Prediction: Modern setting', id:'prediction3' },
+    { label:'Exit Ticket: What are you most curious about?', id:'exitTicket' }
+  ];
+
+  // Generate a cleanly formatted plain text document
+  let fileContent = `=========================================\n`;
+  fileContent += `ROMEO & JULIET: INTRO RESPONSES\n`;
+  fileContent += `=========================================\n`;
+  fileContent += `Student: ${name}\n`;
+  fileContent += `Period: ${period}\n`;
+  fileContent += `Date: ${new Date().toLocaleDateString()}\n\n`;
+
+  fileContent += `--- WRITTEN RESPONSES ---\n\n`;
+
+  fields.forEach(f => {
+    const val = document.getElementById(f.id)?.value || '(no response)';
+    fileContent += `${f.label}:\n`;
+    fileContent += `${val}\n\n`;
+  });
+
+  // Append Quiz Results if they exist
+  if(typeof quizAnswers !== 'undefined' && typeof quizQuestions !== 'undefined' && Object.keys(quizAnswers).length > 0) {
+    fileContent += `--- QUIZ RESULTS ---\n\n`;
+    let score = 0;
+    quizQuestions.forEach((q, i) => {
+      const correct = quizAnswers[i] === q.ans;
+      if(correct) score++;
+      const studentAns = q.opts[quizAnswers[i]] || 'no answer';
+      
+      fileContent += `${i+1}. ${q.q}\n`;
+      fileContent += `Student answered: ${studentAns} [${correct ? 'CORRECT' : 'INCORRECT'}]\n`;
+      if(!correct) {
+         fileContent += `Correct answer: ${q.opts[q.ans]}\n`;
+      }
+      fileContent += `\n`;
+    });
+    fileContent += `-----------------------------------------\n`;
+    fileContent += `Total Score: ${score} / ${quizQuestions.length}\n`;
+    fileContent += `-----------------------------------------\n`;
+  }
+
+  // Trigger the download automatically
+  try {
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    // Format filename as a .txt file
+    a.download = `RJ_Responses_${name.replace(/[^a-z0-9]/gi, '_')}.txt`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    // Alert the student what to do next
+    if (typeof showNotification === 'function') {
+        showNotification('📁 Text file downloaded! Please upload this to eKadence.');
+    } else {
+        alert('📁 Text file downloaded! Please upload this to eKadence.');
+    }
+  } catch(e) {
+    if (typeof showNotification === 'function') {
+        showNotification('❌ Error downloading file.');
+    } else {
+        alert('❌ Error downloading file.');
+    }
+    console.error('Download error:', e);
+  }
+}
+
+// INIT
+renderCharacters();
+renderQuiz();
+lucide.createIcons();
+</script>
+</body>
+</html>
