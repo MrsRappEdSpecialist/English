@@ -166,7 +166,7 @@ textarea:focus, input:focus { outline: none; border-color: var(--primary); }
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.anim-in { animation: fadeInUp 0.4s ease both; }
+
 
 .montague-border { border-left: 3px solid var(--montague); }
 .capulet-border { border-left: 3px solid var(--capulet); }
@@ -212,17 +212,17 @@ textarea:focus, input:focus { outline: none; border-color: var(--primary); }
     </div>
    </header><!-- Main Content -->
    <main class="max-w-5xl mx-auto p-6"><!-- Characters Tab -->
-    <section id="tab-characters" class="anim-in">
+    <section id="tab-characters" class="hidden">
      <div class="flex flex-wrap gap-2 mb-5"><button class="filter-btn active" onclick="filterChars('all')" data-filter="all">All</button> <button class="filter-btn" onclick="filterChars('montague')" data-filter="montague" style="border-color: var(--montague); color: var(--montague);">⚔️ Montagues</button> <button class="filter-btn" onclick="filterChars('capulet')" data-filter="capulet" style="border-color: var(--capulet); color: var(--capulet);">🗡️ Capulets</button> <button class="filter-btn" onclick="filterChars('other')" data-filter="other">👥 Others</button>
      </div>
      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="charGrid"></div>
     </section><!-- Connections Tab -->
-    <section id="tab-connections" class="hidden anim-in">
+    <section id="tab-connections" class="hidden">
      <h2 class="heading-font text-xl font-bold mb-4" style="color: var(--primary);">Real-Life Connections</h2>
      <p class="opacity-60 text-sm mb-5">Relate the themes of Romeo &amp; Juliet to your own life. Your responses auto-save.</p>
      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="connectionsGrid"></div>
     </section><!-- Quiz Tab -->
-    <section id="tab-quiz" class="hidden anim-in">
+    <section id="tab-quiz" class="hidden">
      <div class="flex items-center justify-between mb-5">
       <h2 class="heading-font text-xl font-bold" style="color: var(--primary);">Quick Quiz</h2>
       <div id="quizScore" class="hidden">
@@ -231,7 +231,7 @@ textarea:focus, input:focus { outline: none; border-color: var(--primary); }
      </div>
      <div class="space-y-5" id="quizContainer"></div><button class="btn-primary mt-6" id="submitQuizBtn" onclick="submitQuiz()">Submit Quiz</button>
     </section><!-- Reflect Tab -->
-    <section id="tab-reflect" class="hidden anim-in">
+    <section id="tab-reflect" class="hidden">
      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
       <h2 class="heading-font text-xl font-bold" style="color: var(--primary);">Reflect &amp; Respond</h2><button class="btn-primary flex items-center gap-2" onclick="exportPDF()"> <i data-lucide="download" style="width:16px;height:16px;"></i> Export as PDF </button>
      </div>
