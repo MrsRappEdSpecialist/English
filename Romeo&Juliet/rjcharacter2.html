@@ -346,8 +346,9 @@ function renderCharacters() {
     const teamColor = ch.team === 'montague' ? 'var(--montague)' : ch.team === 'capulet' ? 'var(--capulet)' : 'var(--secondary)';
     const teamLabel = ch.team.charAt(0).toUpperCase() + ch.team.slice(1);
     const div = document.createElement('div');
-    div.className = `card anim-in ${borderClass}`;
+    div.className = `card ${borderClass}`;
     div.style.animationDelay = `${i * 0.06}s`;
+    div.classList.add('anim-in');
     div.innerHTML = `
       <div class="flex items-center gap-2 mb-2">
         <span style="font-size:1.6rem;">${ch.emoji}</span>
@@ -375,7 +376,6 @@ function filterChars(filter) {
 }
 
 // ====== RENDER CONNECTIONS ======
-// Note the added "(p, i)" in the loop parameters to make the stagger work correctly
 function renderConnections() {
   const grid = document.getElementById('connectionsGrid');
   grid.innerHTML = '';
@@ -397,7 +397,6 @@ function renderConnections() {
 }
 
 // ====== RENDER QUIZ ======
-// Note the added "(q, qi)" in the loop parameters 
 function renderQuiz() {
   const container = document.getElementById('quizContainer');
   container.innerHTML = '';
@@ -462,7 +461,6 @@ function retakeQuiz() {
 }
 
 // ====== RENDER REFLECT ======
-// Note the added "(q, i)" in the loop parameters 
 function renderReflect() {
   const container = document.getElementById('reflectContainer');
   container.innerHTML = '';
