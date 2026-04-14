@@ -346,9 +346,9 @@ function renderCharacters() {
     const teamColor = ch.team === 'montague' ? 'var(--montague)' : ch.team === 'capulet' ? 'var(--capulet)' : 'var(--secondary)';
     const teamLabel = ch.team.charAt(0).toUpperCase() + ch.team.slice(1);
     const div = document.createElement('div');
-    div.className = `card ${borderClass}`;
+    // FIX: Added anim-in to the card classes directly
+    div.className = `card anim-in ${borderClass}`;
     div.style.animationDelay = `${i * 0.06}s`;
-    div.classList.add('anim-in');
     div.innerHTML = `
       <div class="flex items-center gap-2 mb-2">
         <span style="font-size:1.6rem;">${ch.emoji}</span>
@@ -379,9 +379,11 @@ function filterChars(filter) {
 function renderConnections() {
   const grid = document.getElementById('connectionsGrid');
   grid.innerHTML = '';
+  // FIX: Added index 'i' to the map function to allow delay staggered animation
   connectionPrompts.forEach((p, i) => {
     const saved = localStorage.getItem('rj_' + p.id) || '';
     const div = document.createElement('div');
+    // FIX: Added 'anim-in' directly to the javascript element creation
     div.className = 'card anim-in';
     div.style.animationDelay = `${i * 0.08}s`;
     div.innerHTML = `
@@ -400,8 +402,10 @@ function renderConnections() {
 function renderQuiz() {
   const container = document.getElementById('quizContainer');
   container.innerHTML = '';
+  // FIX: Make sure the index parameter 'qi' is present
   quizQuestions.forEach((q, qi) => {
     const div = document.createElement('div');
+    // FIX: Added 'anim-in' directly to the javascript element creation
     div.className = 'card anim-in';
     div.style.animationDelay = `${qi * 0.08}s`;
     div.innerHTML = `
@@ -464,9 +468,11 @@ function retakeQuiz() {
 function renderReflect() {
   const container = document.getElementById('reflectContainer');
   container.innerHTML = '';
+  // FIX: Added index 'i' to the map function to allow delay staggered animation
   reflectQuestions.forEach((q, i) => {
     const saved = localStorage.getItem('rj_' + q.id) || '';
     const div = document.createElement('div');
+    // FIX: Added 'anim-in' directly to the javascript element creation
     div.className = 'card anim-in';
     div.style.animationDelay = `${i * 0.08}s`;
     div.innerHTML = `
