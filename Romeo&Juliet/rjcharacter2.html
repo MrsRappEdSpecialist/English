@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romeo &amp; Juliet Lesson</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&amp;family=Source+Sans+3:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+html, body { height: 100%; margin: 0; }
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --text: #e8e6f0;
+  --primary: #c9a84c;
+  --secondary: #7c6f9b;
+  --montague: #3b82f6;
+  --capulet: #ef4444;
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Source Sans 3', sans-serif;
+  --base-size: 16;
+  --line-height: 1.6;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: calc(var(--base-size) * 1px);
+  line-height: var(--line-height);
+}
+
+/* Themes */
+.theme-light { --bg: #f5f0e8; --surface: #ffffff; --text: #2d2b3a; --secondary: #6b5f8a; }
+.theme-high-contrast { --bg: #000000; --surface: #1a1a1a; --text: #ffffff; --primary: #ffd700; --secondary: #00ffff; }
+.theme-dyslexia { --bg: #faf8f0; --surface: #f5f0e0; --text: #3b3530; --primary: #c9a84c; --secondary: #6b5f8a; }
+.theme-dyslexia body, .theme-dyslexia * { font-family: 'Comic Sans MS', 'OpenDyslexic', sans-serif !important; letter-spacing: 0.05em; word-spacing: 0.15em; }
+
+.app-wrapper {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+  transition: all 0.3s;
+}
+
+.heading-font { font-family: var(--font-heading); }
+
+.tab-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.25s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active {
+  background: var(--primary);
+  color: var(--bg);
+  opacity: 1;
+  border-color: var(--primary);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+
+.filter-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: var(--text);
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+.filter-btn:hover { opacity: 0.85; }
+.filter-btn.active { opacity: 1; border-color: var(--primary); background: rgba(201,168,76,0.15); color: var(--primary); }
+
+textarea, input[type="text"], input[type="date"] {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.65rem 0.85rem;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+textarea:focus, input:focus { outline: none; border-color: var(--primary); }
+
+.quiz-option {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255,255,255,0.03);
+}
+.quiz-option:hover { border-color: var(--primary); background: rgba(201,168,76,0.08); }
+.quiz-option.selected { border-color: var(--primary); background: rgba(201,168,76,0.15); }
+.quiz-option.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); }
+.quiz-option.wrong { border-color: #ef4444; background: rgba(239,68,68,0.15); }
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.settings-panel {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--bg);
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.btn-primary:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+.toast-msg {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--primary); color: var(--bg);
+  padding: 0.6rem 1.2rem; border-radius: 8px;
+  font-weight: 600; font-size: 0.85rem;
+  opacity: 0; transform: translateY(10px);
+  transition: all 0.3s; pointer-events: none; z-index: 999;
+}
+.toast-msg.show { opacity: 1; transform: translateY(0); }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-in { animation: fadeInUp 0.4s ease both; }
+
+.montague-border { border-left: 3px solid var(--montague); }
+.capulet-border { border-left: 3px solid var(--capulet); }
+.other-border { border-left: 3px solid var(--secondary); }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="app-wrapper w-full overflow-auto" id="appWrapper"><!-- Toast -->
+   <div class="toast-msg" id="toast"></div><!-- Header -->
+   <header style="background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, transparent 60%);" class="p-6 pb-4 border-b border-white/5">
+    <div class="max-w-5xl mx-auto">
+     <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+       <h1 id="lessonTitle" class="heading-font text-3xl font-bold" style="color: var(--primary);">Romeo &amp; Juliet: Characters</h1>
+       <p id="subtitleText" class="mt-1 opacity-70 text-sm">A Deep Dive into Shakespeare's World</p>
+       <p id="schoolLabel" class="mt-0.5 opacity-50 text-xs tracking-wide uppercase"></p>
+      </div><button onclick="toggleSettings()" class="tab-btn active flex items-center gap-1.5" style="font-size:0.8rem;"> <i data-lucide="settings" style="width:14px;height:14px;"></i> Settings </button>
+     </div><!-- Settings Panel (collapsible) -->
+     <div id="settingsPanel" class="settings-panel mt-4 hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"><!-- Student Info -->
+       <div><label for="studentName" class="text-xs font-semibold opacity-60 block mb-1">Your Name</label> <input type="text" id="studentName" placeholder="Enter name" onchange="saveLocal()">
+       </div>
+       <div><label for="studentPeriod" class="text-xs font-semibold opacity-60 block mb-1">Period</label> <input type="text" id="studentPeriod" placeholder="e.g. 3rd" onchange="saveLocal()">
+       </div>
+       <div><label for="studentDate" class="text-xs font-semibold opacity-60 block mb-1">Date</label> <input type="date" id="studentDate" onchange="saveLocal()">
+       </div>
+       <div><label class="text-xs font-semibold opacity-60 block mb-1">Theme</label>
+        <div class="flex flex-wrap gap-1.5"><button onclick="setTheme('dark')" class="filter-btn active" data-theme="dark">🌙 Dark</button> <button onclick="setTheme('light')" class="filter-btn" data-theme="light">☀️ Light</button> <button onclick="setTheme('high-contrast')" class="filter-btn" data-theme="high-contrast">◐ High</button> <button onclick="setTheme('dyslexia')" class="filter-btn" data-theme="dyslexia">📖 Dyslexia</button>
+        </div>
+       </div>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center gap-6">
+       <div class="flex items-center gap-2"><label class="text-xs font-semibold opacity-60">Text Size</label> <input type="range" min="12" max="24" value="16" id="textSizeSlider" oninput="setTextSize(this.value)" style="accent-color: var(--primary); width: 100px;"> <span id="textSizeLabel" class="text-xs opacity-50">16px</span>
+       </div>
+       <div class="flex items-center gap-2"><label class="text-xs font-semibold opacity-60">Line Spacing</label> <button onclick="toggleLineSpacing()" class="filter-btn" id="lineSpaceBtn">Relaxed</button>
+       </div>
+      </div>
+     </div><!-- Tabs -->
+     <nav class="flex gap-2 mt-4 overflow-x-auto pb-1" role="tablist" aria-label="Lesson sections"><button class="tab-btn active" onclick="switchTab('characters')" role="tab" aria-selected="true" data-tab="characters">🎭 Characters</button> <button class="tab-btn" onclick="switchTab('connections')" role="tab" aria-selected="false" data-tab="connections">🔗 Connections</button> <button class="tab-btn" onclick="switchTab('quiz')" role="tab" aria-selected="false" data-tab="quiz">❓ Quiz</button> <button class="tab-btn" onclick="switchTab('reflect')" role="tab" aria-selected="false" data-tab="reflect">✍️ Reflect</button>
+     </nav>
+    </div>
+   </header><!-- Main Content -->
+   <main class="max-w-5xl mx-auto p-6"><!-- Characters Tab -->
+    <section id="tab-characters" class="anim-in">
+     <div class="flex flex-wrap gap-2 mb-5"><button class="filter-btn active" onclick="filterChars('all')" data-filter="all">All</button> <button class="filter-btn" onclick="filterChars('montague')" data-filter="montague" style="border-color: var(--montague); color: var(--montague);">⚔️ Montagues</button> <button class="filter-btn" onclick="filterChars('capulet')" data-filter="capulet" style="border-color: var(--capulet); color: var(--capulet);">🗡️ Capulets</button> <button class="filter-btn" onclick="filterChars('other')" data-filter="other">👥 Others</button>
+     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="charGrid"></div>
+    </section><!-- Connections Tab -->
+    <section id="tab-connections" class="hidden anim-in">
+     <h2 class="heading-font text-xl font-bold mb-4" style="color: var(--primary);">Real-Life Connections</h2>
+     <p class="opacity-60 text-sm mb-5">Relate the themes of Romeo &amp; Juliet to your own life. Your responses auto-save.</p>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="connectionsGrid"></div>
+    </section><!-- Quiz Tab -->
+    <section id="tab-quiz" class="hidden anim-in">
+     <div class="flex items-center justify-between mb-5">
+      <h2 class="heading-font text-xl font-bold" style="color: var(--primary);">Quick Quiz</h2>
+      <div id="quizScore" class="hidden">
+       <span class="badge" style="background: var(--primary); color: var(--bg); font-size: 0.85rem; padding: 0.3rem 0.8rem;"></span>
+      </div>
+     </div>
+     <div class="space-y-5" id="quizContainer"></div><button class="btn-primary mt-6" id="submitQuizBtn" onclick="submitQuiz()">Submit Quiz</button>
+    </section><!-- Reflect Tab -->
+    <section id="tab-reflect" class="hidden anim-in">
+     <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <h2 class="heading-font text-xl font-bold" style="color: var(--primary);">Reflect &amp; Respond</h2><button class="btn-primary flex items-center gap-2" onclick="exportPDF()"> <i data-lucide="download" style="width:16px;height:16px;"></i> Export as PDF </button>
+     </div>
+     <p class="opacity-60 text-sm mb-5">Write thoughtful responses. These will be included in your PDF export.</p>
+     <div class="space-y-4" id="reflectContainer"></div>
+    </section>
+   </main>
+  </div>
+  <script>
+// ====== DATA ======
+const characters = [
+  { name: "Romeo", emoji: "💔", team: "montague", role: "Protagonist / Star-Crossed Lover", desc: "Son of Lord Montague. Passionate and impulsive, he falls instantly in love with Juliet despite the family feud.", modern: "That friend who changes their entire personality for every new crush.", quote: "But soft, what light through yonder window breaks?" },
+  { name: "Juliet", emoji: "🌹", team: "capulet", role: "Protagonist / Star-Crossed Lover", desc: "Daughter of Lord Capulet. Only 13, yet more mature than Romeo. Brave enough to defy her family for love.", modern: "The straight-A student who secretly rebels against strict parents.", quote: "What's in a name? That which we call a rose by any other name would smell as sweet." },
+  { name: "Mercutio", emoji: "⚡", team: "montague", role: "Romeo's Best Friend", desc: "Witty, bold, and fiercely loyal. His death is the turning point of the play — neither Montague nor Capulet by blood.", modern: "The class clown who's actually the most perceptive person in the room.", quote: "A plague o' both your houses!" },
+  { name: "Tybalt", emoji: "🔥", team: "capulet", role: "Juliet's Cousin / Antagonist", desc: "Hot-headed and aggressive. Known as the 'Prince of Cats' for his skilled swordsmanship. Despises all Montagues.", modern: "The person who starts fights in the group chat over nothing.", quote: "What, drawn, and talk of peace? I hate the word." },
+  { name: "Nurse", emoji: "🤱", team: "capulet", role: "Juliet's Caretaker & Confidante", desc: "Raised Juliet from birth. Bawdy and talkative, she's Juliet's closest ally — until she isn't.", modern: "Your favorite aunt who gossips but always has your back (mostly).", quote: "I am the drudge and toil in your delight." },
+  { name: "Friar Lawrence", emoji: "⛪", team: "other", role: "Priest & Secret Ally", desc: "Marries Romeo and Juliet in secret, hoping to end the feud. His risky plan ultimately fails.", modern: "The well-meaning teacher who gets way too involved in student drama.", quote: "These violent delights have violent ends." },
+  { name: "Lord Capulet", emoji: "👑", team: "capulet", role: "Juliet's Father", desc: "Wealthy patriarch who demands obedience. Arranges Juliet's marriage to Paris without her consent.", modern: "The controlling parent who says 'my house, my rules.'", quote: "Hang thee, young baggage! Disobedient wretch!" },
+  { name: "Benvolio", emoji: "🕊️", team: "montague", role: "Romeo's Cousin / Peacemaker", desc: "The voice of reason among the young men. Always tries to avoid conflict but gets dragged into it anyway.", modern: "The friend group mediator who's always saying 'let's all just calm down.'", quote: "I do but keep the peace. Put up thy sword." }
+];
+
+const connectionPrompts = [
+  { id: "c1", emoji: "🏠", title: "Family Feuds", prompt: "Have you ever been told you couldn't be friends with someone because of family disagreements? How did it feel? What did you do?" },
+  { id: "c2", emoji: "🚫", title: "Forbidden Friendships", prompt: "Describe a time when you or someone you know had to keep a friendship or relationship secret. Why was it secret? Was the secrecy worth it?" },
+  { id: "c3", emoji: "🎭", title: "Peer Pressure", prompt: "Mercutio pressures Romeo into attending the Capulet party. When has peer pressure led you (or someone you know) into a situation — good or bad?" },
+  { id: "c4", emoji: "🤝", title: "Loyalty vs. Doing Right", prompt: "Tybalt fights for family loyalty. Benvolio seeks peace. Which approach do you relate to more, and why? When is loyalty dangerous?" }
+];
+
+const quizQuestions = [
+  { q: "Which family does Romeo belong to?", opts: ["Capulet", "Montague", "Neither — he's neutral", "The Prince's family"], answer: 1 },
+  { q: "Who is known as the 'Prince of Cats'?", opts: ["Romeo", "Mercutio", "Tybalt", "Benvolio"], answer: 2 },
+  { q: "What is Friar Lawrence's plan to help Romeo and Juliet?", opts: ["Help them escape Verona immediately", "Marry them secretly to unite the families", "Challenge both families to a duel", "Send letters to the Prince"], answer: 1 },
+  { q: "Whose death is the turning point of the play?", opts: ["Romeo's", "Juliet's", "Tybalt's", "Mercutio's"], answer: 3 },
+  { q: "How old is Juliet in the play?", opts: ["16", "15", "13", "18"], answer: 2 },
+  { q: "Who says 'A plague o' both your houses'?", opts: ["Romeo", "Mercutio", "The Prince", "Friar Lawrence"], answer: 1 }
+];
+
+const reflectQuestions = [
+  { id: "r1", prompt: "If you could give Romeo OR Juliet one piece of advice at any point in the play, what would it be and when would you give it?" },
+  { id: "r2", prompt: "Do you think the adults in the play (parents, Friar Lawrence, Nurse) are more to blame for the tragedy than the young characters? Defend your position." },
+  { id: "r3", prompt: "Shakespeare wrote this play over 400 years ago. Why do you think stories about forbidden love and family conflict are STILL popular today?" },
+  { id: "r4", prompt: "Choose one character and explain how the outcome of the play might have changed if that character had made ONE different decision." }
+];
+
+// ====== STATE ======
+let currentTab = 'characters';
+let currentFilter = 'all';
+let quizAnswers = {};
+let quizSubmitted = false;
+let quizScoreVal = null;
+let currentTheme = 'dark';
+
+// ====== INIT ======
+const defaultConfig = {
+  lesson_title: "Romeo & Juliet: Characters",
+  school_name: "",
+  subtitle_text: "A Deep Dive into Shakespeare's World",
+  background_color: "#0f0f1a",
+  surface_color: "#1a1a2e",
+  text_color: "#e8e6f0",
+  primary_color: "#c9a84c",
+  secondary_color: "#7c6f9b",
+  font_family: "Cinzel",
+  font_size: 16
+};
+
+function applyConfig(config) {
+  const c = { ...defaultConfig, ...config };
+  document.documentElement.style.setProperty('--bg', c.background_color);
+  document.documentElement.style.setProperty('--surface', c.surface_color);
+  document.documentElement.style.setProperty('--text', c.text_color);
+  document.documentElement.style.setProperty('--primary', c.primary_color);
+  document.documentElement.style.setProperty('--secondary', c.secondary_color);
+  document.documentElement.style.setProperty('--base-size', c.font_size);
+  document.documentElement.style.setProperty('--font-heading', `'${c.font_family}', serif`);
+
+  const el = (id) => document.getElementById(id);
+  el('lessonTitle').textContent = c.lesson_title;
+  el('subtitleText').textContent = c.subtitle_text;
+  el('schoolLabel').textContent = c.school_name || '';
+
+  document.querySelectorAll('.heading-font').forEach(h => {
+    h.style.fontFamily = `'${c.font_family}', 'Cinzel', serif`;
+  });
+
+  // Update active tab btn colors
+  document.querySelectorAll('.tab-btn.active, .btn-primary').forEach(b => {
+    b.style.background = c.primary_color;
+    b.style.color = c.background_color;
+  });
+}
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => applyConfig(config),
+  mapToCapabilities: (config) => ({
+    recolorables: [
+      { get: () => config.background_color || defaultConfig.background_color, set: v => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+      { get: () => config.surface_color || defaultConfig.surface_color, set: v => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+      { get: () => config.text_color || defaultConfig.text_color, set: v => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+      { get: () => config.primary_color || defaultConfig.primary_color, set: v => { config.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+      { get: () => config.secondary_color || defaultConfig.secondary_color, set: v => { config.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } }
+    ],
+    borderables: [],
+    fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: v => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+    fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: v => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+  }),
+  mapToEditPanelValues: (config) => new Map([
+    ["lesson_title", config.lesson_title || defaultConfig.lesson_title],
+    ["school_name", config.school_name || defaultConfig.school_name],
+    ["subtitle_text", config.subtitle_text || defaultConfig.subtitle_text]
+  ])
+});
+
+// ====== RENDER CHARACTERS ======
+function renderCharacters() {
+  const grid = document.getElementById('charGrid');
+  const filtered = currentFilter === 'all' ? characters : characters.filter(c => c.team === currentFilter);
+  grid.innerHTML = '';
+  filtered.forEach((ch, i) => {
+    const borderClass = ch.team === 'montague' ? 'montague-border' : ch.team === 'capulet' ? 'capulet-border' : 'other-border';
+    const teamColor = ch.team === 'montague' ? 'var(--montague)' : ch.team === 'capulet' ? 'var(--capulet)' : 'var(--secondary)';
+    const teamLabel = ch.team.charAt(0).toUpperCase() + ch.team.slice(1);
+    const div = document.createElement('div');
+    div.className = `card ${borderClass}`;
+    div.style.animationDelay = `${i * 0.06}s`;
+    div.classList.add('anim-in');
+    div.innerHTML = `
+      <div class="flex items-center gap-2 mb-2">
+        <span style="font-size:1.6rem;">${ch.emoji}</span>
+        <div>
+          <h3 class="heading-font font-bold" style="font-size:1.05rem;">${ch.name}</h3>
+          <span class="badge" style="background: ${teamColor}20; color: ${teamColor};">${teamLabel}</span>
+        </div>
+      </div>
+      <p class="text-xs font-semibold opacity-50 mb-1">${ch.role}</p>
+      <p class="text-sm opacity-80 mb-2">${ch.desc}</p>
+      <div style="background: rgba(255,255,255,0.03); border-radius: 6px; padding: 0.5rem 0.65rem; margin-bottom: 0.5rem;">
+        <p class="text-xs opacity-50 mb-0.5 font-semibold">🧠 Modern Comparison</p>
+        <p class="text-sm italic opacity-75">${ch.modern}</p>
+      </div>
+      <p class="text-xs italic opacity-50" style="color: var(--primary);">"${ch.quote}"</p>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function filterChars(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+  renderCharacters();
+}
+
+// ====== RENDER CONNECTIONS ======
+function renderConnections() {
+  const grid = document.getElementById('connectionsGrid');
+  grid.innerHTML = '';
+  connectionPrompts.forEach(p => {
+    const saved = localStorage.getItem('rj_' + p.id) || '';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="flex items-center gap-2 mb-2">
+        <span style="font-size:1.3rem;">${p.emoji}</span>
+        <h3 class="heading-font font-bold" style="font-size:0.95rem;">${p.title}</h3>
+      </div>
+      <p class="text-sm opacity-70 mb-3">${p.prompt}</p>
+      <textarea rows="4" placeholder="Type your response..." oninput="saveField('rj_${p.id}', this.value)">${saved}</textarea>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ====== RENDER QUIZ ======
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizQuestions.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <p class="font-semibold mb-3"><span class="opacity-40 mr-1">${qi + 1}.</span> ${q.q}</p>
+      <div class="space-y-2" id="quiz-q-${qi}">
+        ${q.opts.map((opt, oi) => {
+          let extraClass = '';
+          if (quizSubmitted) {
+            if (oi === q.answer) extraClass = ' correct';
+            else if (quizAnswers[qi] === oi) extraClass = ' wrong';
+          } else if (quizAnswers[qi] === oi) {
+            extraClass = ' selected';
+          }
+          return `<div class="quiz-option${extraClass}" onclick="selectQuiz(${qi}, ${oi})" role="button" tabindex="0">${opt}</div>`;
+        }).join('')}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  const scoreEl = document.getElementById('quizScore');
+  const btn = document.getElementById('submitQuizBtn');
+  if (quizSubmitted) {
+    scoreEl.classList.remove('hidden');
+    scoreEl.querySelector('span').textContent = `Score: ${quizScoreVal} / ${quizQuestions.length}`;
+    btn.textContent = 'Retake Quiz';
+    btn.onclick = retakeQuiz;
+  } else {
+    scoreEl.classList.add('hidden');
+    btn.textContent = 'Submit Quiz';
+    btn.onclick = submitQuiz;
+  }
+}
+
+function selectQuiz(qi, oi) {
+  if (quizSubmitted) return;
+  quizAnswers[qi] = oi;
+  renderQuiz();
+}
+
+function submitQuiz() {
+  if (Object.keys(quizAnswers).length < quizQuestions.length) {
+    showToast('Please answer all questions first!');
+    return;
+  }
+  quizSubmitted = true;
+  quizScoreVal = quizQuestions.reduce((s, q, i) => s + (quizAnswers[i] === q.answer ? 1 : 0), 0);
+  renderQuiz();
+  showToast(`Quiz submitted! ${quizScoreVal}/${quizQuestions.length}`);
+}
+
+function retakeQuiz() {
+  quizAnswers = {};
+  quizSubmitted = false;
+  quizScoreVal = null;
+  renderQuiz();
+}
+
+// ====== RENDER REFLECT ======
+function renderReflect() {
+  const container = document.getElementById('reflectContainer');
+  container.innerHTML = '';
+  reflectQuestions.forEach((q, i) => {
+    const saved = localStorage.getItem('rj_' + q.id) || '';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <p class="font-semibold mb-2"><span style="color: var(--primary);" class="mr-1">${i + 1}.</span> ${q.prompt}</p>
+      <textarea rows="5" placeholder="Write your reflection..." oninput="saveField('rj_${q.id}', this.value)">${saved}</textarea>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ====== TABS ======
+function switchTab(tab) {
+  currentTab = tab;
+  ['characters', 'connections', 'quiz', 'reflect'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    el.classList.toggle('hidden', t !== tab);
+  });
+  document.querySelectorAll('[data-tab]').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+    if (b.dataset.tab === tab) {
+      b.style.background = 'var(--primary)';
+      b.style.color = 'var(--bg)';
+    } else {
+      b.style.background = 'transparent';
+      b.style.color = 'var(--text)';
+    }
+    b.setAttribute('aria-selected', b.dataset.tab === tab);
+  });
+}
+
+// ====== SETTINGS ======
+function toggleSettings() {
+  document.getElementById('settingsPanel').classList.toggle('hidden');
+}
+
+function setTheme(theme) {
+  currentTheme = theme;
+  const wrapper = document.getElementById('appWrapper');
+  wrapper.classList.remove('theme-light', 'theme-high-contrast', 'theme-dyslexia');
+  if (theme !== 'dark') wrapper.classList.add('theme-' + theme);
+  document.querySelectorAll('[data-theme]').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+}
+
+function setTextSize(val) {
+  document.documentElement.style.setProperty('--base-size', val);
+  document.getElementById('textSizeLabel').textContent = val + 'px';
+}
+
+let relaxedSpacing = false;
+function toggleLineSpacing() {
+  relaxedSpacing = !relaxedSpacing;
+  document.documentElement.style.setProperty('--line-height', relaxedSpacing ? '2' : '1.6');
+  document.getElementById('lineSpaceBtn').textContent = relaxedSpacing ? 'Normal' : 'Relaxed';
+  document.getElementById('lineSpaceBtn').classList.toggle('active', relaxedSpacing);
+}
+
+// ====== LOCAL SAVE ======
+function saveField(key, val) {
+  localStorage.setItem(key, val);
+}
+function saveLocal() {
+  localStorage.setItem('rj_name', document.getElementById('studentName').value);
+  localStorage.setItem('rj_period', document.getElementById('studentPeriod').value);
+  localStorage.setItem('rj_date', document.getElementById('studentDate').value);
+}
+function loadLocal() {
+  document.getElementById('studentName').value = localStorage.getItem('rj_name') || '';
+  document.getElementById('studentPeriod').value = localStorage.getItem('rj_period') || '';
+  document.getElementById('studentDate').value = localStorage.getItem('rj_date') || new Date().toISOString().split('T')[0];
+}
+
+// ====== TOAST ======
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ====== EXPORT PDF ======
+function exportPDF() {
+  const name = document.getElementById('studentName').value || 'Student';
+  const period = document.getElementById('studentPeriod').value || '—';
+  const date = document.getElementById('studentDate').value || new Date().toISOString().split('T')[0];
+  const config = window.elementSdk.config || defaultConfig;
+  const school = config.school_name || defaultConfig.school_name || '';
+  const title = config.lesson_title || defaultConfig.lesson_title;
+
+  let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title} - ${name}</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 700px; margin: 0 auto; padding: 40px 30px; color: #222; line-height: 1.7; }
+    h1 { font-size: 22px; border-bottom: 2px solid #c9a84c; padding-bottom: 8px; margin-bottom: 4px; }
+    h2 { font-size: 16px; color: #555; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+    .meta { font-size: 13px; color: #666; margin-bottom: 20px; }
+    .question { font-weight: bold; margin-top: 14px; font-size: 14px; }
+    .answer { margin: 4px 0 14px 0; padding: 8px 12px; background: #f8f7f2; border-left: 3px solid #c9a84c; white-space: pre-wrap; font-size: 13px; }
+    .score-box { background: #c9a84c22; border: 1px solid #c9a84c; padding: 10px 16px; border-radius: 6px; font-weight: bold; display: inline-block; margin-top: 6px; }
+    .empty { color: #999; font-style: italic; }
+    @media print { body { padding: 20px; } }
+  </style></head><body>`;
+
+  html += `<h1>${title}</h1>`;
+  html += `<div class="meta">${school ? school + '<br>' : ''}Student: <strong>${name}</strong> &nbsp;|&nbsp; Period: <strong>${period}</strong> &nbsp;|&nbsp; Date: <strong>${date}</strong></div>`;
+
+  // Connections
+  html += `<h2>🔗 Real-Life Connections</h2>`;
+  connectionPrompts.forEach(p => {
+    const val = localStorage.getItem('rj_' + p.id) || '';
+    html += `<div class="question">${p.emoji} ${p.title}</div>`;
+    html += `<div class="answer">${val || '<span class="empty">No response</span>'}</div>`;
+  });
+
+  // Quiz
+  html += `<h2>❓ Quiz Results</h2>`;
+  if (quizSubmitted) {
+    html += `<div class="score-box">Score: ${quizScoreVal} / ${quizQuestions.length}</div>`;
+    quizQuestions.forEach((q, i) => {
+      const chose = quizAnswers[i] !== undefined ? q.opts[quizAnswers[i]] : 'No answer';
+      const correct = q.opts[q.answer];
+      const isRight = quizAnswers[i] === q.answer;
+      html += `<div class="question">${i + 1}. ${q.q}</div>`;
+      html += `<div class="answer">${isRight ? '✅' : '❌'} Your answer: ${chose}${!isRight ? ' (Correct: ' + correct + ')' : ''}</div>`;
+    });
+  } else {
+    html += `<p class="empty">Quiz not yet submitted.</p>`;
+  }
+
+  // Reflections
+  html += `<h2>✍️ Reflections</h2>`;
+  reflectQuestions.forEach((q, i) => {
+    const val = localStorage.getItem('rj_' + q.id) || '';
+    html += `<div class="question">${i + 1}. ${q.prompt}</div>`;
+    html += `<div class="answer">${val || '<span class="empty">No response</span>'}</div>`;
+  });
+
+  html += `</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (w) {
+    w.onload = () => { w.print(); URL.revokeObjectURL(url); };
+  } else {
+    showToast('Please allow pop-ups to export.');
+  }
+}
+
+// ====== BOOT ======
+loadLocal();
+renderCharacters();
+renderConnections();
+renderQuiz();
+renderReflect();
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ec56339652ef8b7',t:'MTc3NjE5Nzc3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
