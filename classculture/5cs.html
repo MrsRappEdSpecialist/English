@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260828-05-5fe3063","C":{"Abril Fatface":"YACgEZbkUVE,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo":"YAHO2-t-jNE,0","Arial":"YAGyDvJ_4Ts,0","Bebas Neue":"YACgESME5ew,0","Bricolage Grotesque":"YAFyMcdwzpc,0","Canva Sans":"YAFLd8sKbwc,2","Caveat":"YALBs2ploWQ,0","Comic Sans MS":"YAHO2VMiyZo,0","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAEul-FRQw4,0","Georgia":"YAGzXkO0pEM,0","Helvetica Neue":"YAFcf6CtJfI,0","Impact":"YAFcfnjI7Vk,0","Inter":"YAFdJvSyp_k,3","Iowan Old Style":"YAGNIFa8j9o,0","Jacques Francois":"YAHO2a5g66Q,0","JetBrains Mono":"YAFdJksXcAk,0","Libre Baskerville":"YACgEUFdPdA,0","Manrope":"YAHO2b2feC4,0","Merriweather":"YACgEXvHxxs,0","Montserrat":"YADLjI9qxTA,0","Nunito":"YACgEX8C5Gg,0","Oleo Script":"YACgEQQ14jI,0","Phantom Sans":"YAHO2E8Pb88,0","Playfair Display":"YACgEYmuCJE,0","Poppins":"YAFdJjbTu24,1","Press Start 2P":"YAFyGr-8pmQ,0","Quicksand":"YADWjpfPmdk,0","Raleway":"YACgEVg3xZg,0","Segoe UI":"YAHNdRD1Klw,0","Source Sans 3":"YAG4lO1Mj10,0","Spectral":"YAHO2rVUHIM,0","Times New Roman":"YAGzXW3gftg,0","Times":"YAGzXW3gftg,0","Ubuntu":"YACgERDU--Q,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0","ui-monospace":"YADlN8CFZ8Q,0","ui-sans-serif":"YACkoN-xg4g,0"}}');</script><script src="/_sdk/50d846425a1e5082.telemetry_sdk.js" integrity="sha512-Otbex+ztlVbcEGql0rXGd/3E3ee/hqAntg6DeuUEMG6pIPbXGOSvZbFZVzknAXi1tH/itQ+ijEhOTr2aWj6CXg=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anaheim High School 5Cs</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #17233d;
+      --paper: #f8f2e8;
+      --muted: #5e6877;
+      --card: #fffdf8;
+      --line: #d9d1c4;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Work Sans", sans-serif; color: var(--ink); }
+    .page-shell { width: 100%; min-height: calc(100 * min(var(--vh, 1vh), 1vh)); overflow-x: hidden; }
+    .title-font { font-family: "Fraunces", serif; }
+    .paper-grain {
+      background-image: radial-gradient(rgba(23,35,61,.07) .8px, transparent .8px);
+      background-size: 15px 15px;
+    }
+    .top-rule { height: 8px; background: repeating-linear-gradient(90deg, #d84a3a 0 42px, #f0b643 42px 84px, #25736b 84px 126px, #3156a5 126px 168px, #8c407a 168px 210px); }
+    .tab-button {
+      border: 1px solid #cfc5b4;
+      background: rgba(255,253,248,.75);
+      color: #27344d;
+      transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+    }
+    .tab-button:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(23,35,61,.12); }
+    .tab-button.is-active { color: white; border-color: transparent; box-shadow: 0 7px 0 rgba(23,35,61,.18); }
+    .panel { display: none; animation: lift .45s ease both; }
+    .panel.is-active { display: block; }
+    .definition-card, .quote-card { background: var(--card); border: 1px solid var(--line); }
+    .gallery-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+    .gallery-tile { overflow: hidden; background: #ddd; }
+    .gallery-tile:hover .gallery-image { transform: scale(1.06); }
+    .number-tag { font-family: "Fraunces", serif; }
+    .panel-accent { border-left: 8px solid currentColor; }
+    .reveal { animation: lift .6s ease both; }
+    @keyframes lift {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tab-button:focus-visible, button:focus-visible { outline: 3px solid #17233d; outline-offset: 3px; }
+    @media (max-width: 640px) {
+      .gallery-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .gallery-grid .gallery-tile:first-child { grid-column: span 2; }
+    }
+  </style>
+  <script src="/_sdk/b3bf9e8ac58e6ad6.data_sdk.js" type="text/javascript" integrity="sha512-otc1u9NYq9Ms5Jt//7vmhrrqR5CLPr8Jdgs6741gqniClfLMcfmC+jK/cKuQdhLv6G0esJ/FzaMS9tv0T/vj/Q=="></script>
+  <script src="/_sdk/a6de989e8af05ea5.resizing_sdk.js" type="text/javascript" integrity="sha512-cceAQMIleYr/3eg7o5WzN46w0HpgI1sxi+5kDUb7CmTjHEpgBtINDxtOpnNeUtujjui8NG0OSDgUMl0/E2lT2A=="></script>
+ </head>
+ <body data-template-id="__page-root" class="paper-grain">
+  <div class="page-shell">
+   <div class="top-rule"></div>
+   <header class="w-full px-5 pt-10 pb-7 md:px-10 md:pt-14">
+    <div class="max-w-7xl mx-auto">
+     <div class="flex items-center gap-3 mb-6 text-sm font-bold uppercase tracking-[0.2em] text-slate-600"><span class="w-9 h-px bg-slate-700"></span> <span data-template-id="school-label" class="canva-text"></span>
+     </div>
+     <div class="max-w-4xl">
+      <h1 data-template-id="page-title" class="canva-text title-font font-bold leading-[.98]"></h1>
+      <p data-template-id="page-intro" class="canva-text mt-6 max-w-3xl text-lg leading-relaxed text-slate-600"></p>
+     </div>
+    </div>
+   </header>
+   <nav aria-label="Explore the five competencies" class="w-full px-5 pb-10 md:px-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 gap-3 md:grid-cols-5"><button type="button" class="tab-button canva-button rounded-xl px-4 py-4 font-bold" data-template-id="character-tab" data-panel="character-panel" aria-selected="true"></button> <button type="button" class="tab-button canva-button rounded-xl px-4 py-4 font-bold" data-template-id="communication-tab" data-panel="communication-panel" aria-selected="false"></button> <button type="button" class="tab-button canva-button rounded-xl px-4 py-4 font-bold" data-template-id="critical-thinking-tab" data-panel="critical-thinking-panel" aria-selected="false"></button> <button type="button" class="tab-button canva-button rounded-xl px-4 py-4 font-bold" data-template-id="creativity-tab" data-panel="creativity-panel" aria-selected="false"></button> <button type="button" class="tab-button canva-button rounded-xl px-4 py-4 font-bold col-span-2 md:col-span-1" data-template-id="collaboration-tab" data-panel="collaboration-panel" aria-selected="false"></button>
+    </div>
+   </nav>
+   <main class="w-full px-5 pb-14 md:px-10">
+    <section id="character-panel" class="panel is-active max-w-7xl mx-auto" aria-labelledby="character-title">
+     <div data-template-id="character-banner" class="canva-banner panel-accent rounded-2xl p-6 md:p-9">
+      <p data-template-id="character-kicker" class="canva-text font-bold uppercase tracking-[.17em]"></p>
+      <h2 id="character-title" data-template-id="character-title" class="canva-text title-font mt-2 font-bold"></h2>
+      <p data-template-id="character-teen" class="canva-text mt-4 max-w-3xl text-lg leading-relaxed"></p>
+     </div>
+     <div class="mt-8 grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+      <div>
+       <h3 data-template-id="character-definitions-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="character-level-1" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="character-definition-1" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="character-level-2" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="character-definition-2" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="character-level-3" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="character-definition-3" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+       </div>
+      </div>
+      <aside>
+       <h3 data-template-id="character-quotes-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="character-quote-1" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="character-quote-2" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="character-quote-3" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+       </div>
+      </aside>
+     </div>
+     <div class="mt-9 gallery-grid grid grid-cols-4 gap-3">
+      <div class="gallery-tile col-span-2 row-span-2 rounded-2xl min-h-64">
+       <img data-template-id="character-image-1" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="character-image-2" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="character-image-3" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="character-image-4" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="character-image-5" class="canva-image gallery-image" loading="lazy">
+      </div>
+     </div>
+    </section>
+    <section id="communication-panel" class="panel max-w-7xl mx-auto" aria-labelledby="communication-title">
+     <div data-template-id="communication-banner" class="canva-banner panel-accent rounded-2xl p-6 md:p-9">
+      <p data-template-id="communication-kicker" class="canva-text font-bold uppercase tracking-[.17em]"></p>
+      <h2 id="communication-title" data-template-id="communication-title" class="canva-text title-font mt-2 font-bold"></h2>
+      <p data-template-id="communication-teen" class="canva-text mt-4 max-w-3xl text-lg leading-relaxed"></p>
+     </div>
+     <div class="mt-8 grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+      <div>
+       <h3 data-template-id="communication-definitions-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="communication-level-1" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="communication-definition-1" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="communication-level-2" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="communication-definition-2" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="communication-level-3" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="communication-definition-3" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+       </div>
+      </div>
+      <aside>
+       <h3 data-template-id="communication-quotes-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="communication-quote-1" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="communication-quote-2" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="communication-quote-3" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+       </div>
+      </aside>
+     </div>
+     <div class="mt-9 gallery-grid grid grid-cols-4 gap-3">
+      <div class="gallery-tile col-span-2 row-span-2 rounded-2xl min-h-64">
+       <img data-template-id="communication-image-1" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="communication-image-2" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="communication-image-3" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="communication-image-4" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="communication-image-5" class="canva-image gallery-image" loading="lazy">
+      </div>
+     </div>
+    </section>
+    <section id="critical-thinking-panel" class="panel max-w-7xl mx-auto" aria-labelledby="critical-thinking-title">
+     <div data-template-id="critical-thinking-banner" class="canva-banner panel-accent rounded-2xl p-6 md:p-9">
+      <p data-template-id="critical-thinking-kicker" class="canva-text font-bold uppercase tracking-[.17em]"></p>
+      <h2 id="critical-thinking-title" data-template-id="critical-thinking-title" class="canva-text title-font mt-2 font-bold"></h2>
+      <p data-template-id="critical-thinking-teen" class="canva-text mt-4 max-w-3xl text-lg leading-relaxed"></p>
+     </div>
+     <div class="mt-8 grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+      <div>
+       <h3 data-template-id="critical-thinking-definitions-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="critical-thinking-level-1" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="critical-thinking-definition-1" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="critical-thinking-level-2" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="critical-thinking-definition-2" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="critical-thinking-level-3" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="critical-thinking-definition-3" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+       </div>
+      </div>
+      <aside>
+       <h3 data-template-id="critical-thinking-quotes-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="critical-thinking-quote-1" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="critical-thinking-quote-2" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="critical-thinking-quote-3" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+       </div>
+      </aside>
+     </div>
+     <div class="mt-9 gallery-grid grid grid-cols-4 gap-3">
+      <div class="gallery-tile col-span-2 row-span-2 rounded-2xl min-h-64">
+       <img data-template-id="critical-thinking-image-1" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="critical-thinking-image-2" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="critical-thinking-image-3" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="critical-thinking-image-4" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="critical-thinking-image-5" class="canva-image gallery-image" loading="lazy">
+      </div>
+     </div>
+    </section>
+    <section id="creativity-panel" class="panel max-w-7xl mx-auto" aria-labelledby="creativity-title">
+     <div data-template-id="creativity-banner" class="canva-banner panel-accent rounded-2xl p-6 md:p-9">
+      <p data-template-id="creativity-kicker" class="canva-text font-bold uppercase tracking-[.17em]"></p>
+      <h2 id="creativity-title" data-template-id="creativity-title" class="canva-text title-font mt-2 font-bold"></h2>
+      <p data-template-id="creativity-teen" class="canva-text mt-4 max-w-3xl text-lg leading-relaxed"></p>
+     </div>
+     <div class="mt-8 grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+      <div>
+       <h3 data-template-id="creativity-definitions-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="creativity-level-1" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="creativity-definition-1" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="creativity-level-2" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="creativity-definition-2" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="creativity-level-3" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="creativity-definition-3" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+       </div>
+      </div>
+      <aside>
+       <h3 data-template-id="creativity-quotes-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="creativity-quote-1" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="creativity-quote-2" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="creativity-quote-3" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+       </div>
+      </aside>
+     </div>
+     <div class="mt-9 gallery-grid grid grid-cols-4 gap-3">
+      <div class="gallery-tile col-span-2 row-span-2 rounded-2xl min-h-64">
+       <img data-template-id="creativity-image-1" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="creativity-image-2" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="creativity-image-3" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="creativity-image-4" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="creativity-image-5" class="canva-image gallery-image" loading="lazy">
+      </div>
+     </div>
+    </section>
+    <section id="collaboration-panel" class="panel max-w-7xl mx-auto" aria-labelledby="collaboration-title">
+     <div data-template-id="collaboration-banner" class="canva-banner panel-accent rounded-2xl p-6 md:p-9">
+      <p data-template-id="collaboration-kicker" class="canva-text font-bold uppercase tracking-[.17em]"></p>
+      <h2 id="collaboration-title" data-template-id="collaboration-title" class="canva-text title-font mt-2 font-bold"></h2>
+      <p data-template-id="collaboration-teen" class="canva-text mt-4 max-w-3xl text-lg leading-relaxed"></p>
+     </div>
+     <div class="mt-8 grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+      <div>
+       <h3 data-template-id="collaboration-definitions-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="collaboration-level-1" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="collaboration-definition-1" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="collaboration-level-2" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="collaboration-definition-2" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+        <article class="definition-card rounded-xl p-5">
+         <span data-template-id="collaboration-level-3" class="canva-tag inline-block rounded-full px-3 py-1 text-sm font-bold"></span>
+         <p data-template-id="collaboration-definition-3" class="canva-text mt-3 leading-relaxed"></p>
+        </article>
+       </div>
+      </div>
+      <aside>
+       <h3 data-template-id="collaboration-quotes-heading" class="canva-text title-font font-bold"></h3>
+       <div class="mt-4 grid gap-4">
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="collaboration-quote-1" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="collaboration-quote-2" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+        <blockquote class="quote-card rounded-xl p-5">
+         <p data-template-id="collaboration-quote-3" class="canva-text title-font text-lg leading-relaxed"></p>
+        </blockquote>
+       </div>
+      </aside>
+     </div>
+     <div class="mt-9 gallery-grid grid grid-cols-4 gap-3">
+      <div class="gallery-tile col-span-2 row-span-2 rounded-2xl min-h-64">
+       <img data-template-id="collaboration-image-1" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="collaboration-image-2" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="collaboration-image-3" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="collaboration-image-4" class="canva-image gallery-image" loading="lazy">
+      </div>
+      <div class="gallery-tile rounded-2xl min-h-32">
+       <img data-template-id="collaboration-image-5" class="canva-image gallery-image" loading="lazy">
+      </div>
+     </div>
+    </section>
+   </main>
+   <footer class="w-full border-t border-stone-300 px-5 py-7 md:px-10">
+    <p data-template-id="footer-note" class="canva-text max-w-7xl mx-auto text-center text-sm font-medium text-slate-600"></p>
+   </footer>
+  </div>
+  <script src="/_sdk/c6bcadf20ce5820f.editing_sdk.js" integrity="sha512-LVukVCTKnKSxy98w+wCVzDAxVXBG2vy32XblXlmJD9CPFnF2/FVc75CFngl41IdXcX3sVHJc9olw64zrPM/FIA=="></script>
+  <script>
+    document.querySelectorAll('.tab-button').forEach((button, index) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-button').forEach(tab => {
+          tab.classList.remove('is-active');
+          tab.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('is-active'));
+        button.classList.add('is-active');
+        button.setAttribute('aria-selected', 'true');
+        document.getElementById(button.dataset.panel).classList.add('is-active');
+      });
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          button.click();
+        }
+      });
+      if (index === 0) button.classList.add('is-active');
+    });
+    lucide.createIcons();
+  </script>
+ </body>
+</html>
